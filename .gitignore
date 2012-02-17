@@ -1,0 +1,8 @@
+build/
+Testing/
+MAC.*
+doc/latex/
+doc/html/
+*.*~
+temp/
+sim/
