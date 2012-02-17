@@ -1,10 +1,10 @@
-JetDEau::JetDEau():m_fluid(1),m_air(0),
+JetDEau::JetDEau():m_fluid(1),m_air(0),m_cfl_factor(0.25),
 m_table(m_O),m_w(m_table,m_part),m_init(m_w,m_fluid,m_air,m_v_1_h,m_v_h,4,m_stag),
 m_stag(m_v_h),m_get_v(m_w,m_stag,m_v_1_h),
 m_conv(m_w,m_rungeKutta,m_get_v,m_stag,m_dt,m_fluid,m_N_V),
 m_grav(m_w,m_g,m_dt,m_fluid,m_N_V),
 m_viscosity(m_w,m_viscosity_const,m_dt,m_v_1_h,m_fluid),
-m_out(m_w,m_stag,m_v_h,m_t,1),m_time_step(m_v_1_h,0.25),
+m_out(m_w,m_stag,m_v_h,m_t,1),m_time_step(m_w,m_v_1_h,m_cfl_factor,m_dt),
 m_pres(m_w,m_v_1_h,m_fluid),m_extrapolate_v(m_w,m_fluid,4,m_N_V),
 m_move_part(m_w,m_rungeKutta,m_get_v,m_dt),
 m_time_out("timing.csv", fstream::out),
@@ -64,7 +64,7 @@ void JetDEau::Calculate()
 	m_time_init=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	cout<<"timestep"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
-	m_dt=m_time_step.Calculate(m_w);
+	m_time_step.Calculate();
 	m_time_ticks_end=times(&m_time_end);
 	m_time_time_step=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	if(m_dt>0.1)

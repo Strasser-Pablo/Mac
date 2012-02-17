@@ -14,30 +14,32 @@ using namespace std;
 
 /**
  * @brief
- * Calculate the next time step so that the faster particle move only a given factor.
- * \f[\Delta t=k\frac{h}{||v_{max}||} \f]
+ * Calculate the next time step so that the faster particle move only a given factor of a cell.
+ * In this case the cell is non Isotropic.
  **/
 template <class MacWorld,class TypeData>
 class CalculateTimeStepNonIso{
 	static const int type_dim=MacWorld::type_dim;
-	TypeData m_factor;
+	TypeData& m_factor;
+	TypeData& m_dt;
+	const MacWorld &m_world;
 	const Physvector<type_dim,TypeData>& m_1_h;
 public:
 	/**
 	 * @brief
-	 * Constructor for a given cell size and factor.
-	 * @param h Cell size.
-	 * @param factor Fraction of the Cell size.
+	 * Constructor taken as argument reference to different data.
+	 * @param[in] h Cell size.
+	 * @param[in] factor Fraction of the Cell size to traverse.
+	 * @param[in] world World to use to read speed.
+	 * @param[out] dt Where to output time step calculated.
 	 **/
-	CalculateTimeStepNonIso(const Physvector<type_dim,TypeData>& _1_h,TypeData factor);
+	CalculateTimeStepNonIso(const MacWorld &world,const Physvector<type_dim,TypeData>& _1_h,TypeData& factor, TypeData &dt);
 	
 	/**
 	 * @brief
-	 * Calculate the time step for the given mac_grid.
-	 * @param world mac_world to use.
-	 * @return TypeData Time_step to use.
+	 * Calculate the optimal time step.
 	 **/
-	TypeData Calculate(const MacWorld &world)const ;
+	void Calculate()const ;
 };
 #include "CalculateTimeStepNonIso.tpp"
 #endif

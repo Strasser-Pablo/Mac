@@ -77,6 +77,7 @@ class JetDEau
 	double m_time_output;
 	long m_time_ticks_deb;
 	long m_time_ticks_end;
+	double m_cfl_factor;
 public:
 	JetDEau();
 	void Calculate();

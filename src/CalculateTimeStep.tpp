@@ -5,15 +5,15 @@
  **/
 
 template <class MacWorld,class TypeData>
-CalculateTimeStep<MacWorld,TypeData>::CalculateTimeStep(const TypeData &h,TypeData factor):m_h(h),m_factor(factor)
+CalculateTimeStep<MacWorld,TypeData>::CalculateTimeStep(const MacWorld &world,const TypeData &h,TypeData& factor,TypeData &dt):m_h(h),m_factor(factor),m_world(world),m_dt(dt)
 {
 	
 }
 
 	template <class MacWorld,class TypeData>
-TypeData CalculateTimeStep<MacWorld,TypeData>::Calculate(const MacWorld &world)const
+void CalculateTimeStep<MacWorld,TypeData>::Calculate()const
 {
 	CalculateMacMaximalSpeed<typename MacWorld::type_mac_cell> max;
-	ApplyToEveryMacCell<CalculateMacMaximalSpeed<typename MacWorld::type_mac_cell> ,MacWorld>(world,max);
-	return m_h*m_factor/max.GetResult();
+	ApplyToEveryMacCell<CalculateMacMaximalSpeed<typename MacWorld::type_mac_cell> ,MacWorld>(m_world,max);
+	m_dt=m_h*m_factor/max.GetResult();
 }

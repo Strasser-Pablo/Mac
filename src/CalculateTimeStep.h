@@ -19,24 +19,27 @@ using namespace std;
  **/
 template <class MacWorld,class TypeData>
 class CalculateTimeStep{
-	TypeData m_factor;
+	TypeData& m_factor;
 	const TypeData& m_h;
+	TypeData& m_dt;
+	const MacWorld &m_world;
 public:
 	/**
 	 * @brief
-	 * Constructor for a given cell size and factor.
-	 * @param h Cell size.
-	 * @param factor Fraction of the Cell size.
+	 * Constructor taking as input reference to the following data.
+	 * @param[in] h Cell size.
+	 * @param[in] factor Fraction of the Cell size.
+	 * @param[out] dt Reference to the time step variable to change.
+	 * @param[in] world Reference to the world variable to read.
 	 **/
-	CalculateTimeStep(const TypeData& h,TypeData factor);
+	CalculateTimeStep(const MacWorld &world,const TypeData& h,TypeData &factor,TypeData &dt);
 	
 	/**
 	 * @brief
 	 * Calculate the time step for the given mac_grid.
-	 * @param world mac_world to use.
-	 * @return TypeData Time_step to use.
+	 * The output is done in reference dt.
 	 **/
-	TypeData Calculate(const MacWorld &world)const ;
+	 void Calculate()const ;
 };
 #include "CalculateTimeStep.tpp"
 #endif
