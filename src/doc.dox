@@ -1,0 +1,22 @@
+/**
+*	\defgroup Utility Utility Class and file
+*	@brief 
+*   General Uttility class and file.
+*	For example Vector, container and rounding function are in this
+*   Category.
+*   \defgroup Structure Structure Class
+*	@brief
+*	Structure representing the data.
+*	This contain the Particle and Grid.
+*	
+*	\defgroup Operation Operation Class
+*	@brief 
+*	Class making operation on the structure.
+*	This contain a lot of different algorithm.
+**/
+
+/**
+* \mainpage MAC (Marker and Cell)
+*
+*
+**/
