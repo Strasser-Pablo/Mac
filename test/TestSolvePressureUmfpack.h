@@ -6,9 +6,9 @@
 #include "../src/TableContainerList.h"
 #include "../src/KeyTableMap.h"
 #include "../src/Particle.h"
-#include "../src/SolvePressureCG.h"
+#include "../src/SolvePressureUmfpack.h"
 #define eps 1e-10
-class Test_SolvePressureCG: public CxxTest::TestSuite
+class Test_SolvePressureUmfpack : public CxxTest::TestSuite
 {
 	public:
 	void test1dconst()
@@ -39,7 +39,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		world W(k,lp);
 		Physvector<1,double> vh;
 		vh.Set(1,1.0);
-		SolvePressureCG<world> pres(W,vh,1);
+		SolvePressureUmfpack<world> pres(W,vh,1);
 		pres.Calculate();
 		Physvector<1,double> vtemp;
 		vkey.Set(1,0);
@@ -90,7 +90,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		world W(k,lp);
 		Physvector<1,double> vh;
 		vh.Set(1,1.0);
-		SolvePressureCG<world> pres(W,vh,1);
+		SolvePressureUmfpack<world> pres(W,vh,1);
 		pres.Calculate();
 		Physvector<1,double> vtemp;
 		vkey.Set(1,0);
@@ -141,7 +141,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		world W(k,lp);
 		Physvector<1,double> vh;
 		vh.Set(1,1.0);
-		SolvePressureCG<world> pres(W,vh,1);
+		SolvePressureUmfpack<world> pres(W,vh,1);
 		pres.Calculate();
 		Physvector<1,double> vtemp;
 		vkey.Set(1,0);
@@ -198,7 +198,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		Physvector<2,double> vh;
 		vh.Set(1,1.0);
 		vh.Set(2,1.0);
-		SolvePressureCG<world> press(W,vh,1);
+		SolvePressureUmfpack<world> press(W,vh,1);
 		press.Calculate();
 		Physvector<2,double> vtemp;
 		vkey.Set(1,0);
@@ -249,7 +249,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		Physvector<2,double> vh;
 		vh.Set(1,1.0);
 		vh.Set(2,1.0);
-		SolvePressureCG<world> press(W,vh,1);
+		SolvePressureUmfpack<world> press(W,vh,1);
 		press.Calculate();
 		Physvector<2,double> vtemp;
 		vkey.Set(1,0);
@@ -304,7 +304,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		Physvector<2,double> vh;
 		vh.Set(1,1.0);
 		vh.Set(2,1.0);
-		SolvePressureCG<world> press(W,vh,1);
+		SolvePressureUmfpack<world> press(W,vh,1);
 		press.Calculate();
 		Physvector<2,double> vtemp;
 		vkey.Set(1,0);

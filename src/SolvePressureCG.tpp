@@ -80,7 +80,6 @@ typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::Calcu
 	type_data ret=0;
 	for(int i=1;i<=type_dim;++i)
 	{
-		
 		Physvector<type_dim,type_data> temp;
 		m_world.m_mac_grid[key].GetSpeed(temp);
 		ret-=temp.Get(i)*m_1_h.Get(i);

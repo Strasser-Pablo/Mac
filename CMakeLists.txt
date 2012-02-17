@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 2.8)
 option (USE_TESTING 
         "Build the test case?" ON) 
 	
+option (USE_UMFPACK 
+        "Link Umfpack to solve linear equation" ON) 
+
 option (USE_DOXYGEN 
         "Build the documentation" ON) 
 		
@@ -50,7 +53,9 @@ endif(USE_DOXYGEN)
 
 add_executable(computation ${source_files})
 TARGET_LINK_LIBRARIES(computation vtkHybrid)
-
+if(USE_UMFPACK)
+	TARGET_LINK_LIBRARIES(computation -lumfpack)
+endif(USE_UMFPACK)
 install (TARGETS computation DESTINATION bin)
 
 if (USE_TESTING)
@@ -192,4 +197,11 @@ set_target_properties(test_cov_ExtrapolateCellFluid PROPERTIES COMPILE_FLAGS "-g
 CXXTEST_ADD_TEST(test_cov_OutputVectorSpeed test/TestOutputVectorSpeed.cpp
                                  ${CMAKE_CURRENT_SOURCE_DIR}/test/TestOutputVectorSpeed.h)
 set_target_properties(test_cov_OutputVectorSpeed PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+
+CXXTEST_ADD_TEST(test_cov_SolvePressureUmfpack test/TestSolvePressureUmfpack.cpp
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSolvePressureUmfpack.h)
+set_target_properties(test_cov_OutputVectorSpeed PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+if(USE_UMFPACK)
+TARGET_LINK_LIBRARIES(test_cov_SolvePressureUmfpack -lumfpack)
+endif(USE_UMFPACK)
 endif(USE_TESTING)
