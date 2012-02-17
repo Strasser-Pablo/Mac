@@ -1,10 +1,11 @@
 #ifndef SolvePressureCG_H
 #define SolvePressureCG_H
 #include "KeyTableMap.h"
-#include <cmath>
+#include <math.h>
 #include "NeighborsPhysvector.h"
 #include <iostream>
 #include <fstream>
+#include <limits>
 using namespace std;
 /**
  * @file SolvePressureCG.h

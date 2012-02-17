@@ -29,18 +29,19 @@ void SolvePressureCG<TypeWorld>::Calculate()
 	}
 	m_p=m_r;
 	m_stat_out<<"beg "<<m_p.size()<<endl;
+	type_data rsquarebef=numeric_limits<type_data>::max();
 	while(true)
 	{
 	type_data num=CalculateSquare();
 	type_data denom=CalculateAScalar();
 	m_stat_out<<"num "<<num<<" denom "<<denom;
-	if(abs(denom)<0.00000001)
+	type_data alpha=num/denom;
+	if(isnan(alpha)||isinf(alpha))
 	{
 		SetSpeed();
 		m_stat_out<<endl;
 		return;
 	}
-	type_data alpha=num/denom;
 	m_stat_out<<" alpha "<<alpha;
 	for(typename temp_map::iterator it= m_p.begin();it!=m_p.end();++it)
 	{
@@ -56,14 +57,16 @@ void SolvePressureCG<TypeWorld>::Calculate()
 	}
 	type_data rsquare=CalculateSquare();
 	m_stat_out<<" r2 "<<rsquare;
-	if(abs(rsquare)<0.00000000000001)
+	type_data beta=rsquare/num;
+	m_stat_out<<" beta "<<beta<<endl;
+	
+	if(rsquarebef<rsquare||isnan(beta)||rsquare==0)
 	{
 		SetSpeed();
 		m_stat_out<<endl;
 		return;
 	}
-	type_data beta=rsquare/num;
-	m_stat_out<<" beta "<<beta<<endl;
+	rsquarebef=rsquare;
 	for(typename temp_map::iterator it=m_p.begin();it!=m_p.end();++it)
 	{
 		it.data()=m_r[it.key()]+beta*m_p[it.key()];
@@ -177,6 +180,7 @@ typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::Calcu
 template<class TypeWorld>
 void SolvePressureCG<TypeWorld>::SetSpeed()
 {
+	m_stat_out<<"end"<<endl;
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		type_data p;
