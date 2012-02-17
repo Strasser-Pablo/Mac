@@ -195,4 +195,8 @@ void SolvePressureUmfpack<TypeWorld>::CalculateAColumn(int icol,int& inumb,	Phys
 	m_indice[inumb0]=icol;
 	m_val[inumb0]=diagval;
 	m_offset[icol+1]=m_offset[icol]+nboffset;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> d8a6f0c498515a62d6953aa610d1ca77fa526fc0

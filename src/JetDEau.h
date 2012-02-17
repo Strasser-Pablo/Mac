@@ -23,6 +23,7 @@
 #include <fstream>
 #include <sys/times.h>
 #include "CalculateTimeStepNonIso.h"
+#include "SolvePressureUmfpack.h"
 using namespace std;
 class JetDEau
 {
@@ -41,6 +42,7 @@ class JetDEau
 	int m_air;
 	type_meth m_rungeKutta;
 	SolvePressureCG<world> m_pres;
+	SolvePressureUmfpack<world> m_pres_umf;
 	type_vel m_get_v;
 	type_stag m_stag;
 	order m_O;
