@@ -23,6 +23,7 @@ void SolvePressureUmfpack<TypeWorld>::Calculate()
 	    m_iid=0;
 	int inumb=0;
 	m_offset[0]=0;
+	int m_iid0=0;
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		bool b;
@@ -30,23 +31,31 @@ void SolvePressureUmfpack<TypeWorld>::Calculate()
 		it.data().GetCellType(type);
 		if(type==m_fluid)
 			{
-				int tempiid=m_iid;
 				if(m_key_to_num.Exist(it.key()))
 					{
-						tempiid=m_key_to_num[it.key()];
+						for(int i2=m_iid0;i2<m_iid;++i2)
+						{
+							CalculateB(i2,m_num_to_key[i2]);
+							CalculateAColumn(i2,inumb,m_num_to_key[i2]);
+						}
+						m_iid0=m_iid;
 					}
 				else
 					{
 						m_key_to_num[it.key()]=m_iid;
+						m_num_to_key[m_iid]=it.key();
 						++m_iid;
+						CalculateB(m_iid0,it.key());
+						CalculateAColumn(m_iid0,inumb,it.key());
+						++m_iid0;
 					}
-				CalculateB(tempiid,it.key());
-				CalculateAColumn(tempiid,inumb,it.key());
 			}
 
 	}
 	n=m_iid;
 	m_p=new type_data[n];
+	if(n>0)
+	{
 	type_data *null = (type_data *) NULL ;
     void *Symbolic, *Numeric ;
 	
@@ -61,6 +70,7 @@ void SolvePressureUmfpack<TypeWorld>::Calculate()
 		m_world.m_mac_grid[it.key()].SetPressure(m_p[it.data()]);
 	}
 	SetSpeed();
+	}
 	delete[] m_offset;
 	delete[] m_p;
 	delete[] m_indice;
@@ -130,6 +140,7 @@ void SolvePressureUmfpack<TypeWorld>::CalculateAColumn(int icol,int& inumb,	Phys
 	++inumb;
 	int nboffset=1;
 	double diagval=0;
+	int n=0;
 	for(int i=1;i<=type_dim;++i)
 	{
 		bool b;
@@ -154,6 +165,7 @@ void SolvePressureUmfpack<TypeWorld>::CalculateAColumn(int icol,int& inumb,	Phys
 			if(c==m_fluid)
 			{
 				m_key_to_num[key]=m_iid;
+				m_num_to_key[m_iid]=key;
 				m_indice[inumb]=m_iid;
 				m_val[inumb]=m_1_h.Get(i);
 				++m_iid;
@@ -182,9 +194,9 @@ void SolvePressureUmfpack<TypeWorld>::CalculateAColumn(int icol,int& inumb,	Phys
 			if(c==m_fluid)
 			{
 				m_key_to_num[key]=m_iid;
+				m_num_to_key[m_iid]=key;
 				m_indice[inumb]=m_iid;
 				m_val[inumb]=m_1_h.Get(i);
-				diagval-=m_1_h.Get(i);
 				++m_iid;
 				++inumb;
 				++nboffset;
@@ -195,4 +207,22 @@ void SolvePressureUmfpack<TypeWorld>::CalculateAColumn(int icol,int& inumb,	Phys
 	m_indice[inumb0]=icol;
 	m_val[inumb0]=diagval;
 	m_offset[icol+1]=m_offset[icol]+nboffset;
+	bool b=true;
+	while(b)
+	{
+		b=false;
+		for(int i=inumb0;i<inumb-1;++i)
+		{
+			if(m_indice[i]>m_indice[i+1])
+			{
+				int temp=m_indice[i];
+				m_indice[i]=m_indice[i+1];
+				m_indice[i+1]=temp;
+				double dtemp=m_val[i];
+				m_val[i]=m_val[i+1];
+				m_val[i+1]=dtemp;
+				b=true;
+			}
+		}
+	}
 }

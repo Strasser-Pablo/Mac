@@ -33,6 +33,7 @@ class SolvePressureUmfpack
 	int m_iid;
 	
 	KeyTableMap<typename TypeWorld::type_key,int,PhysvectorKeyOrder<type_dim,int > > m_key_to_num;
+	KeyTableMap<int,typename TypeWorld::type_key> m_num_to_key;
 	PhysvectorKeyOrder<type_dim,int> m_o;
 	
 	/**
