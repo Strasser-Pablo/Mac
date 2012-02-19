@@ -24,6 +24,8 @@ void SolvePressureUmfpack<TypeWorld>::Calculate()
 	int inumb=0;
 	m_offset[0]=0;
 	int m_iid0=0;
+	m_key_to_num.clear();
+	m_num_to_key.clear();
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		bool b;
@@ -70,6 +72,10 @@ void SolvePressureUmfpack<TypeWorld>::Calculate()
 		m_world.m_mac_grid[it.key()].SetPressure(m_p[it.data()]);
 	}
 	SetSpeed();
+	}
+	else
+	{
+		cout<<"zero size linear system to solve"<<endl; 
 	}
 	delete[] m_offset;
 	delete[] m_p;
