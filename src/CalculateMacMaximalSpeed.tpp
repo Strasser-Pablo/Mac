@@ -5,12 +5,18 @@
  **/
 
 template <class TypeMacCell>
-CalculateMacMaximalSpeed<TypeMacCell>::CalculateMacMaximalSpeed():m_max(0)
+CalculateMacMaximalSpeed<TypeMacCell>::CalculateMacMaximalSpeed(const type_cell& fluid):m_max(0),m_fluid(fluid)
 {
 }
 
 template <class TypeMacCell>
 void CalculateMacMaximalSpeed<TypeMacCell>::operator()(const TypeMacCell & cell){
+	type_cell c;
+	cell.GetCellType(c);
+	if(c!=m_fluid)
+	{
+		return;
+	}
 	typename TypeMacCell::type_vector v;
 	cell.GetSpeed(v);
 	

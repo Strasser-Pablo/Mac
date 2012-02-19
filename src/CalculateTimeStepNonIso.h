@@ -19,11 +19,13 @@ using namespace std;
  **/
 template <class MacWorld,class TypeData>
 class CalculateTimeStepNonIso{
+	typedef typename MacWorld::type_cell type_cell;
 	static const int type_dim=MacWorld::type_dim;
 	TypeData& m_factor;
 	TypeData& m_dt;
 	const MacWorld &m_world;
 	const Physvector<type_dim,TypeData>& m_1_h;
+	const type_cell &m_fluid;
 public:
 	/**
 	 * @brief
@@ -33,7 +35,7 @@ public:
 	 * @param[in] world World to use to read speed.
 	 * @param[out] dt Where to output time step calculated.
 	 **/
-	CalculateTimeStepNonIso(const MacWorld &world,const Physvector<type_dim,TypeData>& _1_h,TypeData& factor, TypeData &dt);
+	CalculateTimeStepNonIso(const MacWorld &world,const Physvector<type_dim,TypeData>& _1_h,TypeData& factor, TypeData &dt,const type_cell &fluid);
 	
 	/**
 	 * @brief

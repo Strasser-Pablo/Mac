@@ -19,12 +19,14 @@ using namespace std;
 template <class TypeMacCell>
 class CalculateMacMaximalSpeed{
 	typename TypeMacCell::type_data m_max;
+	typedef typename TypeMacCell::type_cell type_cell;
+	const type_cell & m_fluid;
 public:
 /**
  * @brief 
  * Default Constructor.
  **/
-	CalculateMacMaximalSpeed();
+	CalculateMacMaximalSpeed(const type_cell& fluid);
 	/**
 	* @brief 
 	* Method that update the current maximun.
