@@ -48,13 +48,12 @@ struct MacWorld{
 	 * Type of vector for key.
 	 **/
 	typedef typename KeyTable::type_key type_key_vect;
-	#ifndef Testing_Partial_Mac
 	/**
 	 * @brief
 	 * Type of mac cell.
 	 **/
 	typedef typename type_mac_cell::type_cell type_cell;
-		#endif
+
 	/**
 	 * @brief 
 	 * Dimension of space.

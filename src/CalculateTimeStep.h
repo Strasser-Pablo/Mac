@@ -19,7 +19,7 @@ using namespace std;
  **/
 template <class MacWorld,class TypeData>
 class CalculateTimeStep{
-	typedef typename MacWorld::type_cell::type_cell type_cell;
+	typedef typename MacWorld::type_cell type_cell;
 	TypeData& m_factor;
 	const TypeData& m_h;
 	TypeData& m_dt;

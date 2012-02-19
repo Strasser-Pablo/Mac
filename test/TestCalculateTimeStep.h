@@ -11,23 +11,24 @@
 #define Testing_Partial_Mac
 class Test_CalculateTimeStep : public CxxTest::TestSuite
 {
-	MacWorld<KeyTableMap<int,MacCell<3,double,double> >,TableContainerList<Physvector<3,double> > >  m_world;
+	MacWorld<KeyTableMap<int,MacCell<3,double,int> >,TableContainerList<Physvector<3,double> > >  m_world;
 	
 public:
 	void testCalculate(){
-		KeyTableMap<int,MacCell<3,double,double> > k;
+		KeyTableMap<int,MacCell<3,double,int> > k;
 		Physvector<3,double> v;
 		v.Set(USEELLIPSE,1.0,0.0,0.0);
-		k[1]=MacCell<3,double,double>(v,4.0);
+		k[1]=MacCell<3,double,int>(v,4.0,1,0);
 		m_world.m_mac_grid=k;
 		double m_h=1.0;
 		double m_factor=1.0;
 		double m_dt=0.0;
-		CalculateTimeStep<MacWorld<KeyTableMap<int,MacCell<3,double,double> >,TableContainerList<Physvector<3,double> > >,double> timestep(m_world,m_h,m_factor,m_dt);
+		int m_fluid=1;
+		CalculateTimeStep<MacWorld<KeyTableMap<int,MacCell<3,double,int> >,TableContainerList<Physvector<3,double> > >,double> timestep(m_world,m_h,m_factor,m_dt,m_fluid);
 		timestep.Calculate();
 		TS_ASSERT_DELTA(m_dt,1.0,eps);
 		v.Set(USEELLIPSE,0.10,0.20,0.40);
-		k[2]=MacCell<3,double,double>(v,4.0);
+		k[2]=MacCell<3,double,int>(v,4.0,1,0);
 		m_world.m_mac_grid=k;
 		timestep.Calculate();
 		TS_ASSERT_DELTA(m_dt,1.0,eps);
