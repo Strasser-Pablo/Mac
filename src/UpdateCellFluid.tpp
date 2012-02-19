@@ -59,10 +59,10 @@ void UpdateCellFluid<TypeWorld,TypeStagPos>::Update()
 					if(b2)
 					{
 					 //Created particle at the two opposing edge.
-					 //m_world.m_particle_list.push_back(type_particle(m_stag_pos.Get(it.key(),i)));
+						m_world.m_particle_list.push_back(type_particle(m_stag_pos.Get(it.key(),i)));
 					    typename TypeWorld::type_key tempkey2=it.key();
 						tempkey2.GetRef(i)+=1;
-						//m_world.m_particle_list.push_back(type_particle(m_stag_pos.Get(tempkey2,i)));
+						m_world.m_particle_list.push_back(type_particle(m_stag_pos.Get(tempkey2,i)));
 					}
 				 }
 				
