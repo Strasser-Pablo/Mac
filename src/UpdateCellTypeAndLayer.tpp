@@ -26,9 +26,7 @@ void UpdateCellTypeAndLayer<TypeWorld>::Update()
 				{
 					m_world.m_mac_grid[neigh].SetCellType(m_air);
 					m_world.m_mac_grid[neigh].SetLayer(i);
-					cout<<"key lay "<<it.key().Get(1)<<" "<<it.key().Get(2)<<" "<<it.key().Get(3)<<endl;
-					cout<<"neigh lay "<<neigh.Get(1)<<" "<<neigh.Get(2)<<" "<<neigh.Get(3)<<endl;
-					cout<<"layer "<<i<<endl;
+					m_world.m_mac_grid[neigh].SetPressure(0);
 				}
 			}
 		}
