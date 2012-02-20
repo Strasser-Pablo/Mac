@@ -56,6 +56,10 @@ class SolvePressureUmfpack
 	 * @param key Key of the component to calculate.
 	 **/
 	void CalculateB(int iline,Physvector<type_dim,int> key);
+	
+	typename SolvePressureUmfpack<TypeWorld>::type_data CalculateLaplacienInCell( Physvector<type_dim,int> key );
+	
+	typename SolvePressureUmfpack<TypeWorld>::type_data CalculateDivergence( Physvector<type_dim,int> key );
 public:
 /**
  * @brief
