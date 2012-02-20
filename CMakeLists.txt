@@ -12,6 +12,8 @@ option (USE_DOXYGEN
 option (USE_INSTALLATION
 		"Build installation" ON)
 
+option (USE_GOOGLE_PERF
+		"Build with Google Perf" ON)
 
 if (USE_TESTING)
  ENABLE_TESTING()
@@ -37,6 +39,17 @@ file(
 	 ${CMAKE_CURRENT_SOURCE_DIR}/src/*
 )
 
+if(USE_GOOGLE_PERF)
+Set(USE_GOOGLE_PERF_DEFINE 1)
+ else(USE_GOOGLE_PERF)
+ Set(USE_GOOGLE_PERF_DEFINE 0)
+endif(USE_GOOGLE_PERF)
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/Config.h.in"
+  "${PROJECT_BINARY_DIR}/Config.h"
+  )
+  
+  include_directories("${PROJECT_BINARY_DIR}")
 
 if (USE_TESTING)
 set(VALGRIND_COMMAND "valgrind ")
@@ -56,6 +69,11 @@ TARGET_LINK_LIBRARIES(computation vtkHybrid)
 if(USE_UMFPACK)
 	TARGET_LINK_LIBRARIES(computation -lumfpack)
 endif(USE_UMFPACK)
+
+if(USE_GOOGLE_PERF)
+	TARGET_LINK_LIBRARIES(computation -lprofiler)
+endif(USE_GOOGLE_PERF)
+
 install (TARGETS computation DESTINATION bin)
 
 if (USE_TESTING)

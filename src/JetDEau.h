@@ -24,6 +24,12 @@
 #include <sys/times.h>
 #include "CalculateTimeStepNonIso.h"
 #include "SolvePressureUmfpack.h"
+
+#include "Config.h"
+
+#if Use_GooglePerf
+	#include <google/profiler.h>
+#endif
 using namespace std;
 class JetDEau
 {

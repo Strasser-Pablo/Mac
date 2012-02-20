@@ -1,19 +1,22 @@
 JetDEau::JetDEau():m_fluid(1),m_air(0),m_cfl_factor(0.25),
-m_table(m_O),m_w(m_table,m_part),m_init(m_w,m_fluid,m_air,m_v_1_h,m_v_h,5,m_stag),
+m_table(m_O),m_w(m_table,m_part),m_init(m_w,m_fluid,m_air,m_v_1_h,m_v_h,10,m_stag),
 m_stag(m_v_h),m_get_v(m_w,m_stag,m_v_1_h),
 m_conv(m_w,m_rungeKutta,m_get_v,m_stag,m_dt,m_fluid,m_N_V),
 m_grav(m_w,m_g,m_dt,m_fluid,m_N_V),
 m_viscosity(m_w,m_viscosity_const,m_dt,m_v_1_h,m_fluid),
 m_out(m_w,m_stag,m_v_h,m_t,1),m_time_step(m_w,m_v_1_h,m_cfl_factor,m_dt,m_fluid),
-m_pres(m_w,m_v_1_h,m_fluid),m_pres_umf(m_w,m_v_1_h,m_fluid),m_extrapolate_v(m_w,m_fluid,5,m_N_V),
+m_pres(m_w,m_v_1_h,m_fluid),m_pres_umf(m_w,m_v_1_h,m_fluid),m_extrapolate_v(m_w,m_fluid,10,m_N_V),
 m_move_part(m_w,m_rungeKutta,m_get_v,m_dt),
 m_time_out("timing.csv", fstream::out),
 m_conv_time(double(sysconf(_SC_CLK_TCK)))
 {
+	#if Use_GooglePerf
+		ProfilerStart("perf.prof");
+	#endif
 	m_N_V=m_stag.GetNeighborsVelocity();
 	m_t=0;
 	m_viscosity_const=0.000001;
-	m_viscosity_const=0;
+	//m_viscosity_const=0;
 	Physvector<3,double> speed;
 	speed.SetAll(0);
 	double speedmax=55;
@@ -83,7 +86,6 @@ void JetDEau::Calculate()
 	m_grav.Calculate();
 	m_time_ticks_end=times(&m_time_end);
 	m_time_gravity=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
-	
 	cout<<"viscosity"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
 	m_viscosity.Calculate();
@@ -112,7 +114,7 @@ void JetDEau::Calculate()
 	cout<<"output"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
 	 
-	  m_t+=m_dt;
+	m_t+=m_dt;
 	m_out.Calculate();
 	
 	m_time_ticks_end=times(&m_time_end);
@@ -120,4 +122,7 @@ void JetDEau::Calculate()
 	
 	cout<<"end"<<endl;
 	m_time_out<<"cell number : "<<m_w.m_mac_grid.size()<<" particle number "<<m_w.m_particle_list.size()<<" time intit: "<<m_time_init<<" time timestep: "<<m_time_time_step<<" time convect: "<<m_time_convect<<" time gravity: "<<m_time_gravity<<" time viscosity: "<<m_time_viscosity<<" time pressure: "<<m_time_pressure<<" time extrapolation: "<<m_time_extrapolate<<" time move: "<<m_time_move<<" time output: "<<m_time_output<<endl;
+	#if Use_GooglePerf
+		ProfilerFlush();
+	#endif
 }
