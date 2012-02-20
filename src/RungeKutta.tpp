@@ -22,9 +22,9 @@ void RungeKutta<TypeData,TypeFunctor,TypeTime>::Calculate(TypeData &data0, TypeF
 	TypeData k=functor(data0);
 	double frac=1./6.;
 	dataResult=data0+frac*timeStep*k;
-	 k=functor(data0+k*(timeStep/2.0));
+	k=functor(data0+k*(timeStep/2.0));
 	dataResult+=2.0*k*frac*timeStep;
-	 k=functor(data0+k*(timeStep/2.0));
+	k=functor(data0+k*(timeStep/2.0));
 	dataResult+=2.0*k*frac*timeStep;
 	k=functor(data0+k*timeStep);
 	dataResult+=k*frac*timeStep;
