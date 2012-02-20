@@ -55,9 +55,8 @@ void ExtrapolateCellFluid<TypeWorld>::Calculate()
 						if(i<=1)
 						{
 							Physvector<type_dim,int> ntemp;
-							if(m_neighv.Get(i,ntemp))
+							if(m_neighv.Get(comp,ntemp))
 							{
-								
 								Physvector<type_dim,int> ntemp2=it.key()-ntemp;
 								m_world.m_mac_grid[ntemp2].GetLayer(lay);
 								if(lay==0)

@@ -237,6 +237,9 @@ class Test_MacConvect : public CxxTest::TestSuite
 		vvv.Set(1,1);
 		vvv.Set(2,0);
 		Nv.Set(1,vvv);
+		vvv.Set(1,0);
+		vvv.Set(2,1);
+		Nv.Set(2,vvv);
 		ExtrapolateCellFluid<world>  Ex(W,1,1,Nv);
 		Ex.Calculate();
 		vkey.Set(1,0);
@@ -253,7 +256,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		W.m_mac_grid[vkey].GetSpeed(tempspeed);
 		TS_ASSERT_EQUALS(lay,1);
 		TS_ASSERT_DELTA(tempspeed.Get(1),0.0,eps);
-		TS_ASSERT_DELTA(tempspeed.Get(2),0.0,eps);
+		TS_ASSERT_DELTA(tempspeed.Get(2),3.0,eps);
 		vkey.Set(1,-1);
 		W.m_mac_grid[vkey].GetLayer(lay);
 		W.m_mac_grid[vkey].GetSpeed(tempspeed);
@@ -267,7 +270,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		W.m_mac_grid[vkey].GetSpeed(tempspeed);
 		TS_ASSERT_EQUALS(lay,1);
 		TS_ASSERT_DELTA(tempspeed.Get(1),2.0,eps);
-		TS_ASSERT_DELTA(tempspeed.Get(2),3.0,eps);
+		TS_ASSERT_DELTA(tempspeed.Get(2),0.0,eps);
 		vkey.Set(2,-1);
 		W.m_mac_grid[vkey].GetLayer(lay);
 		W.m_mac_grid[vkey].GetSpeed(tempspeed);

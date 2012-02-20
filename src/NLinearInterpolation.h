@@ -41,7 +41,7 @@ class NLinearInterpolation
 	 * \exception InternalError if prof is bigger than the stop condition.
 	 * This cannot normaly happen.
 	 **/
-	type_data SubElement( Physvector<type_dim,int>& el,const Physvector<type_dim,double>& posdelta0scaled,const Physvector<type_dim,int> &key0 ,int ind,int prof=1);
+	inline type_data SubElement( Physvector<type_dim,int>& el,const Physvector<type_dim,double>& posdelta0scaled,const Physvector<type_dim,int> &key0 ,int ind,int prof=1);
 public:
 
 /**
