@@ -24,7 +24,7 @@ include (InstallRequiredSystemLibraries)
 include (CPack)
 endif(USE_INSTALLATION)
 
-ADD_DEFINITIONS(-march=native)
+ADD_DEFINITIONS(-march=native -std=c++0x)
 
 FIND_PACKAGE(VTK REQUIRED)
 INCLUDE(${VTK_USE_FILE})
