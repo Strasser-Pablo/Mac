@@ -15,14 +15,14 @@ using namespace std;
  * Find the correct pressure to have an incompressible fluid.
  * Using the library umfpack.
  **/
-template<class TypeWorld>
+template<class TypeWorld,class TypeGetCellType>
 class SolvePressureUmfpack
 {
 	static const int type_dim=TypeWorld::type_dim;
 	typedef typename TypeWorld::type_data type_data;
 	typedef typename TypeWorld::type_cell type_cell;
 	typedef  KeyTableMap<typename TypeWorld::type_key,int,PhysvectorKeyOrder<type_dim,int > > type_to_key;
-	const type_cell& m_fluid;
+	TypeGetCellType &m_GetCellType;
 	TypeWorld & m_world;
 	const Physvector<type_dim,type_data> & m_1_h;
 	int* m_offset;
@@ -57,9 +57,9 @@ class SolvePressureUmfpack
 	 **/
 	void CalculateB(int iline,Physvector<type_dim,int> key);
 	
-	typename SolvePressureUmfpack<TypeWorld>::type_data CalculateLaplacienInCell( Physvector<type_dim,int> key );
+	typename SolvePressureUmfpack<TypeWorld,TypeGetCellType>::type_data CalculateLaplacienInCell( Physvector<type_dim,int> key );
 	
-	typename SolvePressureUmfpack<TypeWorld>::type_data CalculateDivergence( Physvector<type_dim,int> key );
+	typename SolvePressureUmfpack<TypeWorld,TypeGetCellType>::type_data CalculateDivergence( Physvector<type_dim,int> key );
 public:
 /**
  * @brief
@@ -68,7 +68,7 @@ public:
  * @param _1_h 1 over the spacing to use.
  * @param fluid Fluid cell value.
  **/
-	SolvePressureUmfpack(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h ,const type_cell& fluid);
+	SolvePressureUmfpack(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h ,TypeGetCellType &GetCellType);
 	
 	/**
 	 * @brief

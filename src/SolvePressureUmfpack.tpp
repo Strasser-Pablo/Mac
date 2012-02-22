@@ -4,15 +4,15 @@
  * Implementation file for class SolvePressureUmfpack.
  **/
 
-template<class TypeWorld>
-SolvePressureUmfpack<TypeWorld>::SolvePressureUmfpack(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,const type_cell& fluid):m_world(world),m_fluid(fluid),m_1_h(_1_h),m_key_to_num(m_o)
+template<class TypeWorld,class TypeGetCellType>
+SolvePressureUmfpack<TypeWorld,TypeGetCellType>::SolvePressureUmfpack(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,TypeGetCellType &GetCellType):m_world(world),m_1_h(_1_h),m_key_to_num(m_o),m_GetCellType(GetCellType)
 {
 	
 }
 
 
-template<class TypeWorld>
-void SolvePressureUmfpack<TypeWorld>::Calculate()
+template<class TypeWorld,class TypeGetCellType>
+void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::Calculate()
 {
 	int n=m_world.m_mac_grid.size();
 	int nEntry=(2*type_dim+1)*n;
@@ -31,7 +31,7 @@ void SolvePressureUmfpack<TypeWorld>::Calculate()
 		bool b;
 		type_cell type;
 		it.data().GetCellType(type);
-		if(type==m_fluid)
+		if(m_GetCellType.GetIsFluid(type))
 			{
 						for(int i2=m_iid0;i2<m_iid;++i2)
 						{
@@ -75,7 +75,7 @@ void SolvePressureUmfpack<TypeWorld>::Calculate()
 		bool b;
 		type_cell type;
 		it.data().GetCellType(type);
-		if(type==m_fluid)
+		if(m_GetCellType.GetIsFluid(type))
 			{
 				//cout<<"r "<<CalculateDivergence(it.key())-CalculateLaplacienInCell(it.key())<<endl;
 			}
@@ -94,8 +94,8 @@ void SolvePressureUmfpack<TypeWorld>::Calculate()
 }
 
 
-template<class TypeWorld>
-void SolvePressureUmfpack<TypeWorld>::SetSpeed()
+template<class TypeWorld,class TypeGetCellType>
+void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::SetSpeed()
 {
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
@@ -121,7 +121,7 @@ void SolvePressureUmfpack<TypeWorld>::SetSpeed()
 	{
 		type_cell type;
 		it.data().GetCellType(type);
-		if(type==m_fluid){
+		if(m_GetCellType.GetIsFluid(type)){
 			if(type_dim==3)
 			{
 			if(it.key().Get(2)==0)
@@ -134,8 +134,8 @@ void SolvePressureUmfpack<TypeWorld>::SetSpeed()
 	}
 }
 
-template<class TypeWorld>
-void SolvePressureUmfpack<TypeWorld>::CalculateB(int iline,Physvector<type_dim,int> key)
+template<class TypeWorld,class TypeGetCellType>
+void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateB(int iline,Physvector<type_dim,int> key)
 {
 	type_data ret=0;
 	for(int i=1;i<=type_dim;++i)
@@ -151,7 +151,7 @@ void SolvePressureUmfpack<TypeWorld>::CalculateB(int iline,Physvector<type_dim,i
 		m_world.m_mac_grid[key].GetSpeed(temp);
 		type_cell c;
 		m_world.m_mac_grid[key].GetCellType(c);
-		if(c!=m_fluid)
+		if(!m_GetCellType.GetIsFluid(c))
 		{
 		type_data p;
 		m_world.m_mac_grid[key].GetPressure(p);
@@ -160,7 +160,7 @@ void SolvePressureUmfpack<TypeWorld>::CalculateB(int iline,Physvector<type_dim,i
 		ret+=temp.Get(i)*m_1_h.Get(i);
 		key.GetRef(i)-=2;
 		m_world.m_mac_grid[key].GetCellType(c);
-		if(c!=m_fluid)
+		if(!m_GetCellType.GetIsFluid(c))
 		{
 		type_data p;
 		m_world.m_mac_grid[key].GetPressure(p);
@@ -171,8 +171,8 @@ void SolvePressureUmfpack<TypeWorld>::CalculateB(int iline,Physvector<type_dim,i
 	m_b[iline]=ret;
 }
 
-template<class TypeWorld>
-void SolvePressureUmfpack<TypeWorld>::CalculateAColumn(int icol,int& inumb,	Physvector<type_dim,int> key)
+template<class TypeWorld,class TypeGetCellType>
+void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateAColumn(int icol,int& inumb,	Physvector<type_dim,int> key)
 {
 	int inumb0=inumb;
 	++inumb;
@@ -200,7 +200,7 @@ void SolvePressureUmfpack<TypeWorld>::CalculateAColumn(int icol,int& inumb,	Phys
 			{
 				diagval-=m_1_h.Get(i)*m_1_h.Get(i);
 			}
-			if(c==m_fluid)
+			if(m_GetCellType.GetIsFluid(c))
 			{
 				m_key_to_num[key]=m_iid;
 				m_num_to_key[m_iid]=key;
@@ -229,7 +229,7 @@ void SolvePressureUmfpack<TypeWorld>::CalculateAColumn(int icol,int& inumb,	Phys
 			}
 			type_cell c;
 			m_world.m_mac_grid[key].GetCellType(c);
-			if(c==m_fluid)
+			if(m_GetCellType.GetIsFluid(c))
 			{
 				m_key_to_num[key]=m_iid;
 				m_num_to_key[m_iid]=key;
@@ -266,8 +266,8 @@ void SolvePressureUmfpack<TypeWorld>::CalculateAColumn(int icol,int& inumb,	Phys
 }
 
 
-template<class TypeWorld>
-typename SolvePressureUmfpack<TypeWorld>::type_data SolvePressureUmfpack<TypeWorld>::CalculateDivergence( Physvector<type_dim,int> key )
+template<class TypeWorld,class TypeGetCellType>
+typename SolvePressureUmfpack<TypeWorld,TypeGetCellType>::type_data SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateDivergence( Physvector<type_dim,int> key )
 {
 	type_data ret=0;
 	for(int i=1;i<=type_dim;++i)
@@ -291,8 +291,8 @@ typename SolvePressureUmfpack<TypeWorld>::type_data SolvePressureUmfpack<TypeWor
 	return ret;
 }
 
-template<class TypeWorld>
-typename SolvePressureUmfpack<TypeWorld>::type_data SolvePressureUmfpack<TypeWorld>::CalculateLaplacienInCell( Physvector<type_dim,int> key )
+template<class TypeWorld,class TypeGetCellType>
+typename SolvePressureUmfpack<TypeWorld,TypeGetCellType>::type_data SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateLaplacienInCell( Physvector<type_dim,int> key )
 {
 	type_data res=0;
 	for(int i=1;i<=type_dim;++i)
