@@ -199,9 +199,6 @@ class Test_NLinearInterpolation : public CxxTest::TestSuite
 		Physvector<1,double> vh;
 		vh.Set(1,1.0);
 		NLinearInterpolation<world> Nlin(W,vh);
-		InternalError e("a test error");
-		e.what();
-		TS_ASSERT_THROWS(Nlin.Boum(),InternalError);
 	}
 }
 ;
