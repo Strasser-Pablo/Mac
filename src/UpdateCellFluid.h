@@ -21,7 +21,7 @@ using namespace std;
  * If a cell is empty but with a constant speed state.
  * A particle is created in it's center and it's border in the constant speed direction. 
  **/
-template <class TypeWorld,class TypeStagPos,class TypeGetCellType>
+template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
 class UpdateCellFluid
 {
 	TypeWorld & m_world;
@@ -34,6 +34,7 @@ class UpdateCellFluid
 	ParticleToKey< type_particle,type_key_vect_data,type_data,type_dim> m_to_key;
 	TypeGetCellType &m_GetCellType;
 	TypeStagPos & m_stag_pos;
+	TypeCondPart & m_condpart;
 	const Physvector<type_dim,type_data> &m_h;
 public:
 	/**
@@ -42,7 +43,7 @@ public:
 	 * @param world World to use.
 	 * @param _1_h 1/h used to convert position to key.  
 	 **/
-	UpdateCellFluid(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos);
+	UpdateCellFluid(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart);
 	/**
 	 * @brief
 	 * Do the update.

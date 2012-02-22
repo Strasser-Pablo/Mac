@@ -3,14 +3,14 @@
  * @brief
  * Implementation file for class UpdateCellFluid.
  **/
-template <class TypeWorld,class TypeStagPos,class TypeGetCellType>
-UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType>::UpdateCellFluid(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos):m_world(world),m_to_key(_1_h,h),m_stag_pos(stag_pos),m_h(h),m_GetCellType(GetCellType)
+template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
+UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCellFluid(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart):m_world(world),m_to_key(_1_h,h),m_stag_pos(stag_pos),m_h(h),m_GetCellType(GetCellType),m_condpart(condpart)
 {
 	
 }
 
-template <class TypeWorld,class TypeStagPos,class TypeGetCellType>
-void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType>::Update()
+template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
+void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update()
 {
 	typename TypeWorld::type_key tempkey;
 	for(typename TypeWorld::type_tablecontainer::iterator it= m_world.m_particle_list.begin();it!=m_world.m_particle_list.end();++it)
@@ -18,7 +18,7 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType>::Update()
 		tempkey=m_to_key.ToKey(*it);
 		if(type_dim==3)
 		{
-			if(tempkey.Get(2)<-5)
+			if(m_condpart(tempkey))
 			{
 				it=m_world.m_particle_list.erase(it);
 				continue;

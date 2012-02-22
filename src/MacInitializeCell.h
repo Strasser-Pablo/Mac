@@ -23,14 +23,14 @@
  * 
  * @tparam TypeWorld type of world used.
  **/
-template<class TypeWorld,class TypeStagPos,class TypeGetCellType >
+template<class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart >
 class MacInitializeCell
 {
 	typedef typename TypeWorld::type_data type_data;
 	typedef typename TypeWorld::type_cell type_cell;
 	static const int type_dim=TypeWorld::type_dim;
 	 UpdateCellToInitialLayer<TypeWorld> mc_init;
-	 UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType> mc_fluid;
+	 UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart> mc_fluid;
 	 UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType> mc_layer;
 	 UpdateDeleteCell<TypeWorld> mc_delete;
 public:
@@ -43,7 +43,7 @@ public:
 	 * @param _1_h 1 over the celle spacing.
 	 * @param level Depth to use.
 	 **/
-	MacInitializeCell(TypeWorld &world, TypeGetCellType & GetCellType,Physvector<type_dim,type_data>& _1_h,Physvector<type_dim,type_data> &h,int level,TypeStagPos & stag_pos);
+	MacInitializeCell(TypeWorld &world, TypeGetCellType & GetCellType,Physvector<type_dim,type_data>& _1_h,Physvector<type_dim,type_data> &h,int level,TypeStagPos & stag_pos,TypeCondPart &condpart);
 	void Update();
 	void PrepareConstSpeed();
 };
