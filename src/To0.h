@@ -14,8 +14,7 @@
  **/
 template<class T>
 struct To0{
-	static const bool implement=false;
-	static const T value;
+	static constexpr bool implement=false;
 };
 
 /**
@@ -28,9 +27,9 @@ struct To0<double>{
 	 * @brief
 	 * Value 0. Used to know the 0 value.
 	 **/
-	static const double value=0;
+	static constexpr double value=0;
 	
-	static const bool implement=true;
+	static constexpr bool implement=true;
 };
 
 template<>
@@ -39,8 +38,8 @@ struct To0<int>{
 	 * @brief
 	 * Value 0. Used to know the 0 value.
 	 **/
-	static const double value=0;
+	static constexpr double value=0;
 	
-	static const bool implement=true;
+	static constexpr bool implement=true;
 };
 #endif
