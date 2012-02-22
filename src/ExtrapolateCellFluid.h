@@ -24,7 +24,7 @@ using namespace std;
   * typedef type_keytable key table.
   * A member m_mac_grid that is a key table.
   **/
-template <class TypeWorld>
+template <class TypeWorld,class TypeGetCellType>
 class ExtrapolateCellFluid
 {
 	TypeWorld & m_world;
@@ -33,8 +33,7 @@ class ExtrapolateCellFluid
 	typedef typename TypeWorld::type_key_vect type_key_vect;
 	typedef typename TypeWorld::type_key_vect::type_data type_key_vect_data;
 	typedef typename TypeWorld::type_data type_data;
-	type_cell m_fluid;
-	SetLayerFluidCell<TypeWorld> m_layer_fluid;
+	SetLayerFluidCell<TypeWorld,TypeGetCellType> m_layer_fluid;
 	int m_level;
 	NeighborsVelocity<type_dim,int>& m_neighv;
 public:
@@ -47,7 +46,7 @@ public:
 	 * @param neighv Object reveling if because of staggered grid some air cell velocity component are in boundary between water cell.
 	 * And need so to be considered water component.
 	 **/
-	ExtrapolateCellFluid(TypeWorld & world, type_cell fluid,int level,NeighborsVelocity<type_dim,int>& neighv);
+	ExtrapolateCellFluid(TypeWorld & world, TypeGetCellType & GetCellType,int level,NeighborsVelocity<type_dim,int>& neighv);
 	/**
 	 * @brief
 	 * Calculate the Extrapolation.

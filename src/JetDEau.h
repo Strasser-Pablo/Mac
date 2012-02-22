@@ -75,7 +75,7 @@ class JetDEau
 	MacInitializeCell<world,type_stag,type_get_cell_type> m_init;
 	MacApplyViscosity<world> m_viscosity;
 	CalculateTimeStepNonIso<world,double> m_time_step;
-	ExtrapolateCellFluid<world> m_extrapolate_v;
+	ExtrapolateCellFluid<world,type_get_cell_type> m_extrapolate_v;
 	MacMoveParticle<world,type_meth,type_vel,type_stag> m_move_part;
 	fstream m_time_out;
 	double m_conv_time;

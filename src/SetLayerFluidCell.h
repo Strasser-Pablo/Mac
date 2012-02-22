@@ -10,7 +10,7 @@
  * @brief
  * Set All fluid cell layer to 0. And non fluid cell layer to -1.
  **/
-template <class TypeWorld>
+template <class TypeWorld,class TypeGetCellType>
 class SetLayerFluidCell
 {
 	TypeWorld & m_world;
@@ -19,7 +19,7 @@ class SetLayerFluidCell
 	typedef typename TypeWorld::type_key_vect type_key_vect;
 	typedef typename TypeWorld::type_key_vect::type_data type_key_vect_data;
 	typedef typename TypeWorld::type_data type_data;
-	type_cell m_fluid;
+	TypeGetCellType &m_GetCellType;
 public:
 /**
  * @brief
@@ -27,7 +27,7 @@ public:
  * @param world World to use.
  * @param fluid Value of fluid cell.
  **/
-	SetLayerFluidCell(TypeWorld & world,type_cell fluid);
+	SetLayerFluidCell(TypeWorld & world,TypeGetCellType &GetCellType);
 	/**
 	 * @brief
 	 * Do the calculation.

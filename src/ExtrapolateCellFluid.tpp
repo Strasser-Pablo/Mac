@@ -4,15 +4,15 @@
  * Implementation file for class ExtrapolateCellFluid.
  **/
 
-template <class TypeWorld>
-ExtrapolateCellFluid<TypeWorld>::ExtrapolateCellFluid(TypeWorld & world, type_cell fluid,int level,NeighborsVelocity<type_dim,int>& neighv):m_world(world),m_fluid(fluid),m_level(level),m_layer_fluid(world,fluid),m_neighv(neighv)
+template <class TypeWorld,class TypeGetCellType>
+ExtrapolateCellFluid<TypeWorld,TypeGetCellType>::ExtrapolateCellFluid(TypeWorld & world, TypeGetCellType & GetCellType,int level,NeighborsVelocity<type_dim,int>& neighv):m_world(world),m_level(level),m_layer_fluid(world,GetCellType),m_neighv(neighv)
 {
 	
 }
 
 
-template <class TypeWorld>
-void ExtrapolateCellFluid<TypeWorld>::Calculate()
+template <class TypeWorld,class TypeGetCellType>
+void ExtrapolateCellFluid<TypeWorld,TypeGetCellType>::Calculate()
 {
 	m_layer_fluid.Calculate();
 	for(int i=1;i<=m_level;++i)
@@ -75,8 +75,8 @@ void ExtrapolateCellFluid<TypeWorld>::Calculate()
 }
 
 
-template <class TypeWorld>
-void ExtrapolateCellFluid<TypeWorld>::Calculate2()
+template <class TypeWorld,class TypeGetCellType>
+void ExtrapolateCellFluid<TypeWorld,TypeGetCellType>::Calculate2()
 {
 	m_layer_fluid.Calculate();
 	for(int i=1;i<=m_level;++i)

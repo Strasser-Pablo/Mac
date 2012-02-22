@@ -9,6 +9,7 @@
 #include "../src/KeyTableMap.h"
 #include "../src/Particle.h"
 #include "../src/SetLayerFluidCell.h"
+#include "../src/GetCellType.h"
 #define eps 1e-10
 class Test_MacConvect : public CxxTest::TestSuite
 {
@@ -23,6 +24,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<1,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<1,double> temp;
 		temp.Set(1,2.0);
 		mac c1(temp,0,1,0);
@@ -39,7 +41,12 @@ class Test_MacConvect : public CxxTest::TestSuite
 		k[vkey]=c3;
 		list_part lp;
 		world W(k,lp);
-		SetLayerFluidCell<world> FluidCell(W,1);
+		int m_fluid=1;
+		int m_air=0;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		SetLayerFluidCell<world,type_getcelltype> FluidCell(W,m_GetCellType);
 		FluidCell.Calculate();
 		vkey.Set(1,0);
 		int lay;

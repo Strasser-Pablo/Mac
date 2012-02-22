@@ -4,20 +4,20 @@
  * Implementation file for class SetLayerFluidCell.
  **/
 
-template <class TypeWorld>
-SetLayerFluidCell<TypeWorld>::SetLayerFluidCell(TypeWorld & world,type_cell fluid):m_world(world),m_fluid(fluid)
+template <class TypeWorld,class TypeGetCellType>
+SetLayerFluidCell<TypeWorld,TypeGetCellType>::SetLayerFluidCell(TypeWorld & world,TypeGetCellType &GetCellType):m_world(world),m_GetCellType(GetCellType)
 {
 	
 }
 
-template <class TypeWorld>
-void SetLayerFluidCell<TypeWorld>::Calculate()
+template <class TypeWorld,class TypeGetCellType>
+void SetLayerFluidCell<TypeWorld,TypeGetCellType>::Calculate()
 {
 		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		type_cell type;
 		it.data().GetCellType(type);
-		if(type==m_fluid)
+		if(m_GetCellType.GetIsFluid(type))
 		{
 		it.data().SetLayer(0);
 		}

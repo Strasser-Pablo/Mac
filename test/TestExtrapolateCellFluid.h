@@ -9,6 +9,7 @@
 #include "../src/KeyTableMap.h"
 #include "../src/Particle.h"
 #include "../src/ExtrapolateCellFluid.h"
+#include "../src/GetCellType.h"
 #define eps 1e-10
 class Test_MacConvect : public CxxTest::TestSuite
 {
@@ -23,6 +24,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<1,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<1,double> temp;
 		temp.Set(1,2.0);
 		mac c1(temp,0,1,0);
@@ -42,7 +44,12 @@ class Test_MacConvect : public CxxTest::TestSuite
 		list_part lp;
 		world W(k,lp);
 		NeighborsVelocity<1,int> Nv;
-		ExtrapolateCellFluid<world>  Ex(W,1,1,Nv);
+		int m_air=0;
+		int m_fluid=1;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		ExtrapolateCellFluid<world,type_getcelltype>  Ex(W,m_GetCellType,1,Nv);
 		Ex.Calculate();
 		vkey.Set(1,0);
 		int lay;
@@ -73,6 +80,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<1,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<1,double> temp;
 		temp.Set(1,2.0);
 		mac c1(temp,0,1,0);
@@ -95,7 +103,12 @@ class Test_MacConvect : public CxxTest::TestSuite
 		Physvector<1,int> vv;
 		vv.Set(1,1);
 		Nv.Set(1,vv);
-		ExtrapolateCellFluid<world>  Ex(W,1,1,Nv);
+		int m_air=0;
+		int m_fluid=1;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		ExtrapolateCellFluid<world,type_getcelltype>  Ex(W,m_GetCellType,1,Nv);
 		Ex.Calculate();
 		vkey.Set(1,0);
 		int lay;
@@ -126,6 +139,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<2,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<2,double> temp;
 		temp.Set(1,2.0);
 		temp.Set(2,3.0);
@@ -155,7 +169,12 @@ class Test_MacConvect : public CxxTest::TestSuite
 		list_part lp;
 		world W(k,lp);
 		NeighborsVelocity<2,int> Nv;
-		ExtrapolateCellFluid<world>  Ex(W,1,1,Nv);
+		int m_air=0;
+		int m_fluid=1;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		ExtrapolateCellFluid<world,type_getcelltype>  Ex(W,m_GetCellType,1,Nv);
 		Ex.Calculate();
 		vkey.Set(1,0);
 		vkey.Set(2,0);
@@ -204,6 +223,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<2,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<2,double> temp;
 		temp.Set(1,2.0);
 		temp.Set(2,3.0);
@@ -240,7 +260,12 @@ class Test_MacConvect : public CxxTest::TestSuite
 		vvv.Set(1,0);
 		vvv.Set(2,1);
 		Nv.Set(2,vvv);
-		ExtrapolateCellFluid<world>  Ex(W,1,1,Nv);
+		int m_air=0;
+		int m_fluid=1;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		ExtrapolateCellFluid<world,type_getcelltype>  Ex(W,m_GetCellType,1,Nv);
 		Ex.Calculate();
 		vkey.Set(1,0);
 		vkey.Set(2,0);
