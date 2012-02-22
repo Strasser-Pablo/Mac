@@ -18,10 +18,14 @@ void Output<TypeWorld,TypeGetStagSpeedPos>::Calculate()
 		//fstream p(str2.c_str(),fstream::out);
 		m_out_speed.Output(str2.c_str(),i);
 	}
-		string str2=str+string("_4.vtu");
+		stringstream ss3;
+		ss3<<type_dim+1;
+		string str2=str+string("_")+ss3.str()+string(".vtu");
 		//fstream p(str2.c_str(),fstream::out);
 		m_out_speed.OutputPressure(str2.c_str());
-		string str3=str+string("_5.vtu");
+		stringstream ss4;
+		ss4<<type_dim+2;
+		string str3=str+string("_")+ss4.str()+string(".vtu");
 		//fstream p2(str3.c_str(),fstream::out);
 		m_out_speed.OutputParticle(str3.c_str());
 		static fstream out("animation.pvd",fstream::out) ;
@@ -30,12 +34,10 @@ void Output<TypeWorld,TypeGetStagSpeedPos>::Calculate()
 			out<<"<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\">"<<endl;
 			out<<"<Collection>"<<endl;
 		}
-		
-	out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\"1\" file=\""<<str<<"_1.vtu\" />"<<endl;
-	out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\"2\" file=\""<<str<<"_2.vtu\" />"<<endl;
-	out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\"3\" file=\""<<str<<"_3.vtu\" />"<<endl;
-	out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\"4\" file=\""<<str<<"_4.vtu\" />"<<endl;
-	out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\"5\" file=\""<<str<<"_5.vtu\" />"<<endl;
+	for(int i=1;i<=type_dim+2;++i)
+	{
+	out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\""<<i<<"\" file=\""<<str<<"_"<<i<<".vtu\" />"<<endl;
+	}
 	streampos pos;
 	pos=out.tellp();
 	out<<"</Collection>"<<endl;
