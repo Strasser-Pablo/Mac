@@ -7,6 +7,7 @@
 #include "../src/MacCell.h"
 #include "../src/Particle.h"
 #include "../src/MacGetStagPos.h"
+#include "../src/GetCellType.h"
 #define eps 1e-10
 class Test_UpdateCellFluid : public CxxTest::TestSuite
 {
@@ -15,6 +16,7 @@ class Test_UpdateCellFluid : public CxxTest::TestSuite
 	{
 		typedef MacWorld<KeyTableMap<Physvector<3,int>,MacCell<3,double,int>,PhysvectorKeyOrder<3,int > >, TableContainerList<Particle<Physvector<3,double> > > > type_world;
 		typedef MacGetStagPos<type_world>  type_stag;
+		typedef GetCellType<type_world> type_getcelltype;
 		PhysvectorKeyOrder<3,int> korder;
 		
 		KeyTableMap<Physvector<3,int>,MacCell<3,double,int>,PhysvectorKeyOrder<3,int > > grid(korder);
@@ -37,7 +39,11 @@ class Test_UpdateCellFluid : public CxxTest::TestSuite
 		v_h.SetAll(1.0);
 		type_stag m_stag(v_h);
 		int m_fluid=1;
-		UpdateCellFluid<type_world,type_stag > U(world,v_h,v_h,m_fluid,m_stag);
+		int m_air=0;
+		int m_boundary_fluid=2;
+		int m_boundary_air=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		UpdateCellFluid<type_world,type_stag ,type_getcelltype> U(world,v_h,v_h,m_GetCellType,m_stag);
 		U.Update();
 		MacWorld<KeyTableMap<Physvector<3,int>,MacCell<3,double,int>,PhysvectorKeyOrder<3,int > >, TableContainerList<Particle<Physvector<3,double> > > >::type_keytable::const_iterator it=world.m_mac_grid.begin();
 		

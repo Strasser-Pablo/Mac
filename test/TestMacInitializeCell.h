@@ -8,6 +8,7 @@
 #include "../src/KeyTableMap.h"
 #include "../src/Particle.h"
 #include "../src/MacGetStagPos.h"
+#include "../src/GetCellType.h"
 #define eps 1e-10
 class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 {
@@ -22,6 +23,7 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
 		typedef MacGetStagPos<world>  type_stag;
+		typedef GetCellType<world> type_getcelltype;
 		
 		list_part lpart;
 		order O;
@@ -40,7 +42,11 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		type_stag m_stag(m_v_h);
 		int m_fluid=1;
 		int m_air=0;
-		MacInitializeCell<world,type_stag>init(w,m_fluid,m_air,m_v_h,m_v_h,2,m_stag);
+		int m_boundary_air=3;
+		int m_boundary_fluid=2;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		
+		MacInitializeCell<world,type_stag,type_getcelltype>init(w,m_GetCellType,m_v_h,m_v_h,2,m_stag);
 		init.Update();
 		keytable &res=w.m_mac_grid;
 		k1.SetAll(0);

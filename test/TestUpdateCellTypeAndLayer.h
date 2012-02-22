@@ -7,6 +7,7 @@
 #include "../src/TableContainerList.h"
 #include "../src/KeyTableMap.h"
 #include "../src/Particle.h"
+#include "../src/GetCellType.h"
 #define eps 1e-10
 class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 {
@@ -20,7 +21,7 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<3,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
-		
+		typedef GetCellType<world> type_getcelltype;
 		list_part lpart;
 		order O;
 		keytable table(O);
@@ -31,7 +32,10 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		world w(table,lpart);
 		int m_fluid=1;
 		int m_air=0;
-		UpdateCellTypeAndLayer<world> Up(w,m_fluid,m_air,2);
+		int m_boundary_fluid=2;
+		int m_boundary_air=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		UpdateCellTypeAndLayer<world,type_getcelltype> Up(w,m_GetCellType,2);
 		Up.Update();
 		int type;
 		k1.Set(USEELLIPSE,1,0,0);

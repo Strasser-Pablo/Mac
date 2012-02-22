@@ -1,4 +1,5 @@
 #include <cxxtest/TestSuite.h>
+#include "../src/SolvePressureCG.h"
 #include "../src/MacWorld.h"
 #include "../src/MacCell.h"
 #include "../src/Physvector.h"
@@ -6,7 +7,8 @@
 #include "../src/TableContainerList.h"
 #include "../src/KeyTableMap.h"
 #include "../src/Particle.h"
-#include "../src/SolvePressureCG.h"
+
+
 #define eps 1e-10
 class Test_SolvePressureCG: public CxxTest::TestSuite
 {

@@ -36,7 +36,7 @@ void SolvePressureCG<TypeWorld>::Calculate()
 	type_data denom=CalculateAScalar();
 	m_stat_out<<"num "<<num<<" denom "<<denom;
 	type_data alpha=num/denom;
-	if(isnan(alpha)||isinf(alpha))
+	if(std::isnan(alpha)||std::isinf(alpha))
 	{
 		SetSpeed();
 		m_stat_out<<endl;
@@ -60,7 +60,7 @@ void SolvePressureCG<TypeWorld>::Calculate()
 	type_data beta=rsquare/num;
 	m_stat_out<<" beta "<<beta<<endl;
 	
-	if(rsquarebef<rsquare||isnan(beta)||rsquare==0)
+	if(rsquarebef<rsquare||std::isnan(beta)||rsquare==0)
 	{
 		SetSpeed();
 		m_stat_out<<endl;

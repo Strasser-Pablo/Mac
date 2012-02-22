@@ -24,6 +24,7 @@
 #include <sys/times.h>
 #include "CalculateTimeStepNonIso.h"
 #include "SolvePressureUmfpack.h"
+#include "GetCellType.h"
 
 #include "Config.h"
 
@@ -46,8 +47,12 @@ class JetDEau
 	typedef MacGetStagPos<world>  type_stag;
 	typedef MacGetVelocity<world,type_stag > type_vel;
 	typedef RungeKutta<Physvector<dim,double> ,MacConvectSpeedFunctor<world,type_vel>,double >  type_meth;
+	typedef GetCellType<world> type_get_cell_type;
+	type_get_cell_type m_GetCellType;
 	int m_fluid;
 	int m_air;
+	int m_boundary_air;
+	int m_boundary_fluid;
 	type_meth m_rungeKutta;
 	SolvePressureCG<world> m_pres;
 	SolvePressureUmfpack<world> m_pres_umf;
@@ -67,7 +72,7 @@ class JetDEau
 	Physvector<dim,double> m_g;
 	Physvector<dim,double> m_v_h;
 	Physvector<dim,double> m_v_1_h;
-	MacInitializeCell<world,type_stag> m_init;
+	MacInitializeCell<world,type_stag,type_get_cell_type> m_init;
 	MacApplyViscosity<world> m_viscosity;
 	CalculateTimeStepNonIso<world,double> m_time_step;
 	ExtrapolateCellFluid<world> m_extrapolate_v;

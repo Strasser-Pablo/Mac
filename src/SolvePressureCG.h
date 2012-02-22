@@ -1,7 +1,8 @@
 #ifndef SolvePressureCG_H
 #define SolvePressureCG_H
 #include "KeyTableMap.h"
-#include <math.h>
+#include "PhysvectorKeyOrder.h"
+#include <cmath>
 #include "NeighborsPhysvector.h"
 #include <iostream>
 #include <fstream>
