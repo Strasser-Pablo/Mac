@@ -3,13 +3,13 @@
  * @brief
  * Implementation file for class UpdateCellTypeAndLayer.
  **/
-template <class TypeWorld,class TypeGetCellType>
-UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType>::UpdateCellTypeAndLayer(TypeWorld & world,TypeGetCellType & GetCellType,int level):m_level(level),m_GetCellType(GetCellType),m_world(world){
+template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
+UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres):m_level(level),m_GetCellType(GetCellType),m_world(world),m_func_pres(func_pres){
 	
 }
 
-template <class TypeWorld,class TypeGetCellType>
-void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType>::Update()
+template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
+void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Update()
 {
 	
 	for(int i=1;i<=m_level;++i){
@@ -26,7 +26,7 @@ void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType>::Update()
 				{
 					m_world.m_mac_grid[neigh].SetCellType(m_GetCellType.GetAir());
 					m_world.m_mac_grid[neigh].SetLayer(i);
-					m_world.m_mac_grid[neigh].SetPressure(0);
+					m_world.m_mac_grid[neigh].SetPressure(m_func_pres(neigh));
 				}
 			}
 		}
@@ -35,8 +35,8 @@ void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType>::Update()
 }
 
 
-template <class TypeWorld,class TypeGetCellType>
-void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType>::PrepareConstSpeed()
+template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
+void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::PrepareConstSpeed()
 {
 
 		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)

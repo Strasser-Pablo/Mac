@@ -26,6 +26,7 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		typedef MacGetStagPos<world>  type_stag;
 		typedef GetCellType<world> type_getcelltype;
 		typedef std::function<bool(Physvector<3,int>)> type_part_cond;
+		typedef std::function<double(Physvector<3,int>)> type_pres_func;
 		
 		list_part lpart;
 		order O;
@@ -48,7 +49,8 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		int m_boundary_fluid=2;
 		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
 		type_part_cond m_part_cond=[](Physvector<3,int> key){return false;};
-		MacInitializeCell<world,type_stag,type_getcelltype,type_part_cond>init(w,m_GetCellType,m_v_h,m_v_h,2,m_stag,m_part_cond);
+		type_pres_func m_pres_func=[](Physvector<3,int> key){return 0;};
+		MacInitializeCell<world,type_stag,type_getcelltype,type_part_cond,type_pres_func>init(w,m_GetCellType,m_v_h,m_v_h,2,m_stag,m_part_cond,m_pres_func);
 		init.Update();
 		keytable &res=w.m_mac_grid;
 		k1.SetAll(0);

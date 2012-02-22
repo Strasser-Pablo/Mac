@@ -15,7 +15,7 @@ using namespace std;
   * Update the cell type to fluid if a particle is in it. And give a correct layer.
   * It create the air layer with a given depth.
   **/
-template <class TypeWorld,class TypeGetCellType>
+template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
 class UpdateCellTypeAndLayer
 {
 	typedef typename TypeWorld::type_cell type_cell;
@@ -24,6 +24,7 @@ class UpdateCellTypeAndLayer
 	int m_level;
 	static const int type_dim=TypeWorld::type_dim;
 		typedef typename TypeWorld::type_data type_data;
+		TypeFunctionPressure & m_func_pres;
 public:
 /**
  * @brief
@@ -33,7 +34,7 @@ public:
  * @param air Air value to use.
  * @param level Depth of air layer to use.
  **/
-	UpdateCellTypeAndLayer(TypeWorld & world,TypeGetCellType & GetCellType,int level=2);
+	UpdateCellTypeAndLayer(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres);
 	
 	/**
 	 * @brief

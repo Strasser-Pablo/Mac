@@ -8,6 +8,7 @@
 #include "../src/KeyTableMap.h"
 #include "../src/Particle.h"
 #include "../src/GetCellType.h"
+#include <functional>
 #define eps 1e-10
 class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 {
@@ -22,6 +23,7 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
 		typedef GetCellType<world> type_getcelltype;
+		typedef std::function<double(Physvector<3,int>)> type_pres_func;
 		list_part lpart;
 		order O;
 		keytable table(O);
@@ -35,7 +37,8 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		int m_boundary_fluid=2;
 		int m_boundary_air=3;
 		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
-		UpdateCellTypeAndLayer<world,type_getcelltype> Up(w,m_GetCellType,2);
+		type_pres_func m_pres_func=[](Physvector<3,int> key){return 0;};
+		UpdateCellTypeAndLayer<world,type_getcelltype,type_pres_func> Up(w,m_GetCellType,2,m_pres_func);
 		Up.Update();
 		int type;
 		k1.Set(USEELLIPSE,1,0,0);
