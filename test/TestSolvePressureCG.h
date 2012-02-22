@@ -7,7 +7,7 @@
 #include "../src/TableContainerList.h"
 #include "../src/KeyTableMap.h"
 #include "../src/Particle.h"
-
+#include "../src/GetCellType.h"
 
 #define eps 1e-10
 class Test_SolvePressureCG: public CxxTest::TestSuite
@@ -23,6 +23,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<1,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<1,double> temp;
 		temp.Set(1,2.0);
 		mac c1(temp,0,1,0);
@@ -41,7 +42,12 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		world W(k,lp);
 		Physvector<1,double> vh;
 		vh.Set(1,1.0);
-		SolvePressureCG<world> pres(W,vh,1);
+		int m_fluid=1;
+		int m_air=0;
+		int m_boundary_fluid=2;
+		int m_boundary_air=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		SolvePressureCG<world,type_getcelltype> pres(W,vh,m_GetCellType);
 		pres.Calculate();
 		Physvector<1,double> vtemp;
 		vkey.Set(1,0);
@@ -74,6 +80,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<1,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<1,double> temp;
 		temp.Set(1,2.0);
 		mac c1(temp,2,1,0);
@@ -92,7 +99,12 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		world W(k,lp);
 		Physvector<1,double> vh;
 		vh.Set(1,1.0);
-		SolvePressureCG<world> pres(W,vh,1);
+		int m_fluid=1;
+		int m_air=0;
+		int m_boundary_fluid=2;
+		int m_boundary_air=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		SolvePressureCG<world,type_getcelltype> pres(W,vh,m_GetCellType);
 		pres.Calculate();
 		Physvector<1,double> vtemp;
 		vkey.Set(1,0);
@@ -123,6 +135,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<1,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<1,double> temp;
 		temp.Set(1,2.0);
 		Physvector<1,double> temp2;
@@ -143,7 +156,12 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		world W(k,lp);
 		Physvector<1,double> vh;
 		vh.Set(1,1.0);
-		SolvePressureCG<world> pres(W,vh,1);
+		int m_fluid=1;
+		int m_air=0;
+		int m_boundary_fluid=2;
+		int m_boundary_air=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		SolvePressureCG<world,type_getcelltype> pres(W,vh,m_GetCellType);
 		pres.Calculate();
 		Physvector<1,double> vtemp;
 		vkey.Set(1,0);
@@ -172,6 +190,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<2,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<2,double> temp;
 		temp.Set(1,2.0);
 		temp.Set(2,0.0);
@@ -200,7 +219,12 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		Physvector<2,double> vh;
 		vh.Set(1,1.0);
 		vh.Set(2,1.0);
-		SolvePressureCG<world> press(W,vh,1);
+		int m_fluid=1;
+		int m_air=0;
+		int m_boundary_fluid=2;
+		int m_boundary_air=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		SolvePressureCG<world,type_getcelltype> press(W,vh,m_GetCellType);
 		press.Calculate();
 		Physvector<2,double> vtemp;
 		vkey.Set(1,0);
@@ -223,6 +247,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<2,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<2,double> temp;
 		temp.Set(1,2.0);
 		temp.Set(2,0.0);
@@ -251,7 +276,12 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		Physvector<2,double> vh;
 		vh.Set(1,1.0);
 		vh.Set(2,1.0);
-		SolvePressureCG<world> press(W,vh,1);
+		int m_fluid=1;
+		int m_air=0;
+		int m_boundary_fluid=2;
+		int m_boundary_air=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		SolvePressureCG<world,type_getcelltype> press(W,vh,m_GetCellType);
 		press.Calculate();
 		Physvector<2,double> vtemp;
 		vkey.Set(1,0);
@@ -274,6 +304,7 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<2,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<2,double> temp;
 		temp.Set(1,2.0);
 		temp.Set(2,0.0);
@@ -306,7 +337,12 @@ class Test_SolvePressureCG: public CxxTest::TestSuite
 		Physvector<2,double> vh;
 		vh.Set(1,1.0);
 		vh.Set(2,1.0);
-		SolvePressureCG<world> press(W,vh,1);
+		int m_fluid=1;
+		int m_air=0;
+		int m_boundary_fluid=2;
+		int m_boundary_air=3;
+		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		SolvePressureCG<world,type_getcelltype> press(W,vh,m_GetCellType);
 		press.Calculate();
 		Physvector<2,double> vtemp;
 		vkey.Set(1,0);

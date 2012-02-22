@@ -4,16 +4,16 @@
  * Implementation file for class SolvePressureCG.
  **/
 
-template<class TypeWorld>
-SolvePressureCG<TypeWorld>::SolvePressureCG(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,type_cell fluid):m_world(world),m_fluid(fluid),m_r(m_o),m_p(m_o),m_1_h(_1_h),m_vois(m_o)
+template<class TypeWorld,class TypeGetCellType>
+SolvePressureCG<TypeWorld,TypeGetCellType>::SolvePressureCG(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,TypeGetCellType & GetCellType):m_world(world),m_r(m_o),m_p(m_o),m_1_h(_1_h),m_vois(m_o),m_GetCellType(GetCellType)
 ,m_stat_out("cg_stat.csv", fstream::out)
 {
 	
 }
 
 
-template<class TypeWorld>
-void SolvePressureCG<TypeWorld>::Calculate()
+template<class TypeWorld,class TypeGetCellType>
+void SolvePressureCG<TypeWorld,TypeGetCellType>::Calculate()
 {
 	m_r.clear();
 	m_vois.clear();
@@ -22,7 +22,7 @@ void SolvePressureCG<TypeWorld>::Calculate()
 		bool b;
 		type_cell type;
 		it.data().GetCellType(type);
-		if(type==m_fluid){
+		if(m_GetCellType.GetIsFluid(type)){
 		m_r[it.key()]=CalculateDivergence(it.key());
 		m_r[it.key()]-=CalculateLaplacienInCell(it.key());
 		}
@@ -74,8 +74,8 @@ void SolvePressureCG<TypeWorld>::Calculate()
 	}
 }
 
-template<class TypeWorld>
-typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::CalculateDivergence( Physvector<type_dim,int> key )
+template<class TypeWorld,class TypeGetCellType>
+typename SolvePressureCG<TypeWorld,TypeGetCellType>::type_data SolvePressureCG<TypeWorld,TypeGetCellType>::CalculateDivergence( Physvector<type_dim,int> key )
 {
 	type_data ret=0;
 	for(int i=1;i<=type_dim;++i)
@@ -95,8 +95,8 @@ typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::Calcu
 	return ret;
 }
 
-template<class TypeWorld>
-typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::CalculateLaplacien( Physvector<type_dim,int> key )
+template<class TypeWorld,class TypeGetCellType>
+typename SolvePressureCG<TypeWorld,TypeGetCellType>::type_data SolvePressureCG<TypeWorld,TypeGetCellType>::CalculateLaplacien( Physvector<type_dim,int> key )
 {
 	type_data res=0;
 	for(int i=1;i<=type_dim;++i)
@@ -119,8 +119,8 @@ typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::Calcu
 	return res;
 }
 
-template<class TypeWorld>
-typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::CalculateLaplacienInCell( Physvector<type_dim,int> key )
+template<class TypeWorld,class TypeGetCellType>
+typename SolvePressureCG<TypeWorld,TypeGetCellType>::type_data SolvePressureCG<TypeWorld,TypeGetCellType>::CalculateLaplacienInCell( Physvector<type_dim,int> key )
 {
 	type_data res=0;
 	for(int i=1;i<=type_dim;++i)
@@ -153,8 +153,8 @@ typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::Calcu
 	return res;
 }
 
-template<class TypeWorld>
-typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::CalculateSquare()
+template<class TypeWorld,class TypeGetCellType>
+typename SolvePressureCG<TypeWorld,TypeGetCellType>::type_data SolvePressureCG<TypeWorld,TypeGetCellType>::CalculateSquare()
 {
 	type_data res=0;
 	for(typename temp_map::iterator it=m_r.begin();it!=m_r.end();++it)
@@ -165,8 +165,8 @@ typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::Calcu
 }
 
 
-template<class TypeWorld>
-typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::CalculateAScalar()
+template<class TypeWorld,class TypeGetCellType>
+typename SolvePressureCG<TypeWorld,TypeGetCellType>::type_data SolvePressureCG<TypeWorld,TypeGetCellType>::CalculateAScalar()
 {
 	type_data res=0;
 	for(typename temp_map::iterator it=m_p.begin();it!=m_p.end();++it)
@@ -176,8 +176,8 @@ typename SolvePressureCG<TypeWorld>::type_data SolvePressureCG<TypeWorld>::Calcu
 	return res;
 }
 
-template<class TypeWorld>
-void SolvePressureCG<TypeWorld>::SetSpeed()
+template<class TypeWorld,class TypeGetCellType>
+void SolvePressureCG<TypeWorld,TypeGetCellType>::SetSpeed()
 {
 	m_stat_out<<"end"<<endl;
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)

@@ -19,13 +19,13 @@ using namespace std;
  * Find the correct pressure to have an incompressible fluid.
  * Using Conjugate Gradient.
  **/
-template<class TypeWorld>
+template<class TypeWorld,class TypeGetCellType>
 class SolvePressureCG
 {
 	static const int type_dim=TypeWorld::type_dim;
 	typedef typename TypeWorld::type_data type_data;
 	typedef typename TypeWorld::type_cell type_cell;
-	const type_cell m_fluid;
+	TypeGetCellType & m_GetCellType;
 	TypeWorld & m_world;
 	const Physvector<type_dim,type_data> & m_1_h;
 	typedef KeyTableMap<typename TypeWorld::type_key,type_data,PhysvectorKeyOrder<type_dim,int> > temp_map;
@@ -52,7 +52,7 @@ public:
  * @param _1_h 1 over the spacing to use.
  * @param fluid Fluid cell value.
  **/
-	SolvePressureCG(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h ,type_cell fluid);
+	SolvePressureCG(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h ,TypeGetCellType & GetCellType);
 	
 	/**
 	 * @brief
