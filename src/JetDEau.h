@@ -27,23 +27,25 @@
 
 #include "Config.h"
 
+const int dim=2;
+
 #if Use_GooglePerf
 	#include <google/profiler.h>
 #endif
 using namespace std;
 class JetDEau
 {
-	typedef Physvector<3,int> keyvect;
-	typedef Physvector<3,double> vect;
+	typedef Physvector<dim,int> keyvect;
+	typedef Physvector<dim,double> vect;
 	typedef Particle<vect> part;
-	typedef MacCell<3,double,int> mac;
+	typedef MacCell<dim,double,int> mac;
 	typedef TableContainerList<part> list_part;
-	typedef PhysvectorKeyOrder<3,int> order;
+	typedef PhysvectorKeyOrder<dim,int> order;
 	typedef KeyTableMap<keyvect,mac,order> keytable;
 	typedef MacWorld<keytable,list_part> world;
 	typedef MacGetStagPos<world>  type_stag;
 	typedef MacGetVelocity<world,type_stag > type_vel;
-	typedef RungeKutta<Physvector<3,double> ,MacConvectSpeedFunctor<world,type_vel>,double >  type_meth;
+	typedef RungeKutta<Physvector<dim,double> ,MacConvectSpeedFunctor<world,type_vel>,double >  type_meth;
 	int m_fluid;
 	int m_air;
 	type_meth m_rungeKutta;
@@ -58,13 +60,13 @@ class JetDEau
 	Output<world,type_stag> m_out;
 	MacConvectSpeed<world,type_meth,type_vel,type_stag> m_conv;
 	MacGravity<world> m_grav;
-	NeighborsVelocity<3,int> m_N_V;
+	NeighborsVelocity<dim,int> m_N_V;
 	double m_dt;
 	double m_t;
 	double m_viscosity_const;
-	Physvector<3,double> m_g;
-	Physvector<3,double> m_v_h;
-	Physvector<3,double> m_v_1_h;
+	Physvector<dim,double> m_g;
+	Physvector<dim,double> m_v_h;
+	Physvector<dim,double> m_v_1_h;
 	MacInitializeCell<world,type_stag> m_init;
 	MacApplyViscosity<world> m_viscosity;
 	CalculateTimeStepNonIso<world,double> m_time_step;
