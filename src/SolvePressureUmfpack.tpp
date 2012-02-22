@@ -117,6 +117,21 @@ void SolvePressureUmfpack<TypeWorld>::SetSpeed()
 		}
 		it.data().SetSpeed(speed);
 	}
+	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+	{
+		type_cell type;
+		it.data().GetCellType(type);
+		if(type==m_fluid){
+			if(type_dim==3)
+			{
+			if(it.key().Get(2)==0)
+			{
+				//cout<<"key "<<it.key().Get(1)<<" "<<it.key().Get(2)<<" "<<it.key().Get(3)<<endl;
+				//cout<<"div "<<CalculateDivergence(it.key())<<endl;
+			}
+		}
+		}
+	}
 }
 
 template<class TypeWorld>
@@ -259,15 +274,19 @@ typename SolvePressureUmfpack<TypeWorld>::type_data SolvePressureUmfpack<TypeWor
 	{
 		Physvector<type_dim,type_data> temp;
 		m_world.m_mac_grid[key].GetSpeed(temp);
+		//cout<<"speed1 comp "<<i<<" "<<temp.Get(i)<<endl;
 		ret-=temp.Get(i)*m_1_h.Get(i);
+		//cout<<"speed1 contrib "<<-temp.Get(i)*m_1_h.Get(i)<<endl;
 	}
 	for(int i=1;i<=type_dim;++i)
 	{
 		Physvector<type_dim,type_data> temp;
 		key.GetRef(i)+=1;
 		m_world.m_mac_grid[key].GetSpeed(temp);
+		//cout<<"speed2 comp "<<i<<" "<<temp.Get(i)<<endl;
 		key.GetRef(i)-=1;
 		ret+=temp.Get(i)*m_1_h.Get(i);
+		//cout<<"speed2 contrib "<<temp.Get(i)*m_1_h.Get(i)<<endl;
 	}
 	return ret;
 }
