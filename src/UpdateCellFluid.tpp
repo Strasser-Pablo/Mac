@@ -4,7 +4,7 @@
  * Implementation file for class UpdateCellFluid.
  **/
 template <class TypeWorld,class TypeStagPos>
-UpdateCellFluid<TypeWorld,TypeStagPos>::UpdateCellFluid(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,type_cell& fluid,TypeStagPos & stag_pos):m_world(world),m_to_key(_1_h,h),m_fluid(fluid),m_stag_pos(stag_pos)
+UpdateCellFluid<TypeWorld,TypeStagPos>::UpdateCellFluid(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,type_cell& fluid,TypeStagPos & stag_pos):m_world(world),m_to_key(_1_h,h),m_fluid(fluid),m_stag_pos(stag_pos),m_h(h)
 {
 	
 }
@@ -55,7 +55,22 @@ void UpdateCellFluid<TypeWorld,TypeStagPos>::Update()
 					 //Test witch direction is constant.
 					 bool b2;
 					it.data().GetConstSpeed(i,b2);
-					b2=false;
+					if(type_dim==2)
+					{
+						Physvector<type_dim,type_data> keytemp=m_to_key.FromKey(it.key());
+						keytemp.GetRef(1)+=0.25*m_h.Get(1);
+						m_world.m_particle_list.push_back(type_particle(keytemp));
+						keytemp.GetRef(1)-=0.5*m_h.Get(1);
+						m_world.m_particle_list.push_back(type_particle(keytemp));
+						keytemp.GetRef(2)+=0.25*m_h.Get(2);
+						m_world.m_particle_list.push_back(type_particle(keytemp));
+						keytemp.GetRef(2)-=0.5*m_h.Get(2);
+						m_world.m_particle_list.push_back(type_particle(keytemp));
+						keytemp.GetRef(1)+=0.5*m_h.Get(1);
+						m_world.m_particle_list.push_back(type_particle(keytemp));
+						keytemp.GetRef(2)+=0.5*m_h.Get(2);
+						m_world.m_particle_list.push_back(type_particle(keytemp));
+					}
 					if(b2)
 					{
 					 //Created particle at the two opposing edge.
@@ -65,7 +80,7 @@ void UpdateCellFluid<TypeWorld,TypeStagPos>::Update()
 						//m_world.m_particle_list.push_back(type_particle(m_stag_pos.Get(tempkey2,i)));
 					}
 				 }
-				
+						
 				}
 			}
 			 

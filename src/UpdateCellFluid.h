@@ -34,6 +34,7 @@ class UpdateCellFluid
 	ParticleToKey< type_particle,type_key_vect_data,type_data,type_dim> m_to_key;
 	type_cell& m_fluid;
 	TypeStagPos & m_stag_pos;
+	const Physvector<type_dim,type_data> &m_h;
 public:
 	/**
 	 * @brief
