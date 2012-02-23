@@ -5,9 +5,10 @@
  **/
 
 template<class TypeData,int DIM>
-NeighborsDiagPhysvector<TypeData,DIM>::NeighborsDiagPhysvector(const Physvector<DIM,TypeData> &key):m_key(key),m_index(1)
+NeighborsDiagPhysvector<TypeData,DIM>::NeighborsDiagPhysvector(const Physvector<DIM,TypeData> &key):m_key(key)
 {
 	m_neigh.SetAll(-1);
+	m_neigh.Set(1,-2);
 }
 template<class TypeData,int DIM>
 bool NeighborsDiagPhysvector<TypeData,DIM>::GetNext(Physvector<DIM,TypeData> &neigh)
@@ -24,10 +25,10 @@ bool NeighborsDiagPhysvector<TypeData,DIM>::GetNext(Physvector<DIM,TypeData> &ne
 			return false;
 		}
 		m_neigh.GetRef(i)+=1;
-		bool bcont=m_neigh.Get(i)>=2;
+		bcont=m_neigh.Get(i)>=2;
 	}
 	bool b=true;
-	for(int i=1;i<=type_dim;++i)
+	for(int i=1;i<=DIM;++i)
 	{
 		if(m_neigh.Get(i)!=0)
 		{
@@ -37,7 +38,7 @@ bool NeighborsDiagPhysvector<TypeData,DIM>::GetNext(Physvector<DIM,TypeData> &ne
 	}
 	if(b)
 	{
-		return GetNext(neigh);
+		 return GetNext(neigh);
 	}
 	neigh=m_neigh+m_key;
 	return true;

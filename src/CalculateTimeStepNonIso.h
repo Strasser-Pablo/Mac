@@ -17,7 +17,7 @@ using namespace std;
  * Calculate the next time step so that the faster particle move only a given factor of a cell.
  * In this case the cell is non Isotropic.
  **/
-template <class MacWorld,class TypeData>
+template <class MacWorld,class TypeData,class TypeGetCellType>
 class CalculateTimeStepNonIso{
 	typedef typename MacWorld::type_cell type_cell;
 	static const int type_dim=MacWorld::type_dim;
@@ -25,7 +25,7 @@ class CalculateTimeStepNonIso{
 	TypeData& m_dt;
 	const MacWorld &m_world;
 	const Physvector<type_dim,TypeData>& m_1_h;
-	const type_cell &m_fluid;
+	TypeGetCellType &m_GetCellType;
 public:
 	/**
 	 * @brief
@@ -35,7 +35,7 @@ public:
 	 * @param[in] world World to use to read speed.
 	 * @param[out] dt Where to output time step calculated.
 	 **/
-	CalculateTimeStepNonIso(const MacWorld &world,const Physvector<type_dim,TypeData>& _1_h,TypeData& factor, TypeData &dt,const type_cell &fluid);
+	CalculateTimeStepNonIso(const MacWorld &world,const Physvector<type_dim,TypeData>& _1_h,TypeData& factor, TypeData &dt,TypeGetCellType &GetCellType);
 	
 	/**
 	 * @brief

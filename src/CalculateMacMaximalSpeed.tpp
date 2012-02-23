@@ -4,16 +4,16 @@
  * Implementation file for class CalculateMacMaximalSpeed.
  **/
 
-template <class TypeMacCell>
-CalculateMacMaximalSpeed<TypeMacCell>::CalculateMacMaximalSpeed(const type_cell& fluid):m_max(0),m_fluid(fluid)
+template <class TypeMacCell,class TypeGetCellType>
+CalculateMacMaximalSpeed<TypeMacCell,TypeGetCellType>::CalculateMacMaximalSpeed(TypeGetCellType & GetCellType):m_max(0),m_GetCellType(GetCellType)
 {
 }
 
-template <class TypeMacCell>
-void CalculateMacMaximalSpeed<TypeMacCell>::operator()(const TypeMacCell & cell){
+template <class TypeMacCell,class TypeGetCellType>
+void CalculateMacMaximalSpeed<TypeMacCell,TypeGetCellType>::operator()(const TypeMacCell & cell){
 	type_cell c;
 	cell.GetCellType(c);
-	if(c!=m_fluid)
+	if(!m_GetCellType.GetIsFluid(c))
 	{
 		return;
 	}
@@ -26,7 +26,7 @@ void CalculateMacMaximalSpeed<TypeMacCell>::operator()(const TypeMacCell & cell)
 	}
 }
 
-template <class TypeMacCell>
-typename TypeMacCell::type_data CalculateMacMaximalSpeed<TypeMacCell>::GetResult(){
+template <class TypeMacCell,class TypeGetCellType>
+typename TypeMacCell::type_data CalculateMacMaximalSpeed<TypeMacCell,TypeGetCellType>::GetResult(){
 	return sqrt(m_max);
 }

@@ -56,3 +56,15 @@ const typename GetCellType<TypeWorld>::type_cell & GetCellType<TypeWorld>::GetAi
 {
 	return m_air;
 }
+
+template <class TypeWorld>
+const typename GetCellType<TypeWorld>::type_cell & GetCellType<TypeWorld>::GetFluidBoundary()
+{
+	return m_boundary_fluid;
+}
+
+template <class TypeWorld>
+const typename GetCellType<TypeWorld>::type_cell & GetCellType<TypeWorld>::GetAirBoundary()
+{
+	return m_boundary_air;
+}

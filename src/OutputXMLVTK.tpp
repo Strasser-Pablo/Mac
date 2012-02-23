@@ -295,7 +295,7 @@ int k=0;
 		it.data().GetPressure(temp);
 		it.data().GetCellType(type);
 		vpress->InsertValue(k,temp);
-		vtype->InsertValue(k,type==m_fluid);
+		vtype->InsertValue(k,type);
 		++k;
 	}
 	vpress->SetName("pressure");

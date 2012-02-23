@@ -17,14 +17,14 @@ using namespace std;
  * Calculate the next time step so that the faster particle move only a given factor.
  * \f[\Delta t=k\frac{h}{||v_{max}||} \f]
  **/
-template <class MacWorld,class TypeData>
+template <class MacWorld,class TypeData,class TypeGetCellType>
 class CalculateTimeStep{
 	typedef typename MacWorld::type_cell type_cell;
 	TypeData& m_factor;
+	TypeGetCellType &m_GetCellType;
 	const TypeData& m_h;
 	TypeData& m_dt;
 	const MacWorld &m_world;
-	const type_cell &m_fluid; 
 public:
 	/**
 	 * @brief
@@ -34,7 +34,7 @@ public:
 	 * @param[out] dt Reference to the time step variable to change.
 	 * @param[in] world Reference to the world variable to read.
 	 **/
-	CalculateTimeStep(const MacWorld &world,const TypeData& h,TypeData &factor,TypeData &dt,const type_cell &fluid);
+	CalculateTimeStep(const MacWorld &world,const TypeData& h,TypeData &factor,TypeData &dt,TypeGetCellType &GetCellType);
 	
 	/**
 	 * @brief

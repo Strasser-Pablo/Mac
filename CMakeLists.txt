@@ -223,7 +223,7 @@ if(USE_UMFPACK)
 TARGET_LINK_LIBRARIES(test_cov_SolvePressureUmfpack -lumfpack)
 endif(USE_UMFPACK)
 
-CXXTEST_ADD_TEST(test_cov_NeighborsDiagPhysvector test/TestNeighborsPhysvector.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsPhysvector.h)
-set_target_properties(test_cov_OutputVectorSpeed PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_NeighborsDiagPhysvector test/TestNeighborsDiagPhysvector.cpp
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsDiagPhysvector.h)
+set_target_properties(test_cov_NeighborsDiagPhysvector PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
 endif(USE_TESTING)

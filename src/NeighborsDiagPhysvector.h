@@ -1,7 +1,5 @@
 #ifndef NeighborsDiagPhysvector_H
-
-#ifndef NeighborsPhysvector_H
-#define NeighborsPhysvector_H
+#define NeighborsDiagPhysvector_H
 
 #include "Physvector.h"
 #include "To0.h"
@@ -22,7 +20,6 @@ using namespace std;
 template<class TypeData,int DIM>
 class NeighborsDiagPhysvector{
 	Physvector<DIM,TypeData> m_key;
-	int m_index;
 	Physvector<DIM,TypeData> m_neigh;
 public:
 /**

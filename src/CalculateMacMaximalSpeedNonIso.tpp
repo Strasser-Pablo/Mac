@@ -4,16 +4,16 @@
  * Implementation file for class CalculateMacMaximalSpeed.
  **/
 
-template <class TypeMacCell>
-CalculateMacMaximalSpeedNonIso<TypeMacCell>::CalculateMacMaximalSpeedNonIso(const Physvector<type_dim,type_data> & _1_h,const type_cell & fluid):m_max(0),m_1_h(_1_h),m_fluid(fluid)
+template <class TypeMacCell,class TypeGetCellType>
+CalculateMacMaximalSpeedNonIso<TypeMacCell,TypeGetCellType>::CalculateMacMaximalSpeedNonIso(const Physvector<type_dim,type_data> & _1_h,TypeGetCellType & GetCellType):m_max(0),m_1_h(_1_h),m_GetCellType(GetCellType)
 {
 }
 
-template <class TypeMacCell>
-void CalculateMacMaximalSpeedNonIso<TypeMacCell>::operator()(const TypeMacCell & cell){
+template <class TypeMacCell,class TypeGetCellType>
+void CalculateMacMaximalSpeedNonIso<TypeMacCell,TypeGetCellType>::operator()(const TypeMacCell & cell){
 	type_cell c;
 	cell.GetCellType(c);
-	if(c!=m_fluid)
+	if(!m_GetCellType.GetIsFluid(c))
 	{
 		return;
 	}
@@ -29,7 +29,7 @@ void CalculateMacMaximalSpeedNonIso<TypeMacCell>::operator()(const TypeMacCell &
 	}
 }
 
-template <class TypeMacCell>
-typename TypeMacCell::type_data CalculateMacMaximalSpeedNonIso<TypeMacCell>::GetResult(){
+template <class TypeMacCell,class TypeGetCellType>
+typename TypeMacCell::type_data CalculateMacMaximalSpeedNonIso<TypeMacCell,TypeGetCellType>::GetResult(){
 	return sqrt(m_max);
 }

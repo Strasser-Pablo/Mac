@@ -16,17 +16,17 @@ using namespace std;
  * Functor to be used to calculate the maximal speed on a mac_grid.
  * Can be used with ApplyToEveryMacCell.
  **/
-template <class TypeMacCell>
+template <class TypeMacCell,class TypeGetCellType>
 class CalculateMacMaximalSpeed{
 	typename TypeMacCell::type_data m_max;
 	typedef typename TypeMacCell::type_cell type_cell;
-	const type_cell & m_fluid;
+	TypeGetCellType & m_GetCellType;
 public:
 /**
  * @brief 
  * Default Constructor.
  **/
-	CalculateMacMaximalSpeed(const type_cell& fluid);
+	CalculateMacMaximalSpeed(TypeGetCellType & GetCellType);
 	/**
 	* @brief 
 	* Method that update the current maximun.

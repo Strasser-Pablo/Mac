@@ -6,9 +6,11 @@
 #include "../src/ApplyToEveryMacCell.h"
 #include "../src/KeyTableMap.h"
 #include "../src/TableContainerList.h"
+#include "../src/GetCellType.h"
 #define eps 1e-10
 class Test_MaximalSpeed : public CxxTest::TestSuite
 {
+	typedef MacWorld<KeyTableMap<int,MacCell<3,double,int> >,TableContainerList<Physvector<3,double> > > world;
 	MacWorld<KeyTableMap<int,MacCell<3,double,int> >,TableContainerList<Physvector<3,double> > >  m_world;
 public:
 	void Test_Max(){
@@ -22,8 +24,12 @@ public:
 		k[3]=MacCell<3,double,int>(v,8.0,1,0);
 		m_world.m_mac_grid=k;
 		int m_fluid=1;
-		CalculateMacMaximalSpeed<MacCell<3,double,int> > max(m_fluid);
-		ApplyToEveryMacCell<CalculateMacMaximalSpeed<MacCell<3,double,int> > ,MacWorld<KeyTableMap<int,MacCell<3,double,int> >,TableContainerList<Physvector<3,double> > > >(m_world,max);
+		int m_air=0;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		GetCellType<world> m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		CalculateMacMaximalSpeed<MacCell<3,double,int>,GetCellType<world> > max(m_GetCellType);
+		ApplyToEveryMacCell<CalculateMacMaximalSpeed<MacCell<3,double,int>,GetCellType<world> > ,MacWorld<KeyTableMap<int,MacCell<3,double,int> >,TableContainerList<Physvector<3,double> > > >(m_world,max);
 		TS_ASSERT_DELTA(1.0,max.GetResult(),eps);
 	}
 };

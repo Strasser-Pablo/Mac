@@ -19,6 +19,8 @@ public:
 	bool GetIsBoundary(const type_cell & cell);
 	const type_cell & GetFluid();
 	const type_cell & GetAir();
+	const type_cell & GetFluidBoundary();
+	const type_cell & GetAirBoundary();
 };
 
 #include "GetCellType.tpp"
