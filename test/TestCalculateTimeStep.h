@@ -29,7 +29,11 @@ public:
 		int m_air=0;
 		int m_boundary_air=2;
 		int m_boundary_fluid=3;
-		GetCellType<world> m_getcelltype(m_fluid,m_boundary_fluid,m_air,m_boundary_air);
+		double m_rho_fluid=1000;
+		double m_rho_air=1;
+		double m_1_rho_fluid=0.001;
+		double m_1_rho_air=1;
+		GetCellType<world> m_getcelltype(m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air);
 		CalculateTimeStep<world,double,GetCellType<world> > timestep(m_world,m_h,m_factor,m_dt,m_getcelltype);
 		timestep.Calculate();
 		TS_ASSERT_DELTA(m_dt,1.0,eps);

@@ -97,7 +97,7 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		cout<<"9 "<<type<<endl;
 		}
 		
-		void test2dUpdate(){
+		void xtest2dUpdate(){
 		typedef Physvector<2,int> keyvect;
 		typedef Physvector<2,double> vect;
 		typedef Particle<vect> part;

@@ -57,6 +57,10 @@ class JetDEau
 	int m_air;
 	int m_boundary_air;
 	int m_boundary_fluid;
+	double m_rho_fluid;
+	double m_rho_air;
+	double m_1_rho_fluid;
+	double m_1_rho_air;
 	type_meth m_rungeKutta;
 	SolvePressureCG<world,type_get_cell_type> m_pres;
 	SolvePressureUmfpack<world,type_get_cell_type> m_pres_umf;

@@ -1,5 +1,5 @@
 template <class TypeWorld>
-GetCellType<TypeWorld>::GetCellType(const type_cell &fluid,const type_cell &boundary_fluid, const type_cell &air,const type_cell &boundary_air ):m_fluid(fluid),m_air(air),m_boundary_fluid(boundary_fluid),m_boundary_air(boundary_air)
+GetCellType<TypeWorld>::GetCellType(const type_cell &fluid,const type_cell &boundary_fluid, const type_cell &air,const type_cell &boundary_air,const type_data &rho_fluid,const type_data &rho_air,const type_data &_1_rho_fluid,const type_data &_1_rho_air ):m_fluid(fluid),m_air(air),m_boundary_fluid(boundary_fluid),m_boundary_air(boundary_air),m_rho_air(rho_air),m_rho_fluid(rho_fluid),m_1_rho_air(_1_rho_air),m_1_rho_fluid(_1_rho_fluid)
 {
 	
 }
