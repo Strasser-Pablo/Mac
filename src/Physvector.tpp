@@ -143,7 +143,17 @@ Physvector<Dim,TypeData> res;
 	return res;
 }
 
-
+template <int Dim,class TypeData>
+ostream& operator<<(ostream& output, Physvector<Dim,TypeData>& v)
+{
+	output<<"< ";
+	for(int i=1;i<Dim;++i)
+	{
+		output<<v.Get(i)<<" ,";
+	}
+	output<<v.Get(Dim)<<" >";
+	return output;
+}
 
 template <int Dim,class TypeData>
 Physvector<Dim,TypeData>& Physvector<Dim,TypeData>::operator*=(const TypeData & C){

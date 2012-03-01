@@ -5,7 +5,10 @@
 #include <exception>
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <cmath>
+
+using namespace std;
 /**
  * @file Physvector.h
  * @brief
@@ -86,6 +89,9 @@ Physvector<Dim,TypeData> operator*(const TypeData & C,const Physvector<Dim,TypeD
 
 template<int Dim,class TypeData>
 Physvector<Dim,TypeData> operator*(const Physvector<Dim,TypeData> & vect,const TypeData & C);
+
+template<int Dim,class TypeData>
+ostream& operator<<(ostream& output, Physvector<Dim,TypeData>& v);
 
 
 /**
@@ -201,6 +207,8 @@ public:
 	 * @param vect Vector to mulitply with.
 	 **/
 	friend Physvector<Dim,TypeData> operator*<Dim,TypeData>(const Physvector<Dim,TypeData> & vect,const TypeData & C);
+	
+	friend ostream& operator<<<Dim,TypeData>(ostream& output, Physvector<Dim,TypeData>& v);
 	#ifdef TesThrowIntExcept
 	void Boum();
 	#endif
