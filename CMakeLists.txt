@@ -230,4 +230,17 @@ set_target_properties(test_cov_NeighborsDiagPhysvector PROPERTIES COMPILE_FLAGS 
 CXXTEST_ADD_TEST(test_cov_Math_Set test/TestMath_Set.cpp
                                  ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMath_Set.h)
 set_target_properties(test_cov_Math_Set PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+
+CXXTEST_ADD_TEST(test_cov_NDFor test/TestNDFor.cpp
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNDFor.h)
+set_target_properties(test_cov_NDFor PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+
+CXXTEST_ADD_TEST(test_cov_UpdateCellTypeAndLayer3 test/TestUpdateCellTypeAndLayer3.cpp
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellTypeAndLayer3.h)
+set_target_properties(test_cov_UpdateCellTypeAndLayer3 PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+
+CXXTEST_ADD_TEST(test_cov_Math_Set2 test/TestMath_Set2.cpp
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMath_Set2.h)
+set_target_properties(test_cov_Math_Set2 PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+
 endif(USE_TESTING)

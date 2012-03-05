@@ -1,9 +1,16 @@
 #ifndef UpdateCellTypeAndLayer3_H
 #define UpdateCellTypeAndLayer3_H
-
+#include "NDFor.h"
 #include "NeighborsPhysvector.h"
 #include "NeighborsDiagPhysvector.h"
 #include <iostream>
+#include <functional>
+#include <stack>
+#include <set>
+#include "NDForMin.h"
+#include "Math_Set.h"
+#include "test.h"
+#include "PhysvectorKeyOrder.h"
 using namespace std;
 /**
  * @file UpdateCellTypeAndLayer3.h
@@ -25,11 +32,14 @@ class UpdateCellTypeAndLayer3
 	int m_level;
 	int m_nb_comp_con;
 	static const int type_dim=TypeWorld::type_dim;
-		typedef typename TypeWorld::type_data type_data;
-		TypeFunctionPressure & m_func_pres;
-		
-		void CalculateAirNeighbour();
-		void DoAir(Physvector<type_dim,int> & key);
+	typedef typename TypeWorld::type_data type_data;
+	TypeFunctionPressure & m_func_pres;
+	map<int,Math_Set<type_dim,int> > m_set;
+	PhysvectorKeyOrder<type_dim,int> m_O;
+	set<Physvector<type_dim,int>,PhysvectorKeyOrder<type_dim,int> > m_bound_set;
+	void CalculateAirNeighbour();
+	void Follow(Physvector<type_dim,int> & key,int id);
+	bool IsConnected(Physvector<type_dim,int> & keyA,Physvector<type_dim,int> & keyB);
 public:
 /**
  * @brief

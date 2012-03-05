@@ -12,8 +12,12 @@
 #define eps 1e-10
 class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 {
-	public:
-	void test1dUpdate(){
+public:
+	void testtrivial()
+	{
+		
+	}
+	void xtest1dUpdate(){
 		typedef Physvector<1,int> keyvect;
 		typedef Physvector<1,double> vect;
 		typedef Particle<vect> part;
@@ -53,48 +57,7 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		type_pres_func m_pres_func=[](Physvector<1,int> key){return 0;};
 		UpdateCellTypeAndLayer3<world,type_getcelltype,type_pres_func> Up(w,m_GetCellType,2,m_pres_func);
 		Up.Update();
-		int type;
-		k1.Set(1,-1);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"-1 "<<type<<endl;
-		k1.Set(1,0);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"0 "<<type<<endl;
-		k1.Set(1,1);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"1 "<<type<<endl;
 		
-		k1.Set(1,2);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"2 "<<type<<endl;
-		
-		k1.Set(1,3);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"3 "<<type<<endl;
-		
-		k1.Set(1,4);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"4 "<<type<<endl;
-		
-		k1.Set(1,5);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"5 "<<type<<endl;
-		
-		k1.Set(1,6);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"6 "<<type<<endl;
-		
-		k1.Set(1,7);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"7 "<<type<<endl;
-		
-		k1.Set(1,8);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"8 "<<type<<endl;
-		
-		k1.Set(1,9);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"9 "<<type<<endl;
 		}
 		
 		void xtest2dUpdate(){
@@ -129,8 +92,8 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		table[k3].SetLayer(0);
 		
 		keyvect k4;
-		k3.Set(1,0);
-		k3.Set(2,-1);
+		k4.Set(1,0);
+		k4.Set(2,-1);
 		table[k4].SetCellType(1);
 		table[k4].SetLayer(0);
 		world w(table,lpart);
@@ -146,38 +109,5 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		type_pres_func m_pres_func=[](Physvector<2,int> key){return 0;};
 		UpdateCellTypeAndLayer3<world,type_getcelltype,type_pres_func> Up(w,m_GetCellType,2,m_pres_func);
 		Up.Update();
-		int type;
-		k1.Set(1,0);
-		k1.Set(2,0);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"0 0   "<<type<<endl;
-		k1.Set(1,1);
-		k1.Set(2,0);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"1 0   "<<type<<endl;
-		k1.Set(1,0);
-		k1.Set(2,1);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"0 1   "<<type<<endl;
-		
-		k1.Set(1,1);
-		k1.Set(2,1);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"1 1   "<<type<<endl;
-		
-		
-		k1.Set(1,-1);
-		k1.Set(2,0);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"-1 0   "<<type<<endl;
-		k1.Set(1,0);
-		k1.Set(2,-1);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"0 -1   "<<type<<endl;
-		
-		k1.Set(1,-1);
-		k1.Set(2,-1);
-		w.m_mac_grid[k1].GetLayer(type);
-		cout<<"-1 -1   "<<type<<endl;
 		}
 };
