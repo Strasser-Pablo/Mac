@@ -129,6 +129,139 @@ class Test_ApplyToVectorElement : public CxxTest::TestSuite
 		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::NONE);
 		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::NONE);
 	}
+
+	void testAdvanced3_1d()
+	{
+		Math_Set2<1,int> A;
+		Physvector<1,int> k;
+		k.Set(1,0);
+		A.InsertMin(k);
+		k.Set(1,5);
+		A.InsertMax(k);
+		k.Set(1,10);
+		A.InsertMin(k);
+		k.Set(1,15);
+		A.InsertMax(k);
+			
+		Math_Set2<1,int> B;
+		k.Set(1,11);
+		B.InsertMin(k);
+		k.Set(1,14);
+		B.InsertMax(k);
+
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::B_In_A);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::A_In_B);
+	}
+
+	void testAdvanced4_1d()
+	{
+		Math_Set2<1,int> A;
+		Physvector<1,int> k;
+		k.Set(1,0);
+		A.InsertMin(k);
+		k.Set(1,5);
+		A.InsertMax(k);
+		k.Set(1,10);
+		A.InsertMin(k);
+		k.Set(1,15);
+		A.InsertMax(k);
+			
+		Math_Set2<1,int> B;
+		k.Set(1,11);
+		B.InsertMin(k);
+		k.Set(1,14);
+		B.InsertMax(k);
+		k.Set(1,2);
+		B.InsertMin(k);
+		k.Set(1,3);
+		B.InsertMax(k);
+
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::B_In_A);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::A_In_B);
+	}
+
+	void testAdvanced5_1d()
+	{
+		Math_Set2<1,int> A;
+		Physvector<1,int> k;
+		k.Set(1,0);
+		A.InsertMin(k);
+		k.Set(1,5);
+		A.InsertMax(k);
+		k.Set(1,10);
+		A.InsertMin(k);
+		k.Set(1,15);
+		A.InsertMax(k);
+			
+		Math_Set2<1,int> B;
+		k.Set(1,6);
+		B.InsertMin(k);
+		k.Set(1,7);
+		B.InsertMax(k);
+		k.Set(1,16);
+		B.InsertMin(k);
+		k.Set(1,17);
+		B.InsertMax(k);
+
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::NONE);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::NONE);
+	}
+
+	void testAdvanced6_1d()
+	{
+		Math_Set2<1,int> A;
+		Physvector<1,int> k;
+		k.Set(1,0);
+		A.InsertMin(k);
+		k.Set(1,5);
+		A.InsertMax(k);
+		k.Set(1,10);
+		A.InsertMin(k);
+		k.Set(1,15);
+		A.InsertMax(k);
+		k.Set(1,20);
+		A.InsertMin(k);
+		k.Set(1,25);
+		A.InsertMax(k);
+			
+		Math_Set2<1,int> B;
+		k.Set(1,11);
+		B.InsertMin(k);
+		k.Set(1,12);
+		B.InsertMax(k);
+		k.Set(1,21);
+		B.InsertMin(k);
+		k.Set(1,22);
+		B.InsertMax(k);
+
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::B_In_A);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::A_In_B);
+	}
+
+	void testAdvanced7_1d()
+	{
+		Math_Set2<1,int> A;
+			
+		Math_Set2<1,int> B;
+
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::Both_Empty);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::Both_Empty);
+	}
+
+	void testAdvanced8_1d()
+	{
+		Math_Set2<1,int> A;
+			
+		Math_Set2<1,int> B;
+		Physvector<1,int> k;
+		k.Set(1,4);
+		B.InsertMin(k);
+		k.Set(1,5);
+		B.InsertMax(k);
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::A_Empty);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::B_Empty);
+	}
+
 	void xtestbasic2d()
 	{
 		Math_Set2<2,int> A;

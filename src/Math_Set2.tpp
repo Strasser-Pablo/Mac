@@ -11,12 +11,6 @@ void Math_Set2<DIM,TypeData>::InsertMin(Physvector<DIM,TypeData> & key)
 }
 
 template<int DIM,class TypeData>
-void Math_Set2<DIM,TypeData>::InsertBoth(Physvector<DIM,TypeData> & key)
-{
-	m_data[key.Get(1)].InsertMax(key,2);
-}
-
-template<int DIM,class TypeData>
 template<int DIM2>
 void Math_Set2<DIM,TypeData>::InsertMax(Physvector<DIM2,TypeData> & key,int i)
 {
@@ -28,13 +22,6 @@ template<int DIM2>
 void Math_Set2<DIM,TypeData>::InsertMin(Physvector<DIM2,TypeData> & key,int i)
 {
 	m_data[key.Get(i)].InsertMin(key,i+1);
-}
-
-template<int DIM,class TypeData>
-template<int DIM2>
-void Math_Set2<DIM,TypeData>::InsertBoth(Physvector<DIM2,TypeData> & key,int i)
-{
-	m_data[key.Get(i)].InsertBoth(key,i+1);
 }
 
 template<int DIM,class TypeData>
@@ -118,13 +105,6 @@ void Math_Set2<1,TypeData>::InsertMax(Physvector<1,TypeData> & key)
 }
 
 template<class TypeData>
-void Math_Set2<1,TypeData>::InsertBoth(Physvector<1,TypeData> & key)
-{
-	InsertBoth(key,1);
-}
-
-
-template<class TypeData>
 template<int DIM2>
 void Math_Set2<1,TypeData>::InsertMin(Physvector<DIM2,TypeData> & key,int i)
 {
@@ -137,13 +117,7 @@ void Math_Set2<1,TypeData>::InsertMax(Physvector<DIM2,TypeData> & key,int i)
 {
 	m_inter_max.insert(key.Get(i));
 }
-template<class TypeData>
-template<int DIM2>
-void Math_Set2<1,TypeData>::InsertBoth(Physvector<DIM2,TypeData> & key,int i)
-{
-	m_inter_max.insert(key.Get(i));
-	m_inter_min.insert(key.Get(i));
-}
+
 template<class TypeData>
 Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
 {
@@ -169,6 +143,20 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
 	}
 	if(it_min_lb==m_inter_min.begin()&&it_max_lb==m_inter_min.begin())
 	{
+		iterator it_min_lb2=B.m_inter_min.lower_bound(*it_min_lb);
+		iterator it_max_lb2=B.m_inter_max.lower_bound(*it_min_lb);
+		if(it_max_lb2==B.m_inter_max.end())
+		{
+			return Rel_Ensemble::NONE;
+		}
+		if(it_min_lb2==B.m_inter_min.end())
+		{
+			return Rel_Ensemble::A_In_B;
+		}
+		if(*it_max_lb2<*it_min_lb2)
+		{
+			return Rel_Ensemble::A_In_B;
+		}
 		return Rel_Ensemble::NONE;
 	}
 	iterator it_min_up=m_inter_max.lower_bound(*it_min);

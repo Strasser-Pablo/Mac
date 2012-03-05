@@ -18,15 +18,12 @@ public:
 	void Insert(Physvector<DIM,TypeData> & key);
 	void InsertMax(Physvector<DIM,TypeData> & key);
 	void InsertMin(Physvector<DIM,TypeData> & key);
-	void InsertBoth(Physvector<DIM,TypeData> & key);
 	template<int DIM2>
 	void Insert(Physvector<DIM2,TypeData> & key,int i);
 	template<int DIM2>
 	void InsertMax(Physvector<DIM2,TypeData> & key,int i);
 	template<int DIM2>
 	void InsertMin(Physvector<DIM2,TypeData> & key,int i);
-	template<int DIM2>
-	void InsertBoth(Physvector<DIM2,TypeData> & key,int i);
 	Rel_Ensemble IsIn(Math_Set2<DIM,TypeData> & B);
 };
 
@@ -42,15 +39,12 @@ public:
 	void Insert(Physvector<1,TypeData> & key);
 	void InsertMax(Physvector<1,TypeData> & key);
 	void InsertMin(Physvector<1,TypeData> & key);
-	void InsertBoth(Physvector<1,TypeData> & key);
 	template<int DIM2>
 	void Insert(Physvector<DIM2,TypeData> & key,int i);
 	template<int DIM2>
 	void InsertMax(Physvector<DIM2,TypeData> & key,int i);
 	template<int DIM2>
 	void InsertMin(Physvector<DIM2,TypeData> & key,int i);
-	template<int DIM2>
-	void InsertBoth(Physvector<DIM2,TypeData> & key,int i);
 	Rel_Ensemble IsIn(Math_Set2<1,TypeData> & B);
 };
 #include "Math_Set2.tpp"
