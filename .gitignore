@@ -6,3 +6,6 @@ doc/html/
 *.*~
 temp/
 sim/
+*.*.swp
+*.vim
+
