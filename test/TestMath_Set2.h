@@ -262,36 +262,112 @@ class Test_ApplyToVectorElement : public CxxTest::TestSuite
 		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::B_Empty);
 	}
 
-	void xtestbasic2d()
+	void testbasic2d()
 	{
 		Math_Set2<2,int> A;
 		Physvector<2,int> k;
 		for(int i=0;i<=3;++i)
 		{
-			for(int j=0;j<=3;++j)
-			{
-				k.Set(1,i);
-				k.Set(2,j);
-				A.Insert(k);
-			}
+			k.Set(2,0);
+			k.Set(1,i);
+			A.InsertMin(k);
+			k.Set(2,3);
+			A.InsertMax(k);
 		}
 		
 		Math_Set2<2,int> B;
-		k.Set(1,1);
-		k.Set(2,1);
-		B.Insert(k);
-		k.Set(1,1);
-		k.Set(2,2); 
-		B.Insert(k);
-		k.Set(1,2);
-		k.Set(2,1);
-		B.Insert(k);
-		k.Set(1,2);
-		k.Set(2,2);
-		B.Insert(k);
-		
+		for(int i=1;i<=2;++i)
+		{
+			k.Set(2,1);
+			k.Set(1,i);
+			B.InsertMin(k);
+			k.Set(2,2);
+			B.InsertMax(k);
+		}
+			
 		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::B_In_A);
-		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::A_In_B);
+		//TS_ASSERT(B.IsIn(A)==Rel_Ensemble::A_In_B);
+	}
+
+	void xtestbasic2d_2()
+	{
+		Math_Set2<2,int> A;
+		Physvector<2,int> k;
+		for(int i=0;i<=3;++i)
+		{
+			k.Set(2,0);
+			k.Set(1,i);
+			A.InsertMin(k);
+			k.Set(2,3);
+			A.InsertMax(k);
+		}
+		
+		Math_Set2<2,int> B;
+		for(int i=5;i<=7;++i)
+		{
+			k.Set(2,1);
+			k.Set(1,i);
+			B.InsertMin(k);
+			k.Set(2,2);
+			B.InsertMax(k);
+		}
+			
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::NONE);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::NONE);
+	}
+
+
+	void xtestbasic2d_3()
+	{
+		Math_Set2<2,int> A;
+		Physvector<2,int> k;
+		for(int i=0;i<=10;++i)
+		{
+			k.Set(2,0);
+			k.Set(1,i);
+			A.InsertMin(k);
+			k.Set(2,10);
+			A.InsertMax(k);
+			k.Set(2,9);
+			A.InsertMin(k);
+			k.Set(2,1);
+			A.InsertMax(k);
+		}
+		
+		Math_Set2<2,int> B;
+		for(int i=0;i<=10;++i)
+		{
+			k.Set(2,-4);
+			k.Set(1,i);
+			B.InsertMin(k);
+			k.Set(2,-2);
+			B.InsertMax(k);
+			k.Set(2,14);
+			B.InsertMax(k);
+			k.Set(2,12);
+			B.InsertMin(k);
+		}
+		
+		for(int i=3;i<=12;++i)
+		{
+			k.Set(2,6);
+			k.Set(1,i);
+			B.InsertMax(k);
+			k.Set(2,4);
+			B.InsertMin(k);
+		}
+		for(int i=13;i<=15;++i)
+		{
+			k.Set(2,11);
+			k.Set(1,i);
+			B.InsertMax(k);
+			k.Set(2,-1);
+			k.Set(1,i);
+			B.InsertMax(k);
+		}
+
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::NONE);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::NONE);
 	}
 	void xtestavanced_1_2d()
 	{

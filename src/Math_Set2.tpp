@@ -121,6 +121,7 @@ void Math_Set2<1,TypeData>::InsertMax(Physvector<DIM2,TypeData> & key,int i)
 template<class TypeData>
 Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
 {
+	//Test of empty case.
 	if(m_inter_max.empty()&&m_inter_min.empty()&&B.m_inter_max.empty()&&B.m_inter_min.empty())
 	{
 		return Rel_Ensemble::Both_Empty;
@@ -133,56 +134,150 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
 	{
 		return Rel_Ensemble::B_Empty;
 	}
+	//We use the function lower_bound to find greater or egual element in the other ensemble.
 	iterator it_min=B.m_inter_min.begin();
 	iterator it_max=B.m_inter_max.begin();
 	iterator it_min_lb=m_inter_min.lower_bound(*it_min);
 	iterator it_max_lb=m_inter_min.lower_bound(*it_max);
+	//If it_min_lb and it_max_lb are not the same, it say that a element of the min table is between min and max
+	//The shematic is:
+	//		A		B
+	//				it_min(min)
+	//		it_min_lb(min)
+	//
+	//		(a max element is there because we canot traverse the boundary.)
+	//				it_max(max)
+	//
+	//		it_max_lb(min)
 	if(it_min_lb!=it_max_lb)
 	{
 		return Rel_Ensemble::A_In_B;
 	}
-	if(it_min_lb==m_inter_min.begin()&&it_max_lb==m_inter_min.begin())
-	{
-		iterator it_min_lb2=B.m_inter_min.lower_bound(*it_min_lb);
-		iterator it_max_lb2=B.m_inter_max.lower_bound(*it_min_lb);
-		if(it_max_lb2==B.m_inter_max.end())
-		{
-			return Rel_Ensemble::NONE;
-		}
-		if(it_min_lb2==B.m_inter_min.end())
-		{
-			return Rel_Ensemble::A_In_B;
-		}
-		if(*it_max_lb2<*it_min_lb2)
-		{
-			return Rel_Ensemble::A_In_B;
-		}
-		return Rel_Ensemble::NONE;
-	}
+
+	//Here only the case B_In_A and NONE need to be treated.
+	//And it_min_lb==it_max_lb
 	iterator it_min_up=m_inter_max.lower_bound(*it_min);
-	iterator it_max_up=m_inter_max.lower_bound(*it_max);
-	if(it_min_lb==m_inter_min.end()&&it_min_up==m_inter_max.end())
+
+	//If it_min_up==m_inter_max.end(), it say that no max term is below to enclose the surface.
+	//
+	//The shematic is:
+	//
+	//		A			B
+	//						
+	//					it_min(min)		  _ 
+	//								|
+	//					it_max(max)		|  No max element in A in this region.
+	//								|  So B_In_A impossible.
+	//		it_min_lb(min)=it_max_lb		        | 
+	//		                                                |
+	//                                                              |
+	//		it_min_up(max)==m_inter_max.end()              \ /
+	//
+	if(it_min_up==m_inter_max.end())
 	{
 		return Rel_Ensemble::NONE;
 	}
-	if(it_min_lb==m_inter_min.end())
+	//If it_max_lb==m_inter_min.end() This say that because we know that we have a maximal below max in B.
+	//That B_In_A.
+	//The  shematic is:
+	//
+	//		A			B
+	//
+	//		(A min element muss be there because min and max are supposed paired)
+	//              |
+	//		| 			it_min(min)
+	//              |  We enclose everything
+	//              |
+	//		|			it_max(max)
+	//              |
+	//		it_min_up(max)!=m_inter_max_end  Because we have not yet returned.
+	//
+	//		it_max_lb(min)==m_inter_min.end
+	if(it_max_lb==m_inter_min.end())
 	{
 		return Rel_Ensemble::B_In_A;
 	}
-	assert(it_max_lb!=m_inter_min.end());
-	assert(it_min_up!=m_inter_max.end());
-	assert(it_max_up!=m_inter_max.end());
-	if(it_min_up==m_inter_max.begin()&&*it_min_up>*it_max)
+	//A this point we are sure that it_max_lb and it_min_up can be dereferenced.
+	//We can test if *it_min_up is below or above.
+	//
+	// A Shematic is:
+	//
+	// 		A			B
+	//		
+	//		(A min is there to pair with the max below)
+	//
+	// 					it_min(min)
+	//
+	//
+	//
+	// 					it_max(max)
+	//
+	//
+	//		it_min_up(max)
+	//
+	//		it_max_lb(min)
+	if(*it_min_up<=*it_max_lb)
 	{
 		return Rel_Ensemble::B_In_A;
 	}
-	if(*it_min_lb>*it_min_up)
-	{
-		return Rel_Ensemble::B_In_A;
-	}
-	else
-	{
-		return Rel_Ensemble::NONE;
-	}
-	assert(1!=1);
+	// This variable is needed to Solve a subtil case.
+  	// We take the lower bound in B of a element in B.
+  	iterator it2=B.m_inter_min.lower_bound(*it_max);
+  	// If it2==m_inter_min.end() then we are in a case of séparation of the interacting zone.
+  	//
+  	// A shematic is:
+  	//
+  	// 		A			B
+  	//
+  	// 		  |      		it_min(min)
+  	//                |	No min and max is there
+  	//                |      So A is not in B An B is not in A.
+  	// 		  |      		it_max(max)
+  	//		it_max_lb(min)	
+  	//
+  	//
+  	//		it_min_up(max)
+  	//
+  	// 					it2(min)==B.m_inter_min.end()
+  	if(it2==B.m_inter_min.end())
+  	{
+  		return Rel_Ensemble::NONE;
+  	}
+  	// Now it2 can be dereferenced without problem.
+  	//
+  	// A shematic is:
+  	//
+  	// 		A			B
+  	//
+  	// 					it_min(min)
+  	//
+  	//
+  	// 					it_max(max)
+  	//
+  	// 	   				it2(min)!=B.m_inter_min.end()
+  	// 	   	it_max_lb(min)        	|
+  	//                                      |
+  	// 	   	it_min_up(max)          |
+  	//                                      |
+  	//                                      (a max should be there to pair)
+  	if(*it2<=*it_max_lb)
+  	{
+  		return Rel_Ensemble::A_In_B;
+  	}
+  	// The remaining case.
+  	// A shematic is:
+  	//
+  	// 		A			B
+  	//
+  	// 					it_min(min)
+  	//
+  	//
+  	// 					it_max(max)
+  	//
+  	// 	   	it_max_lb(min)        	
+  	//                                      Hier we are not in the interval. We are separated.
+  	// 	   	it_min_up(max)          
+  	//                                      
+  	// 	   				it2(min)!=B.m_inter_min.end()
+  	return Rel_Ensemble::NONE;
 }
