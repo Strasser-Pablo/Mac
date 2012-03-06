@@ -7,7 +7,7 @@ void Math_Set2<DIM,TypeData>::InsertMax(Physvector<DIM,TypeData> & key)
 template<int DIM,class TypeData>
 void Math_Set2<DIM,TypeData>::InsertMin(Physvector<DIM,TypeData> & key)
 {
-	m_data[key.Get(1)].InsertMax(key,2);
+	m_data[key.Get(1)].InsertMin(key,2);
 }
 
 template<int DIM,class TypeData>
@@ -27,8 +27,6 @@ void Math_Set2<DIM,TypeData>::InsertMin(Physvector<DIM2,TypeData> & key,int i)
 template<int DIM,class TypeData>
 Rel_Ensemble Math_Set2<DIM,TypeData>::IsIn(Math_Set2<DIM,TypeData> & B)
 {
-	cout<<"DIM "<<DIM<<endl;
-	
 	if(m_data.empty()&&B.m_data.empty())
 	{
 		return Rel_Ensemble::Both_Empty;
@@ -243,26 +241,67 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
   	{
   		return Rel_Ensemble::NONE;
   	}
-  	// Now it2 can be dereferenced without problem.
-  	//
-  	// A shematic is:
-  	//
-  	// 		A			B
-  	//
-  	// 					it_min(min)
-  	//
-  	//
-  	// 					it_max(max)
-  	//
-  	// 	   				it2(min)!=B.m_inter_min.end()
-  	// 	   	it_max_lb(min)        	|
-  	//                                      |
-  	// 	   	it_min_up(max)          |
-  	//                                      |
-  	//                                      (a max should be there to pair)
+	// Now it2 can be dereferenced.
   	if(*it2<=*it_max_lb)
   	{
-  		return Rel_Ensemble::A_In_B;
+  		iterator it3=B.m_inter_max.lower_bound(*it2);
+		// if it3==B.m_inter_max.end() it say that A is in B.
+		// Normally this case is not possible because it say that we have unpair min,max
+ 	 	// A shematic is:
+  		//
+  		// 		A			B
+  		//
+  		// 					it_min(min)
+  		//
+  		//
+  		// 					it_max(max)
+  		//
+  		// 	   				it2(min)!=B.m_inter_min.end()
+  		// 	   	it_max_lb(min)        	|
+ 	 	//                                      |
+  		// 	   	it_min_up(max)          |
+  		//                                      |
+  		//                                      it3(max)==B.m_inter_max.end()
+		assert(it3!=B.m_inter_max.end());
+		// Comparaison to see if we A is in B or none.
+  		// A shematic is:
+  		//
+  		// 		A			B
+  		//
+  		// 					it_min(min)
+  		//
+  		//
+  		// 					it_max(max)
+  		//
+  		// 	   				it2(min)!=B.m_inter_min.end()
+  		// 	   	it_max_lb(min)        	|
+  		//                                      |
+  		// 	   	it_min_up(max)          |
+  		//                                      |
+  		//                                      it3(max)
+		if(*it3>=*it_min_up)
+		{
+			return Rel_Ensemble::A_In_B;
+		}
+		// None case
+  		// A shematic is:
+  		//
+  		// 		A			B
+  		//
+  		// 					it_min(min)
+  		//
+  		//
+  		// 					it_max(max)
+  		//
+  		// 	   				it2(min)!=B.m_inter_min.end()
+		//
+		// 	   				it3(max)!=B.m_inter_min.end()
+  		// 	   	it_max_lb(min)        
+  		//                                    
+  		// 	   	it_min_up(max)        
+  		//                                    
+  		//                                     
+			return Rel_Ensemble::NONE;
   	}
   	// The remaining case.
   	// A shematic is:
@@ -280,4 +319,28 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
   	//                                      
   	// 	   				it2(min)!=B.m_inter_min.end()
   	return Rel_Ensemble::NONE;
+}
+template<class TypeData>
+void Math_Set2<1,TypeData>::CoutDebInfo()
+{
+	cout<<"deb min "<<endl;
+	for(iterator it=m_inter_min.begin();it!=m_inter_min.end();++it)
+	{
+		cout<<*it<<endl;
+	}
+	cout<<"deb max "<<endl;
+	for(iterator it=m_inter_max.begin();it!=m_inter_max.end();++it)
+	{
+		cout<<*it<<endl;
+	}
+}
+
+template<int DIM,class TypeData>
+void Math_Set2<DIM,TypeData>::CoutDebInfo()
+{
+	for(typename map<TypeData,Math_Set2<DIM-1,TypeData> >::iterator it=m_data.begin();it!=m_data.end();++it)
+	{
+	       	cout<<"Dim "<<DIM<<" "<<it->first<<endl;
+		it->second.CoutDebInfo();
+	}
 }

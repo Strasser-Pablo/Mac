@@ -25,6 +25,7 @@ public:
 	template<int DIM2>
 	void InsertMin(Physvector<DIM2,TypeData> & key,int i);
 	Rel_Ensemble IsIn(Math_Set2<DIM,TypeData> & B);
+	void CoutDebInfo();
 };
 
 template<class TypeData>
@@ -46,6 +47,7 @@ public:
 	template<int DIM2>
 	void InsertMin(Physvector<DIM2,TypeData> & key,int i);
 	Rel_Ensemble IsIn(Math_Set2<1,TypeData> & B);
+	void CoutDebInfo();
 };
 #include "Math_Set2.tpp"
 #endif

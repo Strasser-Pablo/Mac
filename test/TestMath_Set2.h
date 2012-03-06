@@ -289,7 +289,7 @@ class Test_ApplyToVectorElement : public CxxTest::TestSuite
 		//TS_ASSERT(B.IsIn(A)==Rel_Ensemble::A_In_B);
 	}
 
-	void xtestbasic2d_2()
+	void testbasic2d_2()
 	{
 		Math_Set2<2,int> A;
 		Physvector<2,int> k;
@@ -317,20 +317,20 @@ class Test_ApplyToVectorElement : public CxxTest::TestSuite
 	}
 
 
-	void xtestbasic2d_3()
+	void testbasic2d_3()
 	{
 		Math_Set2<2,int> A;
 		Physvector<2,int> k;
 		for(int i=0;i<=10;++i)
 		{
-			k.Set(2,0);
+			k.Set(2,1);
 			k.Set(1,i);
 			A.InsertMin(k);
 			k.Set(2,10);
 			A.InsertMax(k);
 			k.Set(2,9);
 			A.InsertMin(k);
-			k.Set(2,1);
+			k.Set(2,2);
 			A.InsertMax(k);
 		}
 		
@@ -356,6 +356,7 @@ class Test_ApplyToVectorElement : public CxxTest::TestSuite
 			k.Set(2,4);
 			B.InsertMin(k);
 		}
+
 		for(int i=13;i<=15;++i)
 		{
 			k.Set(2,11);
@@ -363,110 +364,145 @@ class Test_ApplyToVectorElement : public CxxTest::TestSuite
 			B.InsertMax(k);
 			k.Set(2,-1);
 			k.Set(1,i);
-			B.InsertMax(k);
+			B.InsertMin(k);
 		}
 
 		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::NONE);
 		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::NONE);
 	}
-	void xtestavanced_1_2d()
+	
+	void testbasic3d()
 	{
-		Math_Set2<2,int> A;
-		Physvector<2,int> k;
-
-		for(int i=0;i<=7;++i)
-		{
-			for(int j=0;j<=6;++j)
+		Math_Set2<3,int> A;
+		Physvector<3,int> k;
+		for(int i=0;i<=3;++i)
+			for(int j=0;j<=3;++j)
 			{
-				k.Set(1,i);
+				k.Set(3,0);
 				k.Set(2,j);
-				A.Insert(k);
+				k.Set(1,i);
+				A.InsertMin(k);
+				k.Set(3,3);
+				A.InsertMax(k);
 			}
-		}
 		
-
-		for(int i=0;i<=2;++i)
+		Math_Set2<3,int> B;
+		for(int i=1;i<=2;++i)
 		{
-			for(int j=7;j<=11;++j)
+			for(int j=1;j<=2;++j)
 			{
-				k.Set(1,i);
+				k.Set(3,1);
 				k.Set(2,j);
-				A.Insert(k);
-			}
-		}
-		
-		
-		for(int i=3;i<=7;++i)
-		{
-			for(int j=8;j<=11;++j)
-			{
 				k.Set(1,i);
-				k.Set(2,j);
-				A.Insert(k);
+				B.InsertMin(k);
+				k.Set(3,2);
+				B.InsertMax(k);
 			}
-		}
-		
-		Math_Set2<2,int> B;
-		for(int i=2;i<=5;++i)
-		{
-			for(int j=2;j<=4;++j)
-			{
-				k.Set(1,i);
-				k.Set(2,j);
-				B.Insert(k);
-			}
-		}
-		
+		}	
 		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::B_In_A);
 		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::A_In_B);
 	}
-	
-	void xtestavanced_2_2d()
+
+	void testbasic3d_2()
 	{
-		Math_Set2<2,int> A;
-		Physvector<2,int> k;
-		
-		for(int i=0;i<=2;++i)
+		Math_Set2<3,int> A;
+		Physvector<3,int> k;
+		for(int i=0;i<=3;++i)
 		{
-			for(int j=0;j<=11;++j)
+			for(int j=0;j<=3;++j)
 			{
-				k.Set(1,i);
+			k.Set(3,0);
+			k.Set(2,j);
+			k.Set(1,i);
+			A.InsertMin(k);
+			k.Set(3,3);
+			A.InsertMax(k);
+			}
+		}
+		
+		Math_Set2<3,int> B;
+		for(int i=5;i<=7;++i)
+		{
+			for(int j=5;j<=7;++j)
+			{
+				k.Set(3,1);
 				k.Set(2,j);
-				A.Insert(k);
+				k.Set(1,i);
+				B.InsertMin(k);
+				k.Set(3,2);
+				B.InsertMax(k);
+			}
+		}
+			
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::NONE);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::NONE);
+	}
+
+
+	void testbasic3d_3()
+	{
+		Math_Set2<3,int> A;
+		Physvector<3,int> k;
+		for(int i=0;i<=10;++i)
+		{
+			for(int j=0;j<=10;++j)
+			{
+				k.Set(3,1);
+				k.Set(2,j);
+				k.Set(1,i);
+				A.InsertMin(k);
+				k.Set(3,10);
+				A.InsertMax(k);
+				k.Set(3,9);
+				A.InsertMin(k);
+				k.Set(3,2);
+				A.InsertMax(k);
+			}
+		}
+		
+		Math_Set2<3,int> B;
+		for(int i=0;i<=10;++i)
+		{
+			for(int j=0;j<=10;++j)
+			{
+				k.Set(3,-4);
+				k.Set(2,j);
+				k.Set(1,i);
+				B.InsertMin(k);
+				k.Set(3,-2);
+				B.InsertMax(k);
+				k.Set(3,14);
+				B.InsertMax(k);
+				k.Set(3,12);
+				B.InsertMin(k);
+			}
+		}
+		for(int i=3;i<=12;++i)
+		{
+			for(int j=3;j<=12;++j)
+			{
+				k.Set(3,6);
+				k.Set(2,j);
+				k.Set(1,i);
+				B.InsertMax(k);
+				k.Set(3,4);
+				B.InsertMin(k);
 			}
 		}
 
-		for(int i=3;i<=7;++i)
+		for(int i=13;i<=15;++i)
 		{
-			for(int j=0;j<=2;++j)
+			for(int j=13;j<=15;++j)
 			{
-				k.Set(1,i);
+				k.Set(3,11);
 				k.Set(2,j);
-				A.Insert(k);
+				k.Set(1,i);
+				B.InsertMax(k);
+				k.Set(3,-1);
+				B.InsertMin(k);
 			}
 		}
-	
-		for(int i=3;i<=7;++i)
-		{
-			for(int j=8;j<=11;++j)
-			{
-				k.Set(1,i);
-				k.Set(2,j);
-				A.Insert(k);
-			}
-		}
-		
-		Math_Set2<2,int> B;
-		for(int i=4;i<=10;++i)
-		{
-			for(int j=4;j<=6;++j)
-			{
-				k.Set(1,i);
-				k.Set(2,j);
-				B.Insert(k);
-			}
-		}
-		
+
 		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::NONE);
 		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::NONE);
 	}
