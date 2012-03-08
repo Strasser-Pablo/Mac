@@ -3,7 +3,6 @@ void Math_Set2<DIM,TypeData>::InsertMax(Physvector<DIM,TypeData> & key)
 {
 	m_data[key.Get(1)].InsertMax(key,2);
 }
-
 template<int DIM,class TypeData>
 void Math_Set2<DIM,TypeData>::InsertMin(Physvector<DIM,TypeData> & key)
 {
@@ -131,6 +130,15 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
 	if(B.m_inter_max.empty()&&B.m_inter_min.empty())
 	{
 		return Rel_Ensemble::B_Empty;
+	}
+	// Ok we are not empty, test if we need to swap min,max.
+	if(*m_inter_min.begin()>*m_inter_max.begin())
+	{
+		m_inter_min.swap(m_inter_max);
+	}
+	if(*B.m_inter_min.begin()>*B.m_inter_max.begin())
+	{
+		B.m_inter_min.swap(B.m_inter_max);
 	}
 	//We use the function lower_bound to find greater or egual element in the other ensemble.
 	iterator it_min=B.m_inter_min.begin();
@@ -320,6 +328,7 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
   	// 	   				it2(min)!=B.m_inter_min.end()
   	return Rel_Ensemble::NONE;
 }
+
 template<class TypeData>
 void Math_Set2<1,TypeData>::CoutDebInfo()
 {
@@ -344,3 +353,33 @@ void Math_Set2<DIM,TypeData>::CoutDebInfo()
 		it->second.CoutDebInfo();
 	}
 }
+
+
+/*template<class TypeData,int DIM>
+template<class func,int DIM2>
+void Math_Set2<DIM,TypeData>::FillSet(func f,Physvector<DIM2,TypeData> &key,int i)
+{
+}
+*/
+/*
+template<class func>
+template<class TypeData,int DIM>
+void Math_Set2<DIM,TypeData>::FillSet(func& f)
+{
+}
+*/
+/*
+template<class TypeData>
+template<class func>
+void Math_Set2<1,TypeData>::FillSet(func& f)
+{
+}
+*/
+
+
+/*  
+template<class func,int DIM2>
+template<class TypeData>
+void Math_Set2<1,TypeData>::FillSet(func &f,Physvector<DIM2,TypeData> &key,int i){
+}
+*/

@@ -1,6 +1,7 @@
 #include <cxxtest/TestSuite.h>
 #include "../src/Math_Set2.h"
 #include <iostream>
+#include <functional>
 
 using namespace std;
 #define eps 1e-10
@@ -505,5 +506,46 @@ class Test_ApplyToVectorElement : public CxxTest::TestSuite
 
 		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::NONE);
 		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::NONE);
+	}
+
+	void testLauchFunc()
+	{
+		Math_Set2<1,int> A;
+		Physvector<1,int> k;
+		k.Set(1,2);
+		A.InsertMin(k);
+		k.Set(1,4);
+		A.InsertMax(k);
+		int i=0;
+		function<void(Physvector<1,int>)> f=[&i](Physvector<1,int> key)
+		{
+			TS_ASSERT_LESS_THAN(key.Get(1),4);
+			TS_ASSERT(key.Get(1)>2);
+			++i;
+		};
+		A.FillSet(f);
+		TS_ASSERT_EQUALS(i,1);
+	}
+	
+
+	void testLauchFunc2()
+	{
+		Math_Set2<2,int> A;
+		Physvector<2,int> k;
+		k.Set(1,1);
+		k.Set(2,2);
+		A.InsertMin(k);
+		k.Set(1,1);
+		k.Set(2,4);
+		A.InsertMax(k);
+		int i=0;
+		function<void(Physvector<2,int>)> f=[&i](Physvector<2,int> key)
+		{
+			TS_ASSERT_LESS_THAN(key.Get(2),4);
+			TS_ASSERT(key.Get(2)>2);
+			++i;
+		};
+		A.FillSet(f);
+		TS_ASSERT_EQUALS(i,1);
 	}
 };

@@ -8,14 +8,14 @@
 #include <stack>
 #include <set>
 #include "NDForMin.h"
-#include "Math_Set.h"
+#include "Math_Set2.h"
 #include "test.h"
 #include "PhysvectorKeyOrder.h"
 using namespace std;
 /**
  * @file UpdateCellTypeAndLayer3.h
  * @brief
- * Declaration file for class UpdateCellTypeAndLayer.
+ * Declaration file for class UpdateCellTypeAndLayer3.
  **/
  
  /**
@@ -33,13 +33,17 @@ class UpdateCellTypeAndLayer3
 	int m_nb_comp_con;
 	static const int type_dim=TypeWorld::type_dim;
 	typedef typename TypeWorld::type_data type_data;
+	typedef typename map<int,Math_Set2<type_dim,int> >::iterator iterator_map;
+	typedef typename set<Physvector<type_dim,int>,PhysvectorKeyOrder<type_dim,int> >::iterator iterator_set;
 	TypeFunctionPressure & m_func_pres;
-	map<int,Math_Set<type_dim,int> > m_set;
+	map<int,Math_Set2<type_dim,int> > m_set;
 	PhysvectorKeyOrder<type_dim,int> m_O;
 	set<Physvector<type_dim,int>,PhysvectorKeyOrder<type_dim,int> > m_bound_set;
+	void CreateLayer();
 	void CalculateAirNeighbour();
 	void Follow(Physvector<type_dim,int> & key,int id);
-	bool IsConnected(Physvector<type_dim,int> & keyA,Physvector<type_dim,int> & keyB);
+	void EraseIfIn(iterator_map & it);
+	void CleanSet();
 public:
 /**
  * @brief

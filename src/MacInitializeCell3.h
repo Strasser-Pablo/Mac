@@ -6,7 +6,7 @@
 #include "UpdateDeleteCell.h"
 
 /**
- * @file MacInitializeCell2.h
+ * @file MacInitializeCell3.h
  * @brief 
  * Declaration file for class MacInitializeCell.
  **/
@@ -24,7 +24,7 @@
  * @tparam TypeWorld type of world used.
  **/
 template<class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart,class TypeFunctionPressure >
-class MacInitializeCell2
+class MacInitializeCell3
 {
 	typedef typename TypeWorld::type_data type_data;
 	typedef typename TypeWorld::type_cell type_cell;
