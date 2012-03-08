@@ -242,8 +242,8 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cl
 	while(it!=m_set.end())
 	{
 		iterator_map it2=it;
-		EraseIfIn(it2);
 		++it;
+		EraseIfIn(it2);
 	}
 }
 
@@ -256,7 +256,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 	 };
 	 std::function<void(Physvector<type_dim,int>)> f=[&](Physvector<type_dim,int> key)
 	 {
-		m_bound_set.erase(key);
+		 g(key);
 		for(int i=1;i<=type_dim;++i)
 		{
 			int cor=0;
