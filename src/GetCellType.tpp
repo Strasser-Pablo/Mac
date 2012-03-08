@@ -197,3 +197,55 @@ Type_Inter GetCellType<TypeWorld>::GetInter(const type_key & key1,int i,int sign
 	key2.Set(i,key2.Get(i)+sign);
 	return GetInter(key1,key2);
 }
+
+template <class TypeWorld>
+const type_data & GetCellType<TypeWorld>::GetRhoInter(const type_key & key1,const type_key &key2)
+{
+	switch(GetInter(key1,key2))
+	{
+		case Fluid_Fluid:
+			return m_rho_fluid;
+		case Air_Air:
+			return m_rho_air;
+		case Fluid_Air:
+			return m_rho_inter;
+		case Fluid_Air_Boundary:
+			return m_rho_inter_bound;
+		case Air_Boundary_Air_Boundary:
+			return m_rho_air;
+	}
+}
+
+template <class TypeWorld>
+const type_data & GetCellType<TypeWorld>::GetRhoInter(const type_key &key1,int i,int sign)
+{
+	type_key key2=key1;
+	key2.Set(i,key1.Get(i)+sign);
+	return GetRhoInter(key1,key2);
+}
+
+template <class TypeWorld>
+const type_data & GetCellType<TypeWorld>::Get1_RhoInter(const type_key & key1,const type_key &key2)
+{
+	switch(GetInter(key1,key2))
+	{
+		case Fluid_Fluid:
+			return m_1_rho_fluid;
+		case Air_Air:
+			return m_1_rho_air;
+		case Fluid_Air:
+			return m_1_rho_inter;
+		case Fluid_Air_Boundary:
+			return m_1_rho_inter_bound;
+		case Air_Boundary_Air_Boundary:
+			return m_1_rho_air;
+	}
+}
+
+template <class TypeWorld>
+const type_data & GetCellType<TypeWorld>::Get1_RhoInter(const type_key &key1,int i,int sign)
+{
+	type_key key2=key1;
+	key2.Set(i,key1.Get(i)+sign);
+	return Get1_RhoInter(key1,key2);
+}

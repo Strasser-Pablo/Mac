@@ -52,6 +52,10 @@ public:
 	const type_data & GetInterBound1_Rho();
 	Type_Inter GetInter(const type_key & key1,const type_key &key2);
 	Type_Inter GetInter(const type_key & key1,int i,int sign=1);
+	const type_data & GetRhoInter(const type_key & key1,const type_key &key2);
+	const type_data & GetRhoInter(const type_key &key1,int i,int sign=1);
+	const type_data & Get1_RhoInter(const type_key & key1,const type_key &key2);
+	const type_data & Get1_RhoInter(const type_key &key1,int i,int sign=1);
 };
 
 #include "GetCellType.tpp"
