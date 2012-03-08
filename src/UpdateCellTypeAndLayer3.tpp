@@ -16,6 +16,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Up
 	
 	 std::function<void(Physvector<type_dim,int>)> f=[&](Physvector<type_dim,int> key)
 	 {
+		 // Erase Bound_Set so that we can find remaining air boundary (the Lateral one).
 		m_bound_set.erase(key);
 		for(int i=1;i<=type_dim;++i)
 		{
@@ -69,6 +70,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Ca
 			m_bound_set.insert(small_key);
 			if(i==type_dim)
 			{
+				// Insert Min, Max consistently.
 				if(negsign==1)
 				{
 					m_set[m_nb_comp_con].InsertMin(small_key);
@@ -115,6 +117,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Fo
 		for(int i=1;i<=type_dim;++i)
 		{
 			m_neigh.GetRef(i)=m_act.GetRef(i)/2;
+			// Correct the problem with negatif cell number (-1/2=0 --> we want -1)
 			if(m_act.GetRef(i)<0&&(m_act.GetRef(i)%2!=0))
 			{
 				--m_neigh.GetRef(i);
@@ -138,6 +141,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Fo
 			m_neigh.GetRef(i)=save_neigh;
 			if(layer==0)
 			{
+				// We are at a Min/Max wall.
 				if(i==type_dim)
 				{
 					if(v_mod==0)
@@ -149,6 +153,19 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Fo
 						m_set[id].InsertMin(m_act);
 					}
 				}
+				// Consider other direction for lateral move.
+				//
+				// This consist to the following shematic:
+				// A are Air cell.
+				// F are Fluid cell.
+				// CC is the current cell.
+				// We move to the xx cell, because it maintain contact with the Fluid Cell.
+				//
+				//
+				// 	     AAA
+				//	xx|CCAAA
+				//	FFFFF
+				// 	FFFFF
 				for(int j=1;j<=type_dim;++j)
 				{
 					if(j==i)
@@ -156,15 +173,34 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Fo
 						continue;
 					}
 					int save_j=m_act.GetRef(j);
+					// Give the opposite sub cell in the lateral direction.
+					// Because we have the two following case:
+					//	abs(m_act.GetRef(j)%2)		correction
+					//
+					//	0				1	
+					//	1				0
 					m_act.GetRef(j)-=(2*abs(m_act.GetRef(j)%2)-1);
 					if(m_bound_set.count(m_act)==0)
 					{
 						m_stack.push(m_act);
 						m_bound_set.insert(m_act);
 					};
+					// Restore m_act
 					m_act.GetRef(j)=save_j;	
 				}	
 			}
+			//We have Air, We can move Forward.
+			// This consist to the following shematic:
+			// A are Air cell.
+			// F are Fluid cell.
+			// CC is the current cell.
+			// We move to the xx cell, because we have air in it.
+			//
+			//
+			// 	     AAA
+			//	  |CCxxx
+			//	FFFFF
+			// 	FFFFF
 		 	else
 			{
 				int save_i=m_act.GetRef(i);
