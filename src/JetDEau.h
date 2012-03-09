@@ -76,7 +76,7 @@ class JetDEau
 	world m_w;
 	Output<world,type_stag> m_out;
 	MacConvectSpeed<world,type_meth,type_vel,type_stag> m_conv;
-	MacGravity<world> m_grav;
+	MacGravity<world,type_get_cell_type> m_grav;
 	NeighborsVelocity<dim,int> m_N_V;
 	double m_dt;
 	double m_t;

@@ -50,7 +50,7 @@ template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsFluid(const type_key & key)
 {
 	type_cell c;
-	m_world[key].GetCellType(c);
+	m_world.m_mac_grid[key].GetCellType(c);
 	return GetIsFluid(c);
 }
 
@@ -58,7 +58,7 @@ template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsAir(const type_key & key)
 {
 	type_cell c;
-	m_world[key].GetCellType(c);
+	m_world.m_mac_grid[key].GetCellType(c);
 	return GetIsAir(c);
 }
 
@@ -66,14 +66,14 @@ template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsFluidOnly(const type_key & key)
 {
 	type_cell c;
-	m_world[key].GetCellType(c);
+	m_world.m_mac_grid[key].GetCellType(c);
 	return GetIsFluidOnly(c);
 }
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsAirOnly(const type_key & key)
 {
 	type_cell c;
-	m_world[key].GetCellType(c);
+	m_world.m_mac_grid[key].GetCellType(c);
 	return GetIsAirOnly(c);
 }
 
@@ -81,7 +81,7 @@ template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsBoundaryAir(const type_key & key)
 {
 	type_cell c;
-	m_world[key].GetCellType(c);
+	m_world.m_mac_grid[key].GetCellType(c);
 	return GetIsBoundaryAir(c);
 }
 
@@ -89,7 +89,7 @@ template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsBoundaryFluid(const type_key & key)
 {
 	type_cell c;
-	m_world[key].GetCellType(c);
+	m_world.m_mac_grid[key].GetCellType(c);
 	return GetIsBoundaryFluid(c);
 }
 
@@ -97,7 +97,7 @@ template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsBoundary(const type_key & key)
 {
 	type_cell c;
-	m_world[key].GetCellType(c);
+	m_world.m_mac_grid[key].GetCellType(c);
 	return GetIsBoundary(c);
 }
 template <class TypeWorld>
@@ -199,25 +199,25 @@ Type_Inter GetCellType<TypeWorld>::GetInter(const type_key & key1,int i,int sign
 }
 
 template <class TypeWorld>
-const type_data & GetCellType<TypeWorld>::GetRhoInter(const type_key & key1,const type_key &key2)
+const typename GetCellType<TypeWorld>::type_data & GetCellType<TypeWorld>::GetRhoInter(const type_key & key1,const type_key &key2)
 {
 	switch(GetInter(key1,key2))
 	{
-		case Fluid_Fluid:
+		case Type_Inter::Fluid_Fluid:
 			return m_rho_fluid;
-		case Air_Air:
+		case Type_Inter::Air_Air:
 			return m_rho_air;
-		case Fluid_Air:
+		case Type_Inter::Fluid_Air:
 			return m_rho_inter;
-		case Fluid_Air_Boundary:
+		case Type_Inter::Fluid_Air_Boundary:
 			return m_rho_inter_bound;
-		case Air_Boundary_Air_Boundary:
+		case Type_Inter::Air_Boundary_Air_Boundary:
 			return m_rho_air;
 	}
 }
 
 template <class TypeWorld>
-const type_data & GetCellType<TypeWorld>::GetRhoInter(const type_key &key1,int i,int sign)
+const  typename GetCellType<TypeWorld>::type_data& GetCellType<TypeWorld>::GetRhoInter(const type_key &key1,int i,int sign)
 {
 	type_key key2=key1;
 	key2.Set(i,key1.Get(i)+sign);
@@ -225,25 +225,25 @@ const type_data & GetCellType<TypeWorld>::GetRhoInter(const type_key &key1,int i
 }
 
 template <class TypeWorld>
-const type_data & GetCellType<TypeWorld>::Get1_RhoInter(const type_key & key1,const type_key &key2)
+const typename GetCellType<TypeWorld>::type_data& GetCellType<TypeWorld>::Get1_RhoInter(const type_key & key1,const type_key &key2)
 {
 	switch(GetInter(key1,key2))
 	{
-		case Fluid_Fluid:
+		case Type_Inter::Fluid_Fluid:
 			return m_1_rho_fluid;
-		case Air_Air:
+		case Type_Inter::Air_Air:
 			return m_1_rho_air;
-		case Fluid_Air:
+		case Type_Inter::Fluid_Air:
 			return m_1_rho_inter;
-		case Fluid_Air_Boundary:
+		case Type_Inter::Fluid_Air_Boundary:
 			return m_1_rho_inter_bound;
-		case Air_Boundary_Air_Boundary:
+		case Type_Inter::Air_Boundary_Air_Boundary:
 			return m_1_rho_air;
 	}
 }
 
 template <class TypeWorld>
-const type_data & GetCellType<TypeWorld>::Get1_RhoInter(const type_key &key1,int i,int sign)
+const typename GetCellType<TypeWorld>::type_data & GetCellType<TypeWorld>::Get1_RhoInter(const type_key &key1,int i,int sign)
 {
 	type_key key2=key1;
 	key2.Set(i,key1.Get(i)+sign);

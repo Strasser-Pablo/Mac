@@ -1,6 +1,5 @@
 #ifndef GetCellType_H
-
-enum class Type_Inter{Fluid_Fluid,Air_Air,Fluid_Air,Fluid_Air_Boundary,Air_Boundary_Air_Boundary};
+#include "Type_Inter.h"
 
 template <class TypeWorld>
 class GetCellType
@@ -51,11 +50,11 @@ public:
 	const type_data & GetInterBoundRho();
 	const type_data & GetInterBound1_Rho();
 	Type_Inter GetInter(const type_key & key1,const type_key &key2);
-	Type_Inter GetInter(const type_key & key1,int i,int sign=1);
+	Type_Inter GetInter(const type_key & key1,int i,int sign=-1);
 	const type_data & GetRhoInter(const type_key & key1,const type_key &key2);
-	const type_data & GetRhoInter(const type_key &key1,int i,int sign=1);
+	const type_data & GetRhoInter(const type_key &key1,int i,int sign=-1);
 	const type_data & Get1_RhoInter(const type_key & key1,const type_key &key2);
-	const type_data & Get1_RhoInter(const type_key &key1,int i,int sign=1);
+	const type_data & Get1_RhoInter(const type_key &key1,int i,int sign=-1);
 };
 
 #include "GetCellType.tpp"
