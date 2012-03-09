@@ -49,56 +49,84 @@ bool GetCellType<TypeWorld>::GetIsBoundary(const type_cell & cell)
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsFluid(const type_key & key)
 {
-	type_cell c;
-	m_world.m_mac_grid[key].GetCellType(c);
-	return GetIsFluid(c);
+	if(m_world.m_mac_grind.Exist(key))
+	{
+		type_cell c;
+		m_world.m_mac_grid[key].GetCellType(c);
+		return GetIsFluid(c);
+	}
+	return false;
 }
 
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsAir(const type_key & key)
 {
-	type_cell c;
-	m_world.m_mac_grid[key].GetCellType(c);
-	return GetIsAir(c);
+	if(m_world.m_mac_grind.Exist(key))
+	{
+		type_cell c;
+		m_world.m_mac_grid[key].GetCellType(c);
+		return GetIsAir(c);
+	}
+	return true;
 }
 
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsFluidOnly(const type_key & key)
 {
-	type_cell c;
-	m_world.m_mac_grid[key].GetCellType(c);
-	return GetIsFluidOnly(c);
+	if(m_world.m_mac_grid.Exist(key))
+	{
+		type_cell c;
+		m_world.m_mac_grid[key].GetCellType(c);
+		return GetIsFluidOnly(c);
+	}
+	return false;
 }
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsAirOnly(const type_key & key)
 {
-	type_cell c;
-	m_world.m_mac_grid[key].GetCellType(c);
-	return GetIsAirOnly(c);
+	if(m_world.m_mac_grid.Exist(key))
+	{
+		type_cell c;
+		m_world.m_mac_grid[key].GetCellType(c);
+		return GetIsAirOnly(c);
+	}
+	return true;
 }
 
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsBoundaryAir(const type_key & key)
 {
-	type_cell c;
-	m_world.m_mac_grid[key].GetCellType(c);
-	return GetIsBoundaryAir(c);
+	if(m_world.m_mac_grid.Exist(key))
+	{
+		type_cell c;
+		m_world.m_mac_grid[key].GetCellType(c);
+		return GetIsBoundaryAir(c);
+	}
+	return false;
 }
 
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsBoundaryFluid(const type_key & key)
 {
-	type_cell c;
-	m_world.m_mac_grid[key].GetCellType(c);
-	return GetIsBoundaryFluid(c);
+	if(m_world.m_mac_grid.Exist(key))
+	{
+		type_cell c;
+		m_world.m_mac_grid[key].GetCellType(c);
+		return GetIsBoundaryFluid(c);
+	}
+	return false;
 }
 
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsBoundary(const type_key & key)
 {
-	type_cell c;
-	m_world.m_mac_grid[key].GetCellType(c);
-	return GetIsBoundary(c);
+	if(m_world.m_mac_grid.Exist(key))
+	{
+		type_cell c;
+		m_world.m_mac_grid[key].GetCellType(c);
+		return GetIsBoundary(c);
+	}
+	return false;
 }
 template <class TypeWorld>
 const typename GetCellType<TypeWorld>::type_cell & GetCellType<TypeWorld>::GetFluid()

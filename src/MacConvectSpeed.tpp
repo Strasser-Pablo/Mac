@@ -35,8 +35,6 @@ void MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos,GetTy
 			
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		type_cell type;
-		it.data().GetCellType(type);
 		bool b=false;
 		for(int i=1;i<=type_dim;++i)
 		{
