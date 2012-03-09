@@ -91,7 +91,7 @@ template<int Dim,class TypeData>
 Physvector<Dim,TypeData> operator*(const Physvector<Dim,TypeData> & vect,const TypeData & C);
 
 template<int Dim,class TypeData>
-ostream& operator<<(ostream& output, Physvector<Dim,TypeData>& v);
+ostream& operator<<(ostream& output,const Physvector<Dim,TypeData>& v);
 
 
 /**
@@ -208,7 +208,7 @@ public:
 	 **/
 	friend Physvector<Dim,TypeData> operator*<Dim,TypeData>(const Physvector<Dim,TypeData> & vect,const TypeData & C);
 	
-	friend ostream& operator<<<Dim,TypeData>(ostream& output, Physvector<Dim,TypeData>& v);
+	friend ostream& operator<<<Dim,TypeData>(ostream& output,const Physvector<Dim,TypeData>& v);
 	#ifdef TesThrowIntExcept
 	void Boum();
 	#endif
