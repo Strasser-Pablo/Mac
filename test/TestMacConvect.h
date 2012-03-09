@@ -11,6 +11,7 @@
 #include "../src/MacGetStagPos.h"
 #include "../src/MacConvectSpeed.h"
 #include "../src/RungeKutta.h"
+#include "../src/GetCellType.h"
 #define eps 1e-10
 class Test_MacConvect : public CxxTest::TestSuite
 {
@@ -25,6 +26,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<1,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<1,double> temp;
 		temp.Set(1,2.0);
 		mac c1(temp,0,1,0);
@@ -41,6 +43,19 @@ class Test_MacConvect : public CxxTest::TestSuite
 		k[vkey]=c3;
 		list_part lp;
 		world W(k,lp);
+		int m_air=0;
+		int m_fluid=1;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		double m_rho_fluid=1000;
+		double m_rho_air=1;
+		double m_1_rho_fluid=0.001;
+		double m_1_rho_air=1;
+		double m_rho_inter=1000;
+		double m_rho_inter_bound=1000;
+		double m_1_rho_inter=0.001;
+		double m_1_rho_inter_bound=0.001;
+		type_getcelltype m_GetCellType(W,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
 		Physvector<1,double>  vh;
 		vh.Set(1,1.0);
 		typedef MacGetStagPos<world>  type_stag;
@@ -50,9 +65,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef RungeKutta<Physvector<1,double> ,MacConvectSpeedFunctor<world,type_vel>,double >  type_meth;
 		type_meth R;
 		double dt=0.2;
-		int m_fluid=1;
-		NeighborsVelocity<1,int> m_N_V;
-		MacConvectSpeed<world,type_meth,type_vel,type_stag > Conv(W,R,Nlin,stag,dt,m_fluid,m_N_V);
+		MacConvectSpeed<world,type_meth,type_vel,type_stag,type_getcelltype > Conv(W,R,Nlin,stag,dt,m_GetCellType);
 		Conv.Calculate();
 		vkey.Set(1,0);
 		Physvector<1,double> vtemp;
@@ -70,6 +83,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<2,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<2,double> temp;
 		temp.Set(1,2.0);
 		temp.Set(2,0.0);
@@ -95,6 +109,19 @@ class Test_MacConvect : public CxxTest::TestSuite
 		k[vkey]=c5;
 		list_part lp;
 		world W(k,lp);
+		int m_air=0;
+		int m_fluid=1;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		double m_rho_fluid=1000;
+		double m_rho_air=1;
+		double m_1_rho_fluid=0.001;
+		double m_1_rho_air=1;
+		double m_rho_inter=1000;
+		double m_rho_inter_bound=1000;
+		double m_1_rho_inter=0.001;
+		double m_1_rho_inter_bound=0.001;
+		type_getcelltype m_GetCellType(W,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
 		Physvector<2,double>  vh;
 		vh.Set(1,1.0);
 		vh.Set(2,1.0);
@@ -105,8 +132,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef RungeKutta<Physvector<2,double> ,MacConvectSpeedFunctor<world,type_vel>,double >  type_meth;
 		type_meth R;
 		double dt=0.00;
-		NeighborsVelocity<2,int> m_N_V;
-		MacConvectSpeed<world,type_meth,type_vel,type_stag> Conv(W,R,Nlin,stag,dt,1,m_N_V);
+		MacConvectSpeed<world,type_meth,type_vel,type_stag,type_getcelltype> Conv(W,R,Nlin,stag,dt,m_GetCellType);
 		Conv.Calculate();
 		vkey.Set(1,0);
 		vkey.Set(2,0);
@@ -125,6 +151,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<1,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<1,double> temp;
 		temp.Set(1,2.0);
 		mac c1(temp,0,1,0);
@@ -142,6 +169,19 @@ class Test_MacConvect : public CxxTest::TestSuite
 		k[vkey]=c3;
 		list_part lp;
 		world W(k,lp);
+		int m_air=0;
+		int m_fluid=1;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		double m_rho_fluid=1000;
+		double m_rho_air=1;
+		double m_1_rho_fluid=0.001;
+		double m_1_rho_air=1;
+		double m_rho_inter=1000;
+		double m_rho_inter_bound=1000;
+		double m_1_rho_inter=0.001;
+		double m_1_rho_inter_bound=0.001;
+		type_getcelltype m_GetCellType(W,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
 		Physvector<1,double>  vh;
 		vh.Set(1,1.0);
 		typedef MacGetStagPos<world>  type_stag;
@@ -151,8 +191,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef RungeKutta<Physvector<1,double> ,MacConvectSpeedFunctor<world,type_vel>,double >  type_meth;
 		type_meth R;
 		double dt=0.2;
-		NeighborsVelocity<1,int> m_N_V;
-		MacConvectSpeed<world,type_meth,type_vel,type_stag> Conv(W,R,Nlin,stag,dt,1,m_N_V);
+		MacConvectSpeed<world,type_meth,type_vel,type_stag,type_getcelltype> Conv(W,R,Nlin,stag,dt,m_GetCellType);
 		Conv.Calculate();
 		vkey.Set(1,0);
 		Physvector<1,double> vtemp;
@@ -170,6 +209,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef PhysvectorKeyOrder<2,int> order;
 		typedef KeyTableMap<keyvect,mac,order> keytable;
 		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType<world> type_getcelltype;
 		Physvector<2,double> temp;
 		temp.Set(1,2.0);
 		temp.Set(2,0.0);
@@ -189,6 +229,19 @@ class Test_MacConvect : public CxxTest::TestSuite
 		k[vkey]=c3;
 		list_part lp;
 		world W(k,lp);
+		int m_air=0;
+		int m_fluid=1;
+		int m_boundary_air=2;
+		int m_boundary_fluid=3;
+		double m_rho_fluid=1000;
+		double m_rho_air=1;
+		double m_1_rho_fluid=0.001;
+		double m_1_rho_air=1;
+		double m_rho_inter=1000;
+		double m_rho_inter_bound=1000;
+		double m_1_rho_inter=0.001;
+		double m_1_rho_inter_bound=0.001;
+		type_getcelltype m_GetCellType(W,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
 		Physvector<2,double>  vh;
 		vh.Set(1,1.0);
 		vh.Set(2,1.0);
@@ -199,8 +252,7 @@ class Test_MacConvect : public CxxTest::TestSuite
 		typedef RungeKutta<Physvector<2,double> ,MacConvectSpeedFunctor<world,type_vel>,double >  type_meth;
 		type_meth R;
 		double dt=0.2;
-		NeighborsVelocity<2,int> m_N_V;
-		MacConvectSpeed<world,type_meth,type_vel,type_stag> Conv(W,R,Nlin,stag,dt,1,m_N_V);
+		MacConvectSpeed<world,type_meth,type_vel,type_stag,type_getcelltype> Conv(W,R,Nlin,stag,dt,m_GetCellType);
 		Conv.Calculate();
 		vkey.Set(1,0);
 		vkey.Set(2,0);
