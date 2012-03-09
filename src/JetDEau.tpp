@@ -3,7 +3,7 @@ m_table(m_O),m_w(m_table,m_part),m_init(m_w,m_GetCellType,m_v_1_h,m_v_h,5,m_stag
 m_stag(m_v_h),m_get_v(m_w,m_stag,m_v_1_h),m_boundary_air(2),m_boundary_fluid(3),
 m_conv(m_w,m_rungeKutta,m_get_v,m_stag,m_dt,m_fluid,m_N_V),
 m_grav(m_w,m_g,m_dt,m_fluid,m_GetCellType),
-m_viscosity(m_w,m_viscosity_const,m_dt,m_v_1_h,m_fluid),
+m_viscosity(m_w,m_viscosity_const,m_dt,m_v_1_h,m_GetCellType),
 m_out(m_w,m_stag,m_v_h,m_t,1),m_time_step(m_w,m_v_1_h,m_cfl_factor,m_dt,m_GetCellType),
 m_pres(m_w,m_v_1_h,m_GetCellType),m_pres_umf(m_w,m_v_1_h,m_GetCellType),m_extrapolate_v(m_w,m_GetCellType,5,m_N_V),
 m_move_part(m_w,m_rungeKutta,m_get_v,m_dt),
