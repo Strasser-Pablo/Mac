@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-
+project(MAC CXX)
 option (USE_TESTING 
         "Build the test case?" ON) 
 	
@@ -14,6 +14,11 @@ option (USE_INSTALLATION
 
 option (USE_GOOGLE_PERF
 		"Build with Google Perf" ON)
+option (USE_COMPILER_OPTION_WALL "Build with -Wall option that will generate more warning" ON)
+
+option (USE_COMPILER_OPTION_IGNORE_WARNING_REORDER "Build with -Wnoreorder to ignore reorder warning" on)
+
+include(CheckCXXCompilerFlag)
 
 if (USE_TESTING)
  ENABLE_TESTING()
@@ -23,9 +28,6 @@ if(USE_INSTALLATION)
 include (InstallRequiredSystemLibraries)
 include (CPack)
 endif(USE_INSTALLATION)
-
-ADD_DEFINITIONS(-march=native -std=c++0x)
-
 FIND_PACKAGE(VTK REQUIRED)
 INCLUDE(${VTK_USE_FILE})
 
@@ -64,6 +66,44 @@ COMMENT "Writing documentation ..."
 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/doc/")
 endif(USE_DOXYGEN)
 
+CHECK_CXX_COMPILER_FLAG(-march=native COMPILER_NATIVE)
+CHECK_CXX_COMPILER_FLAG(-std=c++0x COMPILER_CPP0x)
+
+if(USE_COMPILER_OPTION_WALL)
+	CHECK_CXX_COMPILER_FLAG(-Wall COMPILER_WALL)
+endif(USE_COMPILER_OPTION_WALL)
+if(COMPILER_WALL)
+	ADD_DEFINITIONS(-Wall)
+endif(COMPILER_WALL)
+
+if(COMPILER_NATIVE)
+ADD_DEFINITIONS(-march=native)
+endif(COMPILER_NATIVE)
+
+if(COMPILER_CPP0x)
+ADD_DEFINITIONS(-std=c++0x)
+endif(COMPILER_CPP0x)
+
+if(USE_COMPILER_OPTION_IGNORE_WARNING_REORDER)
+	CHECK_CXX_COMPILER_FLAG(-Wno-reorder COMPILER_WNOREORDER)
+endif(USE_COMPILER_OPTION_IGNORE_WARNING_REORDER)
+
+if(COMPILER_WNOREORDER)
+	ADD_DEFINITIONS(-Wno-reorder)
+endif(COMPILER_WNOREORDER)
+
+set(BACKUP_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS})
+SET(CMAKE_REQUIRED_FLAGS "--coverage")
+CHECK_CXX_COMPILER_FLAG("--coverage -g" COMPILER_COVERAGE)
+set(CMAKE_REQUIRED_FLAGS ${BACKUP_REQUIRED_FLAGS})
+CHECK_CXX_COMPILER_FLAG(-o0 COMPILER_NO_OPTIMISATION)
+if(COMPILER_COVERAGE)
+	set(COMPILER_COVERAGE_FLAG "--coverage -g ")
+endif(COMPILER_COVERAGE)
+if(COMPILER_NO_OPTIMISATION)
+	set(COMPILER_NO_OPTIMISATION_FLAG "-o0 ")
+endif(COMPILER_NO_OPTIMISATION)
+
 add_executable(computation ${source_files})
 TARGET_LINK_LIBRARIES(computation vtkHybrid)
 if(USE_UMFPACK)
@@ -78,147 +118,97 @@ install (TARGETS computation DESTINATION bin)
 
 if (USE_TESTING)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
-CXXTEST_ADD_TEST(test_cov_physvector test/TestPhysvector.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPhysvector.h)
-set_target_properties(test_cov_physvector PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs  --coverage -o0" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs  --coverage -o0")
-
-CXXTEST_ADD_TEST(test_cov_KeyTableMap test/TestKeyTableMap.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestKeyTableMap.h)
-set_target_properties(test_cov_KeyTableMap PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-CXXTEST_ADD_TEST(test_cov_MacCell test/TestMacCell.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacCell.h)
-set_target_properties(test_cov_MacCell PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
 
 
-CXXTEST_ADD_TEST(test_cov_Particle test/TestParticle.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestParticle.h)
-set_target_properties(test_cov_Particle PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+function(AddTestProperty target)
+	set(COMPILER_FLAG "${COMPILER_COVERAGE_FLAG} ${COMPILER_NO_OPTIMISATION_FLAG}")
+	set_target_properties(${target} PROPERTIES COMPILE_FLAGS ${COMPILER_FLAG} LINK_FLAGS ${COMPILER_FLAG}  )
+endfunction(AddTestProperty)
 
+CXXTEST_ADD_TEST(test_cov_physvector test/TestPhysvector.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPhysvector.h)
+AddTestProperty(test_cov_physvector) 
 
-CXXTEST_ADD_TEST(test_cov_TableContainerList test/TestTableContainerList.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestTableContainerList.h)
-set_target_properties(test_cov_TableContainerList PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_KeyTableMap test/TestKeyTableMap.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestKeyTableMap.h)
+AddTestProperty(test_cov_KeyTableMap) 
 
+CXXTEST_ADD_TEST(test_cov_MacCell test/TestMacCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacCell.h)
+AddTestProperty(test_cov_MacCell) 
 
-CXXTEST_ADD_TEST(test_cov_MaximalSpeed test/TestMaximalSpeed.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMaximalSpeed.h)
-set_target_properties(test_cov_MaximalSpeed PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_Particle test/TestParticle.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestParticle.h)
+AddTestProperty(test_cov_Particle) 
 
+CXXTEST_ADD_TEST(test_cov_TableContainerList test/TestTableContainerList.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestTableContainerList.h)
+AddTestProperty(test_cov_TableContainerList) 
 
-CXXTEST_ADD_TEST(test_cov_CalculateTimeStep test/TestCalculateTimeStep.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestCalculateTimeStep.h)
-set_target_properties(test_cov_CalculateTimeStep PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_MaximalSpeed test/TestMaximalSpeed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMaximalSpeed.h)
+AddTestProperty(test_cov_MaximalSpeed) 
 
+CXXTEST_ADD_TEST(test_cov_CalculateTimeStep test/TestCalculateTimeStep.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestCalculateTimeStep.h)
+AddTestProperty(test_cov_CalculateTimeStep) 
 
-CXXTEST_ADD_TEST(test_cov_Rounding test/TestRounding.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestRounding.h)
-set_target_properties(test_cov_Rounding PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_Rounding test/TestRounding.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestRounding.h)
+AddTestProperty(test_cov_Rounding) 
 
+CXXTEST_ADD_TEST(test_cov_ApplyToVectorElement test/TestApplyToVectorElement.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestApplyToVectorElement.h)
+AddTestProperty(test_cov_ApplyToVectorElement) 
 
-CXXTEST_ADD_TEST(test_cov_ApplyToVectorElement test/TestApplyToVectorElement.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestApplyToVectorElement.h)
-set_target_properties(test_cov_ApplyToVectorElement PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_ParticleToKey test/TestParticleToKey.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestParticleToKey.h)
+AddTestProperty(test_cov_ParticleToKey) 
 
-CXXTEST_ADD_TEST(test_cov_ParticleToKey test/TestParticleToKey.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestParticleToKey.h)
-set_target_properties(test_cov_ParticleToKey PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_UpdateCellFluid test/TestUpdateCellFluid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellFluid.h)
+AddTestProperty(test_cov_UpdateCellFluid) 
 
+CXXTEST_ADD_TEST(test_cov_UpdateCellToInitialLayer test/TestUpdateCellToInitialLayer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellToInitialLayer.h)
+AddTestProperty(test_cov_UpdateCellToInitialLayer) 
 
-CXXTEST_ADD_TEST(test_cov_UpdateCellFluid test/TestUpdateCellFluid.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellFluid.h)
-set_target_properties(test_cov_UpdateCellFluid PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_NeighborsPhysvector test/TestNeighborsPhysvector.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsPhysvector.h)
+AddTestProperty(test_cov_NeighborsPhysvector) 
 
+CXXTEST_ADD_TEST(test_cov_UpdateCellTypeAndLayer test/TestUpdateCellTypeAndLayer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellTypeAndLayer.h)
+AddTestProperty(test_cov_UpdateCellTypeAndLayer) 
 
+CXXTEST_ADD_TEST(test_cov_UpdateDeleteCell test/TestUpdateDeleteCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateDeleteCell.h)
+AddTestProperty(test_cov_UpdateDeleteCell) 
 
-CXXTEST_ADD_TEST(test_cov_UpdateCellToInitialLayer test/TestUpdateCellToInitialLayer.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellToInitialLayer.h)
-set_target_properties(test_cov_UpdateCellToInitialLayer PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_MacInitializeCell test/TestMacInitializeCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacInitializeCell.h)
+AddTestProperty(test_cov_MacInitializeCell) 
 
-CXXTEST_ADD_TEST(test_cov_NeighborsPhysvector test/TestNeighborsPhysvector.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsPhysvector.h)
-set_target_properties(test_cov_NeighborsPhysvector PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_NLinearInterpolation test/TestNLinearInterpolation.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNLinearInterpolation.h)
+AddTestProperty(test_cov_NLinearInterpolation) 
 
+CXXTEST_ADD_TEST(test_cov_MacGetVelocity test/TestMacGetVelocity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacGetVelocity.h)
+AddTestProperty(test_cov_MacGetVelocity) 
 
-CXXTEST_ADD_TEST(test_cov_UpdateCellTypeAndLayer test/TestUpdateCellTypeAndLayer.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellTypeAndLayer.h)
-set_target_properties(test_cov_UpdateCellTypeAndLayer PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_MacConvect test/TestMacConvect.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacConvect.h)
+AddTestProperty(test_cov_MacConvect) 
 
+CXXTEST_ADD_TEST(test_cov_MacGravity test/TestMacGravity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacGravity.h)
+AddTestProperty(test_cov_MacGravity) 
 
-CXXTEST_ADD_TEST(test_cov_UpdateDeleteCell test/TestUpdateDeleteCell.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateDeleteCell.h)
-set_target_properties(test_cov_UpdateDeleteCell PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_ComputeSpeedLaplacien test/TestComputeSpeedLaplacien.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestComputeSpeedLaplacien.h)
+AddTestProperty(test_cov_ComputeSpeedLaplacien) 
 
+CXXTEST_ADD_TEST(test_cov_MacApplyViscosity test/TestMacApplyViscosity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacApplyViscosity.h)
+AddTestProperty(test_cov_MacApplyViscosity) 
 
-CXXTEST_ADD_TEST(test_cov_MacInitializeCell test/TestMacInitializeCell.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacInitializeCell.h)
-set_target_properties(test_cov_MacInitializeCell PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_SolvePressureCG test/TestSolvePressureCG.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSolvePressureCG.h)
+AddTestProperty(test_cov_SolvePressureCG) 
 
+CXXTEST_ADD_TEST(test_cov_NeighborsVelocity test/TestNeighborsVelocity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsVelocity.h)
+AddTestProperty(test_cov_NeighborsVelocity) 
 
+CXXTEST_ADD_TEST(test_cov_SetLayerFluidCell test/TestSetLayerFluidCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSetLayerFluidCell.h)
+AddTestProperty(test_cov_SetLayerFluidCell) 
 
+CXXTEST_ADD_TEST(test_cov_ExtrapolateCellFluid test/TestExtrapolateCellFluid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestExtrapolateCellFluid.h)
+AddTestProperty(test_cov_ExtrapolateCellFluid) 
 
-CXXTEST_ADD_TEST(test_cov_NLinearInterpolation test/TestNLinearInterpolation.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNLinearInterpolation.h)
-set_target_properties(test_cov_NLinearInterpolation PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+CXXTEST_ADD_TEST(test_cov_OutputVectorSpeed test/TestOutputVectorSpeed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestOutputVectorSpeed.h)
+AddTestProperty(test_cov_OutputVectorSpeed)
 
+CXXTEST_ADD_TEST(test_cov_SolvePressureUmfpack test/TestSolvePressureUmfpack.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSolvePressureUmfpack.h)
+AddTestProperty(test_cov_SolvePressureUmfpack)
 
-
-CXXTEST_ADD_TEST(test_cov_MacGetVelocity test/TestMacGetVelocity.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacGetVelocity.h)
-set_target_properties(test_cov_MacGetVelocity PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-
-
-CXXTEST_ADD_TEST(test_cov_MacConvect test/TestMacConvect.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacConvect.h)
-set_target_properties(test_cov_MacConvect PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-
-
-CXXTEST_ADD_TEST(test_cov_MacGravity test/TestMacGravity.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacGravity.h)
-set_target_properties(test_cov_MacGravity PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-
-CXXTEST_ADD_TEST(test_cov_ComputeSpeedLaplacien test/TestComputeSpeedLaplacien.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestComputeSpeedLaplacien.h)
-set_target_properties(test_cov_ComputeSpeedLaplacien PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-
-
-CXXTEST_ADD_TEST(test_cov_MacApplyViscosity test/TestMacApplyViscosity.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacApplyViscosity.h)
-set_target_properties(test_cov_MacApplyViscosity PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-
-CXXTEST_ADD_TEST(test_cov_SolvePressureCG test/TestSolvePressureCG.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSolvePressureCG.h)
-set_target_properties(test_cov_SolvePressureCG PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-
-CXXTEST_ADD_TEST(test_cov_NeighborsVelocity test/TestNeighborsVelocity.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsVelocity.h)
-set_target_properties(test_cov_NeighborsVelocity PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-
-
-CXXTEST_ADD_TEST(test_cov_SetLayerFluidCell test/TestSetLayerFluidCell.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSetLayerFluidCell.h)
-set_target_properties(test_cov_SetLayerFluidCell PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-
-CXXTEST_ADD_TEST(test_cov_ExtrapolateCellFluid test/TestExtrapolateCellFluid.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestExtrapolateCellFluid.h)
-set_target_properties(test_cov_ExtrapolateCellFluid PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-
-CXXTEST_ADD_TEST(test_cov_OutputVectorSpeed test/TestOutputVectorSpeed.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestOutputVectorSpeed.h)
-set_target_properties(test_cov_OutputVectorSpeed PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
-CXXTEST_ADD_TEST(test_cov_SolvePressureUmfpack test/TestSolvePressureUmfpack.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSolvePressureUmfpack.h)
-set_target_properties(test_cov_OutputVectorSpeed PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
 if(USE_UMFPACK)
 TARGET_LINK_LIBRARIES(test_cov_SolvePressureUmfpack -lumfpack)
 endif(USE_UMFPACK)
