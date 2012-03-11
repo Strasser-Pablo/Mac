@@ -269,6 +269,6 @@ class Test_OutputVectorSpeed : public CxxTest::TestSuite
 		out.Output(S,1);
 		stringstream S2;
 		out.OutputPressure(S2);
-		cout<<S2.str();
+		//cout<<S2.str();
 	}
 };
