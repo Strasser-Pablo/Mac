@@ -22,7 +22,7 @@ m_rho_fluid(1000),m_rho_air(1),m_1_rho_fluid(0.001),m_1_rho_air(1),m_rho_inter(1
 	//m_viscosity_const=0;
 	Physvector<dim,double> speed;
 	speed.SetAll(0);
-	double speedmax=55;
+	double speedmax=5;
 	m_v_1_h.SetAll(20);
 	m_v_h.SetAll(0.05);
 	m_v_h.Set(2,1);

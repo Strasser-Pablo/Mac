@@ -14,7 +14,7 @@
 #include "SolvePressureCG.h"
 #include "Output.h"
 #include "MacGravity.h"
-#include "MacInitializeCell.h"
+#include "MacInitializeCell3.h"
 #include "MacApplyViscosity.h"
 #include "CalculateTimeStep.h"
 #include "ExtrapolateCellFluid.h"
@@ -84,7 +84,7 @@ class JetDEau
 	Physvector<dim,double> m_g;
 	Physvector<dim,double> m_v_h;
 	Physvector<dim,double> m_v_1_h;
-	MacInitializeCell<world,type_stag,type_get_cell_type,type_partcondfunc,type_pres_func> m_init;
+	MacInitializeCell3<world,type_stag,type_get_cell_type,type_partcondfunc,type_pres_func> m_init;
 	MacApplyViscosity<world,type_get_cell_type> m_viscosity;
 	CalculateTimeStepNonIso<world,double,type_get_cell_type> m_time_step;
 	ExtrapolateCellFluid<world,type_get_cell_type> m_extrapolate_v;

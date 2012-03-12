@@ -30,8 +30,8 @@ class MacInitializeCell3
 	typedef typename TypeWorld::type_cell type_cell;
 	static const int type_dim=TypeWorld::type_dim;
 	 UpdateCellToInitialLayer<TypeWorld> mc_init;
-	 UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart> mc_fluid;
-	 UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure> mc_layer;
+	 UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart> mc_fluid;
+	 UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure> mc_layer;
 	 UpdateDeleteCell<TypeWorld> mc_delete;
 public:
 	/**
