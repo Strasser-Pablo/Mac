@@ -13,7 +13,6 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::Output(const char * filename,i
 	vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
 	int nbCell=0;
 	int nbPoint=0;
-	int nbvois=pow(2,type_dim);
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		Physvector<type_dim,type_data> temp=m_stag_pos.Get(it.key(),ind);
@@ -162,7 +161,6 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputPressure(const char * fi
 	vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
 	int nbCell=0;
 	int nbPoint=0;
-	int nbvois=pow(2,type_dim);
 	int nbexist=0;
 	m_i=0;
 	KeyTableMap<typename TypeWorld::type_key,int,PhysvectorKeyOrder<type_dim,int> > m_point2(m_o);
@@ -240,11 +238,9 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputPressure(const char * fi
 		throw VTKDimensionError();
 	}
 	
-	int nbbreak=0;
 	int nbcont=pow(2,type_dim);
 	nbCell=0;
 	int nbtotcon=0;
-	int nbdirdim=0;
 	
 		for(typename KeyTableMap<Physvector<type_dim,int>,int,PhysvectorKeyOrder<type_dim,int> >::iterator it= m_point2.begin();it!=m_point2.end();++it)
 	{
@@ -317,8 +313,6 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputParticle(const char * fi
 	vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 	vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
 	int nbCell=0;
-	int nbPoint=0;
-	int nbvois=pow(2,type_dim);
 	
 	for(typename TypeWorld::type_tablecontainer::iterator it= m_world.m_particle_list.begin();it!=m_world.m_particle_list.end();++it)
 	{

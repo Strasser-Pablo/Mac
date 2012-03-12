@@ -28,7 +28,6 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::Calculate()
 	m_num_to_key.clear();
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		bool b;
 		type_cell type;
 		it.data().GetCellType(type);
 		if(m_GetCellType.GetIsFluid(type))
@@ -72,7 +71,6 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::Calculate()
 	
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		bool b;
 		type_cell type;
 		it.data().GetCellType(type);
 		if(m_GetCellType.GetIsFluid(type))
@@ -178,7 +176,6 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateAColumn(int icol,
 	++inumb;
 	int nboffset=1;
 	double diagval=0;
-	int n=0;
 	for(int i=1;i<=type_dim;++i)
 	{
 		bool b;
