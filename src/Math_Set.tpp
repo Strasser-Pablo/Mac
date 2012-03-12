@@ -156,7 +156,6 @@ Rel_Ensemble Math_Set<1,TypeData>::IsIn(Math_Set<1,TypeData> & B)
 	if(B.m_interval.size()<=1||m_interval.size()<=1)
 	{
 		iterator it=B.m_interval.begin();
-		TypeData m_1=*it;
 		throw logic_error("Is surface closed?");
 	}
 	iterator it=B.m_interval.begin();
