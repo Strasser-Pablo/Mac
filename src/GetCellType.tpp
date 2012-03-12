@@ -49,7 +49,7 @@ bool GetCellType<TypeWorld>::GetIsBoundary(const type_cell & cell)
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsFluid(const type_key & key)
 {
-	if(m_world.m_mac_grind.Exist(key))
+	if(m_world.m_mac_grid.Exist(key))
 	{
 		type_cell c;
 		m_world.m_mac_grid[key].GetCellType(c);
@@ -243,6 +243,7 @@ const typename GetCellType<TypeWorld>::type_data & GetCellType<TypeWorld>::GetRh
 		case Type_Inter::Air_Boundary_Air_Boundary:
 			return m_rho_air;
 	}
+	throw logic_error("GetInter is not of a know type");
 }
 
 template <class TypeWorld>
@@ -269,6 +270,7 @@ const typename GetCellType<TypeWorld>::type_data& GetCellType<TypeWorld>::Get1_R
 		case Type_Inter::Air_Boundary_Air_Boundary:
 			return m_1_rho_air;
 	}
+	throw logic_error("GetInter is not of a know type");
 }
 
 template <class TypeWorld>
