@@ -27,8 +27,6 @@ void Math_Set<DIM,TypeData>::Get(Physvector<DIM2,TypeData> & key,int i,set<TypeD
 template<int DIM,class TypeData>
 Rel_Ensemble Math_Set<DIM,TypeData>::IsIn(Math_Set<DIM,TypeData> & B)
 {
-	cout<<"DIM "<<DIM<<endl;
-	
 	if(m_data.empty()&&B.m_data.empty())
 	{
 		return Rel_Ensemble::Both_Empty;
@@ -155,7 +153,6 @@ Rel_Ensemble Math_Set<1,TypeData>::IsIn(Math_Set<1,TypeData> & B)
 	}
 	if(B.m_interval.size()<=1||m_interval.size()<=1)
 	{
-		iterator it=B.m_interval.begin();
 		throw logic_error("Is surface closed?");
 	}
 	iterator it=B.m_interval.begin();

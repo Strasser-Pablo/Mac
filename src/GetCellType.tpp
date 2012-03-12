@@ -204,7 +204,7 @@ Type_Inter GetCellType<TypeWorld>::GetInter(const type_key & key1,const type_key
 	{
 		return Type_Inter::Air_Air;
 	}
-	if(GetIsFluidOnly(key1)&&GetIsAirOnly(key2)||GetIsFluidOnly(key2)&&GetIsAirOnly(key1))
+	if((GetIsFluidOnly(key1)&&GetIsAirOnly(key2))||(GetIsFluidOnly(key2)&&GetIsAirOnly(key1)))
 	{
 		return Type_Inter::Fluid_Air;
 	}
@@ -212,10 +212,11 @@ Type_Inter GetCellType<TypeWorld>::GetInter(const type_key & key1,const type_key
 	{
 		return Type_Inter::Air_Boundary_Air_Boundary;
 	}
-	if(GetIsFluidOnly(key1)&&GetIsBoundaryAir(key2)||GetIsFluidOnly(key2)&&GetIsBoundaryAir(key1))
+	if((GetIsFluidOnly(key1)&&GetIsBoundaryAir(key2))||(GetIsFluidOnly(key2)&&GetIsBoundaryAir(key1)))
 	{
 		return Type_Inter::Fluid_Air_Boundary;
 	}
+	throw logic_error("GetInter is not of a know type");
 }
 
 template <class TypeWorld>

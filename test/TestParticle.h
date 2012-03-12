@@ -7,7 +7,6 @@ class Test_Partice : public CxxTest::TestSuite
 public:
 	void testCreation(){
 		double x;
-		double v;
 		m_part.SetPos(2.0);
 		m_part.GetPos(x);
 		TS_ASSERT_DELTA(x,2.0,eps);

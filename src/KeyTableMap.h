@@ -22,12 +22,11 @@ template<class TypeKey,class TypeData,class TypeComp=less<TypeKey> >
 class KeyTableMap:public KeyTable<TypeKey,TypeData,KeyTableMapIterator<TypeKey,TypeData,TypeComp>,KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>,typename map<TypeKey,TypeData>::size_type>{
 	map<TypeKey,TypeData,TypeComp> m_map;
 public:
-typedef typename map<TypeKey,TypeData,TypeComp>::size_type size_type;
-typedef KeyTableMapIterator<TypeKey,TypeData,TypeComp> iterator;
-typedef KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>  const_iterator;
-typedef TypeData type_data;
-typedef TypeKey type_key;
-/**	
+	typedef typename map<TypeKey,TypeData,TypeComp>::size_type size_type;
+	typedef KeyTableMapIterator<TypeKey,TypeData,TypeComp> iterator;
+	typedef KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>  const_iterator;
+	typedef TypeData type_data;
+	typedef TypeKey type_key;
 	/**
 	 * @brief
 	 * Construct an empty map with ordening given by argument.

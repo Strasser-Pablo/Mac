@@ -19,7 +19,6 @@ void SolvePressureCG<TypeWorld,TypeGetCellType>::Calculate()
 	m_vois.clear();
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		bool b;
 		type_cell type;
 		it.data().GetCellType(type);
 		if(m_GetCellType.GetIsFluid(type)){
