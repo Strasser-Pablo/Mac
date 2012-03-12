@@ -266,7 +266,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 			}
 			key.GetRef(i)=key.GetRef(i)/2+cor;
 		}
-			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAirBoundary());
+			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAir());
 			m_world.m_mac_grid[key].SetLayer(1);
 	 };
 	for(iterator_map it=m_set.begin();it!=m_set.end();++it)
@@ -293,7 +293,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 				m_world.m_mac_grid[neigh].GetLayer(layer);
 				if(layer==-1)
 				{
-					m_world.m_mac_grid[neigh].SetCellType(m_GetCellType.GetAirBoundary());
+					m_world.m_mac_grid[neigh].SetCellType(m_GetCellType.GetAir());
 					m_world.m_mac_grid[neigh].SetLayer(i);
 					m_world.m_mac_grid[neigh].SetPressure(m_func_pres(neigh));
 				}
