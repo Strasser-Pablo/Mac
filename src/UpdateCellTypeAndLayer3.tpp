@@ -4,7 +4,7 @@
  * Implementation file for class UpdateCellTypeAndLayer3.
  **/
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
-UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres):m_level(level),m_GetCellType(GetCellType),m_world(world),m_func_pres(func_pres),m_bound_set(m_O){
+UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres):m_level(level),m_GetCellType(GetCellType),m_world(world),m_func_pres(func_pres),m_bound_set(m_O),m_delete_cell(world){
 	
 }
 
@@ -31,7 +31,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Up
 		m_world.m_mac_grid[key].GetLayer(layer);
 		if(layer==-1)
 		{
-			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAir());
+			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAirBoundary());
 		}
 	 };
 	for(iterator_map it=m_set.begin();it!=m_set.end();++it)
@@ -39,15 +39,11 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Up
 		it->second.FillSet(f);
 	}
 	CreateLayer();
-}
-
-
-template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
-void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::PrepareConstSpeed()
-{
-
-	CalculateAirNeighbour();
-	CleanSet();
+	//clean temp data.
+	m_set.clear();
+	m_bound_set.clear();
+	m_nb_comp_con=0;
+	m_delete_cell.Update();
 }
 
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
@@ -249,7 +245,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cl
 
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
 void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::CreateLayer()
-{  
+{	
 	 std::function<void(Physvector<type_dim,int>)> g=[&](Physvector<type_dim,int> key)
 	 {
 		 m_bound_set.erase(key);
@@ -266,6 +262,9 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 			}
 			key.GetRef(i)=key.GetRef(i)/2+cor;
 		}
+			//cout<<"bound air "<<key<<endl;
+			int lay;
+			m_world.m_mac_grid[key].GetLayer(lay);
 			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAir());
 			m_world.m_mac_grid[key].SetLayer(1);
 	 };
@@ -293,6 +292,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 				m_world.m_mac_grid[neigh].GetLayer(layer);
 				if(layer==-1)
 				{
+				//	cout<<"m_lay fluid "<<neigh<<endl;
 					m_world.m_mac_grid[neigh].SetCellType(m_GetCellType.GetAir());
 					m_world.m_mac_grid[neigh].SetLayer(i);
 					m_world.m_mac_grid[neigh].SetPressure(m_func_pres(neigh));

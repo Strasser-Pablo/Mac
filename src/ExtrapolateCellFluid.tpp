@@ -15,7 +15,7 @@ template <class TypeWorld,class TypeGetCellType>
 void ExtrapolateCellFluid<TypeWorld,TypeGetCellType>::Calculate(bool b)
 {
 	m_layer_fluid.Calculate();
-	for(int i=1;i<=m_level;++i)
+	for(int i=1;i<=m_level+1;++i)
 	{
 		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 		{

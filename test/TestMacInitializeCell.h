@@ -9,6 +9,7 @@
 #include "../src/Particle.h"
 #include "../src/MacGetStagPos.h"
 #include "../src/GetCellType.h"
+#include "../src/ExtrapolateCellFluid.h"
 #include <functional>
 #define eps 1e-10
 class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
@@ -58,7 +59,8 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		type_getcelltype m_GetCellType(w,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_rho_inter_bound,m_1_rho_inter,m_1_rho_inter_bound);
 		type_part_cond m_part_cond=[](Physvector<3,int> key){return false;};
 		type_pres_func m_pres_func=[](Physvector<3,int> key){return 0;};
-		MacInitializeCell<world,type_stag,type_getcelltype,type_part_cond,type_pres_func>init(w,m_GetCellType,m_v_h,m_v_h,2,m_stag,m_part_cond,m_pres_func);
+		ExtrapolateCellFluid<world,type_getcelltype>  Ex(w,m_GetCellType,1);
+		MacInitializeCell<world,type_stag,type_getcelltype,type_part_cond,type_pres_func,ExtrapolateCellFluid<world,type_getcelltype> >init(w,m_GetCellType,m_v_h,m_v_h,2,m_stag,m_part_cond,m_pres_func,Ex);
 		init.Update();
 		keytable &res=w.m_mac_grid;
 		k1.SetAll(0);

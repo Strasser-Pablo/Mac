@@ -15,6 +15,8 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update
 	typename TypeWorld::type_key tempkey;
 	for(typename TypeWorld::type_tablecontainer::iterator it= m_world.m_particle_list.begin();it!=m_world.m_particle_list.end();++it)
 	{
+		Physvector<type_dim,type_data> pos;
+		(*it).GetPos(pos);
 		tempkey=m_to_key.ToKey(*it);
 		if(type_dim==3)
 		{

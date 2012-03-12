@@ -10,6 +10,7 @@
 #include "NDForMin.h"
 #include "Math_Set2.h"
 #include "PhysvectorKeyOrder.h"
+#include "UpdateDeleteCell.h"
 using namespace std;
 /**
  * @file UpdateCellTypeAndLayer3.h
@@ -38,6 +39,7 @@ class UpdateCellTypeAndLayer3
 	map<int,Math_Set2<type_dim,int> > m_set;
 	PhysvectorKeyOrder<type_dim,int> m_O;
 	set<Physvector<type_dim,int>,PhysvectorKeyOrder<type_dim,int> > m_bound_set;
+	UpdateDeleteCell<TypeWorld> m_delete_cell;
 	void CreateLayer();
 	void CalculateAirNeighbour();
 	void Follow(Physvector<type_dim,int> & key,int id);
@@ -59,13 +61,6 @@ public:
 	 * Do the calculation.
 	 **/
 	void Update();
-	/**
-	 * @brief Create cell above constant speed cell.
-	 * Put the speed of the celle the same that the constant speed.
-	 * And put the type to air.
-	 * To be used the first time in the initialization phase.
-	 **/
-	void PrepareConstSpeed();
 };
 #include "UpdateCellTypeAndLayer3.tpp"
 #endif
