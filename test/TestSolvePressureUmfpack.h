@@ -192,7 +192,7 @@ class Test_SolvePressureUmfpack : public CxxTest::TestSuite
 		TS_ASSERT_DELTA(vtemp.Get(1),1.0,eps);
 		double ptemp;
 		W.m_mac_grid[vkey].GetPressure(ptemp);
-		TS_ASSERT_DELTA(ptemp,1.0,eps);
+		TS_ASSERT_DELTA(ptemp,1000.0,eps);
 		
 		vkey.Set(1,1);
 		W.m_mac_grid[vkey].GetSpeed(vtemp);
@@ -399,7 +399,7 @@ class Test_SolvePressureUmfpack : public CxxTest::TestSuite
 		TS_ASSERT_DELTA(vtemp.Get(2),-0.5,eps);
 		double ptemp;
 		W.m_mac_grid[vkey].GetPressure(ptemp);
-		TS_ASSERT_DELTA(ptemp,0.5,eps);
+		TS_ASSERT_DELTA(ptemp,500,eps);
 		
 		vkey.Set(1,1);
 		vkey.Set(2,0);
@@ -609,7 +609,7 @@ class Test_SolvePressureUmfpack : public CxxTest::TestSuite
 		TS_ASSERT_DELTA(vtemp.Get(1),2.0,eps);
 		double ptemp;
 		W.m_mac_grid[vkey].GetPressure(ptemp);
-		TS_ASSERT_DELTA(ptemp,2.0,eps);
+		TS_ASSERT_DELTA(ptemp,2000,eps);
 		
 		vkey.Set(1,1);
 		W.m_mac_grid[vkey].GetSpeed(vtemp);
@@ -683,7 +683,7 @@ class Test_SolvePressureUmfpack : public CxxTest::TestSuite
 		
 		vkey.Set(1,-1);
 		W.m_mac_grid[vkey].GetPressure(ptemp);
-		TS_ASSERT_DELTA(ptemp,-2.0,eps);
+		TS_ASSERT_DELTA(ptemp,-2000,eps);
 		W.m_mac_grid[vkey].GetSpeed(vtemp);
 		TS_ASSERT_DELTA(vtemp.Get(1),0.0,eps);
 		
