@@ -144,7 +144,7 @@ Physvector<Dim,TypeData> res;
 }
 
 template <int Dim,class TypeData>
-ostream& operator<<(ostream& output, Physvector<Dim,TypeData>& v)
+ostream& operator<<(ostream& output,const Physvector<Dim,TypeData>& v)
 {
 	output<<"< ";
 	for(int i=1;i<Dim;++i)

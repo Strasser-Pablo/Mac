@@ -155,3 +155,26 @@ void MacCell<DIM,TypeData,TypeCell>::GetConstSpeed(int i,bool &b)
 	m_one_const=true;
 }
 
+template <int DIM,class TypeData, class TypeCell>
+void MacCell<DIM,TypeData,TypeCell>::GetInterSpeed(int i,TypeData &speed_comp)
+{
+	speed_comp=m_speed.GetRef(i);
+}
+
+template <int DIM,class TypeData, class TypeCell>
+void MacCell<DIM,TypeData,TypeCell>::SetInterSpeed(int i,TypeData &speed_comp)
+{
+	m_speed.GetRef(i)=speed_comp;
+}
+
+template <int DIM,class TypeData, class TypeCell>
+void MacCell<DIM,TypeData,TypeCell>::GetInterTempSpeed(int i,TypeData &speed_comp)
+{
+	speed_comp=m_speed.GetRef(i);
+}
+
+template <int DIM,class TypeData, class TypeCell>
+void MacCell<DIM,TypeData,TypeCell>::SetInterTempSpeed(int i,TypeData &speed_comp)
+{
+	m_speed.GetRef(i)=speed_comp;
+}

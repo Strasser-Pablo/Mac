@@ -1,7 +1,7 @@
 #ifndef MacGravity_H
 #define MacGravity_H
 
-#include "NeighborsVelocity.h"
+#include "Type_Inter.h"
 
 /**
  * @file MacGravity.h
@@ -14,7 +14,7 @@
  * Apply Gravity to all cell.
  * @tparam TypeWorld type of World.
  **/
-template <class TypeWorld>
+template <class TypeWorld,class GetCellType>
 class MacGravity
 {
 	static const int type_dim=TypeWorld::type_dim;
@@ -24,7 +24,7 @@ class MacGravity
 	const type_data& m_dt;
 	const type_cell m_fluid;
 	TypeWorld & m_world;
-	NeighborsVelocity<type_dim,int> &m_neigh;
+	GetCellType & m_GetCellType;
 public:
 /**
  * @brief 
@@ -35,7 +35,7 @@ public:
  * @param fluid Fluid value.
  * @param neigh Method to know if some velocity component are to be considered fluide although the cell is not fluid.
  **/
-	MacGravity(TypeWorld & world,const Physvector<type_dim,type_data>& g,const type_data &dt,const type_cell fluid,NeighborsVelocity<type_dim,int> &neigh);
+	MacGravity(TypeWorld & world,const Physvector<type_dim,type_data>& g,const type_data &dt,const type_cell fluid,	GetCellType & getCellType);
 	void Calculate();
 };
 

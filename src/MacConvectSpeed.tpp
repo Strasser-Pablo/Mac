@@ -5,13 +5,13 @@
  **/
 
 
-template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos>
-MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos>::MacConvectSpeed(TypeWorld & world,TypeMethod &method,TypeGetSpeed & GetSpeed,TypeGetStagSpeedPos &GetStagPos,type_data &dt,const type_cell & fluid,NeighborsVelocity<type_dim,int> & NV):m_world(world),m_ode(m_speed,m_functor,0,method),m_stag_pos(GetStagPos),m_dt(dt),m_functor(GetSpeed),m_GetSpeed(GetSpeed),m_fluid(fluid),m_NV(NV)
+template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos,class GetTypeCell>
+MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::MacConvectSpeed(TypeWorld & world,TypeMethod &method,TypeGetSpeed & GetSpeed,TypeGetStagSpeedPos &GetStagPos,type_data &dt,GetTypeCell& getTypeCell):m_world(world),m_ode(m_speed,m_functor,0,method),m_stag_pos(GetStagPos),m_dt(dt),m_functor(GetSpeed),m_GetSpeed(GetSpeed),m_GetTypeCell(getTypeCell)
 {
 }
 
-template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos>
-void MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos>::TracePart(const Physvector<type_dim,int>& key,Physvector<type_dim,type_data> &vout)
+template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos,class GetTypeCell>
+void MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::TracePart(const Physvector<type_dim,int>& key,Physvector<type_dim,type_data> &vout)
 {
 	for(int i=1;i<=type_dim;++i){
 	m_speed=m_stag_pos.Get(key,i);
@@ -20,8 +20,8 @@ void MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos>::Tra
 	}
 }
 
-template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos>
-void MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos>::TracePart(const Physvector<type_dim,int>& key,Physvector<type_dim,type_data> &vout,int comp)
+template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos,class GetTypeCell>
+void MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::TracePart(const Physvector<type_dim,int>& key,Physvector<type_dim,type_data> &vout,int comp)
 {
 	m_speed=m_stag_pos.Get(key,comp);
 	m_ode.Calculate(m_dt);
@@ -29,71 +29,38 @@ void MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos>::Tra
 	vout.Set(comp,m_GetSpeed.Get(m_speed).Get(comp));
 }
 
-template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos>
-void MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos>::Calculate()
+template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos,class GetTypeCell>
+void MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::Calculate()
 {
 			
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		type_cell type;
-		it.data().GetCellType(type);
-		if(type==m_fluid){
-		Physvector<type_dim,type_data> temp;
-		TracePart(it.key(),temp);
-		it.data().SetTempSpeed(temp);
+		bool b=false;
+		for(int i=1;i<=type_dim;++i)
+		{
+			b=b||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air_Boundary;
 		}
-		else{
-			Physvector<type_dim,int> temp;
-			Physvector<type_dim,int> v;
-			for(int i=1;i<=type_dim;++i)
-			{
-			if(m_NV.Get(i,temp))
-			{
-			v=it.key()-temp;
-			if(m_world.m_mac_grid.Exist(v))
-				{
-				m_world.m_mac_grid[v].GetCellType(type);
-				if(type==m_fluid)
-				{
-					Physvector<type_dim,type_data> temp2;
-					TracePart(it.key(),temp2,i);
-					it.data().SetTempSpeed(temp2);
-				}
-				}
-			}
-			}
-			}
+		if(b)
+		{
+			Physvector<type_dim,type_data> temp;
+			TracePart(it.key(),temp);
+			it.data().SetTempSpeed(temp);
+		}
 	}
 	
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		type_cell type;
-		it.data().GetCellType(type);
-		if(type==m_fluid)
+		for(int i=1;i<=type_dim;++i)
+		{
+			if(m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air_Boundary)
 			{
-		it.data().TempToSpeed();
+				it.data().TempToSpeed();
+				type_data d;
+				it.data().GetInterTempSpeed(i,d);
+				it.data().SetInterTempSpeed(i,d);
+			}
 		}
-		else{
-			Physvector<type_dim,int> temp;
-			Physvector<type_dim,int> v;
-			for(int i=1;i<=type_dim;++i)
-			{
-			if(m_NV.Get(i,temp))
-			{
-			v=it.key()-temp;
-			if(m_world.m_mac_grid.Exist(v))
-				{
-				m_world.m_mac_grid[v].GetCellType(type);
-				if(type==m_fluid)
-				{
-					it.data().TempToSpeed();
-				}
-				}
-			}
-			}
-			}
 	}
-	
 }
 
 

@@ -61,6 +61,10 @@ class JetDEau
 	double m_rho_air;
 	double m_1_rho_fluid;
 	double m_1_rho_air;
+	double m_rho_inter;
+	double m_1_rho_inter;
+	double m_rho_inter_bound;
+	double m_1_rho_inter_bound;
 	type_meth m_rungeKutta;
 	SolvePressureCG<world,type_get_cell_type> m_pres;
 	SolvePressureUmfpack<world,type_get_cell_type> m_pres_umf;
@@ -71,8 +75,8 @@ class JetDEau
 	keytable m_table;
 	world m_w;
 	Output<world,type_stag> m_out;
-	MacConvectSpeed<world,type_meth,type_vel,type_stag> m_conv;
-	MacGravity<world> m_grav;
+	MacConvectSpeed<world,type_meth,type_vel,type_stag,type_get_cell_type> m_conv;
+	MacGravity<world,type_get_cell_type> m_grav;
 	NeighborsVelocity<dim,int> m_N_V;
 	double m_dt;
 	double m_t;
@@ -81,7 +85,7 @@ class JetDEau
 	Physvector<dim,double> m_v_h;
 	Physvector<dim,double> m_v_1_h;
 	MacInitializeCell<world,type_stag,type_get_cell_type,type_partcondfunc,type_pres_func> m_init;
-	MacApplyViscosity<world> m_viscosity;
+	MacApplyViscosity<world,type_get_cell_type> m_viscosity;
 	CalculateTimeStepNonIso<world,double,type_get_cell_type> m_time_step;
 	ExtrapolateCellFluid<world,type_get_cell_type> m_extrapolate_v;
 	MacMoveParticle<world,type_meth,type_vel,type_stag> m_move_part;

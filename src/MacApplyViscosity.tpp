@@ -4,20 +4,24 @@
  * Implementation file for class MacApplyViscosity.
  **/
 
-template<class TypeWorld>
-MacApplyViscosity<TypeWorld>::MacApplyViscosity(TypeWorld &world,const type_data &viscosity, const type_data & dt,const Physvector<type_dim,type_data> & _1_h,const type_cell fluid):m_world(world),m_viscosity(viscosity),m_dt(dt),m_lap(m_world,_1_h),m_fluid(fluid)
+template<class TypeWorld,class GetTypeCell>
+MacApplyViscosity<TypeWorld,GetTypeCell>::MacApplyViscosity(TypeWorld &world,const type_data &viscosity, const type_data & dt,const Physvector<type_dim,type_data> & _1_h,GetTypeCell &getTypeCell):m_world(world),m_viscosity(viscosity),m_dt(dt),m_lap(m_world,_1_h),m_GetTypeCell(getTypeCell)
 {
 	
 }
 
-template<class TypeWorld>
-void MacApplyViscosity<TypeWorld>::Calculate()
+template<class TypeWorld,class GetTypeCell>
+void MacApplyViscosity<TypeWorld,GetTypeCell>::Calculate()
 {
 		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		type_cell type;
-		it.data().GetCellType(type);
-		if(type==m_fluid){
+		bool b=false;
+		for(int i=1;i<=type_dim;++i)
+		{
+			b=b||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid;
+		}
+		if(b)
+		{
 		Physvector<type_dim,type_data> temp;
 		m_lap.Calculate(it.key(),temp);
 		it.data().SetTempSpeed(temp);
@@ -26,29 +30,18 @@ void MacApplyViscosity<TypeWorld>::Calculate()
 	
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		type_cell type;
-		it.data().GetCellType(type);
-		if(type==m_fluid){
-			NeighborsPhysvector<int,type_dim> Neigh(it.key());
-			Physvector<type_dim,int> NeighV;
-			bool b=false;
-			while(Neigh.GetNext(NeighV))
+		for(int i=1;i<=type_dim;++i)
+		{
+			if(m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid)
 			{
-				if(!m_world.m_mac_grid.Exist(NeighV))
-				{
-					b=true; break;
-				}
+				type_data d;
+				it.data().GetInterTempSpeed(i,d);
+				d*=m_dt*m_viscosity;
+				type_data s;
+				it.data().GetInterSpeed(i,s);
+				s+=d;
+				it.data().SetInterSpeed(i,s);
 			}
-			if(b)
-			{
-				continue;
-			}
-		Physvector<type_dim,type_data> temp;
-		it.data().GetTempSpeed(temp);
-		Physvector<type_dim,type_data> speed;
-		it.data().GetSpeed(speed);
-		speed+=m_viscosity*m_dt*temp;
-		it.data().SetSpeed(speed);
 		}
 	}
 }

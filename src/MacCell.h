@@ -80,6 +80,8 @@ static const int type_dim=DIM;
 	 * @param speed Speed value returned.
 	 **/
 	void GetSpeed(Physvector<DIM,TypeData> &speed) const;
+	void SetInterSpeed(int i,TypeData &speed_comp);
+	void GetInterSpeed(int i,TypeData &speed_comp);
 	/**
 	 * @brief
 	 * Set the temporary speed.
@@ -92,6 +94,8 @@ static const int type_dim=DIM;
 	 * @param speed Temporary Speed value returned.
 	 **/
 	void GetTempSpeed(Physvector<DIM,TypeData> &speed);
+	void SetInterTempSpeed(int i,TypeData &speed_comp);
+	void GetInterTempSpeed(int i,TypeData &speed_comp);
 	/**
 	 * @brief Assign Temporary value to Speed.
 	 **/

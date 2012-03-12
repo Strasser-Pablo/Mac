@@ -49,7 +49,11 @@ class Test_MacConvect : public CxxTest::TestSuite
 		double m_rho_air=1;
 		double m_1_rho_fluid=0.001;
 		double m_1_rho_air=1;
-		type_getcelltype m_GetCellType(m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air);
+		double m_rho_inter=1000;
+		double m_rho_inter_bound=1000;
+		double m_1_rho_inter=0.001;
+		double m_1_rho_inter_bound=0.001;
+		type_getcelltype m_GetCellType(W,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
 		SetLayerFluidCell<world,type_getcelltype> FluidCell(W,m_GetCellType);
 		FluidCell.Calculate();
 		vkey.Set(1,0);

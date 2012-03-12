@@ -4,7 +4,7 @@
 #include "ODEFirstOrderTimeIndependent.h"
 #include "Physvector.h"
 #include <iostream>
-#include "NeighborsVelocity.h"
+#include "Type_Inter.h"
 /**
  * @file MacConvectSpeed.h
  * @brief
@@ -25,20 +25,19 @@ class MacConvectSpeedFunctor;
  * @tparam TypeGetSpeed Method used to interpolate speed.
  * @tparam TypeGetStagSpeedPos Class giving the position of speed point.
  **/
-template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos>
+template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos,class GetTypeCell>
 class MacConvectSpeed
 {
 	static const int type_dim=TypeWorld::type_dim;
 	typedef typename TypeWorld::type_data type_data;
 	typedef typename TypeWorld::type_cell type_cell;
-	const type_cell & m_fluid;
 	ODEFirstOrderTimeIndependent<Physvector<type_dim,type_data>,MacConvectSpeedFunctor<TypeWorld,TypeGetSpeed> ,type_data,TypeMethod> m_ode;
 	Physvector<type_dim,type_data> m_speed;
 	TypeWorld & m_world;
 	TypeGetStagSpeedPos & m_stag_pos;
 	TypeGetSpeed &m_GetSpeed;
 	type_data& m_dt;
-	NeighborsVelocity<type_dim,int> & m_NV;
+	GetTypeCell& m_GetTypeCell;
 	MacConvectSpeedFunctor<TypeWorld,TypeGetSpeed> m_functor;
 	void TracePart(const Physvector<type_dim,int>& key,Physvector<type_dim,type_data> &vout,int comp);	
 	void TracePart(const Physvector<type_dim,int>& key,Physvector<type_dim,type_data> &vout);
@@ -53,7 +52,7 @@ public:
 		 * @param dt Time step.
 		 * @param fluid Fluid cell value.
 		 **/
-MacConvectSpeed(TypeWorld & world,TypeMethod &method,TypeGetSpeed & GetSpeed, TypeGetStagSpeedPos &GetStagPos,type_data & dt,const type_cell & fluid,NeighborsVelocity<type_dim,int> & NV);
+MacConvectSpeed(TypeWorld & world,TypeMethod &method,TypeGetSpeed & GetSpeed, TypeGetStagSpeedPos &GetStagPos,type_data & dt,GetTypeCell& getTypeCell);
   
   /**
    * @brief
