@@ -592,4 +592,108 @@ class Test_ApplyToVectorElement : public CxxTest::TestSuite
 		A.FillBoundary(f);
 		TS_ASSERT_EQUALS(i,4);
 	}
+
+	void testBasic2dIn()
+	{
+		Math_Set2<2,int> A;
+		Physvector<2,int> k;
+
+
+		k.Set(1,6);
+		k.Set(2,4);
+		A.InsertMax(k);
+		
+		k.Set(1,7);
+		k.Set(2,4);
+		A.InsertMax(k);
+		
+		k.Set(1,6);
+		k.Set(2,5);
+		A.InsertMin(k);
+		
+		k.Set(1,7);
+		k.Set(2,5);
+		A.InsertMin(k);
+
+		Math_Set2<2,int> B;
+
+		k.Set(1,6);
+		k.Set(2,8);
+		B.InsertMax(k);
+		
+		k.Set(1,7);
+		k.Set(2,8);
+		B.InsertMax(k);
+		
+		k.Set(1,6);
+		k.Set(2,-2);
+		B.InsertMax(k);
+		
+		k.Set(1,7);
+		k.Set(2,-2);
+		B.InsertMax(k);
+		
+		
+		k.Set(1,6);
+		k.Set(2,-14);
+		B.InsertMax(k);
+		
+		k.Set(1,7);
+		k.Set(2,-14);
+		B.InsertMax(k);
+		
+		k.Set(1,6);
+		k.Set(2,-18);
+		B.InsertMax(k);
+		
+		k.Set(1,7);
+		k.Set(2,-18);
+		B.InsertMax(k);
+		
+		k.Set(1,6);
+		k.Set(2,-1);
+		B.InsertMin(k);
+		
+		k.Set(1,7);
+		k.Set(2,-1);
+		B.InsertMin(k);
+		
+		k.Set(1,6);
+		k.Set(2,-9);
+		B.InsertMin(k);
+		
+		k.Set(1,7);
+		k.Set(2,-9);
+		B.InsertMin(k);
+		
+		k.Set(1,6);
+		k.Set(2,-17);
+		B.InsertMin(k);
+		
+		k.Set(1,7);
+		k.Set(2,-17);
+		B.InsertMin(k);
+
+		k.Set(1,6);
+		k.Set(2,-21);
+		B.InsertMin(k);
+		
+		k.Set(1,7);
+		k.Set(2,-21);
+		B.InsertMin(k);
+		
+		k.Set(1,2);
+		k.Set(2,-10);
+		B.InsertMin(k);
+		
+		k.Set(1,2);
+		k.Set(2,10);
+		B.InsertMax(k);
+
+
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::A_In_B);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::B_In_A);
+		TS_ASSERT(A.IsIn(B)==Rel_Ensemble::A_In_B);
+		TS_ASSERT(B.IsIn(A)==Rel_Ensemble::B_In_A);
+	}
 };

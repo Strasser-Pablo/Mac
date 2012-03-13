@@ -237,7 +237,7 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
   	//
   	// 		  |      		it_min(min)
   	//                |	No min and max is there
-  	//                |      So A is not in B An B is not in A.
+  	//                |      So A is not in B And B is not in A.
   	// 		  |      		it_max(max)
   	//		it_max_lb(min)	
   	//
@@ -291,6 +291,7 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
 		{
 			return Rel_Ensemble::A_In_B;
 		}
+  		iterator it4=B.m_inter_max.lower_bound(*it_min_up);
 		// None case
   		// A shematic is:
   		//
@@ -308,9 +309,97 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
   		//                                    
   		// 	   	it_min_up(max)        
   		//                                    
-  		//                                     
+  		//            				it4(max)=B.m_minter_max.end()                         
+		if(it4==B.m_inter_max.end())
+		{		
 			return Rel_Ensemble::NONE;
-  	}
+		}	
+			iterator it5=B.m_inter_min.lower_bound(*it_min_up);
+		// None case
+  		// A shematic is:
+  		//
+  		// 		A			B
+  		//
+  		// 					it_min(min)
+  		//
+  		//
+  		// 					it_max(max)
+  		//
+  		// 	   				it2(min)!=B.m_inter_min.end()
+		//
+		// 	   				it3(max)!=B.m_inter_min.end()
+		//
+		//
+		// 	   				We need to have a min hier to be paired with the max below.
+  		// 	   	it_max_lb(min)        
+  		//                                    
+  		// 	   	it_min_up(max)        
+  		//                                    						|
+  		//            				it4(max)!=B.m_minter_max.end()          |
+		//										|
+		//            				it5(min)==B.m_inter_max.end()    Because we have no min in this region                         
+		if(it5==B.m_inter_min.end())
+		{
+			return Rel_Ensemble::A_In_B;
+		}
+
+		// Now it4 and it5 can be dereferenced.
+		// None case
+  		// A shematic is:
+  		//
+  		// 		A			B
+  		//
+  		// 					it_min(min)
+  		//
+  		//
+  		// 					it_max(max)
+  		//
+  		// 	   				it2(min)!=B.m_inter_min.end()
+		//
+		// 	   				it3(max)!=B.m_inter_min.end()
+		//					
+		//					Need to have a min hier to be paired with the max below
+		//
+  		// 	   	it_max_lb(min)        
+  		//                                    
+  		// 	   	it_min_up(max)        
+  		//                                    						
+  		//            				it4(max)!=B.m_minter_max.end()          
+		//										
+		//            				it5(min)!=B.m_inter_max.end()                             
+  		if(*it4>=*it5)
+		{
+			return Rel_Ensemble::A_In_B;
+		}
+		// None case
+  		// A shematic is:
+  		//
+  		// 		A			B
+  		//
+  		// 					it_min(min)
+  		//
+  		//
+  		// 					it_max(max)
+  		//
+  		// 	   				it2(min)!=B.m_inter_min.end()
+		//
+		// 	   				it3(max)!=B.m_inter_min.end()
+		//
+		//
+  		// 	   	it_max_lb(min)        
+  		//                                    
+  		// 	   	it_min_up(max)        
+  		//                                    						
+		//										
+		//            				it5(min)!=B.m_inter_max.end()                             
+		//
+		//
+  		//            				it4(max)!=B.m_minter_max.end()          
+		else
+		{
+			return Rel_Ensemble::NONE;
+		}
+	}
   	// The remaining case.
   	// A shematic is:
   	//
