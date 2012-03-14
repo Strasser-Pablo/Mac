@@ -6,7 +6,7 @@
 
 template<class TypeWorld,class TypeGetCellType>
 SolvePressureUmfpack<TypeWorld,TypeGetCellType>::SolvePressureUmfpack(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,TypeGetCellType &GetCellType):m_world(world),m_1_h(_1_h),m_key_to_num(m_o),m_GetCellType(GetCellType)
-{
+,m_stat_out("umfpack_div.txt",fstream::out){
 	
 }
 
@@ -68,6 +68,18 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::Calculate()
 	}
 	
 	SetSpeed();
+	type_data max=0;
+	for(typename type_to_key::iterator it= m_key_to_num.begin();it!=m_key_to_num.end();++it)
+	{
+		type_data temp=abs(CalculateDivergence(it.key()));
+		if(temp>max)
+		{
+			max=temp;
+		}
+	}
+	m_stat_out<<"max div "<<max<<endl;
+
+
 	}
 	else
 	{
@@ -134,11 +146,12 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateB(int iline,Physv
 		{
 		type_data p;
 		m_world.m_mac_grid[key].GetPressure(p);
-		ret-=p*m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,i);
+		ret-=p*m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,i,1);
 		}
 		key.GetRef(i)+=1;
 	}
 	m_b[iline]=ret;
+	m_stat_out<<"calculate B "<<key<<" "<<ret<<endl;
 }
 
 template<class TypeWorld,class TypeGetCellType>

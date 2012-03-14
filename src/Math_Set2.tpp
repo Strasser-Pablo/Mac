@@ -49,14 +49,14 @@ Rel_Ensemble Math_Set2<DIM,TypeData>::IsIn(Math_Set2<DIM,TypeData> & B)
 			case Rel_Ensemble::A_In_B:
 				if(b_B_empty)
 				{
-					throw logic_error("Is surface closed?");
+					throw logic_error("Is surface closed? 51");
 				}
 				return Rel_Ensemble::A_In_B;
 			break;
 			case Rel_Ensemble::B_In_A:
 				if(b_A_empty)
 				{
-					throw logic_error("Is surface closed?");
+					throw logic_error("Is surface closed? 58");
 				}
 				return Rel_Ensemble::B_In_A;
 			break;
@@ -67,8 +67,6 @@ Rel_Ensemble Math_Set2<DIM,TypeData>::IsIn(Math_Set2<DIM,TypeData> & B)
 				b_B_empty=true;
 			break;
 			case Rel_Ensemble::Both_Empty:
-				b_A_empty=true;
-				b_B_empty=true;
 			break;
 			case Rel_Ensemble::NONE:
 				return Rel_Ensemble::NONE;

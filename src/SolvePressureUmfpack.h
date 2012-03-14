@@ -3,6 +3,7 @@
 #include "KeyTableMap.h"
 #include <suitesparse/umfpack.h>
 #include <iostream>
+#include <fstream>
 using namespace std;
 /**
  * @file SolvePressureUmfpack.h
@@ -36,6 +37,7 @@ class SolvePressureUmfpack
 	KeyTableMap<int,typename TypeWorld::type_key> m_num_to_key;
 	PhysvectorKeyOrder<type_dim,int> m_o;
 	
+	fstream m_stat_out;
 	/**
 	 * @brief
 	 * Calculate the element for the column icol. And update the matrix given as reference.

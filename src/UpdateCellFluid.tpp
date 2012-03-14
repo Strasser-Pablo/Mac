@@ -32,9 +32,9 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update
 	
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		type_cell fluid;
-		it.data().GetCellType(fluid);
-		if(!m_GetCellType.GetIsFluid(fluid))
+		int lay;
+		it.data().GetLayer(lay);
+		if(lay==-1)
 		{
 			//Test if one component is constant speed.
 			bool b=false;

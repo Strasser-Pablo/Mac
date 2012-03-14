@@ -11,6 +11,7 @@
 #include "Math_Set2.h"
 #include "PhysvectorKeyOrder.h"
 #include "UpdateDeleteCell.h"
+#include <fstream>
 using namespace std;
 /**
  * @file UpdateCellTypeAndLayer3.h
@@ -45,6 +46,8 @@ class UpdateCellTypeAndLayer3
 	void Follow(Physvector<type_dim,int> & key,int id);
 	void EraseIfIn(iterator_map & it);
 	void CleanSet();
+	int m_i_out;
+	fstream m_stat_out;
 public:
 /**
  * @brief

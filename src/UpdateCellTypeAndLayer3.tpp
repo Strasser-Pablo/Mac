@@ -4,16 +4,16 @@
  * Implementation file for class UpdateCellTypeAndLayer3.
  **/
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
-UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres):m_level(level),m_GetCellType(GetCellType),m_world(world),m_func_pres(func_pres),m_bound_set(m_O),m_delete_cell(world){
-	
+UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres):m_level(level),m_GetCellType(GetCellType),m_world(world),m_func_pres(func_pres),m_bound_set(m_O),m_delete_cell(world),m_stat_out("top_res.txt",fstream::out){
+	m_i_out=0;	
 }
 
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
 void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Update()
 {
+	++m_i_out;
 	CalculateAirNeighbour();
 	CleanSet();
-	
 	 std::function<void(Physvector<type_dim,int>)> f=[&](Physvector<type_dim,int> key)
 	 {
 		 // Erase Bound_Set so that we can find remaining air boundary (the Lateral one).
@@ -30,8 +30,9 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Up
 		int layer;
 		m_world.m_mac_grid[key].GetLayer(layer);
 		if(layer==-1)
-		{
+		{	
 			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAirBoundary());
+			m_world.m_mac_grid[key].SetLayer(0);
 		}
 	 };
 	for(iterator_map it=m_set.begin();it!=m_set.end();++it)
@@ -108,6 +109,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Fo
 	while(!m_stack.empty())
 	{
 		m_act=m_stack.top();
+		//cout<<"id m_act "<<id<<" "<<m_act<<endl;
 		m_stack.pop();
 		Physvector<type_dim,int> m_neigh;
 		for(int i=1;i<=type_dim;++i)
@@ -141,7 +143,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Fo
 				if(i==type_dim)
 				{
 					if(v_mod==0)
-					{
+					{	
 						m_set[id].InsertMax(m_act);
 					}
 					else
@@ -262,9 +264,6 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 			}
 			key.GetRef(i)=key.GetRef(i)/2+cor;
 		}
-			//cout<<"bound air "<<key<<endl;
-			int lay;
-			m_world.m_mac_grid[key].GetLayer(lay);
 			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAir());
 			m_world.m_mac_grid[key].SetLayer(1);
 	 };
@@ -272,7 +271,6 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 	{
 		it->second.FillBoundary(f);	
 	}
-
 	g=[&](Physvector<type_dim,int> key)
 	 {
 	 };
