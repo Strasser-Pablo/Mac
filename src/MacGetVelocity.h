@@ -40,6 +40,7 @@ public:
 	 * @param pos Position where to calculate.
 	 **/
 	Physvector<type_dim,type_data> Get(const Physvector<type_dim,type_data> &pos);
+	type_data Get(const Physvector<type_dim,type_data> &pos,int i);
 };
 #include "MacGetVelocity.tpp"
 #endif

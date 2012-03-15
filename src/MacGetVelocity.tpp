@@ -19,3 +19,9 @@ template <class TypeWorld,class TypeStagPos>
 	}
 	return v2;
 }
+
+template <class TypeWorld,class TypeStagPos>
+typename MacGetVelocity<TypeWorld,TypeStagPos>::type_data MacGetVelocity<TypeWorld,TypeStagPos>::Get(const Physvector<type_dim,type_data> &pos,int i)
+{
+	return m_Interp.Calculate(m_stag_pos.GetCorrectLow(pos,i) ,i);
+}

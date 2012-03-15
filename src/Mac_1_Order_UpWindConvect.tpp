@@ -35,7 +35,7 @@ typename Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,Ge
 {
 	type_data U1;
 	type_data U2;
-        type_data U=m_GetSpeed.Get(m_stag_pos.Get(key,i)).GetRef(j);
+        type_data U=m_GetSpeed.Get(m_stag_pos.Get(key,i),j);
 	if(U>0)
 	{
 		m_world.m_mac_grid[key].GetInterSpeed(i,U1);
@@ -63,6 +63,12 @@ void Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTyp
 		it.data().SpeedToTemp();
 		for(int i=1;i<=type_dim;++i)
 		{
+			bool b;
+			it.data().GetConstSpeed(i,b);
+			if(b)
+			{
+				continue;
+			}
 			if(m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air_Boundary)
 			{
 				type_data v;
