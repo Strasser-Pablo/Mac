@@ -27,7 +27,7 @@
 #include "GetCellType.h"
 #include <functional>
 #include "Config.h"
-
+#include "Mac_1_Order_UpWindConvect.h"
 const int dim=2;
 
 #if Use_GooglePerf
@@ -77,6 +77,7 @@ class JetDEau
 	world m_w;
 	Output<world,type_stag> m_out;
 	MacConvectSpeed<world,type_meth,type_vel,type_stag,type_get_cell_type> m_conv;
+	Mac_1_Order_UpWindConvect<world,type_vel,type_stag,type_get_cell_type> m_conv_1_up;
 	MacGravity<world,type_get_cell_type> m_grav;
 	NeighborsVelocity<dim,int> m_N_V;
 	double m_dt;

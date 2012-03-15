@@ -11,20 +11,20 @@ m_time_out("timing.csv", fstream::out),
 m_conv_time(double(sysconf(_SC_CLK_TCK))),
 m_part_cond([](Physvector<dim,int> key){return key.Get(2)<-5;}),
 m_pres_func([](Physvector<dim,int> key){return 0;}),
-m_rho_fluid(1000),m_rho_air(1),m_1_rho_fluid(0.001),m_1_rho_air(1),m_rho_inter(1000),m_1_rho_inter(0.001),m_rho_inter_bound(1000),m_1_rho_inter_bound(0.001)
+m_rho_fluid(1000),m_rho_air(1),m_1_rho_fluid(0.001),m_1_rho_air(1),m_rho_inter(1000),m_1_rho_inter(0.001),m_rho_inter_bound(1000),m_1_rho_inter_bound(0.001),m_conv_1_up(m_w,m_get_v,m_stag,m_dt,m_GetCellType,m_v_h,m_v_1_h)
 {
 	#if Use_GooglePerf
 		ProfilerStart("perf.prof");
 	#endif
 	m_N_V=m_stag.GetNeighborsVelocity();
 	m_t=0;
-	m_viscosity_const=0.000001;
-	//m_viscosity_const=0;
+	//m_viscosity_const=0.000001;
+	m_viscosity_const=0;
 	Physvector<dim,double> speed;
 	speed.SetAll(0);
 	double speedmax=55;
-	m_v_1_h.SetAll(20);
-	m_v_h.SetAll(0.05);
+	m_v_1_h.SetAll(200);
+	m_v_h.SetAll(0.005);
 	m_v_h.Set(2,1);
 	m_v_1_h.Set(2,1);
 	int Nx=10;
@@ -101,7 +101,8 @@ void JetDEau::Calculate()
 	}
 	cout<<"convect"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
-	m_conv.Calculate();
+	//m_conv.Calculate();
+	//m_conv_1_up.Calculate();
 	m_time_ticks_end=times(&m_time_end);
 	m_time_convect=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	

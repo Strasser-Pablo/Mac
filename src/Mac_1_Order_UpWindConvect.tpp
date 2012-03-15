@@ -6,7 +6,7 @@ Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell
 
 
 template <class TypeWorld,class TypeGetSpeed,class TypeGetStagSpeedPos,class GetTypeCell>
-typename Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::type_data Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::ElementaryUpwind(Physvector<type_dim,int> &key,int i,int j)
+typename Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::type_data Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::ElementaryUpwind(Physvector<type_dim,int>& key,int i,int j)
 {
 	type_data U1;
 	type_data U2;
@@ -42,7 +42,6 @@ typename Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,Ge
 		key.GetRef(j)-=1;	
 		m_world.m_mac_grid[key].GetInterSpeed(i,U2);
 		U*=(U1-U2)*m_1_h.Get(j);
-		key.GetRef(j)+=1;	
 	}
 	else
 	{
@@ -50,7 +49,6 @@ typename Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,Ge
 		key.GetRef(j)+=1;
 		m_world.m_mac_grid[key].GetInterSpeed(i,U2);
 		U*=(U2-U1)*m_1_h.Get(j);
-		key.GetRef(j)-=1;
 	}
 	return U;
 }
@@ -63,12 +61,6 @@ void Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTyp
 		it.data().SpeedToTemp();
 		for(int i=1;i<=type_dim;++i)
 		{
-			bool b;
-			it.data().GetConstSpeed(i,b);
-			if(b)
-			{
-				continue;
-			}
 			if(m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air_Boundary)
 			{
 				type_data v;
