@@ -13,11 +13,14 @@ option (USE_INSTALLATION
 		"Build installation" ON)
 
 option (USE_GOOGLE_PERF
-		"Build with Google Perf" ON)
+	"Build with Google Perf" OFF)
 option (USE_COMPILER_OPTION_WALL "Build with -Wall option that will generate more warning" ON)
 
 option (USE_COMPILER_OPTION_IGNORE_WARNING_REORDER "Build with -Wnoreorder to ignore reorder warning" on)
 
+option (USE_COMPILER_EXTRA "Build with -WExtra" off)
+
+option (USE_COMPILER_OPTIMISATION_FLAG "Optimize Code" on)
 include(CheckCXXCompilerFlag)
 
 if (USE_TESTING)
@@ -72,23 +75,44 @@ CHECK_CXX_COMPILER_FLAG(-std=c++0x COMPILER_CPP0x)
 if(USE_COMPILER_OPTION_WALL)
 	CHECK_CXX_COMPILER_FLAG(-Wall COMPILER_WALL)
 endif(USE_COMPILER_OPTION_WALL)
+if(USE_COMPILER_OPTION_WALL)
+else()
+	set(COMPILER_WALL false)
+endif()
+
 if(COMPILER_WALL)
 	ADD_DEFINITIONS(-Wall)
 endif(COMPILER_WALL)
+if(USE_COMPILER_EXTRA)
+	CHECK_CXX_COMPILER_FLAG("-Wextra -Wunsafe-loop-optimizations -Wdisabled-optimization" COMPILER_EXTRA)
+endif()
 
+if(USE_COMPILER_EXTRA)
+else()
+	set(COMPILER_EXTRA,false)
+endif()
+
+if(COMPILER_EXTRA)
+	ADD_DEFINITIONS(-Wextra -Wunsafe-loop-optimizations -Wdisabled-optimization)
+endif()
 if(COMPILER_NATIVE)
-ADD_DEFINITIONS(-march=native)
+	ADD_DEFINITIONS(-march=native)
 endif(COMPILER_NATIVE)
 
 if(COMPILER_CPP0x)
-ADD_DEFINITIONS(-std=c++0x)
+	ADD_DEFINITIONS(-std=c++0x)
 endif(COMPILER_CPP0x)
 
 if(USE_COMPILER_OPTION_IGNORE_WARNING_REORDER)
 	CHECK_CXX_COMPILER_FLAG(-Wno-reorder COMPILER_WNOREORDER)
 endif(USE_COMPILER_OPTION_IGNORE_WARNING_REORDER)
 
-if(COMPILER_WNOREORDER)
+if(USE_COMPILER_OPTION_IGNORE_WARNING_REORDER)
+else()
+	set(COMPILER_WNOREORDER false)
+endif()
+
+if(COMPILER_WNOREORDER )
 	ADD_DEFINITIONS(-Wno-reorder)
 endif(COMPILER_WNOREORDER)
 
@@ -103,7 +127,16 @@ endif(COMPILER_COVERAGE)
 if(COMPILER_NO_OPTIMISATION)
 	set(COMPILER_NO_OPTIMISATION_FLAG "-o0 ")
 endif(COMPILER_NO_OPTIMISATION)
-
+if(USE_COMPILER_OPTIMISATION_FLAG)
+	CHECK_CXX_COMPILER_FLAG("-fwhole-program -flto " COMPILER_OPTIMISATION_FLAG)
+endif()
+if(USE_COMPILER_OPTIMISATION_FLAG)
+else()
+	set(COMPILER_OPTIMISATION_FLAG false)
+endif()
+if(COMPILER_OPTIMISATION_FLAG)
+	ADD_DEFINITIONS(-fwhole-program -flto)
+endif()
 add_executable(computation ${source_files})
 TARGET_LINK_LIBRARIES(computation vtkHybrid)
 if(USE_UMFPACK)
@@ -232,5 +265,8 @@ set_target_properties(test_cov_UpdateCellTypeAndLayer3 PROPERTIES COMPILE_FLAGS 
 CXXTEST_ADD_TEST(test_cov_Math_Set2 test/TestMath_Set2.cpp
                                  ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMath_Set2.h)
 set_target_properties(test_cov_Math_Set2 PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+
+CXXTEST_ADD_TEST(test_cov_Mac_1_Order_UpWindConvect test/TestMac_1_OrderUpWindConvect.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMac_1_OrderUpWindConvect.h)
+AddTestProperty(test_cov_Mac_1_Order_UpWindConvect)
 
 endif(USE_TESTING)
