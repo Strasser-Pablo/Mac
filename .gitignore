@@ -1,4 +1,4 @@
-build/
+build*/
 Testing/
 MAC.*
 doc/latex/
