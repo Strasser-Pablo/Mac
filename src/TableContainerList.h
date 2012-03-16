@@ -51,6 +51,7 @@ typedef TypeData type_data;
 	virtual const TypeData& front()const;
 	virtual TypeData& back();
 	virtual const TypeData& back()const;
+	virtual void insert(const TypeData &data);
 	virtual iterator insert(iterator pos,const TypeData & data);
 	virtual iterator erase(iterator pos);
 	virtual iterator begin();

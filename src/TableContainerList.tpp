@@ -78,9 +78,14 @@ const TypeData & TableContainerList<TypeData>::back() const
 template<class TypeData>
 typename TableContainerList<TypeData>::iterator  TableContainerList<TypeData>::insert(iterator pos,const TypeData & data)
 {
-	pos.GetListIterator();
 	typename list<TypeData>::iterator temp=m_list.insert(pos.GetListIterator(),data);
 	return TableContainerListIterator<TypeData>(temp);
+}
+
+template<class TypeData>
+void  TableContainerList<TypeData>::insert(const TypeData & data)
+{
+	m_list.push_back(data);
 }
 
 template<class TypeData>
