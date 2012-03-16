@@ -19,6 +19,7 @@ Physvector<Dim,TypeData>::~Physvector()
 template <int Dim,class TypeData>
 void Physvector<Dim,TypeData>::Set(int indice,TypeData value)
 {
+#ifndef NDEBUG
 	if(indice>Dim)
 	{
 		throw OverFlowException(indice,Dim);
@@ -27,6 +28,7 @@ void Physvector<Dim,TypeData>::Set(int indice,TypeData value)
 	{
 		throw UnderFlowException(indice);
 	}
+#endif
 	m_data[indice-1]=value;
 }
 
@@ -54,6 +56,7 @@ void Physvector<Dim,TypeData>::Set(UseEllipse,TypeData first,...){
 template <int Dim,class TypeData>
 TypeData Physvector<Dim,TypeData>::Get(int indice)const
 {
+#ifndef NDEBUG
 	if(indice>Dim){
 		throw OverFlowException(indice,Dim);
 	}
@@ -62,12 +65,14 @@ TypeData Physvector<Dim,TypeData>::Get(int indice)const
 	{
 		throw UnderFlowException(indice);
 	}
+#endif
 	return m_data[indice-1];
 }
 
 template <int Dim,class TypeData>
 TypeData& Physvector<Dim,TypeData>::GetRef(int indice)
 {
+#ifndef NDEBUG
 	if(indice>Dim){
 		throw OverFlowException(indice,Dim);
 	}
@@ -75,6 +80,7 @@ TypeData& Physvector<Dim,TypeData>::GetRef(int indice)
 	if(indice<1){
 		throw UnderFlowException(indice);
 	}
+#endif
 	return m_data[indice-1];
 }
 
