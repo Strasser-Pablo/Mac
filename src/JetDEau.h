@@ -109,7 +109,7 @@ class JetDEau
 	long m_time_ticks_end;
 	double m_cfl_factor;
 	int m_i;
-	int m_spos;
+	streampos m_spos;
 	friend class boost::serialization::access;
 	template <class Archive>
 	void serialize(Archive & ar,const unsigned int version);
@@ -117,6 +117,7 @@ public:
 	JetDEau();
 	void Calculate();
 	void SetUp();
+	int& GetFileNumber();
 };
 #include "JetDEau.tpp"
 #endif

@@ -180,9 +180,23 @@ void JetDEau::serialize(Archive & ar,const unsigned int version)
 	ar & boost::serialization::make_nvp("Rho_1_Inter_Boundary",m_1_rho_inter_bound);
 	ar & boost::serialization::make_nvp("World",m_w);
 	ar & boost::serialization::make_nvp("File_Number",m_i);
-	ar & boost::serialization::make_nvp("Seek_Pos_Animation",m_spos);
+	if(typename Archive::is_loading())
+	{
+		long int temp;
+		ar & boost::serialization::make_nvp("Seek_Pos_Animation",temp);
+		m_spos=temp;
+	}
+	else if(typename Archive::is_saving())
+	{
+		long int temp=m_spos;
+		ar & boost::serialization::make_nvp("Seek_Pos_Animation",temp);
+	}
 	if(typename Archive::is_loading())
 	{
 		m_out.Load();
 	}
+}
+	int& JetDEau::GetFileNumber()
+{
+	return m_i;
 }

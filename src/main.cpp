@@ -8,11 +8,10 @@ const int nb_stop=100;
 const bool barchive=true;
 const int nb_archive=10;
 
-const bool bload=true;
+const bool bload=false;
 const char* file_to_load="backup20.xml";
 const char* file_save_prefixe="backup";
 const char* file_save_extension=".xml";
-const int ibeg=20;
 int main(){
 	JetDEau J;
 	if(bload)
@@ -25,7 +24,7 @@ int main(){
 	{
 		J.SetUp();
 	}
-	int i=ibeg;
+	int &i=J.GetFileNumber();
 while(true)
 {
 	J.Calculate();
@@ -49,6 +48,5 @@ while(true)
 			break;
 		}
 	}
-	++i;
 }
 }
