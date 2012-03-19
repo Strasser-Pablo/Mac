@@ -224,3 +224,9 @@ void Physvector<Dim,TypeData>::Boum()
 	throw OutOfBoundException();
 }
 #endif
+template <int Dim,class TypeData>
+template<class Archive>
+void Physvector<Dim,TypeData>::serialize(Archive &ar,const unsigned int version)
+{
+	ar & boost::serialization::make_nvp("Vector_Data",m_data);
+}

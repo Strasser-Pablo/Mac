@@ -118,3 +118,10 @@ typename TableContainerList<TypeData>::const_iterator  TableContainerList<TypeDa
 {
 	return TableContainerListConstIterator<TypeData>(m_list.end());
 }
+	
+template<class TypeData>
+template<class Archive>
+void TableContainerList<TypeData>::serialize(Archive & ar,const unsigned int version)
+{
+	ar & boost::serialization::make_nvp("List",m_list);
+}

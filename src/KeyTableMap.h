@@ -1,9 +1,9 @@
 #include "KeyTable.h"
 #ifndef KeyTableMap_H
 #define KeyTableMap_H
-#include <map>
+#include <boost/serialization/map.hpp>
 #include "KeyTableMapIterator.h"
-
+#include <boost/serialization/nvp.hpp>
 using namespace std;
 
 /**
@@ -21,6 +21,9 @@ using namespace std;
 template<class TypeKey,class TypeData,class TypeComp=less<TypeKey> >
 class KeyTableMap:public KeyTable<TypeKey,TypeData,KeyTableMapIterator<TypeKey,TypeData,TypeComp>,KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>,typename map<TypeKey,TypeData>::size_type>{
 	map<TypeKey,TypeData,TypeComp> m_map;
+	friend class boost::serialization::access;
+	template <class Archive>
+	void serialize(Archive & Ar,const unsigned int version);
 public:
 	typedef typename map<TypeKey,TypeData,TypeComp>::size_type size_type;
 	typedef KeyTableMapIterator<TypeKey,TypeData,TypeComp> iterator;

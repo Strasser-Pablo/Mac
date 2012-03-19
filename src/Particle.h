@@ -1,5 +1,6 @@
 #ifndef Particle_H
 #define Particle_H
+#include <boost/serialization/nvp.hpp>
 /**
  * @file Particle.h
  * @brief
@@ -14,6 +15,9 @@
 template <class TypeVector> 
 class Particle{
 	TypeVector m_pos;
+	friend class boost::serialization::access;
+	template <class Archive>
+	void serialize(Archive & ar,const unsigned int version);
 public:
  typedef TypeVector type_vector;
  /**

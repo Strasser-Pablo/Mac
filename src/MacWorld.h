@@ -1,5 +1,7 @@
 #ifndef MacWorld_H
 #define MacWorld_H
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/nvp.hpp>
 /**
  * @file MacWorld.h
  * @brief
@@ -88,6 +90,14 @@ struct MacWorld{
 	MacWorld()
 	{
 	}
+	private:
+		friend class boost::serialization::access;
+		template <class Archive>
+		void serialize(Archive & ar,const unsigned int version)
+		{
+			ar & boost::serialization::make_nvp("Cell",m_mac_grid);
+			ar & boost::serialization::make_nvp("Particle",m_particle_list);
+		}
 };
 
 #endif

@@ -3,6 +3,7 @@
 #define MacCell_H
 
 #include <iostream>
+#include <boost/serialization/nvp.hpp>
 using namespace std;
 /**
  * @file MacCell.h
@@ -25,6 +26,9 @@ class MacCell{
 	bool m_const_speed[DIM];
 	bool m_one_const;
 	int m_layer;
+	friend class boost::serialization::access;
+	template <class Archive>
+	void serialize(Archive & Ar,const unsigned int version);
 public:
 /**
  * @brief

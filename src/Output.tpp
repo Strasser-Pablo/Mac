@@ -1,5 +1,5 @@
 template <class TypeWorld,class TypeGetStagSpeedPos>
-Output<TypeWorld,TypeGetStagSpeedPos>::Output(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,double & t,type_cell fluid):m_out_speed(world,stag,h,fluid),m_i(0),m_t(t)
+Output<TypeWorld,TypeGetStagSpeedPos>::Output(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,double & t,type_cell fluid,int &i,int &spos):m_out_speed(world,stag,h,fluid),m_t(t),m_i(i),m_spos(spos)
 {
 
 }
@@ -28,21 +28,32 @@ void Output<TypeWorld,TypeGetStagSpeedPos>::Calculate()
 		string str3=str+string("_")+ss4.str()+string(".vtu");
 		//fstream p2(str3.c_str(),fstream::out);
 		m_out_speed.OutputParticle(str3.c_str());
-		static fstream out("animation.pvd",fstream::out) ;
-		if(m_i==0)
-		{
-			out<<"<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\">"<<endl;
-			out<<"<Collection>"<<endl;
-		}
 	for(int i=1;i<=type_dim+2;++i)
 	{
-	out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\""<<i<<"\" file=\""<<str<<"_"<<i<<".vtu\" />"<<endl;
+		m_out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\""<<i<<"\" file=\""<<str<<"_"<<i<<".vtu\" />"<<endl;
 	}
 	streampos pos;
-	pos=out.tellp();
-	out<<"</Collection>"<<endl;
-	out<<"</VTKFile>"<<endl;
-	out.seekp(pos);
+	pos=m_out.tellp();
+	m_out<<"</Collection>"<<endl;
+	m_out<<"</VTKFile>"<<endl;
+	m_out.seekp(pos);
+	m_spos=pos;
 	cout<<"output "<<m_i<<endl;
 	++m_i;
+}
+
+template <class TypeWorld,class TypeGetStagSpeedPos>
+void Output<TypeWorld,TypeGetStagSpeedPos>::SetUp()
+{
+	m_out.open("animation.pvd",ios::out);
+	m_out<<"<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\">"<<endl;
+	m_out<<"<Collection>"<<endl;
+}
+
+template <class TypeWorld,class TypeGetStagSpeedPos>
+void Output<TypeWorld,TypeGetStagSpeedPos>::Load()
+{
+	m_out.open("animation.pvd",ios::ate);
+	streampos pos=m_spos;
+	m_out.seekp(pos);
 }

@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include <cmath>
+#include <boost/serialization/nvp.hpp>
 
 using namespace std;
 /**
@@ -113,6 +114,10 @@ class Physvector{
 	 * Data for the last indice
 	 **/
 	TypeData m_data[Dim];
+
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar,const unsigned int version);
 	
 public:
 	

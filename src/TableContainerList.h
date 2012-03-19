@@ -1,12 +1,12 @@
 #ifndef TableContainerList_H
 #define TableContainerList_H
 
-#include <list>
+#include <boost/serialization/list.hpp>
 using namespace std;
 
 #include "TableContainerListIterator.h"
 #include "TableContainer.h"
-
+#include <boost/serialization/nvp.hpp>
 /**
  * @file TableContainerList.h
  * @brief
@@ -22,6 +22,9 @@ using namespace std;
 template<class TypeData>
 class TableContainerList:public TableContainer<TypeData,TableContainerListIterator<TypeData>,TableContainerListConstIterator<TypeData>,typename list<TypeData>::size_type>{
 	list<TypeData> m_list;
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive & ar,const unsigned int version);
 public:
 /**
  * @brief

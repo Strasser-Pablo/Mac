@@ -28,6 +28,7 @@
 #include <functional>
 #include "Config.h"
 #include "Mac_1_Order_UpWindConvect.h"
+#include <boost/serialization/nvp.hpp>
 const int dim=2;
 
 #if Use_GooglePerf
@@ -107,9 +108,15 @@ class JetDEau
 	long m_time_ticks_deb;
 	long m_time_ticks_end;
 	double m_cfl_factor;
+	int m_i;
+	int m_spos;
+	friend class boost::serialization::access;
+	template <class Archive>
+	void serialize(Archive & ar,const unsigned int version);
 public:
 	JetDEau();
 	void Calculate();
+	void SetUp();
 };
 #include "JetDEau.tpp"
 #endif

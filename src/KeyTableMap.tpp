@@ -86,3 +86,11 @@ void KeyTableMap<TypeKey,TypeData,TypeComp>::clear()
 {
 		 m_map.clear();
 }
+
+
+template<class TypeKey,class TypeData,class TypeComp>
+template <class Archive>
+void KeyTableMap<TypeKey,TypeData,TypeComp>::serialize(Archive & Ar,const unsigned int version)
+{
+	Ar & boost::serialization::make_nvp("Map",m_map);  
+}

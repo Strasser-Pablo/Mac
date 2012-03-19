@@ -184,3 +184,17 @@ void MacCell<DIM,TypeData,TypeCell>::SetInterTempSpeed(int i,TypeData &speed_com
 		m_speedTemp.GetRef(i)=speed_comp;
 	}
 }
+
+
+template <int DIM,class TypeData, class TypeCell>
+template <class Archive>
+void MacCell<DIM,TypeData,TypeCell>::serialize(Archive & Ar,const unsigned int version)
+{
+	Ar & boost::serialization::make_nvp("Speed",m_speed);
+	Ar & boost::serialization::make_nvp("Speed_Temp",m_speedTemp);
+	Ar & boost::serialization::make_nvp("Pressure",m_pressure);
+	Ar & boost::serialization::make_nvp("Cell_Type",m_cell_type);
+	Ar & boost::serialization::make_nvp("Const_Speed",m_const_speed);
+	Ar & boost::serialization::make_nvp("One_Const_Speed",m_one_const);
+	Ar & boost::serialization::make_nvp("Layer",m_layer);
+}
