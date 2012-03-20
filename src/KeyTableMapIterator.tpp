@@ -1,4 +1,3 @@
-
 /**
  * @file KeyTableMapIterator.tpp
  * @brief
