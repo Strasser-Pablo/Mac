@@ -34,14 +34,14 @@ public:
 	 * @param B Iterator to compare with.
 	 * @return bool True if the iterator point to the same element.
 	 **/
-	virtual bool operator==(const TableContainerListIterator<TypeData> &B);
+	virtual bool operator==(const TableContainerListIterator<TypeData> &B) __attribute__((pure));
 	/**
 	 * @brief
 	 * Comparaison operator for iterator. False if iterator point to the same element.
 	 * @param B Iterator to compare with.
 	 * @return bool False if the iterator point to the same element.
 	 **/
-	virtual bool operator!=(const TableContainerListIterator<TypeData> &B);
+	virtual bool operator!=(const TableContainerListIterator<TypeData> &B) __attribute__((pure));
 	/**
 	 * @brief
 	 * Advance the iterator the the next element.
@@ -56,10 +56,11 @@ public:
 	 * @brief
 	 * Get the data pointed by the iterator.
 	 **/
-	virtual TypeData& operator*();
+	virtual TypeData& operator*() __attribute__((pure));
 	
-	virtual typename list<TypeData>::iterator GetListIterator();
-	virtual const typename list<TypeData>::iterator GetListIterator() const;
+	virtual typename list<TypeData>::iterator& GetListIterator() __attribute__((const));
+
+	virtual const typename list<TypeData>::iterator& GetListIterator() const __attribute__((const));
 };
 
 template<class TypeData>
@@ -84,14 +85,14 @@ public:
 	 * @param B Iterator to compare with.
 	 * @return bool True if the iterator point to the same element.
 	 **/
-	virtual bool operator==(const TableContainerListConstIterator<TypeData> &B);
+	virtual bool operator==(const TableContainerListConstIterator<TypeData> &B) __attribute__((pure));
 	/**
 	 * @brief
 	 * Comparaison operator for iterator. False if iterator point to the same element.
 	 * @param B Iterator to compare with.
 	 * @return bool False if the iterator point to the same element.
 	 **/
-	virtual bool operator!=(const TableContainerListConstIterator<TypeData> &B);
+	virtual bool operator!=(const TableContainerListConstIterator<TypeData> &B) __attribute__((pure));
 	/**
 	 * @brief
 	 * Advance the iterator the the next element.
@@ -106,10 +107,10 @@ public:
 	 * @brief
 	 * Get the data pointed by the iterator.
 	 **/
-	virtual const TypeData& operator*();
+	virtual const TypeData& operator*() __attribute__((pure));
 	
-	virtual typename list<TypeData>::const_iterator GetListIterator();
-	virtual const typename list<TypeData>::const_iterator GetListIterator() const;
+	virtual typename list<TypeData>::const_iterator& GetListIterator() __attribute__((const));
+	virtual const typename list<TypeData>::const_iterator& GetListIterator() const __attribute__((const));
 };
 #include "TableContainerListIterator.tpp"
 #endif

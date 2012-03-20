@@ -117,7 +117,7 @@ public:
 	JetDEau();
 	void Calculate();
 	void SetUp();
-	int& GetFileNumber();
+	int& GetFileNumber() __attribute__((const));
 };
 #include "JetDEau.tpp"
 #endif

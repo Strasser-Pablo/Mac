@@ -53,13 +53,13 @@ TypeData& TableContainerListIterator<TypeData>::operator*()
 }
 
 template<class TypeData>
-typename list<TypeData>::iterator TableContainerListIterator<TypeData>::GetListIterator()
+typename list<TypeData>::iterator& TableContainerListIterator<TypeData>::GetListIterator()
 {
 	return m_iterator;
 }
 
 template<class TypeData>
-const typename list<TypeData>::iterator TableContainerListIterator<TypeData>::GetListIterator() const
+const typename list<TypeData>::iterator& TableContainerListIterator<TypeData>::GetListIterator() const
 {
 	return m_iterator;
 }
@@ -126,13 +126,13 @@ const TypeData& TableContainerListConstIterator<TypeData>::operator*()
 }
 
 template<class TypeData>
-typename list<TypeData>::const_iterator TableContainerListConstIterator<TypeData>::GetListIterator()
+typename list<TypeData>::const_iterator& TableContainerListConstIterator<TypeData>::GetListIterator()
 {
 	return m_iterator;
 }
 
 template<class TypeData>
-const typename list<TypeData>::const_iterator TableContainerListConstIterator<TypeData>::GetListIterator() const
+const typename list<TypeData>::const_iterator& TableContainerListConstIterator<TypeData>::GetListIterator() const
 {
 	return m_iterator;
 }

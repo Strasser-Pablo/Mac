@@ -38,9 +38,9 @@ public:
 	KeyTableMap(const TypeComp& comp=less<TypeKey>() );
 	virtual ~KeyTableMap();
 	virtual void insert(const TypeKey & key,const TypeData & value);
-	virtual bool empty();
-	virtual size_type size();
-	virtual bool Exist(const TypeKey& key);
+	virtual bool empty() __attribute__((pure));
+	virtual size_type size() __attribute__((pure));
+	virtual bool Exist(const TypeKey& key) __attribute__((pure));
 	virtual TypeData& operator[](const TypeKey & key);
 	virtual iterator begin();
 	virtual iterator end();

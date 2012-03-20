@@ -31,20 +31,20 @@ class KeyTableMapIterator:public KeyTableIterator<TypeKey,TypeData,KeyTableMapIt
 	 **/
 	KeyTableMapIterator(typename map<TypeKey,TypeData,TypeComp>::iterator iterator);
 	virtual ~KeyTableMapIterator();
-	virtual bool operator==(const KeyTableMapIterator &B);
-	virtual bool operator!=(const KeyTableMapIterator &B);
+	virtual bool operator==(const KeyTableMapIterator &B) __attribute__((pure));
+	virtual bool operator!=(const KeyTableMapIterator &B) __attribute__((pure));
 	virtual KeyTableMapIterator<TypeKey,TypeData,TypeComp>& operator++();
 	virtual KeyTableMapIterator<TypeKey,TypeData,TypeComp> operator++(int);
-	virtual TypeData& operator*();
-	virtual TypeKey key();
-	virtual TypeData& data();
+	virtual TypeData& operator*() __attribute__((pure));
+	virtual TypeKey key() __attribute__((pure));
+	virtual TypeData& data() __attribute__((pure));
 	/**
 	 * @brief 
 	 * Return the map iterator used internaly.
 	 * @return Map iterator.
 	 **/
-	virtual typename map<TypeKey,TypeData,TypeComp>::iterator& GetMapIterator();
-	virtual const typename  map<TypeKey,TypeData,TypeComp>::iterator& GetMapIterator() const;
+	virtual typename map<TypeKey,TypeData,TypeComp>::iterator& GetMapIterator() __attribute__((const));
+	virtual const typename  map<TypeKey,TypeData,TypeComp>::iterator& GetMapIterator() const __attribute__((const));
 };
 
 template<class TypeKey,class TypeData,class TypeComp>
@@ -69,20 +69,20 @@ class KeyTableMapConstIterator:public KeyTableConstIterator<TypeKey,TypeData,Key
 	 **/
 	KeyTableMapConstIterator(typename map<TypeKey,TypeData,TypeComp>::const_iterator iterator);
 	virtual ~KeyTableMapConstIterator();
-	virtual bool operator==(const KeyTableMapConstIterator &B);
-	virtual bool operator!=(const KeyTableMapConstIterator &B);
+	virtual bool operator==(const KeyTableMapConstIterator &B) __attribute__((pure));
+	virtual bool operator!=(const KeyTableMapConstIterator &B) __attribute__((pure));
 	virtual KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>& operator++();
 	virtual KeyTableMapConstIterator<TypeKey,TypeData,TypeComp> operator++(int);
-	virtual const TypeData& operator*();
-	virtual const TypeKey key();
-	virtual const TypeData& data();
+	virtual const TypeData& operator*() __attribute__((pure));
+	virtual const TypeKey key() __attribute__((pure));
+	virtual const TypeData& data() __attribute__((pure));
 	/**
 	 * @brief 
 	 * Return the map iterator used internaly.
 	 * @return Map iterator.
 	 **/
-	virtual typename map<TypeKey,TypeData,TypeComp>::const_iterator& GetMapIterator();
-	virtual const typename  map<TypeKey,TypeData,TypeComp>::const_iterator& GetMapIterator() const;
+	virtual typename map<TypeKey,TypeData,TypeComp>::const_iterator& GetMapIterator() __attribute__((const));
+	virtual const typename  map<TypeKey,TypeData,TypeComp>::const_iterator& GetMapIterator() const __attribute__((const));
 };
 
 #include "KeyTableMapIterator.tpp"
