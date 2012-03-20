@@ -2,7 +2,14 @@ cmake_minimum_required(VERSION 2.8)
 project(MAC CXX)
 option (USE_TESTING 
         "Build the test case?" ON) 
-	
+option(USE_DEB_INFO
+	"Build with deb info" ON)
+option(USE_GENERATE_PROFILE_BASED_OPTIMIZATION
+	"Build with generation of profile based optimization",OFF)
+
+option(USE_USE_PROFILE_BASED_OPTIMIZATION
+	"Build with usage of previous profile based optimization",OFF)
+
 option (USE_UMFPACK 
         "Link Umfpack to solve linear equation" ON) 
 
@@ -18,7 +25,7 @@ option (USE_COMPILER_OPTION_WALL "Build with -Wall option that will generate mor
 
 option (USE_COMPILER_OPTION_IGNORE_WARNING_REORDER "Build with -Wnoreorder to ignore reorder warning" on)
 
-option (USE_COMPILER_EXTRA "Build with -WExtra" off)
+option (USE_COMPILER_EXTRA "Build with -WExtra" OFF)
 
 option (USE_COMPILER_OPTIMISATION_FLAG "Optimize Code" on)
 include(CheckCXXCompilerFlag)
@@ -82,28 +89,15 @@ else()
 	set(COMPILER_WALL false)
 endif()
 
-if(COMPILER_WALL)
-	ADD_DEFINITIONS(-Wall)
-endif(COMPILER_WALL)
 if(USE_COMPILER_EXTRA)
-	CHECK_CXX_COMPILER_FLAG("-Wextra -Wunsafe-loop-optimizations -Wdisabled-optimization -Wsuggest-attribut=pure -Wsuggest-attribut=const -Wsuggest-attribut=noreturn" COMPILER_EXTRA)
+	CHECK_CXX_COMPILER_FLAG("-Wextra -Wunsafe-loop-optimizations -Wdisabled-optimization -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn" COMPILER_EXTRA)
 endif()
-
 if(USE_COMPILER_EXTRA)
 else()
 	set(COMPILER_EXTRA,false)
 endif()
 
-if(COMPILER_EXTRA)
-	ADD_DEFINITIONS(-Wextra -Wunsafe-loop-optimizations -Wdisabled-optimization -Wsuggest-attribut=pure -Wsuggest-attribut=const -Wsuggest-attribut=noreturn)
-endif()
-if(COMPILER_NATIVE)
-	ADD_DEFINITIONS(-march=native)
-endif(COMPILER_NATIVE)
 
-if(COMPILER_CPP0x)
-	ADD_DEFINITIONS(-std=c++0x)
-endif(COMPILER_CPP0x)
 
 if(USE_COMPILER_OPTION_IGNORE_WARNING_REORDER)
 	CHECK_CXX_COMPILER_FLAG(-Wno-reorder COMPILER_WNOREORDER)
@@ -114,14 +108,21 @@ else()
 	set(COMPILER_WNOREORDER false)
 endif()
 
-if(COMPILER_WNOREORDER )
-	ADD_DEFINITIONS(-Wno-reorder)
-endif(COMPILER_WNOREORDER)
-
 set(BACKUP_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS})
 SET(CMAKE_REQUIRED_FLAGS "--coverage")
 CHECK_CXX_COMPILER_FLAG("--coverage -g" COMPILER_COVERAGE)
 set(CMAKE_REQUIRED_FLAGS ${BACKUP_REQUIRED_FLAGS})
+
+
+if(USE_USE_PROFILE_BASED_OPTIMIZATION)
+	CHECK_CXX_COMPILER_FLAG("-fprofile-use	-Wno-coverage-mismatch" COMPILER_USE_PROFILE_BASED_OPTIMIZATION)
+endif()
+
+if(USE_GENERATE_PROFILE_BASED_OPTIMIZATION)
+	SET(CMAKE_REQUIRED_FLAGS "--coverage")
+	CHECK_CXX_COMPILER_FLAG("-fprofile-generate -fipa-profile  --coverage -fbranch-probabilities" COMPILER_GENERATE_PROFILE_BASED_OPTIMIZATION)
+	set(CMAKE_REQUIRED_FLAGS ${BACKUP_REQUIRED_FLAGS})
+endif()
 CHECK_CXX_COMPILER_FLAG(-o0 COMPILER_NO_OPTIMISATION)
 if(COMPILER_COVERAGE)
 	set(COMPILER_COVERAGE_FLAG "--coverage -g ")
@@ -136,14 +137,55 @@ if(USE_COMPILER_OPTIMISATION_FLAG)
 else()
 	set(COMPILER_OPTIMISATION_FLAG false)
 endif()
+if(USE_DEB_INFO)
+	CHECK_CXX_COMPILER_FLAG("-g " COMPILER_DEB_INFO)
+endif()
+if(USE_DEB_INFO)
+else()
+	set(COMPILER_OPTIMISATION_FLAG false)
+endif()
+
+
+
+if(COMPILER_WALL)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -Wall" )
+endif(COMPILER_WALL)
+if(COMPILER_USE_PROFILE_BASED_OPTIMIZATION)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -fprofile-use -Wno-coverage-mismatch" )
+endif()
+if(COMPILER_GENERATE_PROFILE_BASED_OPTIMIZATION)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -fprofile-generate -fipa-profile   --coverage -fbranch-probabilities")
+	set(COMPUTATION_LINK_FLAGS "${COMPUTATION_LINK_FLAGS} --coverage" )
+endif()
+if(USE_DEB_INFO)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -g" )
+endif()
+
+if(COMPILER_EXTRA)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -Wextra -Wunsafe-loop-optimizations -Wdisabled-optimization -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn" )
+else()
+endif()
+
+if(COMPILER_WNOREORDER )
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -Wno-reorder" )
+endif(COMPILER_WNOREORDER)
+
+if(COMPILER_CPP0x)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -std=c++0x" )
+else()
+endif(COMPILER_CPP0x)
+
+if(COMPILER_NATIVE)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -march=native" )
+endif(COMPILER_NATIVE)
+
 if(COMPILER_OPTIMISATION_FLAG)
-	ADD_DEFINITIONS(-fwhole-program -flto -fprofile-generate -fipa-profile)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -flto -fwhole-program")
+       	set(COMPUTATION_LINK_FLAGS "${COMPUTATION_LINK_FLAGS} -flto"  )
 endif()
 add_executable(computation ${source_files})
+set_target_properties(computation PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(computation vtkHybrid ${Boost_LIBRARIES} )
-if(COMPILER_OPTIMISATION_FLAG)
-	set_target_properties(computation PROPERTIES COMPILE_FLAGS "-fprofile-generate -fipa-profile -Wno-coverage-mismatch  --coverage -fbranch-probabilities -fprofile-use" LINK_FLAGS "-fprofile-generate -fipa-profile  -Wcoverage-mismatch  --coverage -fbranch-probabilities -fprofile-use"  )
-endif()
 if(USE_UMFPACK)
 	TARGET_LINK_LIBRARIES(computation -lumfpack)
 endif(USE_UMFPACK)
