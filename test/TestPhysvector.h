@@ -51,21 +51,4 @@ void testarithmetic(){
 	TS_ASSERT_DELTA(vres.Get(1),2*v1.Get(1),eps);
 	TS_ASSERT_DELTA(vres.Get(2),2*v1.Get(2),eps);
 }
-void testOutofBound(){
-	TS_ASSERT_THROWS(v1.Get(3),OverFlowException);
-	TS_ASSERT_THROWS(v1.Get(0),UnderFlowException);
-	OverFlowException E(1,2);
-	E.what();
-	UnderFlowException E2(-1);
-	E2.what();
-	OutOfBoundException E3;
-	E3.what();
-	TS_ASSERT_THROWS(v1.Boum(),OutOfBoundException );
-	
-	TS_ASSERT_THROWS(v1.GetRef(3),OverFlowException);
-	TS_ASSERT_THROWS(v1.GetRef(0),UnderFlowException);
-	
-	TS_ASSERT_THROWS(v1.Set(3,2),OverFlowException);
-	TS_ASSERT_THROWS(v1.Set(0,3),UnderFlowException);
-}
 };
