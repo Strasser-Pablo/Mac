@@ -172,6 +172,7 @@ endif(COMPILER_WNOREORDER)
 
 if(COMPILER_CPP0x)
 	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -std=c++0x" )
+	set(CPP0X_FLAG "-std=c++0x")
 else()
 endif(COMPILER_CPP0x)
 
@@ -201,7 +202,7 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 
 
 function(AddTestProperty target)
-	set(COMPILER_FLAG "${COMPILER_COVERAGE_FLAG} ${COMPILER_NO_OPTIMISATION_FLAG}")
+	set(COMPILER_FLAG "${COMPILER_COVERAGE_FLAG} ${COMPILER_NO_OPTIMISATION_FLAG} ${CPP0X_FLAG}")
 	set_target_properties(${target} PROPERTIES COMPILE_FLAGS ${COMPILER_FLAG} LINK_FLAGS ${COMPILER_FLAG})
 	Target_link_libraries(${target}  ${Boost_LIBRARIES})
 endfunction(AddTestProperty)
@@ -296,23 +297,21 @@ endif(USE_UMFPACK)
 
 CXXTEST_ADD_TEST(test_cov_NeighborsDiagPhysvector test/TestNeighborsDiagPhysvector.cpp
                                  ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsDiagPhysvector.h)
-set_target_properties(test_cov_NeighborsDiagPhysvector PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
+AddTestProperty(test_cov_NeighborsDiagPhysvector)
 CXXTEST_ADD_TEST(test_cov_Math_Set test/TestMath_Set.cpp
                                  ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMath_Set.h)
-set_target_properties(test_cov_Math_Set PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
-
+AddTestProperty(test_cov_Math_Set) 
 CXXTEST_ADD_TEST(test_cov_NDFor test/TestNDFor.cpp
                                  ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNDFor.h)
-set_target_properties(test_cov_NDFor PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+AddTestProperty(test_cov_NDFor)
 
 CXXTEST_ADD_TEST(test_cov_UpdateCellTypeAndLayer3 test/TestUpdateCellTypeAndLayer3.cpp
                                  ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellTypeAndLayer3.h)
-set_target_properties(test_cov_UpdateCellTypeAndLayer3 PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+AddTestProperty(test_cov_UpdateCellTypeAndLayer3)
 
 CXXTEST_ADD_TEST(test_cov_Math_Set2 test/TestMath_Set2.cpp
                                  ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMath_Set2.h)
-set_target_properties(test_cov_Math_Set2 PROPERTIES COMPILE_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage" LINK_FLAGS "-g -ftest-coverage -fprofile-arcs -o0 --coverage")
+AddTestProperty(test_cov_Math_Set2)
 
 CXXTEST_ADD_TEST(test_cov_Mac_1_Order_UpWindConvect test/TestMac_1_OrderUpWindConvect.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMac_1_OrderUpWindConvect.h)
 AddTestProperty(test_cov_Mac_1_Order_UpWindConvect)
@@ -321,4 +320,8 @@ CXXTEST_ADD_TEST(test_cov_Serialization test/TestSerialization.cpp ${CMAKE_CURRE
 AddTestProperty(test_cov_Serialization)
 	TARGET_LINK_LIBRARIES(test_cov_Serialization vtkHybrid )
 	TARGET_LINK_LIBRARIES(test_cov_Serialization umfpack)
+
+	
+CXXTEST_ADD_TEST(test_cov_KeyTableUnorderedMap test/TestKeyTableUnorderedMap.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestKeyTableUnorderedMap.h)
+AddTestProperty(test_cov_KeyTableUnorderedMap)
 endif(USE_TESTING)
