@@ -13,6 +13,7 @@ MacCell<DIM,TypeData,TypeCell>::MacCell():m_layer(-1)
 		m_const_speed[i]=false;
 	}
 	m_one_const=false;
+	m_speedTemp.SetAll(0);
 }
 
 
@@ -24,6 +25,7 @@ MacCell<DIM,TypeData,TypeCell>::MacCell(Physvector<DIM,TypeData> &speed,const Ty
 		m_const_speed[i]=false;
 	}
 	m_one_const=false;
+	m_speedTemp.SetAll(0);
 }
 
 template <int DIM,class TypeData, class TypeCell>
@@ -34,6 +36,7 @@ MacCell<DIM,TypeData,TypeCell>::MacCell(Physvector<DIM,TypeData> &speed,const Ty
 		m_const_speed[i]=false;
 	}
 	m_one_const=false;
+	m_speedTemp.SetAll(0);
 }
 
 template <int DIM,class TypeData, class TypeCell>
@@ -191,7 +194,6 @@ template <class Archive>
 void MacCell<DIM,TypeData,TypeCell>::serialize(Archive & Ar,const unsigned int version)
 {
 	Ar & boost::serialization::make_nvp("Speed",m_speed);
-	Ar & boost::serialization::make_nvp("Speed_Temp",m_speedTemp);
 	Ar & boost::serialization::make_nvp("Pressure",m_pressure);
 	Ar & boost::serialization::make_nvp("Cell_Type",m_cell_type);
 	Ar & boost::serialization::make_nvp("Const_Speed",m_const_speed);
