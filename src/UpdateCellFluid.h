@@ -26,6 +26,7 @@ class UpdateCellFluid
 {
 	TypeWorld & m_world;
 	typedef typename TypeWorld::type_cell type_cell;
+	typedef typename TypeWorld::type_mac_cell type_mac_cell;
 	static const int type_dim=TypeWorld::type_dim;
 	typedef typename TypeWorld::type_particle type_particle;
 	typedef typename TypeWorld::type_key_vect type_key_vect;

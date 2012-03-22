@@ -29,7 +29,7 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update
 		m_world.m_mac_grid[tempkey].SetLayer(0);
 		m_world.m_mac_grid[tempkey].SetCellType(m_GetCellType.GetFluid());
 	}
-	
+	m_world.m_mac_grid.reserve(m_world.m_mac_grid.size()+type_mac_cell::GetNBConstSpeed());
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		int lay;
