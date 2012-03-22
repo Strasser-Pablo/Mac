@@ -28,6 +28,9 @@
 #include <functional>
 #include "Config.h"
 #include "Mac_1_Order_UpWindConvect.h"
+#include "UpdateDeleteCell.h"
+#include "KeyTableUnorderedMap.h"
+#include "HashPhysvector.h"
 #include <boost/serialization/nvp.hpp>
 const int dim=2;
 
@@ -43,7 +46,8 @@ class JetDEau
 	typedef MacCell<dim,double,int> mac;
 	typedef TableContainerList<part> list_part;
 	typedef PhysvectorKeyOrder<dim,int> order;
-	typedef KeyTableMap<keyvect,mac,order> keytable;
+	typedef HashPhysvector<dim,int> Hash;
+	typedef KeyTableUnorderedMap<keyvect,mac,Hash> keytable;
 	typedef MacWorld<keytable,list_part> world;
 	typedef MacGetStagPos<world>  type_stag;
 	typedef MacGetVelocity<world,type_stag > type_vel;
@@ -52,6 +56,7 @@ class JetDEau
 	typedef std::function<bool(Physvector<dim,int>)> type_partcondfunc;
 	typedef std::function<double(Physvector<dim,int>)> type_pres_func;
 	typedef ExtrapolateCellFluid<world,type_get_cell_type> type_extrapolate;
+	Hash m_hash;
 	type_partcondfunc m_part_cond;
 	type_pres_func m_pres_func;
 	type_get_cell_type m_GetCellType;
@@ -113,6 +118,7 @@ class JetDEau
 	friend class boost::serialization::access;
 	template <class Archive>
 	void serialize(Archive & ar,const unsigned int version);
+	UpdateDeleteCell<world> m_delete;
 public:
 	JetDEau();
 	void Calculate();
