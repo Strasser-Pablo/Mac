@@ -17,7 +17,7 @@ using namespace std;
  * @tparam TypeData for numerical data (double,float).
  * @tparam TypeCell type of data for cell (enum, class etc)
  **/
-template <int DIM,class TypeData, class TypeCell>
+template <int DIM,class TypeData, class TypeCell,int ID=0>
 class MacCell{
 	Physvector<DIM,TypeData> m_speed;
 	Physvector<DIM,TypeData> m_speedTemp;
@@ -29,7 +29,9 @@ class MacCell{
 	friend class boost::serialization::access;
 	template <class Archive>
 	void serialize(Archive & Ar,const unsigned int version);
+	static int m_nb_const_speed;
 public:
+	static int GetNBConstSpeed();
 /**
  * @brief
  * Type of the data (float, double).

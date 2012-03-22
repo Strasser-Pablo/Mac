@@ -5,8 +5,8 @@
  * Implementation file for class MacCell.
  **/
 
-template <int DIM,class TypeData, class TypeCell>
-MacCell<DIM,TypeData,TypeCell>::MacCell():m_layer(-1)
+template <int DIM,class TypeData, class TypeCell,int ID>
+MacCell<DIM,TypeData,TypeCell,ID>::MacCell():m_layer(-1)
 {
 	for(int i=0;i<DIM;++i)
 	{
@@ -17,8 +17,8 @@ MacCell<DIM,TypeData,TypeCell>::MacCell():m_layer(-1)
 }
 
 
-template <int DIM,class TypeData, class TypeCell>
-MacCell<DIM,TypeData,TypeCell>::MacCell(Physvector<DIM,TypeData> &speed,const TypeData &pressure,const int layer):m_speed(speed),m_pressure(pressure),m_layer(layer)
+template <int DIM,class TypeData, class TypeCell,int ID>
+MacCell<DIM,TypeData,TypeCell,ID>::MacCell(Physvector<DIM,TypeData> &speed,const TypeData &pressure,const int layer):m_speed(speed),m_pressure(pressure),m_layer(layer)
 {
 	for(int i=0;i<DIM;++i)
 	{
@@ -28,8 +28,8 @@ MacCell<DIM,TypeData,TypeCell>::MacCell(Physvector<DIM,TypeData> &speed,const Ty
 	m_speedTemp.SetAll(0);
 }
 
-template <int DIM,class TypeData, class TypeCell>
-MacCell<DIM,TypeData,TypeCell>::MacCell(Physvector<DIM,TypeData> &speed,const TypeData &pressure, const TypeCell &type,const int layer):m_speed(speed),m_pressure(pressure),m_cell_type(type),m_layer(layer)
+template <int DIM,class TypeData, class TypeCell,int ID>
+MacCell<DIM,TypeData,TypeCell,ID>::MacCell(Physvector<DIM,TypeData> &speed,const TypeData &pressure, const TypeCell &type,const int layer):m_speed(speed),m_pressure(pressure),m_cell_type(type),m_layer(layer)
 {
 	for(int i=0;i<DIM;++i)
 	{
@@ -39,13 +39,13 @@ MacCell<DIM,TypeData,TypeCell>::MacCell(Physvector<DIM,TypeData> &speed,const Ty
 	m_speedTemp.SetAll(0);
 }
 
-template <int DIM,class TypeData, class TypeCell>
-MacCell<DIM,TypeData,TypeCell>::~MacCell(){
+template <int DIM,class TypeData, class TypeCell,int ID>
+MacCell<DIM,TypeData,TypeCell,ID>::~MacCell(){
 }
 
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::SetSpeed(Physvector<DIM,TypeData> &speed)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetSpeed(Physvector<DIM,TypeData> &speed)
 {
 	if(!m_one_const)
 	{
@@ -63,14 +63,14 @@ void MacCell<DIM,TypeData,TypeCell>::SetSpeed(Physvector<DIM,TypeData> &speed)
 	}
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::GetSpeed(Physvector<DIM,TypeData> &speed) const
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetSpeed(Physvector<DIM,TypeData> &speed) const
 {
 	speed=m_speed;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::SetTempSpeed(Physvector<DIM,TypeData> &speed)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetTempSpeed(Physvector<DIM,TypeData> &speed)
 {
 	if(!m_one_const)
 	{
@@ -89,83 +89,84 @@ void MacCell<DIM,TypeData,TypeCell>::SetTempSpeed(Physvector<DIM,TypeData> &spee
 	}
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::GetTempSpeed(Physvector<DIM,TypeData> &speed)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetTempSpeed(Physvector<DIM,TypeData> &speed)
 {
 	speed=m_speedTemp;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::TempToSpeed()
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::TempToSpeed()
 {
 	m_speed=m_speedTemp;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::SpeedToTemp()
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SpeedToTemp()
 {
 	m_speedTemp=m_speed;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::SetPressure(const TypeData &pressure)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetPressure(const TypeData &pressure)
 {
 	m_pressure=pressure;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::GetPressure(TypeData &pressure)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetPressure(TypeData &pressure)
 {
 	pressure=m_pressure;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::SetCellType(const TypeCell & type)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetCellType(const TypeCell & type)
 {
 	m_cell_type=type;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::GetCellType(TypeCell & type)const
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetCellType(TypeCell & type)const
 {
 	type=m_cell_type;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::SetLayer(const int layer)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetLayer(const int layer)
 {
 	m_layer=layer;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::GetLayer(int & layer)const
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetLayer(int & layer)const
 {
 	layer=m_layer;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::SetConstSpeed(int i,bool b)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetConstSpeed(int i,bool b)
 {
 	m_const_speed[i-1]=b;
 	m_one_const=true;
 	m_speedTemp.GetRef(i)=m_speed.Get(i);
+	++m_nb_const_speed;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::GetConstSpeed(int i,bool &b)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetConstSpeed(int i,bool &b)
 {
 	b=m_const_speed[i-1];
 	m_one_const=true;
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::GetInterSpeed(int i,TypeData &speed_comp)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetInterSpeed(int i,TypeData &speed_comp)
 {
 	speed_comp=m_speed.GetRef(i);
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::SetInterSpeed(int i,TypeData &speed_comp)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetInterSpeed(int i,TypeData &speed_comp)
 {
 	if(!m_const_speed[i-1])
 	{
@@ -173,14 +174,14 @@ void MacCell<DIM,TypeData,TypeCell>::SetInterSpeed(int i,TypeData &speed_comp)
 	}
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::GetInterTempSpeed(int i,TypeData &speed_comp)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetInterTempSpeed(int i,TypeData &speed_comp)
 {
 	speed_comp=m_speedTemp.GetRef(i);
 }
 
-template <int DIM,class TypeData, class TypeCell>
-void MacCell<DIM,TypeData,TypeCell>::SetInterTempSpeed(int i,TypeData &speed_comp)
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetInterTempSpeed(int i,TypeData &speed_comp)
 {
 	if(!m_const_speed[i-1])
 	{
@@ -189,9 +190,9 @@ void MacCell<DIM,TypeData,TypeCell>::SetInterTempSpeed(int i,TypeData &speed_com
 }
 
 
-template <int DIM,class TypeData, class TypeCell>
+template <int DIM,class TypeData, class TypeCell,int ID>
 template <class Archive>
-void MacCell<DIM,TypeData,TypeCell>::serialize(Archive & Ar,const unsigned int version)
+void MacCell<DIM,TypeData,TypeCell,ID>::serialize(Archive & Ar,const unsigned int version)
 {
 	Ar & boost::serialization::make_nvp("Speed",m_speed);
 	Ar & boost::serialization::make_nvp("Pressure",m_pressure);
@@ -199,4 +200,13 @@ void MacCell<DIM,TypeData,TypeCell>::serialize(Archive & Ar,const unsigned int v
 	Ar & boost::serialization::make_nvp("Const_Speed",m_const_speed);
 	Ar & boost::serialization::make_nvp("One_Const_Speed",m_one_const);
 	Ar & boost::serialization::make_nvp("Layer",m_layer);
+}
+
+template <int DIM,class TypeData, class TypeCell,int ID>
+int MacCell<DIM,TypeData,TypeCell,ID>::m_nb_const_speed=0;
+
+template <int DIM,class TypeData, class TypeCell,int ID>
+int MacCell<DIM,TypeData,TypeCell,ID>::GetNBConstSpeed()
+{
+	return m_nb_const_speed;
 }
