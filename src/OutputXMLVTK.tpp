@@ -15,20 +15,23 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::Output(const char * filename,i
 	int nbPoint=0;
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
-		Physvector<type_dim,type_data> temp=m_stag_pos.Get(it.key(),ind);
 		m_point[it.key()]=nbPoint;
+		++nbPoint;
+	}
+
+	for(typename type_table_point::iterator it= m_point.begin();it!=m_point.end();++it)
+	{
+		Physvector<type_dim,type_data> temp=m_stag_pos.Get(it.key(),ind);
 		type_data vtemp[3];
 		for(int i=1;i<=type_dim;++i)
 		{
 			vtemp[i-1]=temp.Get(i);
-			
 		}
 		for(int i=type_dim+1;i<=3;++i)
 		{
 			vtemp[i-1]=0;
 		}
-		vtkpoints->InsertPoint(nbPoint,vtemp);
-		++nbPoint;
+		vtkpoints->InsertPoint(it.data(),vtemp);
 	}
 	  vtkunstruct->SetPoints(vtkpoints);
 			int ntype;
@@ -124,28 +127,26 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::Output(const char * filename,i
 
   vtkSmartPointer<vtkDoubleArray> vtkspeedarray=vtkSmartPointer<vtkDoubleArray>::New();
   vtkspeedarray->SetNumberOfComponents(3);
-int i=0;
-		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+	for(typename type_table_point::iterator it= m_point.begin();it!=m_point.end();++it)
 	{
 		Physvector<type_dim,type_data> temp;
-		it.data().GetSpeed(temp);
+		m_world.m_mac_grid[it.key()].GetSpeed(temp);
 		for(int j=1;j<=3;++j)
 		{
 			if(j==ind){
-			vtkspeedarray->InsertComponent(i,j-1,temp.Get(j));
+			vtkspeedarray->InsertComponent(it.data(),j-1,temp.Get(j));
 			}
 			else{
-			vtkspeedarray->InsertComponent(i,j-1,0);
+			vtkspeedarray->InsertComponent(it.data(),j-1,0);
 			}
 		}
-		++i;
 	}
 	vtkspeedarray->SetName("speed");
 	vtkunstruct->GetPointData()->AddArray(vtkspeedarray);
 	
 	
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-  //writer->SetDataModeToAscii();
+  writer->SetDataModeToAscii();
   writer->SetInput(vtkunstruct);
   writer->SetFileName(filename);
   writer->Write();
@@ -284,12 +285,17 @@ vtkSmartPointer<vtkFloatArray> vpress=vtkSmartPointer<vtkFloatArray>::New();
 vtkSmartPointer<vtkIntArray> vtype=vtkSmartPointer<vtkIntArray>::New();
 
 int k=0;
-		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+		for(typename KeyTableMap<Physvector<type_dim,int>,int,PhysvectorKeyOrder<type_dim,int> >::iterator it= m_point2.begin();it!=m_point2.end();++it)
 	{
+		Physvector<type_dim,int> key;
+		for(int i=1;i<=type_dim;++i)
+		{
+			key.GetRef(i)=(it.key().Get(i)+1)/2;
+		}
 		type_data temp;
-		int type;
-		it.data().GetPressure(temp);
-		it.data().GetCellType(type);
+		int type; 
+		m_world.m_mac_grid[key].GetPressure(temp);
+		m_world.m_mac_grid[key].GetCellType(type);
 		vpress->InsertValue(k,temp);
 		vtype->InsertValue(k,type);
 		++k;
@@ -299,7 +305,7 @@ int k=0;
 	vtkunstruct->GetCellData()->AddArray(vpress);
 	vtkunstruct->GetCellData()->AddArray(vtype);
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-  //writer->SetDataModeToAscii();
+  writer->SetDataModeToAscii();
   writer->SetInput(vtkunstruct);
   writer->SetFileName(filename);
   writer->Write();
@@ -339,7 +345,7 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputParticle(const char * fi
 	}
 	
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-  //writer->SetDataModeToAscii();
+  writer->SetDataModeToAscii();
   writer->SetInput(vtkunstruct);
   writer->SetFileName(filename);
   writer->Write();
