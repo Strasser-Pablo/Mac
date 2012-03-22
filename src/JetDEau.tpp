@@ -30,13 +30,13 @@ void JetDEau::SetUp()
 	Physvector<dim,double> speed;
 	speed.SetAll(0);
 	double speedmax=5;
-	m_v_1_h.SetAll(600);
-	m_v_h.SetAll(1./600.);
+	m_v_1_h.SetAll(300);
+	m_v_h.SetAll(1./300.);
 	//m_v_h.Set(2,1);
 	//m_v_1_h.Set(2,1);
-	int Nx=1;
-	int Nz=1;
-	int r=30;
+	int Nx=15;
+	int Nz=15;
+	int r=15;
 	Physvector<dim,int> key;
 	double r02=pow(r,2);
 	if(dim==3)
@@ -45,7 +45,7 @@ void JetDEau::SetUp()
 	{
 		for(int k=-Nz;k<=Nz;++k)
 	{
-		double r2=pow(i+0.5,2)+pow(k+0.5,2);
+		double r2=pow(i,2)+pow(k,2);
 		
 		if(r2>r02)
 		{
@@ -66,7 +66,7 @@ void JetDEau::SetUp()
 	{
 	for(int i=-Nx;i<=Nx;++i)
 	{
-		double r2=pow(i+0.5,2);
+		double r2=pow(i,2);
 		
 		if(r2>r02)
 		{
@@ -97,6 +97,7 @@ void JetDEau::Calculate()
 	cout<<"update"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
 	m_init.Update();
+	m_out.Calculate();
 	m_time_ticks_end=times(&m_time_end);
 	m_time_init=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	cout<<"timestep"<<endl;
