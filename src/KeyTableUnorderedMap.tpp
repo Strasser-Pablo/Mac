@@ -121,5 +121,5 @@ void KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::serialize(Archive
 template<class TypeKey,class TypeData,class TypeHash,class TypeComp>
 void KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::reserve(size_type count)
 {
-	m_map.reserve(cout);
+	m_map.reserve(count);
 }
