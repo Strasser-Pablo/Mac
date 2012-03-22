@@ -1,6 +1,6 @@
 build*/
 Testing/
-MAC.*
+/MAC.*
 doc/latex/
 doc/html/
 *.*~
