@@ -13,6 +13,7 @@ void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Upd
 {
 	
 	for(int i=1;i<=m_level;++i){
+	 m_world.m_mac_grid.reserve((pow(3,type_dim)-1)*m_world.m_mac_grid.size());
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		int layer;
@@ -38,7 +39,7 @@ void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Upd
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
 void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::PrepareConstSpeed()
 {
-
+	 m_world.m_mac_grid.reserve((pow(3,type_dim)-1)*m_world.m_mac_grid.size());
 		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 		{
 						for(int i=1;i<=type_dim;++i)
