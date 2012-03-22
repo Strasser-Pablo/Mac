@@ -3,15 +3,17 @@
 #include <boost/archive/xml_iarchive.hpp>
 using namespace std;
 
-const bool bstop=false;
+const bool bstop=true;
 const int nb_stop=100;
 const bool barchive=true;
 const int nb_archive=10;
 
 const bool bload=false;
-const char* file_to_load="backup20.xml";
+const char* file_to_load="backup5.xml";
 const char* file_save_prefixe="backup";
 const char* file_save_extension=".xml";
+
+
 int main(){
 	JetDEau J;
 	if(bload)
@@ -25,6 +27,9 @@ int main(){
 		J.SetUp();
 	}
 	int &i=J.GetFileNumber();
+			std::ofstream ofs("initback.xml");
+			boost::archive::xml_oarchive oa(ofs);
+			oa<<boost::serialization::make_nvp("JetDEau",J);
 while(true)
 {
 	J.Calculate();
