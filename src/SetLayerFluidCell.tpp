@@ -17,14 +17,14 @@ void SetLayerFluidCell<TypeWorld,TypeGetCellType>::Calculate()
 	{
 		type_cell type;
 		it.data().GetCellType(type);
-		if(m_GetCellType.GetIsFluid(type))
+		if(!m_GetCellType.GetIsAir(type))
 		{
-		it.data().SetLayer(0);
+			it.data().SetLayer(0);
 		}
 		else
 		{
-		it.data().SetLayer(-1);
-		it.data().SetPressure(0);
+			it.data().SetLayer(-1);
+			it.data().SetPressure(0);
 		}
 	}
 }
