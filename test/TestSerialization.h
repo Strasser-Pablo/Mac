@@ -11,6 +11,7 @@
 #include "../src/MacWorld.h"
 #include "../src/PhysvectorKeyOrder.h"
 #include "../src/JetDEau.h"
+#include <utility>
 #define eps 1e-10
 using namespace std;
 class Test_Serialization : public CxxTest::TestSuite
@@ -140,6 +141,7 @@ public:
 			Mac.SetSpeed(vect);
 			Mac.SetCellType(4);
 			Mac.SetLayer(3);
+			Mac.SetPressure(4);
 			oa<<boost::serialization::make_nvp("MacCell",Mac);
 		}
 		{
@@ -149,14 +151,17 @@ public:
 			ia>>boost::serialization::make_nvp("MacCell",M);
 			int c;
 			int l;
+			double p;
 			Physvector<2,double> v;
 			M.GetCellType(c);
 			M.GetSpeed(v);
 			M.GetLayer(l);
+			M.GetPressure(p);
 			TS_ASSERT_DELTA(v.Get(1),2.3,eps);
 			TS_ASSERT_DELTA(v.Get(2),4.6,eps);
 			TS_ASSERT_EQUALS(c,4);
 			TS_ASSERT_EQUALS(l,3);
+			TS_ASSERT_EQUALS(p,4);
 		}
 	}
 
@@ -281,4 +286,24 @@ public:
 		}
 	}
 
+	void testPair()
+	{
+		{
+			pair<int,int> p;
+			p.first=4;
+			p.second=10;
+			std::ofstream ofs("test.txt");
+			boost::archive::xml_oarchive oa(ofs);
+			oa<<boost::serialization::make_nvp("Pair",p);
+		}
+		{
+
+			pair<int,int> p;
+			std::ifstream ifs("test.txt");
+			boost::archive::xml_iarchive ia(ifs);
+			ia>>boost::serialization::make_nvp("Pair",p);
+			TS_ASSERT_EQUALS(p.first,4);
+			TS_ASSERT_EQUALS(p.second,10);
+		}
+	}
 };
