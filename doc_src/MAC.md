@@ -14,6 +14,52 @@ Navier-Stockes equation
 \frac{\partial u(\xi,t)}{\partial t} +\left(u(\xi,t)\cdot \nabla \right) u(\xi,t)&=-\frac{\nabla p(\xi,t)}{\rho(\xi,t)}+\frac{F(\xi,t)}{\rho(\xi,t)}+\nu \Delta u(\xi,t)
 \f}
 
+Where:
+	- \f$u\f$ is the eulerian speed.
+	- \f$\xi\f$ is the eulerian position.
+	- \f$p\f$ is the pressure.
+	- \f$\rho\f$ is the mass density.
+	- \f$\nu\f$ is the viscosity.
+	- \f$\F\f$ is the force.
+
+The following variable need to be solved:
+	- \f$u\f$
+	- \f$p\f$
+
+For a given Force \f$F\f$ a given boundary condition for \f$p\f$ and a given
+initial condition for \f$u\f$.
+
+The value of the function and the boundary condition are given by the topology
+of the problem and depend of the velocity of the particle at time before.
+The topology change is calculated at same time as the equation.
+
+Topology
+--------
+
+The topology is given by the type of a cell that can be:
+	- Watter.
+	- Exterior Air.
+	- Interior Air.
+
+The difference between interior and exterior is if we are connected to
+infinity.
+
+Data Structure
+--------------
+
+The Data Structure consist of:
+
+	- A list of Cell in a given mesh position:
+	A Cell contain the following data.
+		+ Speed.
+		+ Pressure.
+		+ CellType. 
+	- A list of Particle.
+	  A Particle consist of:
+		+ A position.
+
+
+
 Algorithm
 ---------
 
