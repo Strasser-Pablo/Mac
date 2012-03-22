@@ -86,3 +86,40 @@ void KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::clear()
 {
 		 m_map.clear();
 }
+
+template<class TypeKey,class TypeData,class TypeHash,class TypeComp>
+template <class Archive>
+void KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::serialize(Archive & ar,const unsigned int version)
+{
+	
+	if(typename Archive::is_loading())
+	{
+		size_type size;
+		ar & boost::serialization::make_nvp("Size",size);
+		for(size_type i=0;i<size;++i)
+		{
+			typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::value_type in;
+			ar & boost::serialization::make_nvp("Pair",in);
+			m_map.insert(in);	
+		}
+
+	}
+	else if(typename Archive::is_saving())
+	{
+		size_type size=m_map.size();
+		ar & boost::serialization::make_nvp("Size",size);
+		for(typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator it=m_map.begin();it!=m_map.end();++it)
+		{
+
+			typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::value_type out=*it;
+			ar & boost::serialization::make_nvp("Pair",out);
+		}
+	}
+	
+}
+
+template<class TypeKey,class TypeData,class TypeHash,class TypeComp>
+void KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::reserve(size_type count)
+{
+	m_map.reserve(cout);
+}

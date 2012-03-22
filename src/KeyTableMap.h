@@ -49,6 +49,7 @@ public:
 	virtual void erase(iterator pos);
 	virtual void erase(const TypeKey & key);
 	virtual void clear();
+	void reserve(size_type count);
 };
 
 #include "KeyTableMap.tpp"

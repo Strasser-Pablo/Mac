@@ -3,7 +3,7 @@
 #define KeyTableUnordered_H
 #include <unordered_map>
 #include "KeyTableUnorderedMapIterator.h"
-
+#include <boost/serialization/utility.hpp>
 using namespace std;
 
 /**
@@ -21,6 +21,9 @@ using namespace std;
 template<class TypeKey,class TypeData,class TypeHash=std::hash<TypeKey>,class TypeComp=equal_to<TypeKey> >
 class KeyTableUnorderedMap:public KeyTable<TypeKey,TypeData,KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>,KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp>,typename map<TypeKey,TypeData>::size_type>{
 	unordered_map<TypeKey,TypeData,TypeHash,TypeComp> m_map;
+	friend class boost::serialization::access;
+	template <class Archive>
+	void serialize(Archive & Ar,const unsigned int version);
 public:
 	typedef typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::size_type size_type;
 	typedef KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp> iterator;
@@ -46,6 +49,7 @@ public:
 	virtual void erase(iterator pos);
 	virtual void erase(const TypeKey & key);
 	virtual void clear();
+	virtual void reserve(size_type count);
 };
 
 #include "KeyTableUnorderedMap.tpp"

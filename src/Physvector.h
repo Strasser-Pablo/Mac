@@ -187,13 +187,13 @@ public:
 	 * Element by element comparaison.
 	 * @param b Vector to compare with.
 	 **/
-	inline bool operator==(const Physvector<Dim,TypeData> & b);
+	inline bool operator==(const Physvector<Dim,TypeData> & b) const;
 	/**
 	 * @brief
 	 * Element by element comparaison.
 	 * @param b Vector to compare with.
 	 **/
-	inline bool operator!=(const Physvector<Dim,TypeData> & b);	
+	inline bool operator!=(const Physvector<Dim,TypeData> & b) const;	
 	
 	inline TypeData Norm();
 	

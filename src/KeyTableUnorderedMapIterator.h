@@ -1,5 +1,5 @@
-#ifndef KeyTableMapIterator_H
-#define KeyTableMapIterator_H
+#ifndef KeyTableUnorderedMapIterator_H
+#define KeyTableUnorderedMapIterator_H
 
 #include <unordered_map>
 #include "KeyTableIterator.h"

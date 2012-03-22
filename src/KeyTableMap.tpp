@@ -94,3 +94,9 @@ void KeyTableMap<TypeKey,TypeData,TypeComp>::serialize(Archive & Ar,const unsign
 {
 	Ar & boost::serialization::make_nvp("Map",m_map);  
 }
+
+template<class TypeKey,class TypeData,class TypeComp>
+void KeyTableMap<TypeKey,TypeData,TypeComp>::reserve(size_type count)
+{
+
+}

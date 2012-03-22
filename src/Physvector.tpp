@@ -171,7 +171,7 @@ Physvector<Dim,TypeData>& Physvector<Dim,TypeData>::operator*=(const TypeData & 
 }
 
 template <int Dim,class TypeData>
-bool Physvector<Dim,TypeData>::operator==(const Physvector<Dim,TypeData> & b){
+bool Physvector<Dim,TypeData>::operator==(const Physvector<Dim,TypeData> & b) const{
 	for(int i=0;i<Dim;++i)
 	{
 		if(m_data[i]!=b.m_data[i])
@@ -183,7 +183,7 @@ bool Physvector<Dim,TypeData>::operator==(const Physvector<Dim,TypeData> & b){
 }
 
 template <int Dim,class TypeData>
-bool Physvector<Dim,TypeData>::operator!=(const Physvector<Dim,TypeData> & b){
+bool Physvector<Dim,TypeData>::operator!=(const Physvector<Dim,TypeData> & b) const{
 	for(int i=0;i<Dim;++i)
 	{
 		if(m_data[i]!=b.m_data[i])

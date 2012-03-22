@@ -1,5 +1,6 @@
 #include <cxxtest/TestSuite.h>
 #include "../src/KeyTableMap.h"
+#include "../src/PhysvectorKeyOrder.h"
 #define eps 1e-10
 class Test_KeyTableMap : public CxxTest::TestSuite
 {
@@ -100,5 +101,29 @@ void testConstIterator(){
 	TS_ASSERT_EQUALS(map2.begin(),m_map.begin());
 	TS_ASSERT_EQUALS(map2.end(),m_map.end());
 }
-
+	void testPhysvectorKeyOrder()
+	{
+		typedef Physvector<3,int> vect;
+		PhysvectorKeyOrder<3,int> O;
+		KeyTableMap<vect,double,PhysvectorKeyOrder<3,int> > table(O);
+		vect v;
+		v.Set(1,4);
+		v.Set(2,6);
+		v.Set(3,9);
+		table[v]=5.0;
+		TS_ASSERT_DELTA(table[v],5.0,eps);
+		for(int i=0;i<=20;++i)
+		{
+			v.Set(1,i);
+			for(int j=0;j<=20;++j)
+			{
+				v.Set(2,j);
+				for(int k=0;k<=20;++k)
+				{
+					v.Set(3,k);
+					table[v]=i*j*k*0.1;
+				}
+			}
+		}
+	}
 };
