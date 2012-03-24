@@ -14,6 +14,7 @@ using namespace std;
  **/
 
 /**
+ * @ingroup GR_Linked_List
  * @brief
  * Implementation of a container based on stl list.
  * 

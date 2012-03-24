@@ -10,6 +10,7 @@
  **/
 
 /**
+ * @ingroup GR_Viscosity
  * @brief
  * Add the viscosity force contribution. Calculating the laplacien.
  * @tparam TypeWorld World type to use.

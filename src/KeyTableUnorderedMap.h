@@ -13,6 +13,7 @@ using namespace std;
  **/
 
 /**
+ * @ingroup GR_Hash_Map
  * @brief Container class. Linking a key to a value. Implemented with std::map.
  * \tparam TypeKey TypeKey to use. Need to have a < operator.
  * \tparam TypeData TypeData to use. Has no constraint.

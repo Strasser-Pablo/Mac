@@ -8,6 +8,7 @@
  **/
  
  /**
+  * @ingroup GR_Particle
   * @brief
   * class Representing a particle with a given position and speed.
   * @tparam TypeVector type used for vector.

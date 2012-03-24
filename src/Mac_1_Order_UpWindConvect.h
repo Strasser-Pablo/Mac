@@ -6,7 +6,9 @@
 #include <iostream>
 
 using namespace std;
-
+/**
+ * @ingroup GR_Convection
+ **/
 template <class TypeWorld,class TypeGetSpeed,class TypeGetStagSpeedPos,class GetTypeCell>
 class Mac_1_Order_UpWindConvect
 {

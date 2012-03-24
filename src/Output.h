@@ -6,6 +6,9 @@
 #include <string>
 #include <sstream>
 using namespace std;
+/**
+ * @ingroup GR_Output
+ **/
 template <class TypeWorld,class TypeGetStagSpeedPos>
 class Output
 {

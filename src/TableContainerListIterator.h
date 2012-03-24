@@ -16,6 +16,7 @@ template<class TypeData>
 class TableContainerListIterator;
 
 /**
+ * @ingroup GR_Linked_List
  * @brief
  * Iterator to use TableContainerList.
  * @tparam TypeData Type of the data.
@@ -67,6 +68,7 @@ template<class TypeData>
 class TableContainerListIterator;
 
 /**
+ * @ingroup GR_Linked_List
  * @brief
  * Const Iterator to use TableContainerList.
  * @tparam TypeData Type of the data.

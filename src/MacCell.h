@@ -11,6 +11,7 @@ using namespace std;
  * Declaration file for class MacCell.
  **/
 /**
+ * @ingroup GR_Cell
  * @brief
  * Represent a MAC Cell.
  * @tparam DIM Dimension of the space.

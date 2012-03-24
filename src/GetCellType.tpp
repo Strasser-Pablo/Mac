@@ -216,7 +216,29 @@ Type_Inter GetCellType<TypeWorld>::GetInter(const type_key & key1,const type_key
 	{
 		return Type_Inter::Fluid_Air_Boundary;
 	}
-	throw logic_error("GetInter is not of a know type");
+	stringstream ss;
+	if(m_world.m_mac_grid.Exist(key1))
+	{
+		type_cell c;
+		m_world.m_mac_grid[key1].GetCellType(c);
+		ss<<"key1 "<<c;
+	}
+	else
+	{
+		ss<<"key1 don't exist ";
+	}
+	if(m_world.m_mac_grid.Exist(key2))
+	{
+		type_cell c;
+		m_world.m_mac_grid[key2].GetCellType(c);
+		ss<<" key2 "<<c;
+	}
+	else
+	{
+		ss<<" key2 don't exist ";
+	}
+	string str=string("GetInter is not of a know type.")+ss.str();
+	throw logic_error(str.c_str());
 }
 
 template <class TypeWorld>

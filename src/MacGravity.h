@@ -10,6 +10,7 @@
  **/
 
 /**
+ * @ingroup GR_Gravity
  * @brief
  * Apply Gravity to all cell.
  * @tparam TypeWorld type of World.

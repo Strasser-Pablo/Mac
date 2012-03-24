@@ -8,6 +8,7 @@
  * Declaration file for class MacWorld.
  **/
 /**
+ * @ingroup GR_World
  * @brief 
  * Structure to store information the mac grid and the particle.
  * @tparam KeyTable Key Table where the mac cell are stored.

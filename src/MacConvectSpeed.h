@@ -16,6 +16,7 @@ template <class TypeWorld,class TypeGetSpeed>
 class MacConvectSpeedFunctor;
 
 /**
+ * @ingroup GR_Convection
  * @brief
  * Convect Speed using a Backward trace particle.
  * Send a particle with backward in time one time step.

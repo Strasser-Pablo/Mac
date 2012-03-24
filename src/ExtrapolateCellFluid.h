@@ -13,6 +13,7 @@ using namespace std;
  **/
  
  /**
+  * @ingroup GR_Extrapolate
   * @brief
   * Extrapolate the speed to the exterior of the fluid zone.
   * @tparam TypeWorld Type used for the grid.

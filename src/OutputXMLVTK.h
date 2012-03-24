@@ -22,6 +22,10 @@ class VTKDimensionError:public std::exception{
 		return "VTK File Format doesn't accept dimension different than 1,2,3.";
 	}
 };
+
+/**
+ * @ingroup GR_Output
+ **/
 template <class TypeWorld,class TypeGetStagSpeedPos>
 class OutputXMLVTK
 {

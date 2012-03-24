@@ -9,6 +9,7 @@
  **/
  
  /**
+  * @ingroup GR_Map
   * @brief
   * Ordering class that order physvector as key.
   * Ordering by the first element of the vector and in case of equality use the next.

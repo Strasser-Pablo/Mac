@@ -20,7 +20,7 @@ Where:
 	- \f$p\f$ is the pressure.
 	- \f$\rho\f$ is the mass density.
 	- \f$\nu\f$ is the viscosity.
-	- \f$\F\f$ is the force.
+	- \f$F\f$ is the force.
 
 The following variable need to be solved:
 	- \f$u\f$
@@ -48,7 +48,6 @@ Data Structure
 --------------
 
 The Data Structure consist of:
-
 	- A list of Cell in a given mesh position:
 	A Cell contain the following data.
 		+ Speed.

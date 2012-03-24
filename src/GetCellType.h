@@ -1,6 +1,9 @@
 #ifndef GetCellType_H
 #include "Type_Inter.h"
 #include <stdexcept>
+/**
+ *  @ingroup GR_GetCellType
+ **/
 template <class TypeWorld>
 class GetCellType
 {

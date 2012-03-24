@@ -12,6 +12,7 @@ using namespace std;
  **/
 
 /**
+ * @ingroup GR_Solve_Pressure
  * @brief
  * Find the correct pressure to have an incompressible fluid.
  * Using the library umfpack.

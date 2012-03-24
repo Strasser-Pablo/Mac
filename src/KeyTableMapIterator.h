@@ -14,6 +14,7 @@ using namespace std;
 template<class TypeKey,class TypeData,class TypeComp>
 class KeyTableMapIterator;
 /**
+ * @ingroup GR_Map
  * @brief
  * Iterator class to a KeyTableMap.
  * \tparam TypeKey TypeKey to use. Need to have a < operator.
@@ -51,6 +52,7 @@ template<class TypeKey,class TypeData,class TypeComp>
 class KeyTableMapConstIterator;
 
 /**
+ * @ingroup GR_Map
  * @brief
  * Const Iterator class to a KeyTableMap.
  * \tparam TypeKey TypeKey to use. Need to have a < operator.

@@ -3,6 +3,9 @@
 #include "Physvector.h"
 #include "MacConvectSpeed.h"
 #include "ODEFirstOrderTimeIndependent.h"
+/**
+ * @ingroup GR_Move_Particle
+ **/
 template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos>
 class MacMoveParticle
 {

@@ -13,6 +13,7 @@
 
 using namespace std;
 /**
+ * @ingroup GR_GetSpeed
  * @brief
  * Get The Velocity in a point of space interpolating from the grid.
  * @tparam TypeWorld Type of World used.
