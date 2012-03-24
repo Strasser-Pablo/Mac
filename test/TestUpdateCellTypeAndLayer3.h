@@ -377,4 +377,5 @@ public:
 		k.Set(2,0);
 		TS_ASSERT(m_GetCellType.GetIsFluid(k));
 		}
+
 };

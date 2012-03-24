@@ -146,7 +146,7 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::Output(const char * filename,i
 	
 	
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-  writer->SetDataModeToAscii();
+  //writer->SetDataModeToAscii();
   writer->SetInput(vtkunstruct);
   writer->SetFileName(filename);
   writer->Write();
@@ -305,7 +305,7 @@ int k=0;
 	vtkunstruct->GetCellData()->AddArray(vpress);
 	vtkunstruct->GetCellData()->AddArray(vtype);
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-  writer->SetDataModeToAscii();
+  //writer->SetDataModeToAscii();
   writer->SetInput(vtkunstruct);
   writer->SetFileName(filename);
   writer->Write();
@@ -345,7 +345,7 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputParticle(const char * fi
 	}
 	
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-  writer->SetDataModeToAscii();
+  //writer->SetDataModeToAscii();
   writer->SetInput(vtkunstruct);
   writer->SetFileName(filename);
   writer->Write();

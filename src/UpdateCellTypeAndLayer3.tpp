@@ -110,7 +110,6 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Fo
 	while(!m_stack.empty())
 	{
 		m_act=m_stack.top();
-		//cout<<"id m_act "<<id<<" "<<m_act<<endl;
 		m_stack.pop();
 		Physvector<type_dim,int> m_neigh;
 		for(int i=1;i<=type_dim;++i)
@@ -292,7 +291,6 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 				m_world.m_mac_grid[neigh].GetLayer(layer);
 				if(layer==-1)
 				{
-				//	cout<<"m_lay fluid "<<neigh<<endl;
 					m_world.m_mac_grid[neigh].SetCellType(m_GetCellType.GetAir());
 					m_world.m_mac_grid[neigh].SetLayer(i);
 					m_world.m_mac_grid[neigh].SetPressure(m_func_pres(neigh));

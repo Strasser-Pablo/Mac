@@ -3,7 +3,7 @@
 #include <boost/archive/xml_iarchive.hpp>
 using namespace std;
 
-const bool bstop=true;
+const bool bstop=false;
 const int nb_stop=100;
 const bool barchive=true;
 const int nb_archive=10;
