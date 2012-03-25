@@ -18,13 +18,10 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update
 		Physvector<type_dim,type_data> pos;
 		(*it).GetPos(pos);
 		tempkey=m_to_key.ToKey(*it);
-		if(type_dim==3)
+		if(m_condpart(tempkey))
 		{
-			if(m_condpart(tempkey))
-			{
-				it=m_world.m_particle_list.erase(it);
-				continue;
-			}
+			it=m_world.m_particle_list.erase(it);
+			continue;
 		}
 		m_world.m_mac_grid[tempkey].SetLayer(0);
 		m_world.m_mac_grid[tempkey].SetCellType(m_GetCellType.GetFluid());
