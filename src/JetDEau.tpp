@@ -99,7 +99,7 @@ void JetDEau::Calculate()
 	m_init.Update();
 	m_time_ticks_end=times(&m_time_end);
 	m_time_init=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
-	m_out.Calculate();			
+	
 	cout<<"timestep"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
 	m_time_step.Calculate();
