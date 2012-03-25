@@ -365,7 +365,7 @@ Rel_Ensemble Math_Set2<1,TypeData>::IsIn(Math_Set2<1,TypeData> & B)
   		//            				it4(max)!=B.m_minter_max.end()          
 		//										
 		//            				it5(min)!=B.m_inter_max.end()                             
-  		if(*it4>=*it5)
+  		if(*it4<=*it5)
 		{
 			return Rel_Ensemble::A_In_B;
 		}
