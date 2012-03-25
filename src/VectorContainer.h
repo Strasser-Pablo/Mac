@@ -25,6 +25,9 @@ VectorContainer<TypeContainer,TypeData,TypeConstant>& operator*=(  VectorContain
 
 
 /**
+ * @deprecated
+ * Not used nowhere.
+ *
  * @brief
  * This class implement element by element addition and multiplication by a constant.
  * The underlying container can be every stl compatible container.

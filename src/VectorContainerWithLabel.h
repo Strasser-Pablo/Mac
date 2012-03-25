@@ -25,6 +25,8 @@ template <class TypeContainer,class TypeData,class TypeConstant,class TypeContai
 VectorContainerWithLabel<TypeContainer,TypeData,TypeConstant,TypeContainerLabel,TypeLabel>& operator*=(VectorContainerWithLabel<TypeContainer,TypeData,TypeConstant,TypeContainerLabel,TypeLabel>& a, const TypeConstant & C);
 
 /**
+ * @deprecated
+ * Not used.
  * @brief
  * This class consist like VectorContainer of a element and element addition and multiplication.
  * With as additional information an label.

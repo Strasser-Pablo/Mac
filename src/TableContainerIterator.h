@@ -7,6 +7,11 @@
  * Declaration file for class TableContainerIterator and TableContainerConstIterator.
  **/
 
+/**
+ * @ingroup GR_Container_List
+ * @deprecated
+ * Only serve as concept.
+ **/
 template <class TypeData, class TypeIterator>
 class TableContainerIterator{
 public:
@@ -55,6 +60,11 @@ public:
 	virtual TypeData& operator*()=0;
 };
 
+/**
+ * @ingroup GR_Container_List
+ * @deprecated
+ * Only serve as concept.
+ **/
 template <class TypeData, class TypeIterator>
 class TableContainerConstIterator{
 public:

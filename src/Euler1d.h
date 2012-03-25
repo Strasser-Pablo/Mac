@@ -9,6 +9,11 @@
  **/
  
  /**
+  * @ingroup GR_ODE_Method
+  * 
+  * @deprecated
+  * Not used and serve nothing because dimension is a unknow. 
+  *
   * @brief
   * Calculate one dimensional ODE with Euler method.
   * 

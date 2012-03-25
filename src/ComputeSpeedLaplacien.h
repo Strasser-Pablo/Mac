@@ -8,6 +8,7 @@
  **/
 
 /**
+ * @ingroup GR_Laplacien
  * @brief
  * Compute the Laplacien for speed from the grid.
  * @tparam TypeWorld World type used to access the grid.

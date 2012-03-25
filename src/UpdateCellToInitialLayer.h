@@ -7,6 +7,7 @@
  **/
 
 /**
+ * @brief GR_Initial_Layer
  * @brief 
  * Put the layer of all particle to -1.
  **/

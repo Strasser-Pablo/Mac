@@ -8,6 +8,10 @@
  **/
 
 /**
+ * @ingroup GR_Container_List
+ * @deprecated
+ * Only serve as concept.
+ *
  * @brief
  * Container class that store data.
  * The container is able to add item at begin and at end.

@@ -52,6 +52,7 @@ struct SubElement<type_dim,type_data,prof,1,TypeWorld>
 using namespace std;
 
 /**
+ * @ingroup GR_Interpolation
  * @brief
  * Calculate a N linear interpolation for the ith component of speed.
  * @tparam TypeWorld type of World used.

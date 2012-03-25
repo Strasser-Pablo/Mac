@@ -9,6 +9,7 @@
  **/
  
  /**
+  * @ingroup GR_ODE_Method
   * @brief
   * Implementation to Solve ODE independent on time with Euler method.
   * To be used as last template argument of ODEFirstOrderTimeIndependent.

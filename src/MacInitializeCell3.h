@@ -11,7 +11,7 @@
  **/
 
 /**
- * @ingroup GR_Initialize
+ * @ingroup GR_Mac_Initialize
  * @brief
  * Initialize the grid. Consisting to the following step:
  * - Cell with particle in it are Fluid Cell.

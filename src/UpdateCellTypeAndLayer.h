@@ -11,6 +11,7 @@ using namespace std;
  **/
  
  /**
+  * @ingroup GR_Topology
   * @brief
   * Update the cell type to fluid if a particle is in it. And give a correct layer.
   * It create the air layer with a given depth.

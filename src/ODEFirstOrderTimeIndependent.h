@@ -7,6 +7,7 @@
 **/
 
 /**
+ * @ingroup GR_ODE_Solver
  * @brief  Class for solving first order ODE without time dependence.
  *
  * This class represent an ODE of form:

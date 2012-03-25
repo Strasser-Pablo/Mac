@@ -63,6 +63,7 @@ MacConvectSpeed(TypeWorld & world,TypeMethod &method,TypeGetSpeed & GetSpeed, Ty
 };
 
 /**
+ * @ingroup GR_Convection
  * @brief
  * Functor used in class MacConvectSpeed. As function giving the speed.
  * @tparam TypeWorld World type used.

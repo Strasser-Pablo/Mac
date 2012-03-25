@@ -7,6 +7,7 @@
  **/
  
  /**
+  * @ingroup GR_Update_Delete
   * @brief 
   * Delete cell that have -1 as layer.
   * This class is used to cleanup unused air cell.

@@ -2,7 +2,7 @@
 #include "Type_Inter.h"
 #include <stdexcept>
 /**
- *  @ingroup GR_GetCellType
+ *  @ingroup GR_Get_Cell_Type
  **/
 template <class TypeWorld>
 class GetCellType

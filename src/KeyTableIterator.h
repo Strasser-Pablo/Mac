@@ -9,6 +9,10 @@
 
 
 /**
+ * @ingroup GR_Container_Map
+ * @deprecated
+ * Only serve as concept. Not very usefull
+ *
  * @brief
  * Iterator class to a KeyTable.
  * \tparam TypeKey TypeKey to use. Need to have a < operator.
@@ -70,6 +74,10 @@ public:
 };
 
 /**
+ * @ingroup GR_Container_Map
+ * @deprecated
+ * Only serve as concept. Not very usefull
+ *
  * @brief
  * Const Iterator class to a KeyTable.
  * \tparam TypeKey TypeKey to use. Need to have a < operator.

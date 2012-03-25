@@ -11,6 +11,7 @@ using namespace std;
  **/
 
 /**
+ * @ingroup GR_Update_Fluid
  * @brief
  * Update the cell that have fluid and their layer.
  * @tparam TypeWorld type of the World used.

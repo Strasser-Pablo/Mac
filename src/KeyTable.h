@@ -6,6 +6,10 @@
  **/
 
 /**
+ * @ingroup GR_Container_Map
+ * @deprecated
+ * Only used to show concept. Not usefull.
+ *
  * @brief Container abstract class. Linking a key to a value.
  * \tparam TypeKey TypeKey to use. Need to have a < operator.
  * \tparam TypeData TypeData to use. Has no constraint.

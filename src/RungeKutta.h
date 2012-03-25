@@ -8,7 +8,8 @@
  * Declaration file for class RungeKutta.
  **/
  
-  /**
+ /**
+  * @ingroup GR_ODE_Method
   * @brief
   * Implementation to Solve ODE independent on time with RungeKutta method.
   * To be used as last template argument of ODEFirstOrderTimeIndependent.

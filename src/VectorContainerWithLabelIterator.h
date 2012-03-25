@@ -10,6 +10,8 @@
  **/
 
 /**
+ * @deprecated
+ * Not used.
  * @brief
  * Iterator class for class VectorContainerWithLabel.
  * It work like stl Forward iterator. With possibility to access the label with GetLabel().
@@ -100,6 +102,9 @@ public:
 };
 
 /**
+ * @deprecated
+ * Not used
+ *
  * @brief
  * constant Iterator class for class VectorContainerWithLabel.
  * It work like stl constant Forward iterator. With possibility to access the label with GetLabel().
