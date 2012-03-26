@@ -68,20 +68,6 @@ class NLinearInterpolation
 	typedef typename TypeWorld::type_data type_data;
 	TypeWorld &m_world;
 	const Physvector<type_dim,type_data> &m_1_h;
-	/**
-	 * @brief 
-	 * Calculate Recursifly the interpolation.
-	 * The recursion will be done in dimension of space.
-	 * @param el Partial element to calculate, where component after depth are 0.
-	 * The element consist of vector of 0 or 1. Depending one witch side component to use.
-	 * @param posdelta0scaled Scaled position counted with 0 position at key0.
-	 * @param key0 0 key of the interpolation.
-	 * @param ind Speed index to use.
-	 * @param prof How many term we have calculated. when i=type_dim+1 we have finished.
-	 * 
-	 * \exception InternalError if prof is bigger than the stop condition.
-	 * This cannot normaly happen.
-	 **/
 public:
 
 /**

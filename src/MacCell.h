@@ -17,6 +17,8 @@ using namespace std;
  * @tparam DIM Dimension of the space.
  * @tparam TypeData for numerical data (double,float).
  * @tparam TypeCell type of data for cell (enum, class etc)
+ * @tparam ID an ID differencing different group of Cell.
+ * Used so that static member can be different.
  **/
 template <int DIM,class TypeData, class TypeCell,int ID=0>
 class MacCell{
@@ -32,6 +34,11 @@ class MacCell{
 	void serialize(Archive & Ar,const unsigned int version);
 	static int m_nb_const_speed;
 public:
+/**
+ * @brief 
+ * Get the number of constspeed for all cell with the same id.
+ * The value that we get is a upper bound.
+ **/
 	static int GetNBConstSpeed();
 /**
  * @brief
@@ -48,6 +55,10 @@ typedef TypeCell type_cell;
  * Type used for vector.
  **/
 typedef Physvector<DIM,TypeData> type_vector;
+/**
+ * @brief
+ * Dimension of the vector.
+ **/
 static const int type_dim=DIM;
 	/**
 	 * @brief
@@ -59,6 +70,7 @@ static const int type_dim=DIM;
 	 * Constructor for a given speed and pressure.
 	 * @param speed Initial speed.
 	 * @param pressure Initial pressure.
+	 * @param layer Layer used in different algorithm.
 	 **/
 	MacCell(Physvector<DIM,TypeData> &speed,const TypeData& pressure,const int layer=-1);
 	
@@ -68,6 +80,7 @@ static const int type_dim=DIM;
 	 * @param speed Initial speed.
 	 * @param pressure Initial pressure.
 	 * @param type Initial cell type.
+	 * @param layer Layer used in different algorithm.
 	 **/
 	MacCell(Physvector<DIM,TypeData> &speed,const TypeData& pressure,const TypeCell & type,const int layer=-1);
 	/**
@@ -87,7 +100,19 @@ static const int type_dim=DIM;
 	 * @param speed Speed value returned.
 	 **/
 	void GetSpeed(Physvector<DIM,TypeData> &speed) const;
+	/**
+	 * @brief
+	 * Set the speed of a given component.
+	 * @param i Component to set.
+	 * @param speed_comp Value to set to.
+	 **/
 	void SetInterSpeed(int i,TypeData &speed_comp);
+	/**
+	 * @brief
+	 * Get the speed of a given component.
+	 * @param i Component to set.
+	 * @param speed_comp Reference to set to the value of the speed component.
+	 **/
 	void GetInterSpeed(int i,TypeData &speed_comp);
 	/**
 	 * @brief
@@ -101,7 +126,19 @@ static const int type_dim=DIM;
 	 * @param speed Temporary Speed value returned.
 	 **/
 	void GetTempSpeed(Physvector<DIM,TypeData> &speed);
+	/**
+	 * @brief
+	 * Set the temporary speed of a given component.
+	 * @param i Component to set.
+	 * @param speed_comp Value to set to.
+	 **/
 	void SetInterTempSpeed(int i,TypeData &speed_comp);
+	/**
+	 * @brief
+	 * Get the temporary speed of a given component.
+	 * @param i Component to set.
+	 * @param speed_comp Reference to set to the value of the temporary speed component.
+	 **/
 	void GetInterTempSpeed(int i,TypeData &speed_comp);
 	/**
 	 * @brief Assign Temporary value to Speed.
@@ -136,9 +173,31 @@ static const int type_dim=DIM;
 	 **/
 	void GetCellType(TypeCell & type) const ;
 	
+	/**
+	 * @brief
+	 * Set the value of the layer.
+	 * @param layer Value to set.
+	 **/
 	void SetLayer(const int layer);
+	/**
+	 * @brief
+	 * Get the value of the layer.
+	 * @param layer Reference to set to the given layer.
+	 **/
 	void GetLayer(int &layer) const ;
+	/**
+	 * @brief
+	 * Set the given component to constant speed.
+	 * @param i Component to set.
+	 * @param b Boolean if we set to constant speed or not.
+	 **/
 	void SetConstSpeed(int i,bool b);
+	/**
+	 * @brief
+	 * Get the given component constant speed value.
+	 * @param i Component to get.
+	 * @param b Reference to the value where to put the value.
+	 **/
 	void GetConstSpeed(int i,bool &b);
 };
 

@@ -34,7 +34,7 @@ public:
  * @param viscosity Viscosity value.
  * @param dt Time step used.
  * @param _1_h Vector of spacing in all direction.
- * @param fluid Fluid cell value.
+ * @param getTypeCell Class used to get the cell type.
  **/
 	MacApplyViscosity(TypeWorld &world,const type_data &viscosity, const type_data & dt,const Physvector<type_dim,type_data> & _1_h,GetTypeCell &getTypeCell);
 	/**

@@ -23,6 +23,10 @@ public:
  * @param world World to use.
  **/
 	UpdateDeleteCell(TypeWorld &world);
+	/**
+	 * @brief
+	 * Do the update.
+	 **/
 	void Update();
 };
 #include "UpdateDeleteCell.tpp"

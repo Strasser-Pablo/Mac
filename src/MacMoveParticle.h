@@ -5,6 +5,12 @@
 #include "ODEFirstOrderTimeIndependent.h"
 /**
  * @ingroup GR_Move_Particle
+ * @brief
+ * Move the particle with the field given by interpolation of speed of the grid.
+ * @tparam TypeWorld World to use.
+ * @tparam TypeMethod Method to use to solve ODE equation.
+ * @tparam TypeGetSpeed Class to use to know speed.
+ * @tparam TypeGetStagSpeedPos Position of speed. Deprecated.
  **/
 template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos>
 class MacMoveParticle
@@ -17,7 +23,15 @@ class MacMoveParticle
 		MacConvectSpeedFunctor<TypeWorld,TypeGetSpeed> m_functor;
 		ODEFirstOrderTimeIndependent<Physvector<type_dim,type_data>,MacConvectSpeedFunctor<TypeWorld,TypeGetSpeed> ,type_data,TypeMethod> m_ode;
 public:
+		/**
+		 * @brief
+		 * Constructor.
+		 **/
 		MacMoveParticle(TypeWorld & world,TypeMethod &method,TypeGetSpeed & GetSpeed,type_data & dt);
+		/**
+		 * @brief
+		 * Calculate the next time step.
+		 **/
 		void Calculate();
 };
 #include "MacMoveParticle.tpp"

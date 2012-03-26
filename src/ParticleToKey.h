@@ -39,6 +39,10 @@ public:
  * @return Physvector<DIM,TypeDataKey> key in witch cell is the particle.
  **/
 	Physvector<DIM,TypeDataKey> ToKey(const TypeParticle &part);
+/**
+ * @brief
+ * Transform a key integer data to a position.
+ **/
 	Physvector<DIM,TypeData> FromKey(const Physvector<DIM,TypeDataKey> &key);
 };
 #include "ParticleToKey.tpp"

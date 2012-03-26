@@ -7,6 +7,7 @@
  **/
  
  /**
+  * @deprecated
   * @brief
   * TestFunction to test Convolution.
   **/

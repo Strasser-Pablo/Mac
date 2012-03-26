@@ -25,8 +25,21 @@ template<class TypeData>
 class TableContainerListIterator:public TableContainerIterator<TypeData,TableContainerListIterator<TypeData> >{
 	typename list<TypeData>::iterator m_iterator;
 public:
+	/**
+	 * @brief
+	 * Default constructor.
+	 **/
 	TableContainerListIterator();
+	/**
+	 * @brief
+	 * Destructor.
+	 **/
 	~TableContainerListIterator();
+	/**
+	 * @brief
+	 * Create the iterator with the given list iterator.
+	 * @param iterator List Iterator to use for creation.
+	 **/
 	TableContainerListIterator( typename list<TypeData>::iterator iterator);
 	
 	/**
@@ -59,8 +72,16 @@ public:
 	 **/
 	virtual TypeData& operator*() __attribute__((pure));
 	
+	/**
+	 * @brief
+	 * Get the underlying list iterator.
+	 **/
 	virtual typename list<TypeData>::iterator& GetListIterator() __attribute__((const));
 
+	/**
+	 * @brief
+	 * Get the underlying list const_iterator.
+	 **/
 	virtual const typename list<TypeData>::iterator& GetListIterator() const __attribute__((const));
 };
 

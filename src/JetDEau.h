@@ -41,6 +41,10 @@ using namespace std;
 /**
  * @ingroup GR_JetDEau
  *
+ * @brief
+ * Class that assemble all module for JetDEau
+ *
+ * This class is an important class where all class and module needed are put together.
  **/
 class JetDEau
 {
@@ -125,9 +129,27 @@ class JetDEau
 	void serialize(Archive & ar,const unsigned int version);
 	UpdateDeleteCell<world> m_delete;
 public:
+	/**
+	 * @brief
+	 * Default constructor.
+	 * This only prépare the module. It doesn't put initial condition for speed or set somes variable
+	 * like dimension.
+	 **/
 	JetDEau();
+	/**
+	 * @brief
+	 * Calculate the next time step.
+	 **/
 	void Calculate();
+	/**
+	 * @brief
+	 * SetUp the new initial condition. Like initial speed and initial condition.
+	 **/
 	void SetUp();
+	/**
+	 * @brief
+	 * Return a reference of the file number.
+	 **/
 	int& GetFileNumber() __attribute__((const));
 };
 #include "JetDEau.tpp"

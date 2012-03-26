@@ -10,13 +10,15 @@
  * @brief
  * Declaration file for class NeighborsPhysvector.
  **/
+
+using namespace std;
+
 /**
  * @brief
  * Get Neighboard Vector of a point.
  * @tparam TypeData data of the vector.
  * @tparam Dim dimension of the vector.
  **/
-using namespace std;
 template<class TypeData,int DIM>
 class NeighborsPhysvector{
 	Physvector<DIM,TypeData> m_key;
@@ -26,7 +28,7 @@ public:
 /**
  * @brief
  * Constructor.
- * @param key Origine from with give neighbors.
+ * @param key Origin from with to give neighbors.
  **/
 	NeighborsPhysvector(const Physvector<DIM,TypeData> &key);
 /**

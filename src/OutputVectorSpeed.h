@@ -15,6 +15,7 @@ class VTKDimensionError:public std::exception{
 
 /**
  * @ingroup GR_Output
+ * @deprecated
  **/
 template <class TypeWorld,class TypeGetStagSpeedPos>
 class OutputVectorSpeed

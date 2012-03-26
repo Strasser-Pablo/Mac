@@ -37,6 +37,10 @@ public:
  * @param neigh Method to know if some velocity component are to be considered fluide although the cell is not fluid.
  **/
 	MacGravity(TypeWorld & world,const Physvector<type_dim,type_data>& g,const type_data &dt,const type_cell fluid,	GetCellType & getCellType);
+/**
+ * @brief
+ * Do the calculation for next time step.
+ **/
 	void Calculate();
 };
 

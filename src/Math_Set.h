@@ -5,9 +5,18 @@
 #include <iostream>
 #include <set>
 using namespace std;
-
+/**
+ * @brief
+ * Enum containing value for Set relation.
+ **/
 enum class Rel_Ensemble{A_In_B,B_In_A,A_Empty,B_Empty,Both_Empty,NONE};
 
+/**
+ * @brief
+ * Class that store set.
+ * @deprecated
+ * Not used Math_Set2 is used instead.
+ **/
 template<int DIM,class TypeData>
 class Math_Set
 {

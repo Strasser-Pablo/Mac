@@ -46,7 +46,15 @@ public:
 	 * @param level Depth to use.
 	 **/
 	MacInitializeCell(TypeWorld &world, TypeGetCellType & GetCellType,Physvector<type_dim,type_data>& _1_h,Physvector<type_dim,type_data> &h,int level,TypeStagPos & stag_pos,TypeCondPart &condpart,TypeFunctionPressure &func_pres,TypeExtrapolate &Extrap);
+	/**
+	 * @brief
+	 * Update the cell to be ready for calculation.
+	 **/
 	void Update();
+	/**
+	 * @brief
+	 * Like the Update function. But extrapolate speed around constant speed to not use unintialiased speed.
+	 **/
 	void PrepareConstSpeed();
 };
 #include "MacInitializeCell.tpp"

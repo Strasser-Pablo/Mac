@@ -25,6 +25,10 @@ class VTKDimensionError:public std::exception{
 
 /**
  * @ingroup GR_Output
+ * @brief
+ * Output XML vtk compatible file.
+ * @tparam TypeWorld Type used for World.
+ * @tparam TypeGetStagSpeedPos Type used for GetStagSpeedPos.
  **/
 template <class TypeWorld,class TypeGetStagSpeedPos>
 class OutputXMLVTK
@@ -41,9 +45,33 @@ class OutputXMLVTK
 	const Physvector<type_dim,type_data>& m_h;
 	type_cell m_fluid;
 public:
+	/**
+	 * @brief
+	 * Constructor.
+	 * @param world World used.
+	 * @param stag TypeGetStagSpeedPos used.
+	 * @param h Spacing used.
+	 * @param fluid Value used for fluid.
+	 **/
 	OutputXMLVTK(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,type_cell fluid);
+	/**
+	 * @brief
+	 * Output speed.
+	 * @param filename Filename.
+	 * @param ind Speed component to output.
+	 **/
 	void Output(const char * filename,int ind);
+	/**
+	 * @brief
+	 * Output Pressure.
+	 * @param filename Filename.
+	 **/
 	void OutputPressure(const char * filename);
+	/**
+	 * @brief
+	 * Output Particle.
+	 * @param filename Filename.
+	 **/
 	void OutputParticle(const char * filename);
 }
 ;

@@ -41,6 +41,12 @@ public:
 	 * @param pos Position where to calculate.
 	 **/
 	Physvector<type_dim,type_data> Get(const Physvector<type_dim,type_data> &pos);
+	/**
+	 * @brief
+	 * Get the given component speed by interpolation.
+	 * @param pos Position where to calculate.
+	 * @param i Component to calculate.
+	 **/
 	type_data Get(const Physvector<type_dim,type_data> &pos,int i);
 };
 #include "MacGetVelocity.tpp"
