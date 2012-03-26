@@ -33,7 +33,7 @@
 #include "HashPhysvector.h"
 #include <boost/serialization/nvp.hpp>
 const int dim=2;
-
+#define INTERPOLATION_NO_PROTECTION
 #if Use_GooglePerf
 	#include <google/profiler.h>
 #endif

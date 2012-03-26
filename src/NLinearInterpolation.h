@@ -32,15 +32,19 @@ struct SubElement<type_dim,type_data,prof,1,TypeWorld>
 			ret*=(posdelta0scaled.Get(i)-1+el.Get(i) )*(-1+2*el.Get(i));
 		}
 		Physvector<type_dim,type_data> vtemp;
+		#ifndef INTERPOLATION_NO_PROTECTION
 		if(m_world.m_mac_grid.Exist(key0+el))
 		{
+		#endif
 		m_world.m_mac_grid[key0+el].GetSpeed(vtemp);
 		ret*=vtemp.Get(ind);
 		return ret;
+		#ifndef INTERPOLATION_NO_PROTECTION
 		}
 		else{
 			return 0;
 		}
+		#endif
 	}
 };
 /**
