@@ -15,13 +15,16 @@ template<class TypeWorld,class TypeGetCellType>
 void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::Calculate()
 {
 	int n=m_world.m_mac_grid.size();
+	// Because it's a laplacian with 2*dim for of diagonal entry and 1 diagonal entry.
 	int nEntry=(2*type_dim+1)*n;
 	m_offset=new int[n+1];
 	m_indice=new int[nEntry];
 	m_val=new type_data[nEntry];
 	m_b=new type_data[n];
+	//Current index of numbered cell.
 	m_iid=0;
 	int inumb=0;
+	//First ofset need by definition always be 0.
 	m_offset[0]=0;
 	int m_iid0=0;
 	m_key_to_num.clear();
@@ -36,6 +39,7 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::Calculate()
 							CalculateAColumn(i2,inumb,m_num_to_key[i2]);
 						}
 						m_iid0=m_iid;
+				//Key don't exist, give a number.
 				if(!m_key_to_num.Exist(it.key()))
 					{
 						m_key_to_num[it.key()]=m_iid;
