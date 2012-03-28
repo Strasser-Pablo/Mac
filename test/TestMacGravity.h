@@ -55,7 +55,8 @@ class Test_MacGravity : public CxxTest::TestSuite
 		GetCellType<world> m_GetCellType(W,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
 		Physvector<1,double> g;
 		g.Set(1,-9.81);
-		MacGravity<world,GetCellType<world> > grav(W,g,0.1,1,m_GetCellType);
+		double m_dt=0.1;
+		MacGravity<world,GetCellType<world> > grav(W,g,m_dt,1,m_GetCellType);
 		grav.Calculate();
 		Physvector<1,double> vtemp;
 		vkey.Set(1,0);
@@ -107,7 +108,8 @@ class Test_MacGravity : public CxxTest::TestSuite
 		Physvector<2,double> g;
 		g.Set(1,-9.81);
 		g.Set(2,0);
-		MacGravity<world,GetCellType<world> > grav(W,g,0.1,1,m_GetCellType);
+		double m_dt=0.1;
+		MacGravity<world,GetCellType<world> > grav(W,g,m_dt,1,m_GetCellType);
 		grav.Calculate();
 		Physvector<2,double> vtemp;
 		vkey.Set(1,0);
@@ -160,7 +162,8 @@ class Test_MacGravity : public CxxTest::TestSuite
 		MacGetStagPos<world> stagPos(vh);
 		Physvector<1,double> g;
 		g.Set(1,-9.81);
-		MacGravity<world,GetCellType<world> > grav(W,g,0.1,1,m_GetCellType);
+		double m_dt=0.1;
+		MacGravity<world,GetCellType<world> > grav(W,g,m_dt,1,m_GetCellType);
 		grav.Calculate();
 		Physvector<1,double> vtemp;
 		vkey.Set(1,0);
