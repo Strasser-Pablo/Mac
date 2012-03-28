@@ -155,7 +155,6 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateB(int iline,Physv
 		key.GetRef(i)+=1;
 	}
 	m_b[iline]=ret;
-	m_stat_out<<"calculate B "<<key<<" "<<ret<<endl;
 }
 
 template<class TypeWorld,class TypeGetCellType>
