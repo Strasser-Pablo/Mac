@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(MAC CXX)
-option (USE_TESTING 
-        "Build the test case?" ON) 
+option (USE_TESTING
+        "Build the test case?" ON)
 option(USE_DEB_INFO
-	"Build with deb info" ON)
+	"Build with deb info" OFF)
 option(USE_GENERATE_PROFILE_BASED_OPTIMIZATION
 	"Build with generation of profile based optimization",OFF)
 
