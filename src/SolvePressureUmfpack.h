@@ -33,8 +33,15 @@ class SolvePressureUmfpack
 	type_data* m_b;
 	type_data *m_p;
 	int m_iid;
-	
+	/**
+	 * @brief
+	 * Convert from the position index to a cell number.
+	 **/
 	KeyTableMap<typename TypeWorld::type_key,int,PhysvectorKeyOrder<type_dim,int > > m_key_to_num;
+	/**
+	 * @brief
+	 * Convert from a number of cell to a cell position vector.
+	 **/
 	KeyTableMap<int,typename TypeWorld::type_key> m_num_to_key;
 	PhysvectorKeyOrder<type_dim,int> m_o;
 	
