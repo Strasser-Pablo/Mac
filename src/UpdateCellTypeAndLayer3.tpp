@@ -52,7 +52,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Ca
 {
 	m_nb_comp_con=1;
 	typename TypeWorld::type_keytable::iterator it;
-	 std::function<void(Physvector<type_dim,int>,int,int)> f=[&,&m_nb_comp_con](Physvector<type_dim,int> key,int i,int negsign)
+	 std::function<void(Physvector<type_dim,int>,int,int)> f=[&](Physvector<type_dim,int> key,int i,int negsign)
 	 {
 		int layer;
 		m_world.m_mac_grid[key].GetLayer(layer);
@@ -78,10 +78,10 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Ca
 				}
 			}
 			this->Follow(small_key,m_nb_comp_con);
-			++m_nb_comp_con;
+			++this->m_nb_comp_con;
 		}
 	 };
-	 m_world.m_mac_grid.reserve((pow(3,type_dim)-1)*m_world.m_mac_grid.size());
+	 m_world.m_mac_grid.reserve((pow(3,type_dim))*m_world.m_mac_grid.size());
 	for(it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		int layer;
