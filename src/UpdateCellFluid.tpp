@@ -50,8 +50,6 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update
 				 for(int i=1;i<=type_dim;++i)
 				 {
 					 //Test witch direction is constant.
-					 bool b2;
-					it.data().GetConstSpeed(i,b2);
 					if(type_dim==2)
 					{
 						Physvector<type_dim,type_data> keytemp=m_to_key.FromKey(it.key());
@@ -67,14 +65,6 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update
 						m_world.m_particle_list.push_back(type_particle(keytemp));
 						keytemp.GetRef(2)+=0.5*m_h.Get(2);
 						m_world.m_particle_list.push_back(type_particle(keytemp));
-					}
-					if(b2)
-					{
-					 //Created particle at the two opposing edge.
-						m_world.m_particle_list.push_back(type_particle(m_stag_pos.Get(it.key(),i)));
-					    typename TypeWorld::type_key tempkey2=it.key();
-						tempkey2.GetRef(i)+=1;
-						//m_world.m_particle_list.push_back(type_particle(m_stag_pos.Get(tempkey2,i)));
 					}
 				 }
 						
