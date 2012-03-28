@@ -26,7 +26,7 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update
 		m_world.m_mac_grid[tempkey].SetLayer(0);
 		m_world.m_mac_grid[tempkey].SetCellType(m_GetCellType.GetFluid());
 	}
-	m_world.m_mac_grid.reserve(m_world.m_mac_grid.size()+type_mac_cell::GetNBConstSpeed());
+	stack<Physvector<type_dim,int> > m_key_add;
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		int lay;
@@ -45,9 +45,7 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update
 			if(b)
 			{
 				//create particle at center and set layer and fluid type.
-				 m_world.m_particle_list.push_back(type_particle(m_to_key.FromKey(it.key())));
-				 m_world.m_mac_grid[it.key()].SetLayer(0);
-				 m_world.m_mac_grid[it.key()].SetCellType(m_GetCellType.GetFluid());
+				 m_key_add.push(it.key());
 				 
 				 for(int i=1;i<=type_dim;++i)
 				 {
@@ -83,5 +81,14 @@ void UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update
 				}
 			}
 			 
+		}
+		Physvector<type_dim,int> m_key;
+		while(!m_key_add.empty())
+		{
+			m_key=m_key_add.top();
+			m_key_add.pop();
+			m_world.m_particle_list.push_back(type_particle(m_to_key.FromKey(m_key)));
+			m_world.m_mac_grid[m_key].SetLayer(0);
+			m_world.m_mac_grid[m_key].SetCellType(m_GetCellType.GetFluid());
 		}
 	}

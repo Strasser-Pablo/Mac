@@ -81,7 +81,6 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Ca
 			++this->m_nb_comp_con;
 		}
 	 };
-	 m_world.m_mac_grid.reserve((pow(3,type_dim))*m_world.m_mac_grid.size());
 	for(it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		int layer;
@@ -248,6 +247,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cl
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
 void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::CreateLayer()
 {	
+	 stack<Physvector<type_dim,int> > m_layer_stack;
 	 std::function<void(Physvector<type_dim,int>)> g=[&](Physvector<type_dim,int> key)
 	 {
 		 m_bound_set.erase(key);
@@ -266,6 +266,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 		}
 			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAir());
 			m_world.m_mac_grid[key].SetLayer(1);
+			m_layer_stack.push(key);
 	 };
 	for(iterator_map it=m_set.begin();it!=m_set.end();++it)
 	{
@@ -278,25 +279,32 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 	{
 		f(*it);
 	}
+	stack<Physvector<type_dim,int> > m_layer_stack2;
 	for(int i=2;i<=m_level;++i){
-	 m_world.m_mac_grid.reserve((pow(3,type_dim))*m_world.m_mac_grid.size());
-	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+		Physvector<type_dim,int> m_key;
+	while(!m_layer_stack.empty())
 	{
+		m_key=m_layer_stack.top();
+		m_layer_stack.pop();
 		int layer;
-		it.data().GetLayer(layer);
-		if(layer==i-1){
-			NeighborsPhysvector<typename TypeWorld::type_key::type_data, TypeWorld::type_dim> N(it.key());
+		m_world.m_mac_grid[m_key].GetLayer(layer);
+		if(layer==i-1)
+		{
+			NeighborsPhysvector<typename TypeWorld::type_key::type_data, TypeWorld::type_dim> N(m_key);
 			typename TypeWorld::type_key neigh;
-			while(N.GetNext(neigh)){
+			while(N.GetNext(neigh))
+			{
 				m_world.m_mac_grid[neigh].GetLayer(layer);
 				if(layer==-1)
 				{
 					m_world.m_mac_grid[neigh].SetCellType(m_GetCellType.GetAir());
 					m_world.m_mac_grid[neigh].SetLayer(i);
 					m_world.m_mac_grid[neigh].SetPressure(m_func_pres(neigh));
+					m_layer_stack2.push(neigh);
 				}
 			}
 		}
 	}
+		m_layer_stack2.swap(m_layer_stack);
 	}
 }
