@@ -279,7 +279,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 		f(*it);
 	}
 	for(int i=2;i<=m_level;++i){
-	 m_world.m_mac_grid.reserve((pow(3,type_dim)-1)*m_world.m_mac_grid.size());
+	 m_world.m_mac_grid.reserve((pow(3,type_dim))*m_world.m_mac_grid.size());
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		int layer;
