@@ -70,7 +70,7 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::Calculate()
 	{
 		m_world.m_mac_grid[it.key()].SetPressure(m_p[it.data()]);
 	}
-	
+
 	SetSpeed();
 	type_data max=0;
 	for(typename type_to_key::iterator it= m_key_to_num.begin();it!=m_key_to_num.end();++it)
@@ -82,8 +82,6 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::Calculate()
 		}
 	}
 	m_stat_out<<"max div "<<max<<endl;
-
-
 	}
 	else
 	{
@@ -136,9 +134,13 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateB(int iline,Physv
 	for(int i=1;i<=type_dim;++i)
 	{
 		Physvector<type_dim,type_data> temp;
+		bool b1;
+		m_world.m_mac_grid[key].GetConstSpeed(i,b1);
 		key.GetRef(i)+=1;
+		bool b2;
+		m_world.m_mac_grid[key].GetConstSpeed(i,b2);
 		m_world.m_mac_grid[key].GetSpeed(temp);
-		if(m_GetCellType.GetIsAirOnly(key))
+		if(m_GetCellType.GetIsAirOnly(key)&&!b2)
 		{
 		type_data p;
 		m_world.m_mac_grid[key].GetPressure(p);
@@ -146,7 +148,7 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateB(int iline,Physv
 		}
 		ret+=temp.Get(i)*m_1_h.Get(i);
 		key.GetRef(i)-=2;
-		if(m_GetCellType.GetIsAirOnly(key))
+		if(m_GetCellType.GetIsAirOnly(key)&&!b1)
 		{
 		type_data p;
 		m_world.m_mac_grid[key].GetPressure(p);
@@ -168,22 +170,25 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateAColumn(int icol,
 	{
 		bool b;
 		m_world.m_mac_grid[key].GetConstSpeed(i,b);
+		// Look cell below (or left).
 		key.GetRef(i)-=1;
-		if(m_key_to_num.Exist(key))
+		// Only fluid cell and boundary air are in key to num. No test needed.
+		// But a const speed can be between two fluid cell.
+		// In this case make the two cell disjoint.
+		if(!b)
+		{
+			diagval-=m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,m_num_to_key[icol]);
+		}
+		if(m_key_to_num.Exist(key)&&!b)
 		{
 			m_indice[inumb]=m_key_to_num[key];
 			m_val[inumb]=m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,m_num_to_key[icol]);
-			diagval-=m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,m_num_to_key[icol]);
 			++inumb;
 			++nboffset;
 		}
 		else
 		{
-			if(!b)
-			{
-				diagval-=m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,m_num_to_key[icol]);
-			}
-			if(m_GetCellType.GetIsFluid(key))
+			if((m_GetCellType.GetIsFluid(key)||m_GetCellType.GetIsBoundaryAir(key))&&!b)
 			{
 				m_key_to_num[key]=m_iid;
 				m_num_to_key[m_iid]=key;
@@ -194,23 +199,23 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateAColumn(int icol,
 				++nboffset;
 			}
 		}
+		// Look cell above or right.
 		key.GetRef(i)+=2;
-		if(m_key_to_num.Exist(key))
+		m_world.m_mac_grid[key].GetConstSpeed(i,b);
+		if(!b)
+		{
+			diagval-=m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,m_num_to_key[icol]);
+		}
+		if(m_key_to_num.Exist(key)&&!b)
 		{
 			m_indice[inumb]=m_key_to_num[key];
 			m_val[inumb]=m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,m_num_to_key[icol]);
-			diagval-=m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,m_num_to_key[icol]);
 			++inumb;
 			++nboffset;
 		}
 		else
 		{
-			m_world.m_mac_grid[key].GetConstSpeed(i,b);
-			if(!b)
-			{
-				diagval-=m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,m_num_to_key[icol]);
-			}
-			if(m_GetCellType.GetIsFluid(key))
+			if((m_GetCellType.GetIsFluid(key)||m_GetCellType.GetIsBoundaryAir(key))&&!b)
 			{
 				m_key_to_num[key]=m_iid;
 				m_num_to_key[m_iid]=key;
@@ -221,11 +226,13 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateAColumn(int icol,
 				++nboffset;
 			}
 		}
+		// restore key.
 		key.GetRef(i)-=1;
 	}
 	m_indice[inumb0]=icol;
 	m_val[inumb0]=diagval;
 	m_offset[icol+1]=m_offset[icol]+nboffset;
+	//order value and indice from minimun to maximun
 	bool b=true;
 	while(b)
 	{
@@ -272,18 +279,22 @@ template<class TypeWorld,class TypeGetCellType>
 typename SolvePressureUmfpack<TypeWorld,TypeGetCellType>::type_data SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateLaplacienInCell( Physvector<type_dim,int> key )
 {
 	type_data res=0;
+	Physvector<type_dim,int> key0=key;
+	type_data _1_rho;
+	type_data p0;
+	m_world.m_mac_grid[key].GetPressure(p0);
 	for(int i=1;i<=type_dim;++i)
 	{ 
 		key.GetRef(i)+=1;
 		type_data temp;
 		bool b;
-		int n=0;
 		m_world.m_mac_grid[key].GetConstSpeed(i,b);
 		if(!b)
 		{
 		m_world.m_mac_grid[key].GetPressure(temp);
-		res+=temp*m_1_h.Get(i)*m_1_h.Get(i);
-		++n;
+		_1_rho=m_GetCellType.Get1_RhoInter(key0,key);
+		res+=temp*m_1_h.Get(i)*m_1_h.Get(i)*_1_rho;
+		res-=p0*m_1_h.Get(i)*m_1_h.Get(i)*_1_rho;
 		}
 		key.GetRef(i)-=1;
 		m_world.m_mac_grid[key].GetConstSpeed(i,b);
@@ -291,12 +302,11 @@ typename SolvePressureUmfpack<TypeWorld,TypeGetCellType>::type_data SolvePressur
 		if(!b)
 		{
 		m_world.m_mac_grid[key].GetPressure(temp);
-		res+=temp*m_1_h.Get(i)*m_1_h.Get(i);
-		++n;
+		_1_rho=m_GetCellType.Get1_RhoInter(key0,key);
+		res+=temp*m_1_h.Get(i)*m_1_h.Get(i)*_1_rho;
+		res-=p0*m_1_h.Get(i)*m_1_h.Get(i)*_1_rho;
 		}
 		key.GetRef(i)+=1;
-		m_world.m_mac_grid[key].GetPressure(temp);
-		res-=n*temp*m_1_h.Get(i)*m_1_h.Get(i);
 	}
 	return res;
 }
