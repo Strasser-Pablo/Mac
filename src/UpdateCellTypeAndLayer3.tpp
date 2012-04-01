@@ -4,7 +4,8 @@
  * Implementation file for class UpdateCellTypeAndLayer3.
  **/
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
-UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres):m_level(level),m_GetCellType(GetCellType),m_world(world),m_func_pres(func_pres),m_bound_set(m_O),m_delete_cell(world),m_stat_out("top_res.txt",fstream::out){
+UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres,const Physvector<type_dim,type_data>& h,const Physvector<type_dim,type_data>& _1_h):m_level(level),m_GetCellType(GetCellType),m_world(world),m_func_pres(func_pres),m_bound_set(m_O),m_delete_cell(world),m_stat_out("top_res.txt",fstream::out),m_to_key(_1_h,h),m_h(h)
+{
 	m_i_out=0;	
 }
 
@@ -31,8 +32,24 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Up
 		m_world.m_mac_grid[key].GetLayer(layer);
 		if(layer==-1)
 		{	
-			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAirBoundary());
-			m_world.m_mac_grid[key].SetLayer(0);
+			if(type_dim==2)
+			{
+				Physvector<type_dim,type_data> keytemp=m_to_key.FromKey(key);
+				keytemp.GetRef(1)+=0.25*m_h.Get(1);
+				m_world.m_particle_list.push_back(type_particle(keytemp));
+				keytemp.GetRef(1)-=0.5*m_h.Get(1);
+				m_world.m_particle_list.push_back(type_particle(keytemp));
+				keytemp.GetRef(2)+=0.25*m_h.Get(2);
+				m_world.m_particle_list.push_back(type_particle(keytemp));
+				keytemp.GetRef(2)-=0.5*m_h.Get(2);
+				m_world.m_particle_list.push_back(type_particle(keytemp));
+				keytemp.GetRef(1)+=0.5*m_h.Get(1);
+				m_world.m_particle_list.push_back(type_particle(keytemp));
+				keytemp.GetRef(2)+=0.5*m_h.Get(2);
+				m_world.m_particle_list.push_back(type_particle(keytemp));
+				m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetFluid());
+				m_world.m_mac_grid[key].SetLayer(0);
+			}
 		}
 	 };
 	for(iterator_map it=m_set.begin();it!=m_set.end();++it)

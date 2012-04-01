@@ -12,6 +12,7 @@
 #include "PhysvectorKeyOrder.h"
 #include "UpdateDeleteCell.h"
 #include <fstream>
+#include "ParticleToKey.h"
 using namespace std;
 /**
  * @file UpdateCellTypeAndLayer3.h
@@ -29,12 +30,15 @@ template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
 class UpdateCellTypeAndLayer3
 {
 	typedef typename TypeWorld::type_cell type_cell;
+	typedef typename TypeWorld::type_particle type_particle;
+	typedef typename TypeWorld::type_key_vect type_key_vect;
+	typedef typename TypeWorld::type_data type_data;
+	typedef typename TypeWorld::type_key_vect::type_data type_key_vect_data;
 	TypeGetCellType & m_GetCellType;
 	TypeWorld & m_world;
 	int m_level;
 	int m_nb_comp_con;
 	static const int type_dim=TypeWorld::type_dim;
-	typedef typename TypeWorld::type_data type_data;
 	typedef typename map<int,Math_Set2<type_dim,int> >::iterator iterator_map;
 	typedef typename set<Physvector<type_dim,int>,PhysvectorKeyOrder<type_dim,int> >::iterator iterator_set;
 	TypeFunctionPressure & m_func_pres;
@@ -48,7 +52,9 @@ class UpdateCellTypeAndLayer3
 	void EraseIfIn(iterator_map & it);
 	void CleanSet();
 	int m_i_out;
+	ParticleToKey< type_particle,type_key_vect_data,type_data,type_dim> m_to_key;
 	fstream m_stat_out;
+	const Physvector<type_dim,type_data>& m_h;
 public:
 /**
  * @brief
@@ -58,7 +64,7 @@ public:
  * @param air Air value to use.
  * @param level Depth of air layer to use.
  **/
-	UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres);
+	UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres,const Physvector<type_dim,type_data>& h,const Physvector<type_dim,type_data>& _1_h);
 	
 	/**
 	 * @brief
