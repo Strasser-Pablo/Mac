@@ -306,8 +306,10 @@ int k=0;
 	}
 	vpress->SetName("pressure");
 	vtype->SetName("type");
+	vdiv->SetName("Divergence");
 	vtkunstruct->GetCellData()->AddArray(vpress);
 	vtkunstruct->GetCellData()->AddArray(vtype);
+	vtkunstruct->GetCellData()->AddArray(vdiv);
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   //writer->SetDataModeToAscii();
   writer->SetInput(vtkunstruct);
