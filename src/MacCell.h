@@ -24,7 +24,8 @@ template <int DIM,class TypeData, class TypeCell,int ID=0>
 class MacCell{
 	Physvector<DIM,TypeData> m_speed;
 	Physvector<DIM,TypeData> m_speedTemp;
-	TypeData m_pressure; 
+	TypeData m_pressure;
+        TypeData m_div;	
 	TypeCell m_cell_type;
 	bool m_const_speed[DIM];
 	bool m_one_const;
@@ -160,6 +161,18 @@ static const int type_dim=DIM;
 	 * @param pressure Value returned.
 	 **/
 	void GetPressure(TypeData & pressure);
+	/**
+	 * @brief
+	 * Set Div Value.
+	 * @param Div Value to set to.
+	 **/
+	void SetDivergence(const TypeData &  Div);
+	/**
+	 * @brief
+	 * Get Div Value.
+	 * @param Div Value returned.
+	 **/
+	void GetDivergence(TypeData & Div);
 	/**
 	 * @brief 
 	 * Set the cell type.

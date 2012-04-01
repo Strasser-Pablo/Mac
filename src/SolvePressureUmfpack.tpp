@@ -51,6 +51,10 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::Calculate()
 						++m_iid0;
 					}
 			}
+		else
+		{
+			it.data().SetDivergence(0);
+		}
 
 	}
 	n=m_iid;
@@ -125,11 +129,13 @@ template<class TypeWorld,class TypeGetCellType>
 void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateB(int iline,Physvector<type_dim,int> key)
 {
 	type_data ret=0;
+	type_data div=0;
 	for(int i=1;i<=type_dim;++i)
 	{
 		Physvector<type_dim,type_data> temp;
 		m_world.m_mac_grid[key].GetSpeed(temp);
 		ret-=temp.Get(i)*m_1_h.Get(i);
+		div-=temp.Get(i)*m_1_h.Get(i);
 	}
 	for(int i=1;i<=type_dim;++i)
 	{
@@ -147,6 +153,7 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateB(int iline,Physv
 		ret-=p*m_1_h.Get(i)*m_1_h.Get(i)*m_GetCellType.Get1_RhoInter(key,i);
 		}
 		ret+=temp.Get(i)*m_1_h.Get(i);
+		div+=temp.Get(i)*m_1_h.Get(i);
 		key.GetRef(i)-=2;
 		if(m_GetCellType.GetIsAirOnly(key)&&!b1)
 		{
@@ -156,6 +163,7 @@ void SolvePressureUmfpack<TypeWorld,TypeGetCellType>::CalculateB(int iline,Physv
 		}
 		key.GetRef(i)+=1;
 	}
+	m_world.m_mac_grid[key].SetDivergence(div);
 	m_b[iline]=ret;
 }
 

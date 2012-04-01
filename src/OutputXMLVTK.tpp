@@ -283,6 +283,7 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputPressure(const char * fi
 	
 vtkSmartPointer<vtkFloatArray> vpress=vtkSmartPointer<vtkFloatArray>::New();
 vtkSmartPointer<vtkIntArray> vtype=vtkSmartPointer<vtkIntArray>::New();
+vtkSmartPointer<vtkFloatArray> vdiv=vtkSmartPointer<vtkFloatArray>::New();
 
 int k=0;
 		for(typename KeyTableMap<Physvector<type_dim,int>,int,PhysvectorKeyOrder<type_dim,int> >::iterator it= m_point2.begin();it!=m_point2.end();++it)
@@ -296,8 +297,11 @@ int k=0;
 		int type; 
 		m_world.m_mac_grid[key].GetPressure(temp);
 		m_world.m_mac_grid[key].GetCellType(type);
+		double div;
+		m_world.m_mac_grid[key].GetDivergence(div);
 		vpress->InsertValue(k,temp);
 		vtype->InsertValue(k,type);
+		vdiv->InsertValue(k,div);
 		++k;
 	}
 	vpress->SetName("pressure");
