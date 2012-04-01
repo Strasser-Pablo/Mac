@@ -17,7 +17,7 @@
 #include "MacInitializeCell3.h"
 #include "MacApplyViscosity.h"
 #include "CalculateTimeStep.h"
-#include "ExtrapolateCellFluid.h"
+#include "ExtrapolateCellFluid2.h"
 #include "MacMoveParticle.h"
 #include <iostream>
 #include <fstream>
@@ -63,7 +63,7 @@ class JetDEau
 	typedef GetCellType<world> type_get_cell_type;
 	typedef std::function<bool(Physvector<dim,int>)> type_partcondfunc;
 	typedef std::function<double(Physvector<dim,int>)> type_pres_func;
-	typedef ExtrapolateCellFluid<world,type_get_cell_type> type_extrapolate;
+	typedef ExtrapolateCellFluid2<world,type_get_cell_type> type_extrapolate;
  	typedef Output<world,type_stag> type_out;
 	Hash m_hash;
 	type_partcondfunc m_part_cond;
@@ -104,7 +104,7 @@ class JetDEau
 	MacInitializeCell3<world,type_stag,type_get_cell_type,type_partcondfunc,type_pres_func,type_extrapolate,type_out> m_init;
 	MacApplyViscosity<world,type_get_cell_type> m_viscosity;
 	CalculateTimeStepNonIso<world,double,type_get_cell_type> m_time_step;
-	ExtrapolateCellFluid<world,type_get_cell_type> m_extrapolate_v;
+	type_extrapolate m_extrapolate_v;
 	MacMoveParticle<world,type_meth,type_vel,type_stag> m_move_part;
 	fstream m_time_out;
 	double m_conv_time;
