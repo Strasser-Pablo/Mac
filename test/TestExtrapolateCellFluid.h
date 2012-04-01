@@ -11,7 +11,7 @@
 #include "../src/ExtrapolateCellFluid.h"
 #include "../src/GetCellType.h"
 #define eps 1e-10
-class Test_MacConvect : public CxxTest::TestSuite
+class Test_Extrapolate : public CxxTest::TestSuite
 {
 	public:
 	void test1d()
