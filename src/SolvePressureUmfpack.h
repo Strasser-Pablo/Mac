@@ -1,7 +1,7 @@
 #ifndef SolvePressureUmfpack_H
 #define SolvePressureUmfpack_H
 #include "KeyTableMap.h"
-#include <suitesparse/umfpack.h>
+#include <umfpack.h>
 #include <iostream>
 #include <fstream>
 using namespace std;

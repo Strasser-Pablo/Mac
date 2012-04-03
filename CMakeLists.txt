@@ -65,11 +65,18 @@ configure_file (
   
   include_directories("${PROJECT_BINARY_DIR}")
 
+  find_package(MyCxxTest PATHS ${CMAKE_CURRENT_SOURCE_DIR})
+if(NOT CXXTEST_FOUND)
+	if(USE_TESTING)
+		set(USE_TESTING  FALSE)
+		MESSAGE(WARNING "CXXTEST not found, will not build testsuit")
+	endif(USE_TESTING)
+endif(NOT CXXTEST_FOUND)
 if (USE_TESTING)
 set(VALGRIND_COMMAND "valgrind ")
 set(BUILD_DASHBOARD_REPORTS 1)
 INCLUDE(CTest)
-find_package(CxxTest)
+include_directories("${CXXTEST_INCLUDE_DIRS}")
 endif(USE_TESTING)
 
 if(USE_DOXYGEN)
@@ -79,7 +86,7 @@ WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/doc/")
 endif(USE_DOXYGEN)
 
 CHECK_CXX_COMPILER_FLAG(-march=native COMPILER_NATIVE)
-CHECK_CXX_COMPILER_FLAG(-std=c++0x COMPILER_CPP0x)
+CHECK_CXX_COMPILER_FLAG(-std=c++11 COMPILER_CPP11)
 
 if(USE_COMPILER_OPTION_WALL)
 	CHECK_CXX_COMPILER_FLAG(-Wall COMPILER_WALL)
@@ -171,11 +178,11 @@ if(COMPILER_WNOREORDER )
 	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -Wno-reorder" )
 endif(COMPILER_WNOREORDER)
 
-if(COMPILER_CPP0x)
-	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -std=c++0x" )
-	set(CPP0X_FLAG "-std=c++0x")
+if(COMPILER_CPP11)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -std=c++11" )
+	set(CPP11_FLAG "-std=c++11")
 else()
-endif(COMPILER_CPP0x)
+endif(COMPILER_CPP11)
 
 if(COMPILER_NATIVE)
 	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -march=native" )
@@ -187,15 +194,17 @@ if(COMPILER_OPTIMISATION_FLAG)
 endif()
 add_executable(computation ${source_files})
 set_target_properties(computation PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
-TARGET_LINK_LIBRARIES(computation vtkHybrid ${Boost_LIBRARIES} )
+add_library(lib_computation STATIC)
+set_target_properties(lib_computation PROPERTIES LINKER_LANGUAGE "CXX")
+TARGET_LINK_LIBRARIES(lib_computation vtkHybrid ${Boost_LIBRARIES} )
 if(USE_UMFPACK)
-	TARGET_LINK_LIBRARIES(computation -lumfpack)
+	TARGET_LINK_LIBRARIES(lib_computation -lumfpack -lamd -lcholmod -lcolamd -lblas -llapack)
 endif(USE_UMFPACK)
 
 if(USE_GOOGLE_PERF)
-	TARGET_LINK_LIBRARIES(computation -lprofiler)
+	TARGET_LINK_LIBRARIES(lib_computation -lprofiler)
 endif(USE_GOOGLE_PERF)
-
+TARGET_LINK_LIBRARIES(computation lib_computation)
 install (TARGETS computation DESTINATION bin)
 
 if (USE_TESTING)
@@ -203,11 +212,10 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 
 
 function(AddTestProperty target)
-	set(COMPILER_FLAG "${COMPILER_COVERAGE_FLAG} ${COMPILER_NO_OPTIMISATION_FLAG} ${CPP0X_FLAG}")
+	set(COMPILER_FLAG "${COMPILER_NO_OPTIMISATION_FLAG} ${COMPILER_COVERAGE_FLAG}  ${CPP11_FLAG}")
 	set_target_properties(${target} PROPERTIES COMPILE_FLAGS ${COMPILER_FLAG} LINK_FLAGS ${COMPILER_FLAG})
 	Target_link_libraries(${target}  ${Boost_LIBRARIES})
 endfunction(AddTestProperty)
-
 CXXTEST_ADD_TEST(test_cov_physvector test/TestPhysvector.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPhysvector.h)
 AddTestProperty(test_cov_physvector) 
 
@@ -286,15 +294,16 @@ AddTestProperty(test_cov_SetLayerFluidCell)
 CXXTEST_ADD_TEST(test_cov_ExtrapolateCellFluid test/TestExtrapolateCellFluid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestExtrapolateCellFluid.h)
 AddTestProperty(test_cov_ExtrapolateCellFluid) 
 
+CXXTEST_ADD_TEST(test_cov_ExtrapolateCellFluid2 test/TestExtrapolateCellFluid2.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestExtrapolateCellFluid2.h)
+AddTestProperty(test_cov_ExtrapolateCellFluid2) 
+
 CXXTEST_ADD_TEST(test_cov_OutputVectorSpeed test/TestOutputVectorSpeed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestOutputVectorSpeed.h)
 AddTestProperty(test_cov_OutputVectorSpeed)
 
 CXXTEST_ADD_TEST(test_cov_SolvePressureUmfpack test/TestSolvePressureUmfpack.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSolvePressureUmfpack.h)
 AddTestProperty(test_cov_SolvePressureUmfpack)
 
-if(USE_UMFPACK)
-TARGET_LINK_LIBRARIES(test_cov_SolvePressureUmfpack -lumfpack)
-endif(USE_UMFPACK)
+TARGET_LINK_LIBRARIES(test_cov_SolvePressureUmfpack lib_computation)
 
 CXXTEST_ADD_TEST(test_cov_NeighborsDiagPhysvector test/TestNeighborsDiagPhysvector.cpp
                                  ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsDiagPhysvector.h)
@@ -319,8 +328,7 @@ AddTestProperty(test_cov_Mac_1_Order_UpWindConvect)
 
 CXXTEST_ADD_TEST(test_cov_Serialization test/TestSerialization.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSerialization.h)
 AddTestProperty(test_cov_Serialization)
-	TARGET_LINK_LIBRARIES(test_cov_Serialization vtkHybrid )
-	TARGET_LINK_LIBRARIES(test_cov_Serialization umfpack)
+	TARGET_LINK_LIBRARIES(test_cov_Serialization lib_computation)
 
 	
 CXXTEST_ADD_TEST(test_cov_KeyTableUnorderedMap test/TestKeyTableUnorderedMap.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestKeyTableUnorderedMap.h)

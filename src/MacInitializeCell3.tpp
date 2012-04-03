@@ -25,6 +25,6 @@ void MacInitializeCell3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart,TypeF
 	mc_init.Update();
 	mc_fluid.Update();
 	mc_layer.Update();
-	m_Extrap.Calculate(false);
+	m_Extrap.Calculate(true);
 	mc_delete.Update();
 }
