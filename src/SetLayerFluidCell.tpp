@@ -24,7 +24,6 @@ void SetLayerFluidCell<TypeWorld,TypeGetCellType>::Calculate()
 		else
 		{
 			it.data().SetLayer(-1);
-			it.data().SetPressure(0);
 		}
 	}
 }
