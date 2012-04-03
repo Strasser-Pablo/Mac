@@ -52,7 +52,7 @@ public:
 	 * @brief
 	 * Calculate the Extrapolation.
 	 **/
-	void Calculate(bool b=true);
+	void Calculate(bool b=false);
 }
 ;
 #include "ExtrapolateCellFluid2.tpp"

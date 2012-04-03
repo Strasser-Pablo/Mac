@@ -4,199 +4,340 @@
  * Implementation file for class ExtrapolateCellFluid.
  **/
 
-template <class TypeWorld,class TypeGetCellType>
+	template <class TypeWorld,class TypeGetCellType>
 ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::ExtrapolateCellFluid2(TypeWorld & world, TypeGetCellType & GetCellType,int level):m_world(world),m_level(level),m_layer_fluid(world,GetCellType),m_GetCellType(GetCellType)
 {
-	
+
 }
 
 
-template <class TypeWorld,class TypeGetCellType>
-void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool b)
+	template <class TypeWorld,class TypeGetCellType>
+void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 {
 	cout<<"in extrapo "<<endl;
 	m_layer_fluid.Calculate();
-	for(int i=1;i<=m_level+1;++i)
+	bool bcont=true;
+	int i=0;
+	while(bcont)
 	{
-		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+		bcont=false;
+		//Phase d to jump in first iteration.
+		if(i>=1)
 		{
-			int lay;
-			it.data().GetLayer(lay);
-			if(lay==-1)
+			for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 			{
-				NeighborsPhysvector<int,type_dim> Nv(it.key());
-				Physvector<type_dim,int> neigh;
-				Physvector<type_dim,type_data> new_speed;
-				new_speed.SetAll(0);
-				int nb=0;
-				while(Nv.GetNext(neigh))
+
+				int lay;
+				it.data().GetLayer(lay);
+				if(lay==-1)
 				{
-					if(m_world.m_mac_grid.Exist(neigh))
+					bcont=true;
+					for(int j=1;j<=type_dim;++j)
 					{
+						Physvector<type_dim,int> neigh=it.key();
+						neigh.GetRef(j)+=1;
+						if(m_world.m_mac_grid.Exist(neigh))
+						{
 						m_world.m_mac_grid[neigh].GetLayer(lay);
 						if(lay==i-1)
 						{
-						for(int comp=1;comp<=type_dim;++comp)
+							cout<<"in1 "<<it.key()<<endl;
+							NeighborsPhysvector<int,type_dim> Nv(it.key());
+							type_data new_speed=0;
+							int nb=0;
+							while(Nv.GetNext(neigh))
 							{
-								Physvector<type_dim,type_data> temp;
-								m_world.m_mac_grid[neigh].GetSpeed(temp);
-								new_speed+=temp;
-								++nb;
+								if(m_world.m_mac_grid.Exist(neigh))
+								{
+									m_world.m_mac_grid[neigh].GetLayer(lay);
+									if(lay==i-1)
+									{
+										type_data temp;
+										m_world.m_mac_grid[neigh].GetInterSpeed(j,temp);
+										new_speed+=temp;
+										++nb;
+									}
+								}
 							}
+							if(nb!=0)
+							{
+								cout<<"speed set"<<endl;
+								new_speed*=(1.0/nb);
+								it.data().SetInterSpeed(j,new_speed);
+							}
+							cout<<"setlayer1 "<<i<<endl;
+							it.data().SetLayer(i);
 						}
+					}
 					}
 				}
-					if(nb!=0)
+			}
+		}
+		++i;
+		{
+
+			for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+			{
+
+				int lay;
+				it.data().GetLayer(lay);
+				if(lay==-1)
+				{
+					bcont=true;
+					for(int j=1;j<=type_dim;++j)
 					{
-					new_speed*=(1.0/nb);
-					if(b)
-					{
-					if(i<=1)
-					{
-						Physvector<type_dim,type_data> new_speed2;
-						it.data().GetSpeed(new_speed2);
-						for(int comp=1;comp<=type_dim;++comp)
+						Physvector<type_dim,int> neigh=it.key();
+						neigh.GetRef(j)-=1;
+						if(m_world.m_mac_grid.Exist(neigh))
 						{
-							if(m_GetCellType.GetInter(it.key(),comp)==Type_Inter::Fluid_Air_Boundary||m_GetCellType.GetInter(it.key(),comp)==Type_Inter::Fluid_Air)
+						m_world.m_mac_grid[neigh].GetLayer(lay);
+						if(lay==i-1)
+						{
+							cout<<"in2 "<<it.key()<<endl;
+							int nb=0;
+							type_data new_speed;
+						 	if((i==1&&bconst)||i!=1)
 							{
-								new_speed.GetRef(comp)=new_speed2.Get(comp);
+								new_speed=0;
+							NeighborsPhysvector<int,type_dim> Nv(it.key());
+							while(Nv.GetNext(neigh))
+							{
+								if(m_world.m_mac_grid.Exist(neigh))
+								{
+									m_world.m_mac_grid[neigh].GetLayer(lay);
+									if(lay==i-1)
+									{
+										type_data temp;
+										m_world.m_mac_grid[neigh].GetInterSpeed(j,temp);
+										new_speed+=temp;
+										++nb;
+									}
+								}
 							}
+							}
+							if(nb!=0)
+							{
+								cout<<"speed set"<<endl;
+								new_speed*=(1.0/nb);
+								it.data().SetInterSpeed(j,new_speed);
+							}
+							cout<<"setlayer2 "<<i<<endl;
+							it.data().SetLayer(i);
 						}
 					}
-					}
-					if(new_speed.GetRef(1)!=0.00)
-					{
-						cout<<"speed non 0 "<<it.key()<<" "<<new_speed<<endl;
-					}
-					it.data().SetSpeed(new_speed);
-					it.data().SetLayer(i);
 					}
 				}
 			}
 		}
 
-for(int j=0;j<=m_level+1;++j)
-{
-	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
-	{
-		bool b=true;
-		if(j==0)
+		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 		{
-			for(int i=1;i<=type_dim;++i)
+			int lay;
+			it.data().GetLayer(lay);
+			if(lay!=i-1)
 			{
-				//Test if contact with air.
-				if(m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Air||m_GetCellType.GetInter(it.key(),i,1)==Type_Inter::Fluid_Air)
+				continue;
+			}
+			if(m_GetCellType.GetIsBoundaryFluid(it.key()))
+			{
+				continue;
+			}
+			type_data div=0;
+			Physvector<type_dim,int> key=it.key();
+			for(int j=1;j<=type_dim;++j)
+			{
+				type_data temp;
+				it.data().GetInterSpeed(j,temp);
+				div-=temp;
+			}
+			bool b=false;
+			for(int j=1;j<=type_dim;++j)
+			{
+				key.GetRef(j)+=1;
+				if(m_world.m_mac_grid.Exist(key))
 				{
-					b=false;
+					type_data temp;
+					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
+					div+=temp;
+				}
+				else
+				{
+					b=true;
 					break;
 				}
+				key.GetRef(j)-=1;
 			}
 			if(b)
 			{
 				continue;
 			}
-		}
-			//if not good layer exit.
-			int lay;
-			it.data().GetLayer(lay);
-			if(lay!=j)
+			if(div==0)
 			{
 				continue;
 			}
-			type_data div=0;
-			//calculate divergence below.
-			for(int i=1;i<=type_dim;++i)
+			b=false;
+			for(int j=1;j<=type_dim;++j)
 			{
-				type_data temp;
-				it.data().GetInterSpeed(i,temp);
-				div-=temp;
-			}
-			Physvector<type_dim,int> key=it.key();
-			b=true;
-			int n=0;
-			for(int i=1;i<=type_dim;++i)
-			{
-				key.GetRef(i)+=1;
-				if(m_world.m_mac_grid.Exist(key))
+				key.GetRef(j)-=1;
+				if(!m_world.m_mac_grid.Exist(key))
 				{
-					type_data temp;
-					m_world.m_mac_grid[key].GetInterSpeed(i,temp);
-					div+=temp;
-					int templay;
-					m_world.m_mac_grid[key].GetLayer(templay);
-					if(templay==lay+1)
-					{
-						++n;
-					}
-				}
-				else
-				{
-					b=false;
+					b=true;
 					break;
 				}
-				key.GetRef(i)-=1;
+				key.GetRef(j)+=1;
 			}
-			if(!b)
+			if(b)
 			{
 				continue;
 			}
-			for(int i=1;i<=type_dim;++i)
+			int nop=0;
+			int ndouble=0;
+			int nnone=0;
+			for(int j=1;j<=type_dim;++j)
 			{
-				key.GetRef(i)-=1;
-				if(m_world.m_mac_grid.Exist(key))
+				key.GetRef(j)+=1;
+				m_world.m_mac_grid[key].GetLayer(lay);
+				key.GetRef(j)-=2;
+				key.GetRef(j)+=1;
+				int lay2;
+				m_world.m_mac_grid[key].GetLayer(lay2);
+				int k=-1;
+				if(lay==i-1)
 				{
-					int templay;
-					m_world.m_mac_grid[key].GetLayer(templay);
-					if(templay==lay+1)
+					k=0;
+				}
+				if(lay2==i-1)
+				{
+					k=1;
+				}
+				if(k==-1)
+				{
+					++nnone;
+				}
+				if(k==0)
+				{
+					if(lay2!=-1)
 					{
-						++n;
+						++ndouble;
+						k=-1;
+					}
+					else
+					{
+						++nop;
 					}
 				}
-				key.GetRef(i)+=1;
-			}
-			if(n==0)
-			{
-				continue;
-			}
-			type_data dist=div/n;
-			if(dist!=0)
-			{
-				cout<<"div "<<div<<endl;
-				cout<<"dist non 0 "<<endl;
-			}
-			for(int i=1;i<=type_dim;++i)
-			{
-				key.GetRef(i)+=1;
-				int templay;
-				m_world.m_mac_grid[key].GetLayer(templay);
-				if(templay==lay+1)
+				if(k==1)
+				{
+					if(lay!=i-2)
+					{
+						++ndouble;
+						k=-1;
+					}
+					else
+					{
+						++nop;
+					}
+				}
+				if(k==0)
 				{
 					type_data temp;
-					m_world.m_mac_grid[key].GetInterSpeed(i,temp);
-					temp-=dist;
-					m_world.m_mac_grid[key].SetInterSpeed(i,temp);
+					key.GetRef(j)+=1;
+					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
+					key.GetRef(j)-=1;
+					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 				}
-				key.GetRef(i)-=1;
-			}
-			for(int i=1;i<=type_dim;++i)
-			{
-				key.GetRef(i)-=1;
-				if(m_world.m_mac_grid.Exist(key))
+				else if(k==1)
 				{
-					int templay;
-					m_world.m_mac_grid[key].GetLayer(templay);
-					if(templay==lay+1)
+					type_data temp;
+					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
+					key.GetRef(j)+=1;
+					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
+					key.GetRef(j)-=1;
+				}
+			}
+			if(ndouble==0&&nnone==0)
+			{
+				continue;
+			}
+			div=0;
+			for(int j=1;j<=type_dim;++j)
+			{
+				type_data temp;
+				it.data().GetInterSpeed(j,temp);
+				div-=temp;
+			}
+			b=false;
+			for(int j=1;j<=type_dim;++j)
+			{
+				key.GetRef(j)+=1;
+				type_data temp;
+				m_world.m_mac_grid[key].GetInterSpeed(j,temp);
+				div+=temp;
+				key.GetRef(j)-=1;
+			}
+			int n=2*nnone+nop;
+			type_data dist=div/n;
+			for(int j=1;j<=type_dim;++j)
+			{
+				key.GetRef(j)+=1;
+				m_world.m_mac_grid[key].GetLayer(lay);
+				key.GetRef(j)-=2;
+				key.GetRef(j)+=1;
+				int lay2;
+				m_world.m_mac_grid[key].GetLayer(lay2);
+				int k=-1;
+				if(lay==i-1)
+				{
+					k=0;
+				}
+				if(lay2==i-1)
+				{
+					k=1;
+				}
+				if(k==0)
+				{
+					if(lay2!=-1)
 					{
-						type_data temp;
-						m_world.m_mac_grid[it.key()].GetInterSpeed(i,temp);
-						temp+=dist;
-						m_world.m_mac_grid[it.key()].SetInterSpeed(i,temp);
+						k=3;
 					}
 				}
-				key.GetRef(i)+=1;
+				if(k==1)
+				{
+					if(lay!=i-2)
+					{
+						k=3;
+					}
+				}
+				if(k==0)
+				{
+					type_data temp;
+					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
+					temp+=dist;
+					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
+				}
+				else if(k==1)
+				{
+					type_data temp;
+					key.GetRef(j)+=1;
+					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
+					temp-=dist;
+					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
+					key.GetRef(j)-=1;
+				}
+				else if(k==-1)
+				{
+					type_data temp;
+					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
+					temp+=dist;
+					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
+					key.GetRef(j)+=1;
+					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
+					temp-=dist;
+					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
+					key.GetRef(j)-=1;
+				}
 			}
-				
+		}
+		cout<<"i "<<i<<endl;
 	}
-}
-
 }
