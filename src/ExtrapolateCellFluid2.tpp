@@ -14,7 +14,6 @@ ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::ExtrapolateCellFluid2(TypeWorl
 	template <class TypeWorld,class TypeGetCellType>
 void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 {
-	cout<<"in extrapo "<<endl;
 	m_layer_fluid.Calculate();
 	bool bcont=true;
 	int i=0;
@@ -61,7 +60,8 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 							if(nb!=0)
 							{
 								new_speed*=(1.0/nb);
-								cout<<"new speed "<<it.key()<<" "<<new_speed<<endl;
+								cout<<"new_speed1 "<<it.key()<<" "<<j<<endl;
+								cout<<new_speed<<endl;
 								it.data().SetInterSpeed(j,new_speed);
 							}
 							it.data().SetLayer(i);
@@ -93,10 +93,8 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 						{
 							int nb=0;
 							type_data new_speed;
-							cout<<"bconst "<<bconst<<" "<<i<<endl;
 						 	if((i==1&&bconst)||i!=1)
 							{
-								cout<<"var "<<endl;
 								new_speed=0;
 							NeighborsPhysvector<int,type_dim> Nv(it.key());
 							while(Nv.GetNext(neigh))
@@ -108,6 +106,8 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 									{
 										type_data temp;
 										m_world.m_mac_grid[neigh].GetInterSpeed(j,temp);
+										cout<<"neigh2 "<<neigh<<" "<<j<<" "<<it.key()<<endl;
+										cout<<temp<<endl;
 										new_speed+=temp;
 										++nb;
 									}
@@ -116,9 +116,9 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 							}
 							if(nb!=0)
 							{
-								cout<<"new speed "<<endl;
 								new_speed*=(1.0/nb);
-								cout<<"new speed "<<it.key()<<" "<<new_speed<<endl;
+								cout<<"new_speed2 "<<it.key()<<" "<<j<<endl;
+								cout<<new_speed<<endl;
 								it.data().SetInterSpeed(j,new_speed);
 							}
 							it.data().SetLayer(i);
@@ -141,14 +141,14 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			{
 				continue;
 			}
-			cout<<"it key "<<it.key()<<endl;
 			type_data div=0;
 			Physvector<type_dim,int> key=it.key();
 			for(int j=1;j<=type_dim;++j)
 			{
 				type_data temp;
 				it.data().GetInterSpeed(j,temp);
-				cout<<"temp01 "<<temp<<" "<<it.key()<<endl;
+				cout<<"i "<<i<<" temp1 "<<it.key()<<" "<<j<<endl;
+				cout<<" "<<temp<<endl;
 				div-=temp;
 			}
 			bool b=false;
@@ -159,7 +159,8 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				{
 					type_data temp;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					cout<<"temp02 "<<temp<<" "<<key<<endl;
+					cout<<"i "<<i<<" temp2 "<<key<<" "<<j<<endl;
+					cout<<" "<<temp<<endl;
 					div+=temp;
 				}
 				else
@@ -173,7 +174,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			{
 				continue;
 			}
-			cout<<"div0 "<<div<<endl;
 			if(div==0)
 			{
 				continue;
@@ -198,7 +198,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			int nnone=0;
 			for(int j=1;j<=type_dim;++j)
 			{
-				cout<<"key "<<key<<endl;
 				key.GetRef(j)+=1;
 				m_world.m_mac_grid[key].GetLayer(lay);
 				key.GetRef(j)-=2;
@@ -206,8 +205,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				m_world.m_mac_grid[key].GetLayer(lay2);
 				int k=-1;
 				key.GetRef(j)+=1;
-				cout<<"i "<<i<<endl;
-				cout<<"lay "<<lay<<" "<<lay2<<endl;
 				if(lay==i-1)
 				{
 					k=0;
@@ -246,29 +243,21 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				}
 				if(k==0)
 				{
-					cout<<"oppppp "<<endl;
 					type_data temp;
 					key.GetRef(j)+=1;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
 					key.GetRef(j)-=1;
-					cout<<"new speed "<<key<<" "<<temp<<endl;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 				}
 				else if(k==1)
 				{
-					cout<<"oppppp "<<endl;
 					type_data temp;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
 					key.GetRef(j)+=1;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
-					cout<<"new speed "<<key<<" "<<temp<<endl;
 					key.GetRef(j)-=1;
 				}
 			}
-			cout<<"it key "<<it.key()<<endl;
-			cout<<"nnone "<<nnone<<endl;
-			cout<<"ndouble "<<ndouble<<endl;
-			cout<<"nop "<<nop<<endl;
 			if(ndouble==0&&nnone==0)
 			{
 				continue;
@@ -278,7 +267,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			{
 				type_data temp;
 				it.data().GetInterSpeed(j,temp);
-				cout<<"temp "<<temp<<" "<<it.key()<<endl;
 				div-=temp;
 			}
 			b=false;
@@ -287,13 +275,11 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				key.GetRef(j)+=1;
 				type_data temp;
 				m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-				cout<<"temp "<<temp<<" "<<key<<endl;
 				div+=temp;
 				key.GetRef(j)-=1;
 			}
 			int n=2*ndouble+nop;
 			type_data dist=div/n;
-			cout<<"dist "<<dist<<endl;
 			for(int j=1;j<=type_dim;++j)
 			{
 				key.GetRef(j)+=1;
@@ -305,12 +291,10 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				key.GetRef(j)+=1;
 				if(lay==i-1)
 				{
-					cout<<"k0"<<endl;
 					k=0;
 				}
 				if(lay2==i-1)
 				{
-					cout<<"k1"<<endl;
 					k=1;
 				}
 				if(k==0)
@@ -332,7 +316,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 					type_data temp;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
 					temp+=dist;
-					cout<<"set speed "<<key<<" "<<temp<<endl;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 				}
 				else if(k==1)
@@ -341,30 +324,22 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 					key.GetRef(j)+=1;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
 					temp-=dist;
-					cout<<"set speed "<<key<<" "<<temp<<endl;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)-=1;
 				}
 				else if(k==-1)
 				{
-					cout<<"key222222 "<<key<<endl;
 					type_data temp;
-					cout<<"it key22222 "<<it.key()<<endl;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					cout<<"temp1 "<<temp<<endl;
 					temp+=dist;
-					cout<<"set speed "<<key<<" "<<temp<<endl;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)+=1;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					cout<<"temp2 "<<temp<<endl;
 					temp-=dist;
-					cout<<"set speed "<<key<<" "<<temp<<endl;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)-=1;
 				}
 			}
 		}
-		cout<<"i "<<i<<endl;
 	}
 }
