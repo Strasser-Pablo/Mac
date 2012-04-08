@@ -45,7 +45,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 						lay=-1;
 					}
 					neigh.GetRef(j)+=1;
-					if(lay==i+1||lay==-1)
+					if(lay==i+1||lay==-1||(lay==i&&i>0))
 					{
 						NeighborsPhysvector<int,type_dim> Nv(neigh);
 						Physvector<type_dim,int> neigh2;
