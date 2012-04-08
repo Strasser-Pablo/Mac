@@ -79,7 +79,7 @@ WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/doc/")
 endif(USE_DOXYGEN)
 
 CHECK_CXX_COMPILER_FLAG(-march=native COMPILER_NATIVE)
-CHECK_CXX_COMPILER_FLAG(-std=c++0x COMPILER_CPP0x)
+CHECK_CXX_COMPILER_FLAG(-std=c++11 COMPILER_CPP11)
 
 if(USE_COMPILER_OPTION_WALL)
 	CHECK_CXX_COMPILER_FLAG(-Wall COMPILER_WALL)
@@ -171,11 +171,11 @@ if(COMPILER_WNOREORDER )
 	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -Wno-reorder" )
 endif(COMPILER_WNOREORDER)
 
-if(COMPILER_CPP0x)
-	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -std=c++0x" )
-	set(CPP0X_FLAG "-std=c++0x")
+if(COMPILER_CPP11)
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -std=c++11" )
+	set(CPP11_FLAG "-std=c++11")
 else()
-endif(COMPILER_CPP0x)
+endif(COMPILER_CPP11)
 
 if(COMPILER_NATIVE)
 	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -march=native" )
@@ -203,11 +203,10 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 
 
 function(AddTestProperty target)
-	set(COMPILER_FLAG "${COMPILER_COVERAGE_FLAG} ${COMPILER_NO_OPTIMISATION_FLAG} ${CPP0X_FLAG}")
+	set(COMPILER_FLAG "${COMPILER_NO_OPTIMISATION_FLAG} ${COMPILER_COVERAGE_FLAG}  ${CPP11_FLAG}")
 	set_target_properties(${target} PROPERTIES COMPILE_FLAGS ${COMPILER_FLAG} LINK_FLAGS ${COMPILER_FLAG})
 	Target_link_libraries(${target}  ${Boost_LIBRARIES})
 endfunction(AddTestProperty)
-
 CXXTEST_ADD_TEST(test_cov_physvector test/TestPhysvector.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPhysvector.h)
 AddTestProperty(test_cov_physvector) 
 
@@ -285,6 +284,9 @@ AddTestProperty(test_cov_SetLayerFluidCell)
 
 CXXTEST_ADD_TEST(test_cov_ExtrapolateCellFluid test/TestExtrapolateCellFluid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestExtrapolateCellFluid.h)
 AddTestProperty(test_cov_ExtrapolateCellFluid) 
+
+CXXTEST_ADD_TEST(test_cov_ExtrapolateCellFluid2 test/TestExtrapolateCellFluid2.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestExtrapolateCellFluid2.h)
+AddTestProperty(test_cov_ExtrapolateCellFluid2) 
 
 CXXTEST_ADD_TEST(test_cov_OutputVectorSpeed test/TestOutputVectorSpeed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestOutputVectorSpeed.h)
 AddTestProperty(test_cov_OutputVectorSpeed)
