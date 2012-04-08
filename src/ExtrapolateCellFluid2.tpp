@@ -21,119 +21,116 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 	{
 		bcont=false;
 		//Phase d to jump in first iteration.
-		if(i>=1)
-		{
-			for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
-			{
-
-				int lay;
-				it.data().GetLayer(lay);
-				if(lay==-1)
-				{
-					bcont=true;
-					for(int j=1;j<=type_dim;++j)
-					{
-						Physvector<type_dim,int> neigh=it.key();
-						neigh.GetRef(j)+=1;
-						if(m_world.m_mac_grid.Exist(neigh))
-						{
-						m_world.m_mac_grid[neigh].GetLayer(lay);
-						if(lay==i-1)
-						{
-							NeighborsPhysvector<int,type_dim> Nv(it.key());
-							type_data new_speed=0;
-							int nb=0;
-							while(Nv.GetNext(neigh))
-							{
-								if(m_world.m_mac_grid.Exist(neigh))
-								{
-									m_world.m_mac_grid[neigh].GetLayer(lay);
-									if(lay==i-1)
-									{
-										type_data temp;
-										m_world.m_mac_grid[neigh].GetInterSpeed(j,temp);
-										new_speed+=temp;
-										++nb;
-									}
-								}
-							}
-							if(nb!=0)
-							{
-								new_speed*=(1.0/nb);
-								cout<<"new_speed1 "<<it.key()<<" "<<j<<endl;
-								cout<<new_speed<<endl;
-								it.data().SetInterSpeed(j,new_speed);
-							}
-							it.data().SetLayer(i);
-						}
-					}
-					}
-				}
-			}
-		}
-		++i;
-		{
-
-			for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
-			{
-
-				int lay;
-				it.data().GetLayer(lay);
-				if(lay==-1)
-				{
-					bcont=true;
-					for(int j=1;j<=type_dim;++j)
-					{
-						Physvector<type_dim,int> neigh=it.key();
-						neigh.GetRef(j)-=1;
-						if(m_world.m_mac_grid.Exist(neigh))
-						{
-						m_world.m_mac_grid[neigh].GetLayer(lay);
-						if(lay==i-1)
-						{
-							int nb=0;
-							type_data new_speed;
-						 	if((i==1&&bconst)||i!=1)
-							{
-								new_speed=0;
-							NeighborsPhysvector<int,type_dim> Nv(it.key());
-							while(Nv.GetNext(neigh))
-							{
-								if(m_world.m_mac_grid.Exist(neigh))
-								{
-									m_world.m_mac_grid[neigh].GetLayer(lay);
-									if(lay==i-1)
-									{
-										type_data temp;
-										m_world.m_mac_grid[neigh].GetInterSpeed(j,temp);
-										cout<<"neigh2 "<<neigh<<" "<<j<<" "<<it.key()<<endl;
-										cout<<temp<<endl;
-										new_speed+=temp;
-										++nb;
-									}
-								}
-							}
-							}
-							if(nb!=0)
-							{
-								new_speed*=(1.0/nb);
-								cout<<"new_speed2 "<<it.key()<<" "<<j<<endl;
-								cout<<new_speed<<endl;
-								it.data().SetInterSpeed(j,new_speed);
-							}
-							it.data().SetLayer(i);
-						}
-					}
-					}
-				}
-			}
-		}
-
 		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 		{
 			int lay;
 			it.data().GetLayer(lay);
-			if(lay!=i-1)
+			if(lay==i)
+			{
+				bcont=true;
+				Physvector<type_dim,int> neigh=it.key();
+				for(int j=1;j<=type_dim;++j)
+				{
+					neigh.GetRef(j)-=1;
+					if(m_world.m_mac_grid.Exist(neigh))
+					{
+						m_world.m_mac_grid[neigh].GetLayer(lay);
+						if(lay==-1)
+						{
+							m_world.m_mac_grid[neigh].SetLayer(i+1);
+						}
+					}
+					else
+					{
+						lay=-1;
+					}
+					neigh.GetRef(j)+=1;
+					if(lay==i+1||lay==-1)
+					{
+						NeighborsPhysvector<int,type_dim> Nv(neigh);
+						Physvector<type_dim,int> neigh2;
+						type_data new_speed=0;
+						int nb=0;
+						if(i>0)
+						{
+							while(Nv.GetNext(neigh2))
+							{
+								if(m_world.m_mac_grid.Exist(neigh2))
+								{
+									m_world.m_mac_grid[neigh2].GetLayer(lay);
+									if(lay==i-1)
+									{
+										type_data temp;
+										m_world.m_mac_grid[neigh2].GetInterSpeed(j,temp);
+										new_speed+=temp;
+										++nb;
+									}
+								}
+							}
+							if(nb!=0)
+							{
+								new_speed*=(1.0/nb);
+								m_world.m_mac_grid[neigh].SetInterSpeed(j,new_speed);
+							}
+						}
+					}
+				}
+				}
+			}
+		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+		{
+			int lay;
+			it.data().GetLayer(lay);
+			if(lay==i)
+			{
+				bcont=true;
+				Physvector<type_dim,int> neigh=it.key();
+				for(int j=1;j<=type_dim;++j)
+				{
+					neigh.GetRef(j)+=1;
+					if(m_world.m_mac_grid.Exist(neigh))
+					{
+						m_world.m_mac_grid[neigh].GetLayer(lay);
+						if(lay==i+1||lay==-1)
+						{
+							m_world.m_mac_grid[neigh].SetLayer(i+1);
+							NeighborsPhysvector<int,type_dim> Nv(neigh);
+							Physvector<type_dim,int> neigh2;
+							type_data new_speed=0;
+							int nb=0;
+							if(i>0||bconst)
+							{
+								while(Nv.GetNext(neigh2))
+								{
+									if(m_world.m_mac_grid.Exist(neigh2))
+									{
+										m_world.m_mac_grid[neigh2].GetLayer(lay);
+										if(lay==i)
+										{
+											type_data temp;
+											m_world.m_mac_grid[neigh2].GetInterSpeed(j,temp);
+											new_speed+=temp;
+											++nb;
+										}
+									}
+								}
+								if(nb!=0)
+								{
+									new_speed*=(1.0/nb);
+									m_world.m_mac_grid[neigh].SetInterSpeed(j,new_speed);
+								}
+							}
+						}
+					}
+					neigh.GetRef(j)-=1;
+				}
+			}
+		}
+		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+		{
+			int lay;
+			it.data().GetLayer(lay);
+			if(lay!=i)
 			{
 				continue;
 			}
@@ -147,8 +144,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			{
 				type_data temp;
 				it.data().GetInterSpeed(j,temp);
-				cout<<"i "<<i<<" temp1 "<<it.key()<<" "<<j<<endl;
-				cout<<" "<<temp<<endl;
 				div-=temp;
 			}
 			bool b=false;
@@ -159,8 +154,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				{
 					type_data temp;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					cout<<"i "<<i<<" temp2 "<<key<<" "<<j<<endl;
-					cout<<" "<<temp<<endl;
 					div+=temp;
 				}
 				else
@@ -178,38 +171,32 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			{
 				continue;
 			}
-			b=false;
-			for(int j=1;j<=type_dim;++j)
-			{
-				key.GetRef(j)-=1;
-				if(!m_world.m_mac_grid.Exist(key))
-				{
-					b=true;
-					break;
-				}
-				key.GetRef(j)+=1;
-			}
-			if(b)
-			{
-				continue;
-			}
 			int nop=0;
 			int ndouble=0;
 			int nnone=0;
 			for(int j=1;j<=type_dim;++j)
 			{
+				bool bext;
 				key.GetRef(j)+=1;
 				m_world.m_mac_grid[key].GetLayer(lay);
 				key.GetRef(j)-=2;
 				int lay2;
-				m_world.m_mac_grid[key].GetLayer(lay2);
+				if(m_world.m_mac_grid.Exist(key))
+				{
+					m_world.m_mac_grid[key].GetLayer(lay2);
+					bext=true;
+				}
+				else
+				{
+					bext=false;
+				}
 				int k=-1;
 				key.GetRef(j)+=1;
-				if(lay==i-1)
+				if(lay<=i)
 				{
 					k=0;
 				}
-				if(lay2==i-1)
+				if(bext&&(lay2<=i))
 				{
 					k=1;
 				}
@@ -219,7 +206,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				}
 				if(k==0)
 				{
-					if(lay2!=-1)
+					if(bext&&lay2<=i)
 					{
 						++nnone;
 						k=-1;
@@ -231,7 +218,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				}
 				if(k==1)
 				{
-					if(lay!=i-2)
+					if(lay<=i)
 					{
 						++nnone;
 						k=-1;
@@ -282,31 +269,40 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			type_data dist=div/n;
 			for(int j=1;j<=type_dim;++j)
 			{
+				bool bext;
 				key.GetRef(j)+=1;
 				m_world.m_mac_grid[key].GetLayer(lay);
 				key.GetRef(j)-=2;
 				int lay2;
-				m_world.m_mac_grid[key].GetLayer(lay2);
+				if(m_world.m_mac_grid.Exist(key))
+				{
+					m_world.m_mac_grid[key].GetLayer(lay2);
+					bext=true;
+				}
+				else
+				{
+					bext=false;
+				}
 				int k=-1;
 				key.GetRef(j)+=1;
-				if(lay==i-1)
+				if(lay<=i)
 				{
 					k=0;
 				}
-				if(lay2==i-1)
+				if(bext&&lay2<=i)
 				{
 					k=1;
 				}
 				if(k==0)
 				{
-					if(lay2!=-1)
+					if(bext&&lay2<=i)
 					{
 						k=3;
 					}
 				}
 				if(k==1)
 				{
-					if(lay!=i-2)
+					if(lay<=i)
 					{
 						k=3;
 					}
@@ -341,5 +337,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				}
 			}
 		}
+		++i;
 	}
 }
