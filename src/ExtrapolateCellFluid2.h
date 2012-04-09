@@ -3,6 +3,7 @@
 
 #include "SetLayerFluidCell.h"
 #include "NeighborsPhysvector.h"
+#include "Physvector.h"
 #include "Type_Inter.h"
 #include <iostream>
 using namespace std;
@@ -36,7 +37,8 @@ class ExtrapolateCellFluid2
 	typedef typename TypeWorld::type_data type_data;
 	SetLayerFluidCell<TypeWorld,TypeGetCellType> m_layer_fluid;
 	TypeGetCellType & m_GetCellType;
-	int m_level;
+	const Physvector<type_dim,type_data>& m_h;
+	const Physvector<type_dim,type_data>& m_1_h;
 public:
 	/**
 	 * @brief 
@@ -47,7 +49,7 @@ public:
 	 * @param neighv Object reveling if because of staggered grid some air cell velocity component are in boundary between water cell.
 	 * And need so to be considered water component.
 	 **/
-	ExtrapolateCellFluid2(TypeWorld & world, TypeGetCellType & GetCellType,int level);
+	ExtrapolateCellFluid2(TypeWorld & world, TypeGetCellType & GetCellType,const Physvector<type_dim,type_data>& h,const Physvector<type_dim,type_data>& _1_h);
 	/**
 	 * @brief
 	 * Calculate the Extrapolation.

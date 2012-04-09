@@ -5,7 +5,7 @@
  **/
 
 	template <class TypeWorld,class TypeGetCellType>
-ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::ExtrapolateCellFluid2(TypeWorld & world, TypeGetCellType & GetCellType,int level):m_world(world),m_level(level),m_layer_fluid(world,GetCellType),m_GetCellType(GetCellType)
+ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::ExtrapolateCellFluid2(TypeWorld & world, TypeGetCellType & GetCellType,const Physvector<type_dim,type_data>& h,const Physvector<type_dim,type_data>& _1_h):m_world(world),m_layer_fluid(world,GetCellType),m_GetCellType(GetCellType),m_h(h),m_1_h(_1_h)
 {
 
 }
@@ -144,7 +144,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			{
 				type_data temp;
 				it.data().GetInterSpeed(j,temp);
-				div-=temp;
+				div-=temp*m_1_h.Get(j);
 			}
 			bool b=false;
 			for(int j=1;j<=type_dim;++j)
@@ -154,7 +154,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				{
 					type_data temp;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					div+=temp;
+					div+=temp*m_1_h.Get(j);
 				}
 				else
 				{
@@ -174,6 +174,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			int nop=0;
 			int ndouble=0;
 			int nnone=0;
+			type_data nd=0;
 			for(int j=1;j<=type_dim;++j)
 			{
 				bool bext;
@@ -202,6 +203,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				}
 				if(k==-1)
 				{
+					nd+=2*m_1_h.Get(j);
 					++ndouble;
 				}
 				if(k==0)
@@ -213,6 +215,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 					}
 					else
 					{
+						nd+=m_1_h.Get(j);
 						++nop;
 					}
 				}
@@ -225,6 +228,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 					}
 					else
 					{
+						nd+=m_1_h.Get(j);
 						++nop;
 					}
 				}
@@ -254,7 +258,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			{
 				type_data temp;
 				it.data().GetInterSpeed(j,temp);
-				div-=temp;
+				div-=temp*m_1_h.Get(j);
 			}
 			b=false;
 			for(int j=1;j<=type_dim;++j)
@@ -262,11 +266,10 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				key.GetRef(j)+=1;
 				type_data temp;
 				m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-				div+=temp;
+				div+=temp*m_1_h.Get(j);
 				key.GetRef(j)-=1;
 			}
-			int n=2*ndouble+nop;
-			type_data dist=div/n;
+			type_data dist=div/nd;
 			for(int j=1;j<=type_dim;++j)
 			{
 				bool bext;
@@ -311,7 +314,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				{
 					type_data temp;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					temp+=dist;
+					temp+=dist*m_h.Get(j);
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 				}
 				else if(k==1)
@@ -319,7 +322,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 					type_data temp;
 					key.GetRef(j)+=1;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					temp-=dist;
+					temp-=dist*m_h.Get(j);
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)-=1;
 				}
@@ -327,11 +330,11 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				{
 					type_data temp;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					temp+=dist;
+					temp+=dist*m_h.Get(j);
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)+=1;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					temp-=dist;
+					temp-=dist*m_h.Get(j);
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)-=1;
 				}
