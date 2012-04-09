@@ -283,6 +283,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 		}
 			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAir());
 			m_world.m_mac_grid[key].SetLayer(1);
+			m_world.m_mac_grid[key].SetPressure(m_func_pres(key));
 			m_layer_stack.push(key);
 	 };
 	for(iterator_map it=m_set.begin();it!=m_set.end();++it)

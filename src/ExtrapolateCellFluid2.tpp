@@ -339,4 +339,11 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 		}
 		++i;
 	}
+		if(bconst)
+		{
+		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+		{
+			it.data().SetDivergence(0);
+		}
+		}
 }
