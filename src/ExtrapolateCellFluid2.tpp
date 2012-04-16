@@ -174,7 +174,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 			int nop=0;
 			int ndouble=0;
 			int nnone=0;
-			type_data nd=0;
 			for(int j=1;j<=type_dim;++j)
 			{
 				bool bext;
@@ -203,7 +202,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				}
 				if(k==-1)
 				{
-					nd+=2*m_h.Get(j);
 					++ndouble;
 				}
 				if(k==0)
@@ -215,7 +213,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 					}
 					else
 					{
-						nd+=m_h.Get(j);
 						++nop;
 					}
 				}
@@ -228,7 +225,6 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 					}
 					else
 					{
-						nd+=m_h.Get(j);
 						++nop;
 					}
 				}
@@ -248,6 +244,10 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)-=1;
 				}
+			}
+			if(nnone==type_dim)
+			{
+				continue;
 			}
 			if(ndouble==0&&nnone==0)
 			{
@@ -269,16 +269,8 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				div+=temp*m_1_h.Get(j);
 				key.GetRef(j)-=1;
 			}
-			cout<<"it key "<<it.key()<<endl;
-			cout<<"div_bef "<<div<<endl;
-			cout<<"nd "<<nd<<endl;
-			cout<<"ndouble "<<ndouble<<endl;
-			cout<<"nop "<<nop<<endl;
-			cout<<"nnone "<<nnone<<endl;
-			cout<<"m_h "<<m_h.Get(1)<<endl;
-			cout<<"m_1_h "<<m_1_h.Get(1)<<endl;
-			type_data dist=div/nd;
-			cout<<"dist "<<dist<<endl;
+			int n=nop+2*ndouble;
+			type_data dist=div/n;
 			for(int j=1;j<=type_dim;++j)
 			{
 				bool bext;
@@ -323,9 +315,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				{
 					type_data temp;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					cout<<"temp "<<temp<<endl;
 					temp+=dist*m_h.Get(j);
-					cout<<"temp2 "<<temp<<endl;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 				}
 				else if(k==1)
@@ -333,9 +323,7 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 					type_data temp;
 					key.GetRef(j)+=1;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					cout<<"temp "<<temp<<endl;
 					temp-=dist*m_h.Get(j);
-					cout<<"temp2 "<<temp<<endl;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)-=1;
 				}
@@ -343,74 +331,22 @@ void ExtrapolateCellFluid2<TypeWorld,TypeGetCellType>::Calculate(bool bconst)
 				{
 					type_data temp;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					cout<<"temp "<<temp<<endl;
 					temp+=dist*m_h.Get(j);
-					cout<<"temp2 "<<temp<<endl;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)+=1;
 					m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-					cout<<"temp "<<temp<<endl;
 					temp-=dist*m_h.Get(j);
-					cout<<"temp2 "<<temp<<endl;
 					m_world.m_mac_grid[key].SetInterSpeed(j,temp);
 					key.GetRef(j)-=1;
 				}
 			}
-			div=0;
-			for(int j=1;j<=type_dim;++j)
-			{
-				type_data temp;
-				it.data().GetInterSpeed(j,temp);
-				div-=temp*m_1_h.Get(j);
-			}
-			b=false;
-			for(int j=1;j<=type_dim;++j)
-			{
-				key.GetRef(j)+=1;
-				type_data temp;
-				m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-				div+=temp*m_1_h.Get(j);
-				key.GetRef(j)-=1;
-			}
-			cout<<"div "<<div<<endl;
 		}
 		++i;
 	}
-	type_data div_max=0;
-	//	if(bconst)
+		if(bconst)
 		{
 		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 		{
-			type_data div=0;
-			Physvector<type_dim,int> key=it.key();
-			for(int j=1;j<=type_dim;++j)
-			{
-				type_data temp;
-				it.data().GetInterSpeed(j,temp);
-				div-=temp*m_1_h.Get(j);
-			}
-			bool b=false;
-			for(int j=1;j<=type_dim;++j)
-			{
-				key.GetRef(j)+=1;
-				type_data temp;
-				if(!m_world.m_mac_grid.Exist(key))
-				{
-					b=true;
-					break;
-				}
-				m_world.m_mac_grid[key].GetInterSpeed(j,temp);
-				div+=temp*m_1_h.Get(j);
-				key.GetRef(j)-=1;
-			}
-			if(b)
-			{
-				continue;
-			}
-			if(abs(div)>div_max)
-			{
-				div_max=abs(div);
-			}	
 			it.data().SetDivergence(0);
 		}
 		}
