@@ -20,11 +20,11 @@ void MacInitializeCell3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart,TypeF
 }
 
 template<class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart,class TypeFunctionPressure,class TypeExtrapolate,class TypeOutput>
-void MacInitializeCell3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart,TypeFunctionPressure,TypeExtrapolate,TypeOutput>::PrepareConstSpeed()
+void MacInitializeCell3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart,TypeFunctionPressure,TypeExtrapolate,TypeOutput>::PrepareConstSpeed(bool b)
 {	
 	mc_init.Update();
 	mc_fluid.Update();
 	mc_layer.Update();
-	m_Extrap.Calculate(true);
+	m_Extrap.Calculate(b);
 	mc_delete.Update();
 }

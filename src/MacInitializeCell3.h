@@ -55,7 +55,7 @@ public:
 	 * @brief
 	 * Like Update but extrapolate around constant speed cell.
 	 **/
-	void PrepareConstSpeed();
+	void PrepareConstSpeed(bool b=true);
 };
 #include "MacInitializeCell3.tpp"
 #endif

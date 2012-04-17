@@ -337,4 +337,9 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 CXXTEST_ADD_TEST(test_cov_Symmetry test/TestSymmetry.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSymmetry.h)
 AddTestProperty(test_cov_Symmetry)
 	TARGET_LINK_LIBRARIES(test_cov_Symmetry lib_computation)
+
+
+	CXXTEST_ADD_TEST(test_cov_Stationar test/TestStationar.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestStationar.h)
+AddTestProperty(test_cov_Stationar)
+	TARGET_LINK_LIBRARIES(test_cov_Stationar lib_computation)
 endif(USE_TESTING)

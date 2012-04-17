@@ -12,7 +12,7 @@ m_conv_time(double(sysconf(_SC_CLK_TCK))),
 m_part_cond([](Physvector<dim,int> key){return key.Get(2)<-5;}),
 m_pres_func([](Physvector<dim,int> key){return 0;}),
 m_rho_fluid(1000),m_rho_air(1),m_1_rho_fluid(0.001),m_1_rho_air(1),m_rho_inter(1000),m_1_rho_inter(0.001),m_rho_inter_bound(1000),m_1_rho_inter_bound(0.001),m_conv_1_up(m_w,m_get_v,m_stag,m_dt,m_GetCellType,m_v_h,m_v_1_h)
-,m_delete(m_w),m_no_output(false)
+,m_delete(m_w),m_no_output(true)
 {
 	#if Use_GooglePerf
 		ProfilerStart("perf.prof");
@@ -42,19 +42,19 @@ void JetDEau_Test::Calculate()
 	cout<<"convect"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
 	//m_conv.Calculate();
-	//m_conv_1_up.Calculate();
+	m_conv_1_up.Calculate();
 	m_time_ticks_end=times(&m_time_end);
 	m_time_convect=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	
 	
 	cout<<"gravity"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
-	//m_grav.Calculate();
+	m_grav.Calculate();
 	m_time_ticks_end=times(&m_time_end);
 	m_time_gravity=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	cout<<"viscosity"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
-//	m_viscosity.Calculate();
+	m_viscosity.Calculate();
 	m_time_ticks_end=times(&m_time_end);
 	m_time_viscosity=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	
@@ -62,7 +62,7 @@ void JetDEau_Test::Calculate()
 	cout<<"pressure"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
 	//m_pres.Calculate();
-//	m_pres_umf.Calculate();
+	m_pres_umf.Calculate();
 	m_time_ticks_end=times(&m_time_end);
 	m_time_pressure=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	
@@ -81,6 +81,10 @@ void JetDEau_Test::Calculate()
 	cout<<"output"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
 	m_t+=m_dt; 
+	if(!m_no_output)
+	{
+		m_out.Calculate();
+	}
 	m_time_ticks_end=times(&m_time_end);
 	m_time_output=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	
