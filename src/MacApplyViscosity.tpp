@@ -18,7 +18,7 @@ void MacApplyViscosity<TypeWorld,GetTypeCell>::Calculate()
 		bool b=false;
 		for(int i=1;i<=type_dim;++i)
 		{
-			b=b||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid;
+			b=b||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Fluid_Boundary;
 		}
 		if(b)
 		{
@@ -32,7 +32,7 @@ void MacApplyViscosity<TypeWorld,GetTypeCell>::Calculate()
 	{
 		for(int i=1;i<=type_dim;++i)
 		{
-			if(m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid)
+			if(m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Fluid_Boundary)
 			{
 				type_data d;
 				it.data().GetInterTempSpeed(i,d);
