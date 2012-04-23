@@ -342,4 +342,7 @@ AddTestProperty(test_cov_Symmetry)
 	CXXTEST_ADD_TEST(test_cov_Stationar test/TestStationar.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestStationar.h)
 AddTestProperty(test_cov_Stationar)
 	TARGET_LINK_LIBRARIES(test_cov_Stationar lib_computation)
+
+	CXXTEST_ADD_TEST(test_cov_MacWorld2 test/TestMacWorld2.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacWorld2.h)
+	AddTestProperty(test_cov_MacWorld2)
 endif(USE_TESTING)
