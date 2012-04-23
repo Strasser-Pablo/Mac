@@ -2,7 +2,6 @@
 #define MacWorld2_H
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/nvp.hpp>
-#include "MacWorld.h"
 #include <list>
 #include <unordered_map>
 #include <stack>
@@ -21,20 +20,84 @@ using namespace std;
  * @tparam TableContainer Container where the particle are stored.
  **/
 template <class KeyTable,class TableContainer,int DIM>
-struct MacWorld2:public MacWorld<KeyTable,TableContainer>
+struct MacWorld2
 {
-	MacWorld()==delete;
+	MacWorld2()=delete;
 };
 
 
 template <class KeyTable,class TableContainer>
-struct MacWorld2<KeyTable,TableContainer,2>:public MacWorld<KeyTable,TableContainer>
+struct MacWorld2<KeyTable,TableContainer,2> 
 {
+	/**
+	 * @brief
+	 * The mac_cell type.
+	 **/
+	typedef typename KeyTable::type_data type_mac_cell;
+	/**
+	 * @brief
+	 * The key type used to acess the mac cell.
+	 **/
+	typedef typename KeyTable::type_key type_key;
+	/**
+	 * @brief
+	 * The type of particle.
+	 **/
+	typedef typename TableContainer::type_data type_particle;
+	/**
+	 * @brief
+	 * The type of keytable.
+	 **/
+	typedef  KeyTable type_keytable;
+	/**
+	 * @brief
+	 * The type of tablecontainer.
+	 **/
+	typedef  TableContainer type_tablecontainer;
+	/**
+	 * @brief
+	 * Type of data (float,double).
+	 **/
+	typedef typename KeyTable::type_data::type_data type_data;
+	/**
+	 * @brief
+	 * Type of vector for key.
+	 **/
+	typedef typename KeyTable::type_key type_key_vect;
+	/**
+	 * @brief
+	 * Type of mac cell.
+	 **/
+	typedef typename type_mac_cell::type_cell type_cell;
+
+	/**
+	 * @brief 
+	 * Dimension of space.
+	 **/
+	static const int type_dim= KeyTable::type_key::type_dim;
+
+	/**
+	 * @brief
+	 * The mac grid.
+	 **/
+	KeyTable m_mac_grid;
+	/**
+	 * @brief
+	 * The list of particle.
+	 **/
+	TableContainer m_particle_list;
 	typedef list<type_particle*> type_list_surface_elem;
-	typedef unordered_map<int,type_list_surface_elem> type_list_surface;
+	enum class dir_exterior{LEFT,RIGHT};
+	struct list_elem
+	{
+		dir_exterior m_dir;
+		type_list_surface_elem m_list;
+	};
+	typedef list_elem type_list_elem;
+	typedef unordered_map<int,list_elem> type_list_surface;
 	typedef stack<int> type_stack_id;
 	type_list_surface m_list_surface;
-	MacWorld(const KeyTable &grid,const TableContainer & particles):m_mac_grid(grid),m_particle_list(particles)
+	MacWorld2(const KeyTable &grid,const TableContainer & particles):m_mac_grid(grid),m_particle_list(particles)
 	{
 	}
 	/**
@@ -43,7 +106,7 @@ struct MacWorld2<KeyTable,TableContainer,2>:public MacWorld<KeyTable,TableContai
 	 * @attention 
 	 * With this constructor element are default constructed. Not Always possible.
 	 **/
-	MacWorld()
+	MacWorld2()
 	{
 	}
 
@@ -56,7 +119,7 @@ struct MacWorld2<KeyTable,TableContainer,2>:public MacWorld<KeyTable,TableContai
 		}
 		else
 		{
-			int ret=m_id_stack.front();
+			int ret=m_id_stack.top();
 			m_id_stack.pop();
 			return ret;
 		}
