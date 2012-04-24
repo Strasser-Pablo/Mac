@@ -30,6 +30,8 @@ public:
 	 * Default constructor.
 	 **/
 	Math_Set2()=default;
+	void clear();
+	bool testBounded();
 	/**
 	 * @deprecated
 	 **/
@@ -170,6 +172,8 @@ public:
 	 * Default constructor.
 	 **/
 	Math_Set2();
+	void clear();
+	bool testBounded();
 	/**
 	 * @deprecated
 	 **/

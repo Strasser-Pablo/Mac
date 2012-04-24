@@ -86,6 +86,7 @@ struct MacWorld2<KeyTable,TableContainer,2>
 	 * The list of particle.
 	 **/
 	TableContainer m_particle_list;
+	TableContainer m_particle_const_list;
 	typedef list<type_particle*> type_list_surface_elem;
 	enum class dir_exterior{LEFT,RIGHT};
 	struct list_elem

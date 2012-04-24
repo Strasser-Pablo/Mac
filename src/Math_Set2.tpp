@@ -1,4 +1,49 @@
 template<int DIM,class TypeData>
+void Math_Set2<DIM,TypeData>::clear()
+{
+	m_data.clear();
+}
+template<int DIM,class TypeData>
+bool Math_Set2<DIM,TypeData>::testBounded()
+{
+	for(typename map<TypeData,Math_Set2<DIM-1,TypeData> >::iterator it=m_data.begin();it!=m_data.end();++it)
+	{
+		if(!it->second.testBounded())
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+template<class TypeData>
+bool Math_Set2<1,TypeData>::testBounded()
+{
+	if(m_inter_min.empty()&&m_inter_max.empty())
+	{
+		return true;
+	}
+
+	if(m_inter_min.empty())
+	{
+		return false;
+	}
+	if(m_inter_max.empty())
+	{
+		return false;
+	}
+	TypeData beg=*m_inter_min.begin();
+	TypeData end=*m_inter_max.rbegin();
+	return beg<=end;
+}
+template<class TypeData>
+void Math_Set2<1,TypeData>::clear()
+{
+	m_inter_min.clear();
+	m_inter_max.clear();
+}
+
+template<int DIM,class TypeData>
 void Math_Set2<DIM,TypeData>::InsertMax(Physvector<DIM,TypeData> & key)
 {
 	m_data[key.Get(1)].InsertMax(key,2);
