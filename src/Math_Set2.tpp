@@ -1,4 +1,46 @@
 template<int DIM,class TypeData>
+void Math_Set2<DIM,TypeData>::CleanDouble()
+{
+	for(typename map<TypeData,Math_Set2<DIM-1,TypeData> >::iterator it=m_data.begin();it!=m_data.end();++it)
+	{
+		it->second.CleanDouble();
+	}		
+}
+
+template<class TypeData>
+void Math_Set2<1,TypeData>::CleanDouble()
+{	
+	if(m_inter_min.size()!=m_inter_max.size())
+	{
+		set<TypeData> min;
+		set<TypeData> max;
+		iterator it=m_inter_min.begin();
+		iterator it2=m_inter_max.begin();
+		while(it!=m_inter_min.end()||it2!=m_inter_max.end())
+		{
+			iterator it3=it;
+			++it3;
+			while(it3!=m_inter_min.end()&&*it3<=*it2)
+			{
+				++it3;
+			}
+			min.insert(*it);
+			it=it3;;
+			it3=it2;
+			++it3;
+			while(it3!=m_inter_max.end()&&(it==m_inter_min.end()||*it>*it3))
+			{
+				it2=it3;
+				++it3;
+			}
+			max.insert(*it2);
+			++it2;
+		}
+		m_inter_max=max;
+		m_inter_min=min;
+	}
+}	
+template<int DIM,class TypeData>
 void Math_Set2<DIM,TypeData>::clear()
 {
 	m_data.clear();

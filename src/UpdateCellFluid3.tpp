@@ -51,8 +51,8 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 			pos1=pos2;
 		}
 	}
-
 	assert(m_set.testBounded());
+	m_set.CleanDouble();
 	std::function<void(Physvector<type_dim,int>)> f=[&](Physvector<type_dim,int> key)
 	{
 		int lay;

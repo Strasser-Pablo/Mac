@@ -32,6 +32,7 @@ public:
 	 **/
 	Math_Set2()=default;
 	void clear();
+	void CleanDouble();
 	bool testBounded();
 	/**
 	 * @deprecated
@@ -174,6 +175,7 @@ public:
 	 **/
 	Math_Set2();
 	void clear();
+	void CleanDouble();
 	bool testBounded();
 	/**
 	 * @deprecated
