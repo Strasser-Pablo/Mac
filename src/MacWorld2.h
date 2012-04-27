@@ -133,5 +133,12 @@ struct MacWorld2<KeyTable,TableContainer,2>
 	private:
 	int m_max_id=-1;
 	type_stack_id m_id_stack;
+	friend class boost::serialization::access;
+	template <class Archive>
+	void serialize(Archive & ar,const unsigned int version)
+	{
+		ar & boost::serialization::make_nvp("Cell",m_mac_grid);
+		ar & boost::serialization::make_nvp("Particle",m_particle_list);
+	}
 };
 #endif

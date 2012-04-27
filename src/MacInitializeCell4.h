@@ -1,8 +1,9 @@
 #ifndef MacInitializeCell4_H
 #define MacInitializeCell4_H
-#include "UpdateCellFluid2.h"
+#include "UpdateCellFluid3.h"
 #include "UpdateCellToInitialLayer.h"
-#include "UpdateCellTypeAndLayer3.h"
+#include "UpdateCellTypeAndLayer.h"
+#include "UpdateDeleteCell.h"
 /**
  * @file MacInitializeCell3.h
  * @brief 
@@ -29,8 +30,8 @@ class MacInitializeCell4
 	typedef typename TypeWorld::type_cell type_cell;
 	static const int type_dim=TypeWorld::type_dim;
 	 UpdateCellToInitialLayer<TypeWorld> mc_init;
-	 UpdateCellFluid2<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart> mc_fluid;
-	 UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure> mc_layer;
+	 UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart> mc_fluid;
+	 UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure> mc_layer;
 	 UpdateDeleteCell<TypeWorld> mc_delete;
 	 TypeOutput & m_out;
 	 TypeExtrapolate &m_Extrap;

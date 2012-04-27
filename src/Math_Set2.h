@@ -1,4 +1,5 @@
 #ifndef Math_Set2_H
+#define Math_Set2_H
 #include <map>
 #include "Physvector.h"
 #include <deque>

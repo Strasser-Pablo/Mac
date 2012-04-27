@@ -128,6 +128,10 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 			end=key2.Get(i);
 			si=1;
 		}
+		if(key1.Get(i)==key2.Get(i))
+		{
+			continue;
+		}
 		lambdapart=1/(pos2.Get(i)-pos1.Get(i));
 		for(int j=deb;j<=end;++j)
 		{
@@ -147,5 +151,81 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 			list_surface.insert(it,p);
 		}
 		lambda=lambda2;
+	}
+}
+
+template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
+void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::PrepareConst()
+{
+	int id=0;
+	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+	{
+		int lay;
+		it.data().GetLayer(lay);
+		if(lay==-1)
+		{
+			for(int i=1;i<=type_dim;++i)
+			{	
+				std::function<void( Physvector<type_dim,int>,bool forwards)> f=[&](Physvector<type_dim,int> key,bool forwards)
+				{
+
+					int lay;
+					m_world.m_mac_grid[key].GetLayer(lay);
+					bool b;
+					m_world.m_mac_grid[key].GetConstSpeed(i,b);
+					int j=1;
+					if(i==1)
+					{
+						j=2;
+					}
+					if(b)
+					{
+						if(lay==0&&forwards)
+						{
+							return;
+						}
+						if(forwards)
+						{
+							Physvector<type_dim,type_data> pos=m_stag_pos.Get(key,i);
+							pos.GetRef(i)+=0.02*m_h.Get(i);
+							m_world.m_particle_const_list.push_back(type_particle(pos));
+							m_world.m_list_surface[id].m_list.push_back(&m_world.m_particle_const_list.back());
+							m_world.m_mac_grid[key].SetLayer(0);
+							m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetFluidBoundary());
+							key.GetRef(j)+=1;
+							f(key,forwards);
+						}
+						else
+						{
+							Physvector<type_dim,type_data> pos=m_stag_pos.Get(key,i);
+							pos.GetRef(i)+=m_h.Get(i)*0.5;
+							m_world.m_particle_list.push_back(type_particle(pos));
+							m_world.m_list_surface[id].m_list.push_back(&m_world.m_particle_list.back());
+							m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetFluidBoundary());
+							key.GetRef(j)-=1;
+							f(key,forwards);
+						}
+						return;
+					}
+					if(forwards)
+					{
+						key.GetRef(j)-=1;
+					}
+					else
+					{
+						key.GetRef(j)+=1;
+					}
+					f(key,!forwards);
+				};
+				bool b;
+				it.data().GetConstSpeed(i,b);
+				if(b)
+				{
+					m_world.m_list_surface[id].m_dir=dir_exterior::LEFT;
+					f(it.key(),true);
+					++id;
+				}
+			}
+		}
 	}
 }

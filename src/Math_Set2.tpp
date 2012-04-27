@@ -10,6 +10,7 @@ bool Math_Set2<DIM,TypeData>::testBounded()
 	{
 		if(!it->second.testBounded())
 		{
+			cout<<"failed "<<it->first<<endl;
 			return false;
 		}
 	}

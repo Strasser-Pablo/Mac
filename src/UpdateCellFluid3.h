@@ -1,9 +1,10 @@
-#ifndef UpdateCellFluid_H
-#define UpdateCellFluid_H
+#ifndef UpdateCellFluid3_H
+#define UpdateCellFluid3_H
 #include "ParticleToKey.h"
 #include <set>
 #include <iostream>
 #include "Math_Set2.h"
+#include <stack>
 #include <functional>
 using namespace std;
 /**
@@ -61,6 +62,12 @@ public:
 	 * Do the update.
 	 **/
 	void Update();
+	/**
+	 * @brief
+	 *
+	 * Assume positif constant speed.
+	 **/
+	void PrepareConst();
 };
 #include "UpdateCellFluid3.tpp"
 #endif

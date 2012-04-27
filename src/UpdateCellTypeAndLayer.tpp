@@ -11,17 +11,27 @@ UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCe
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
 void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Update()
 {
-	
-	for(int i=1;i<=m_level;++i){
-	 m_world.m_mac_grid.reserve((pow(3,type_dim)-1)*m_world.m_mac_grid.size());
-	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+	for(int i=1;i<=m_level;++i)
 	{
-		int layer;
-		it.data().GetLayer(layer);
-		if(layer==i-1){
-			NeighborsPhysvector<typename TypeWorld::type_key::type_data, TypeWorld::type_dim> N(it.key());
+		stack<Physvector<type_dim,int> > m_stack;
+		for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
+		{
+			int layer;
+			it.data().GetLayer(layer);
+			if(layer==i-1)
+			{
+				m_stack.push(it.key());
+			}
+		}
+		while(!m_stack.empty())
+		{
+			Physvector<type_dim,int> key=m_stack.top();
+			m_stack.pop();
+			NeighborsPhysvector<typename TypeWorld::type_key::type_data, TypeWorld::type_dim> N(key);
 			typename TypeWorld::type_key neigh;
-			while(N.GetNext(neigh)){
+			int layer;
+			while(N.GetNext(neigh))
+			{
 				m_world.m_mac_grid[neigh].GetLayer(layer);
 				if(layer==-1)
 				{
@@ -31,7 +41,6 @@ void UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Upd
 				}
 			}
 		}
-	}
 	}
 }
 
