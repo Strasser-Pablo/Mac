@@ -1,9 +1,19 @@
-
 /**
  * @file MacCell.tpp
  * @brief 
  * Implementation file for class MacCell.
  **/
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetCirculation(const TypeData &circulation)
+{
+	m_circulation=circulation;
+}
+
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetCirculation(TypeData & Circulation)
+{
+	Circulation=m_circulation;
+}
 
 template <int DIM,class TypeData, class TypeCell,int ID>
 MacCell<DIM,TypeData,TypeCell,ID>::MacCell():m_layer(-1),m_div(0)

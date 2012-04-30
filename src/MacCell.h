@@ -26,6 +26,7 @@ class MacCell{
 	Physvector<DIM,TypeData> m_speedTemp;
 	TypeData m_pressure;
         TypeData m_div;	
+	TypeData m_circulation;
 	TypeCell m_cell_type;
 	bool m_const_speed[DIM];
 	bool m_one_const;
@@ -89,6 +90,8 @@ static const int type_dim=DIM;
 	 * Default Destructor.
 	 **/
 	~MacCell();
+	void SetCirculation(const TypeData &circulation);
+	void GetCirculation(TypeData & Circulation);
 	/**
 	 * @brief
 	 * Set the speed.
