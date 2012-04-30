@@ -95,6 +95,7 @@ typename TableContainerList<TypeData>::iterator  TableContainerList<TypeData>::e
 	return TableContainerListIterator<TypeData>(temp);
 }
 
+
 template<class TypeData>
 typename TableContainerList<TypeData>::iterator  TableContainerList<TypeData>::begin()
 {
