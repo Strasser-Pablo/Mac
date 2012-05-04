@@ -3,6 +3,7 @@ void Math_Set2<DIM,TypeData>::CleanDouble()
 {
 	for(typename map<TypeData,Math_Set2<DIM-1,TypeData> >::iterator it=m_data.begin();it!=m_data.end();++it)
 	{
+		cout<<"first "<<it->first<<endl;
 		it->second.CleanDouble();
 	}		
 }
@@ -18,23 +19,66 @@ void Math_Set2<1,TypeData>::CleanDouble()
 		iterator it2=m_inter_max.begin();
 		while(it!=m_inter_min.end()||it2!=m_inter_max.end())
 		{
-			iterator it3=it;
-			++it3;
-			while(it3!=m_inter_min.end()&&*it3<=*it2)
+			bool b=true;
+			if(*it2==*it)
 			{
+				iterator it3=it;
+				iterator it4=it2;
 				++it3;
+				++it4;
+				if(it4==m_inter_max.end()||(it3!=m_inter_min.end()&&*it3<=*it4))
+				{
+					
+					cout<<"min,max "<<endl;
+					min.insert(*it);
+					max.insert(*it2);
+					cout<<"insertmax1 "<<*it2<<endl;
+					++it;
+					++it2;
+					b=false;
+				}
 			}
-			min.insert(*it);
-			it=it3;;
-			it3=it2;
-			++it3;
-			while(it3!=m_inter_max.end()&&(it==m_inter_min.end()||*it>*it3))
+			
+			if(b)
 			{
-				it2=it3;
+				bool b=false;
+				iterator it3=it;
 				++it3;
+				while(it3!=m_inter_min.end()&&*it3<=*it2)
+				{
+					if(*it2==*it3)
+					{
+						iterator it4=it2;
+						++it2;
+						if(it2==m_inter_max.end())
+						{
+							min.insert(*it);
+							max.insert(*it4);
+							cout<<"insertmax2 "<<*it4<<endl;
+							cout<<"break "<<endl;
+							b=true;
+							break;
+						}
+					}
+					++it3;
+				}
+				if(b)
+				{
+					break;
+				}
+				min.insert(*it);
+				it=it3;
+				it3=it2;
+				++it3;
+				while(it3!=m_inter_max.end()&&(it==m_inter_min.end()||*it>*it3))
+				{
+					it2=it3;
+					++it3;
+				}
+				cout<<"insertmax3 "<<*it2<<endl;
+				max.insert(*it2);
+				++it2;
 			}
-			max.insert(*it2);
-			++it2;
 		}
 		m_inter_max=max;
 		m_inter_min=min;

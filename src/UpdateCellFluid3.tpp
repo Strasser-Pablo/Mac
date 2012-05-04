@@ -4,7 +4,7 @@
  * Implementation file for class UpdateCellFluid.
  **/
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
-UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCellFluid3(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart):m_world(world),m_to_key(_1_h,h),m_stag_pos(stag_pos),m_h(h),m_GetCellType(GetCellType),m_condpart(condpart)
+UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCellFluid3(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart):m_world(world),m_to_key(_1_h,h),m_stag_pos(stag_pos),m_h(h),m_GetCellType(GetCellType),m_condpart(condpart),m_set2(_1_h)
 {
 	
 }
@@ -13,6 +13,20 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update()
 {
 	m_set.clear();
+	m_set2.clear();
+	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
+	{
+		for(typename type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
+		{
+			Physvector<type_dim,type_data> pos;
+			(*it2)->GetPos(pos);
+			if(m_condpart(m_to_key.ToKey(pos)))
+			{
+				(*it2)->SetToErase(true);
+				it2=it->second.m_list.erase(it2);
+			}
+		}
+	}
 	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
 	{
 		Physvector<type_dim,type_data> pos1;
@@ -40,19 +54,17 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 	}
 	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
 	{
-		Physvector<type_dim,type_data> pos1;
-		Physvector<type_dim,type_data> pos2;
-		it->second.m_list.back()->GetPos(pos1);
 		dir_exterior dir=it->second.m_dir;
 		for(typename type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
 		{
-			(*it2)->GetPos(pos2);
-			AddToSet(pos1,pos2,dir);
-			pos1=pos2;
+			AddToSet(it2,it->second.m_list,dir);
 		}
 	}
-	assert(m_set.testBounded());
-	m_set.CleanDouble();
+	m_set2.CoutDebInfo();
+	cout<<"transforme"<<endl;
+	m_set=m_set2;
+	cout<<"aft clean"<<endl;
+	m_set.CoutDebInfo();
 	std::function<void(Physvector<type_dim,int>)> f=[&](Physvector<type_dim,int> key)
 	{
 		int lay;
@@ -69,42 +81,108 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 
 
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
-	void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::AddToSet(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir)
+	void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::AddToSet(const typename type_list_surface_elem::iterator & it,type_list_surface_elem & list_surface,dir_exterior dir)
 {
-	Physvector<type_dim,int> key1=m_to_key.ToKey(pos1);
-	Physvector<type_dim,int> key2=m_to_key.ToKey(pos2);
-	if(key1.Get(1)>key2.Get(1))
+	typename type_list_surface_elem::iterator itbef=it;
+	typename type_list_surface_elem::iterator itaft=it;
+	if(itbef==list_surface.begin())
+	{
+		itbef=--list_surface.end();
+	}
+	else
+	{
+		--itbef;
+	}
+	++itaft;
+	if(itaft==list_surface.end())
+	{
+		itaft=list_surface.begin();
+	}
+	Physvector<type_dim,type_data> pos;
+	(*it)->GetPos(pos);
+	Physvector<type_dim,type_data> posaft;
+	(*itaft)->GetPos(posaft);
+	Physvector<type_dim,type_data> posbef;
+	(*itbef)->GetPos(posbef);
+	Physvector<type_dim,int> key=m_to_key.ToKey(pos);
+	Physvector<type_dim,int> keyaft=m_to_key.ToKey(posaft);
+	Physvector<type_dim,int> keybef=m_to_key.ToKey(posbef);
+	Physvector<type_dim,type_data> pos2;
+	if((key.Get(1)-keyaft.Get(1))*(keybef.Get(1)-key.Get(1))<0)
+	{
+		cout<<"ret "<<keybef<<" "<<key<<" "<<keyaft<<endl;
+		return;
+	}
+	bool b=false;
+	bool b2=false;
+	if(key.Get(1)>keyaft.Get(1))
+	{
+		pos2=posaft;
+		b=true;
+	}
+	if(keybef.Get(1)>key.Get(1))
+	{
+		pos2=posbef;
+		b=true;
+	}
+	if(key.Get(1)<keyaft.Get(1))
+	{
+		pos2=posaft;
+		b2=true;
+	}
+	if(keybef.Get(1)<key.Get(1))
+	{
+		pos2=posbef;
+		b2=true;
+	}
+	cout<<"pos13123 "<<pos<<" "<<pos2<<endl;
+	type_data lambdapart=1/(pos2.Get(1)-pos.Get(1));
+	cout<<"pos2 "<<pos2.Get(1)<<" "<<pos.Get(1)<<endl;
+	cout<<"lambda part "<<lambdapart<<endl;
+	type_data lambda=lambdapart*(key.Get(1)*m_h.Get(1)-pos.Get(1));
+	cout<<"lambda "<<lambda<<endl;
+	pos+=lambda*(pos2-pos);	
+	cout<<"pos aft "<<pos<<endl;
+	if(b)
 	{
 		switch(dir)
 		{
 			case dir_exterior::LEFT:
-				m_set.InsertMax(key1);
-				m_set.InsertMax(key2);
+				m_set2.InsertMax(key,pos);
+				cout<<"insert max left "<<key<<" "<<pos<<endl;
+				cout<<"key "<<keybef<<" "<<key<<" "<<keyaft<<endl;
+				cout<<"pos "<<posbef<<" "<<pos<<" "<<posaft<<endl;
 			break;
 			case dir_exterior::RIGHT:
-				m_set.InsertMin(key1);
-				m_set.InsertMin(key2);
+				m_set2.InsertMin(key,pos);
+				cout<<"insert min right "<<key<<" "<<pos<<endl;
+				cout<<"key "<<keybef<<" "<<key<<" "<<keyaft<<endl;
+				cout<<"pos "<<posbef<<" "<<pos<<" "<<posaft<<endl;
 			break;
 		}
 	}
-	else if (key1.Get(1)<key2.Get(1))
+	else if (b2)
 	{
 		switch(dir)
 		{
 			case dir_exterior::LEFT:
-				m_set.InsertMin(key1);
-				m_set.InsertMin(key2);
+				m_set2.InsertMin(key,pos);
+				cout<<"insert min left "<<key<<" "<<pos<<endl;
+				cout<<"key "<<keybef<<" "<<key<<" "<<keyaft<<endl;
+				cout<<"pos "<<posbef<<" "<<pos<<" "<<posaft<<endl;
 			break;
 			case dir_exterior::RIGHT:
-				m_set.InsertMax(key1);
-				m_set.InsertMax(key2);
+				m_set2.InsertMax(key,pos);
+				cout<<"insert max right "<<key<<" "<<pos<<endl;
+				cout<<"key "<<keybef<<" "<<key<<" "<<keyaft<<endl;
+				cout<<"pos "<<posbef<<" "<<pos<<" "<<posaft<<endl;
 			break;
 		}
 	}
 }
 
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
-	void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Rafine(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,const typename type_list_surface_elem::iterator &it,type_list_surface_elem & list_surface)
+	void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Rafine(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,typename type_list_surface_elem::iterator &it2,type_list_surface_elem & list_surface)
 {
 	Physvector<type_dim,int> key1=m_to_key.ToKey(pos1);
 	Physvector<type_dim,int> key2=m_to_key.ToKey(pos2);
@@ -148,7 +226,7 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 			pos=pos1+0.5*(lambda+lambda2)*(pos2-pos1);	
 			m_world.m_particle_list.push_back(type_particle(pos));
 			type_particle* p=&m_world.m_particle_list.back();
-			list_surface.insert(it,p);
+			list_surface.insert(it2,p);
 		}
 		lambda=lambda2;
 	}

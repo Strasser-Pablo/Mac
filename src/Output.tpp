@@ -27,7 +27,7 @@ void Output<TypeWorld,TypeGetStagSpeedPos>::Calculate()
 		ss4<<type_dim+2;
 		string str3=str+string("_")+ss4.str()+string(".vtu");
 		//fstream p2(str3.c_str(),fstream::out);
-		m_out_speed.OutputParticle(str3.c_str());
+		m_out_speed.OutputParticle2(str3.c_str());
 	for(int i=1;i<=type_dim+2;++i)
 	{
 		m_out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\""<<i<<"\" file=\""<<str<<"_"<<i<<".vtu\" />"<<endl;

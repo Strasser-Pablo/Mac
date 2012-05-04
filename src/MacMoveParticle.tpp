@@ -9,6 +9,11 @@ void MacMoveParticle<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos>::Cal
 {
 	for(typename TypeWorld::type_tablecontainer::iterator it= m_world.m_particle_list.begin();it!=m_world.m_particle_list.end();++it)
 	{
+		if((*it).GetToErase())
+		{
+			it=m_world.m_particle_list.erase(it);
+			continue;
+		}
 		(*it).GetPos(m_pos);
 		m_ode.Calculate(m_dt);
 		(*it).SetPos(m_pos);

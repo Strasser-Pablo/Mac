@@ -16,6 +16,7 @@
 template <class TypeVector> 
 class Particle{
 	TypeVector m_pos;
+	bool m_berase=false;
 	friend class boost::serialization::access;
 	template <class Archive>
 	void serialize(Archive & ar,const unsigned int version);
@@ -26,6 +27,8 @@ public:
   * Default Constructor.
   **/
 	Particle();
+	void SetToErase(bool berase);
+	bool GetToErase();
  /**
   * @brief
   * Construct a Particle with givent postion and speed.

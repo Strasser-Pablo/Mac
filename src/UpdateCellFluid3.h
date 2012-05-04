@@ -4,6 +4,7 @@
 #include <set>
 #include <iostream>
 #include "Math_Set2.h"
+#include "Math_Set3.h"
 #include <stack>
 #include <functional>
 using namespace std;
@@ -46,9 +47,10 @@ class UpdateCellFluid3
 	TypeCondPart & m_condpart;
 	const Physvector<type_dim,type_data> &m_h;
 	Math_Set2<type_dim,int> m_set;
+	Math_Set3<type_dim,int,type_data> m_set2;
 
-	void Rafine(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,const typename type_list_surface_elem::iterator & it,type_list_surface_elem & list_surface);
-	void AddToSet(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir);
+	void Rafine(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,typename type_list_surface_elem::iterator & it2,type_list_surface_elem & list_surface);
+	void AddToSet(const typename type_list_surface_elem::iterator & it,type_list_surface_elem & list_surface,dir_exterior dir);
 public:
 	/**
 	 * @brief

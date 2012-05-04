@@ -2,17 +2,13 @@
 #define Math_Set2_H
 #include <map>
 #include "Physvector.h"
+#include "Rel_Ensemble.h"
 #include <deque>
 #include <iostream>
 #include <set>
 #include <cassert>
 #include <stdexcept>
 using namespace std;
-/**
- * @brief
- * Enum that contain value for relation between two set.
- **/
-enum class Rel_Ensemble{A_In_B,B_In_A,A_Empty,B_Empty,Both_Empty,NONE};
 
 /**
  * @brief
