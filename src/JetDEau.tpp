@@ -30,9 +30,9 @@ void JetDEau::SetUp()
 	Physvector<dim,double> speed;
 	speed.SetAll(0);
 	double speedmax=5;
-	int Nx=1;
+	int Nx=4;
 	int Nz=0;
-	int r=1;
+	int r=4;
 	m_v_1_h.SetAll(20.0*Nx);
 	m_v_h.SetAll(1./(20.0*Nx));
 	//m_v_h.Set(2,1);

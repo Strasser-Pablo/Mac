@@ -131,26 +131,26 @@ void Math_Set2<1,TypeData>::clear()
 }
 
 template<int DIM,class TypeData>
-void Math_Set2<DIM,TypeData>::InsertMax(Physvector<DIM,TypeData> & key)
+void Math_Set2<DIM,TypeData>::InsertMax(const Physvector<DIM,TypeData> & key)
 {
 	m_data[key.Get(1)].InsertMax(key,2);
 }
 template<int DIM,class TypeData>
-void Math_Set2<DIM,TypeData>::InsertMin(Physvector<DIM,TypeData> & key)
+void Math_Set2<DIM,TypeData>::InsertMin(const Physvector<DIM,TypeData> & key)
 {
 	m_data[key.Get(1)].InsertMin(key,2);
 }
 
 template<int DIM,class TypeData>
 template<int DIM2>
-void Math_Set2<DIM,TypeData>::InsertMax(Physvector<DIM2,TypeData> & key,int i)
+void Math_Set2<DIM,TypeData>::InsertMax(const Physvector<DIM2,TypeData> & key,int i)
 {
 	m_data[key.Get(i)].InsertMax(key,i+1);
 }
 
 template<int DIM,class TypeData>
 template<int DIM2>
-void Math_Set2<DIM,TypeData>::InsertMin(Physvector<DIM2,TypeData> & key,int i)
+void Math_Set2<DIM,TypeData>::InsertMin(const Physvector<DIM2,TypeData> & key,int i)
 {
 	m_data[key.Get(i)].InsertMin(key,i+1);
 }
@@ -220,27 +220,27 @@ Math_Set2<1,TypeData>::Math_Set2()
 }
 
 template<class TypeData>
-void Math_Set2<1,TypeData>::InsertMin(Physvector<1,TypeData> & key)
+void Math_Set2<1,TypeData>::InsertMin(const Physvector<1,TypeData> & key)
 {
 	InsertMin(key,1);
 }
 
 template<class TypeData>
-void Math_Set2<1,TypeData>::InsertMax(Physvector<1,TypeData> & key)
+void Math_Set2<1,TypeData>::InsertMax(const Physvector<1,TypeData> & key)
 {
 	InsertMax(key,1);
 }
 
 template<class TypeData>
 template<int DIM2>
-void Math_Set2<1,TypeData>::InsertMin(Physvector<DIM2,TypeData> & key,int i)
+void Math_Set2<1,TypeData>::InsertMin(const Physvector<DIM2,TypeData> & key,int i)
 {
 	m_inter_min.insert(key.Get(i));
 }
 
 template<class TypeData>
 template<int DIM2>
-void Math_Set2<1,TypeData>::InsertMax(Physvector<DIM2,TypeData> & key,int i)
+void Math_Set2<1,TypeData>::InsertMax(const Physvector<DIM2,TypeData> & key,int i)
 {
 	m_inter_max.insert(key.Get(i));
 }

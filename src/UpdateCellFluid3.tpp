@@ -4,7 +4,7 @@
  * Implementation file for class UpdateCellFluid.
  **/
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
-UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCellFluid3(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart):m_world(world),m_to_key(_1_h,h),m_stag_pos(stag_pos),m_h(h),m_GetCellType(GetCellType),m_condpart(condpart),m_set2(_1_h)
+UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCellFluid3(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart):m_world(world),m_to_key(_1_h,h),m_stag_pos(stag_pos),m_h(h),m_GetCellType(GetCellType),m_condpart(condpart),m_trav(30,m_hash),m_plein(30,m_hash),m_1_h(_1_h)
 {
 	
 }
@@ -13,7 +13,8 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update()
 {
 	m_set.clear();
-	m_set2.clear();
+	m_trav.clear();
+	m_plein.clear();
 	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
 	{
 		for(typename type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
@@ -40,6 +41,43 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 		}
 	}
 
+	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
+	{
+		Physvector<type_dim,type_data> pos1;
+		Physvector<type_dim,type_data> pos2;
+		it->second.m_list.back()->GetPos(pos1);
+		for(typename type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
+		{	
+			(*it2)->GetPos(pos2);
+			CountTrav(pos1,pos2,it->second.m_dir);
+			pos1=pos2;
+		}
+	}
+
+	for(typename unordered_map<Physvector<type_dim,int>, int,Hash>::iterator it=m_trav.begin();it!=m_trav.end();++it)
+	{
+		switch(it->second)
+		{
+			case 0:
+				if(m_plein[it->first])
+				{
+					m_set.InsertMin(it->first);
+					m_set.InsertMax(it->first);
+				}
+				break;
+			case 1:
+					m_set.InsertMin(it->first);
+				break;
+			case -1:
+					m_set.InsertMax(it->first);
+				break;
+			default:
+				cout<<"it second wront value "<<it->second<<endl;
+				cout<<"it first "<<it->first<<endl;
+				abort();
+				break;
+		}
+	}
 
 	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
 	{
@@ -52,18 +90,6 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetFluidBoundary());
 		}
 	}
-	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
-	{
-		dir_exterior dir=it->second.m_dir;
-		for(typename type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
-		{
-			AddToSet(it2,it->second.m_list,dir);
-		}
-	}
-	m_set2.CoutDebInfo();
-	cout<<"transforme"<<endl;
-	m_set=m_set2;
-	cout<<"aft clean"<<endl;
 	m_set.CoutDebInfo();
 	std::function<void(Physvector<type_dim,int>)> f=[&](Physvector<type_dim,int> key)
 	{
@@ -79,6 +105,86 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 	m_set.FillSet(f);
 }
 
+template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
+	void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::CountTrav(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir)
+{
+
+	Physvector<type_dim,int> key1=m_to_key.ToKey(pos1);
+	Physvector<type_dim,int> key2=m_to_key.ToKey(pos2);
+	int deb;
+	int end;
+	if(key1.Get(1)>key2.Get(1))
+	{
+		end=key1.Get(1);
+		deb=key2.Get(1);
+	}
+	else
+	{
+		deb=key1.Get(1);
+		end=key2.Get(1);
+	}
+	type_data lambda_part=1/(pos2.Get(1)-pos1.Get(1));
+	for(int i=deb;i<=end;++i)
+	{
+		type_data lambda=(i*m_h.Get(1)-pos1.Get(1))*lambda_part;
+		Round<type_data,int> R;
+		Physvector<type_dim,type_data> pos=pos1+lambda*(pos2-pos1);
+		cout<<"pos "<<pos<<endl;
+		for(int j=1;j<=2;++j)
+		{
+			pos.GetRef(j)*=m_1_h.Get(j);
+			key1.GetRef(j)=R(pos.GetRef(j));
+		}
+		if(0<=lambda &&lambda<1)
+		{
+			cout<<"pos1 "<<pos1<<endl;
+			cout<<"pos2 "<<pos2<<endl;
+			cout<<"lambda "<<lambda<<endl;
+			cout<<"key "<<key1<<endl;
+			cout<<"pos "<<pos<<endl;
+			cout<<"in "<<endl;
+			if(m_trav.count(key1)==0)
+			{
+				m_trav[key1]=0;
+				m_plein[key1]=false;
+			}
+			if(pos1.Get(1)<pos2.Get(1))
+			{
+				switch(dir)
+				{
+					case dir_exterior::LEFT:
+						m_trav[key1]+=1;
+						cout<<"+1 "<<endl;
+						m_plein[key1]=true;
+					break;
+					case dir_exterior::RIGHT:
+						cout<<"-1 "<<endl;
+						m_trav[key1]-=1;
+						m_plein[key1]=true;
+					break;
+				}
+			}
+			else if(pos1.Get(1)>pos2.Get(1))
+			{
+				switch(dir)
+				{
+					case dir_exterior::LEFT:
+						cout<<"-1 "<<endl;
+						m_trav[key1]-=1;
+						m_plein[key1]=true;
+					break;
+					case dir_exterior::RIGHT:
+						m_trav[key1]+=1;
+						cout<<"+1 "<<endl;
+						m_plein[key1]=true;
+					break;
+				}
+			}
+
+		}
+	}
+	
+}
 
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
 	void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::AddToSet(const typename type_list_surface_elem::iterator & it,type_list_surface_elem & list_surface,dir_exterior dir)
@@ -187,6 +293,8 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 	Physvector<type_dim,int> key1=m_to_key.ToKey(pos1);
 	Physvector<type_dim,int> key2=m_to_key.ToKey(pos2);
 	set<type_data> s;
+	cout<<"raf pos1 "<<pos1<<" "<<pos2<<endl;
+	cout<<"raf key1 "<<key1<<" "<<key2<<endl;
 	for(int i=1;i<=type_dim;++i)
 	{
 		type_data lambda;
@@ -224,6 +332,7 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 		{
 			Physvector<type_dim,type_data> pos;
 			pos=pos1+0.5*(lambda+lambda2)*(pos2-pos1);	
+			cout<<"pos add "<<pos<<endl;
 			m_world.m_particle_list.push_back(type_particle(pos));
 			type_particle* p=&m_world.m_particle_list.back();
 			list_surface.insert(it2,p);
