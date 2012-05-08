@@ -284,7 +284,7 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputPressure(const char * fi
 vtkSmartPointer<vtkFloatArray> vpress=vtkSmartPointer<vtkFloatArray>::New();
 vtkSmartPointer<vtkIntArray> vtype=vtkSmartPointer<vtkIntArray>::New();
 vtkSmartPointer<vtkFloatArray> vdiv=vtkSmartPointer<vtkFloatArray>::New();
-
+vtkSmartPointer<vtkFloatArray> vcirculation=vtkSmartPointer<vtkFloatArray>::New();
 int k=0;
 		for(typename KeyTableMap<Physvector<type_dim,int>,int,PhysvectorKeyOrder<type_dim,int> >::iterator it= m_point2.begin();it!=m_point2.end();++it)
 	{
@@ -299,17 +299,22 @@ int k=0;
 		m_world.m_mac_grid[key].GetCellType(type);
 		double div;
 		m_world.m_mac_grid[key].GetDivergence(div);
+		type_data circ;
+		m_world.m_mac_grid[key].GetCirculation(circ);
 		vpress->InsertValue(k,temp);
 		vtype->InsertValue(k,type);
 		vdiv->InsertValue(k,div);
+		vcirculation->InsertValue(k,circ);
 		++k;
 	}
 	vpress->SetName("pressure");
 	vtype->SetName("type");
 	vdiv->SetName("Divergence");
+	vcirculation->SetName("Circulation");
 	vtkunstruct->GetCellData()->AddArray(vpress);
 	vtkunstruct->GetCellData()->AddArray(vtype);
 	vtkunstruct->GetCellData()->AddArray(vdiv);
+	vtkunstruct->GetCellData()->AddArray(vcirculation);
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   //writer->SetDataModeToAscii();
   writer->SetInput(vtkunstruct);

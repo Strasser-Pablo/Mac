@@ -32,6 +32,7 @@
 #include "KeyTableUnorderedMap.h"
 #include "HashPhysvector.h"
 #include <boost/serialization/nvp.hpp>
+#include "MacCalculateCirculation.h"
 const int dim=2;
 #define INTERPOLATION_NO_PROTECTION
 #if Use_GooglePerf
@@ -128,6 +129,7 @@ class JetDEau
 	template <class Archive>
 	void serialize(Archive & ar,const unsigned int version);
 	UpdateDeleteCell<world> m_delete;
+	MacCalculateCirculation<world> m_calc_circ;
 public:
 	/**
 	 * @brief
