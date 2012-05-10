@@ -11,8 +11,9 @@ m_time_out("timing.csv", fstream::out),
 m_conv_time(double(sysconf(_SC_CLK_TCK))),
 m_part_cond([](Physvector<dim,int> key){return key.Get(2)<-5;}),
 m_pres_func([](Physvector<dim,int> key){return 0;}),
-m_rho_fluid(1000),m_rho_air(1),m_1_rho_fluid(0.001),m_1_rho_air(1),m_rho_inter(1000),m_1_rho_inter(0.001),m_rho_inter_bound(1000),m_1_rho_inter_bound(0.001),m_conv_1_up(m_w,m_get_v,m_stag,m_dt,m_GetCellType,m_v_h,m_v_1_h)
-,m_delete(m_w),m_calc_circ(m_w,m_v_h)
+m_rho_fluid(1000),m_rho_air(1),m_1_rho_fluid(0.001),m_1_rho_air(1),m_rho_inter(1000),m_1_rho_inter(0.001),m_rho_inter_bound(1000),m_1_rho_inter_bound(0.001),m_conv_1_up(m_w,m_get_v,m_stag,m_dt,m_GetCellType,m_v_h,m_v_1_h),
+m_conv_center(m_w,m_get_v,m_stag,m_dt,m_GetCellType,m_v_h,m_v_1_h)
+,m_delete(m_w),m_no_output(false),m_calc_circ(m_w,m_v_h)
 {
 	#if Use_GooglePerf
 		ProfilerStart("perf.prof");
@@ -29,14 +30,14 @@ void JetDEau::SetUp()
 	m_viscosity_const=0;
 	Physvector<dim,double> speed;
 	speed.SetAll(0);
-	double speedmax=5;
-	//m_v_h.Set(2,1);
-	//m_v_1_h.Set(2,1);
-	int Nx=50;
+	double speedmax=55;
+	int Nx=10;
 	int Nz=0;
-	int r=50;
+	int r=10;
 	m_v_1_h.SetAll(20.0*Nx);
 	m_v_h.SetAll(1./(20.0*Nx));
+	//m_v_h.Set(2,1);
+	//m_v_1_h.Set(2,1);
 	Physvector<dim,int> key;
 	double r02=pow(r,2);
 	if(dim==3)
@@ -55,7 +56,7 @@ void JetDEau::SetUp()
 	key.Set(1,i);
 	key.Set(2,0);
 	key.Set(3,k);
-	mac m(speed,0,0,0);
+	mac m(speed,0,m_boundary_fluid,0);
 	m.SetConstSpeed(2,true);
 	m_w.m_mac_grid[key]=m;
 	}
@@ -73,11 +74,11 @@ void JetDEau::SetUp()
 			continue;
 		}
 		speed.Set(2,speedmax*(1-r2/r02));
-	key.Set(1,i);
-	key.Set(2,0);
-	mac m(speed,0,0,0);
-	m.SetConstSpeed(2,true);
-	m_w.m_mac_grid[key]=m;
+		key.Set(1,i);
+		key.Set(2,0);
+		mac m(speed,0,m_boundary_fluid,0);
+		m.SetConstSpeed(2,true);
+		m_w.m_mac_grid[key]=m;
 	}
 	}
 	m_init.PrepareConstSpeed();
@@ -115,6 +116,8 @@ void JetDEau::Calculate()
 	m_time_ticks_deb=times(&m_time_deb);
 	//m_conv.Calculate();
 	m_conv_1_up.Calculate();
+        //m_conv_center.Calculate();
+
 	m_time_ticks_end=times(&m_time_end);
 	m_time_convect=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	
@@ -153,9 +156,11 @@ void JetDEau::Calculate()
 	cout<<"output"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
 	m_t+=m_dt; 
-	m_calc_circ.Calculate();
-	m_out.Calculate();
-	
+	if(!m_no_output)
+	{
+		m_calc_circ.Calculate();
+		m_out.Calculate();
+	}
 	m_time_ticks_end=times(&m_time_end);
 	m_time_output=(m_time_ticks_end-m_time_ticks_deb)/m_conv_time;
 	
@@ -208,3 +213,10 @@ void JetDEau::serialize(Archive & ar,const unsigned int version)
 {
 	return m_i;
 }
+	
+
+void JetDEau::SetIfOutput(bool b)
+{
+	m_no_output=b;
+}
+

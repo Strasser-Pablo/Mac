@@ -3,6 +3,7 @@
 
 #include "NeighborsPhysvector.h"
 #include <iostream>
+#include <stack>
 using namespace std;
 /**
  * @file UpdateCellTypeAndLayer.h

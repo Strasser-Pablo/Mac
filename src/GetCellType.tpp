@@ -61,7 +61,7 @@ bool GetCellType<TypeWorld>::GetIsFluid(const type_key & key)
 template <class TypeWorld>
 bool GetCellType<TypeWorld>::GetIsAir(const type_key & key)
 {
-	if(m_world.m_mac_grind.Exist(key))
+	if(m_world.m_mac_grid.Exist(key))
 	{
 		type_cell c;
 		m_world.m_mac_grid[key].GetCellType(c);
@@ -216,6 +216,22 @@ Type_Inter GetCellType<TypeWorld>::GetInter(const type_key & key1,const type_key
 	{
 		return Type_Inter::Fluid_Air_Boundary;
 	}
+	if((GetIsBoundaryAir(key1)&&GetIsBoundaryFluid(key2))||(GetIsBoundaryAir(key2)&&GetIsBoundaryFluid(key1)))
+	{
+		return Type_Inter::Fluid_Boundary_Air_Boundary;
+	}
+	if((GetIsAir(key1)&&GetIsBoundaryFluid(key2))||(GetIsAir(key2)&&GetIsBoundaryFluid(key1)))
+	{
+		return Type_Inter::Fluid_Boundary_Air;
+	}
+	if((GetIsBoundaryFluid(key1)&&GetIsBoundaryFluid(key2))||(GetIsBoundaryFluid(key2)&&GetIsBoundaryFluid(key1)))
+	{
+		return Type_Inter::Fluid_Boundary_Fluid_Boundary;
+	}
+	if((GetIsFluid(key1)&&GetIsBoundaryFluid(key2))||(GetIsFluid(key2)&&GetIsBoundaryFluid(key1)))
+	{
+		return Type_Inter::Fluid_Boundary_Fluid;
+	}
 	stringstream ss;
 	if(m_world.m_mac_grid.Exist(key1))
 	{
@@ -264,6 +280,14 @@ const typename GetCellType<TypeWorld>::type_data & GetCellType<TypeWorld>::GetRh
 			return m_rho_inter_bound;
 		case Type_Inter::Air_Boundary_Air_Boundary:
 			return m_rho_air;
+		case Type_Inter::Fluid_Boundary_Air_Boundary:
+			return m_rho_inter_bound;
+		case Type_Inter::Fluid_Boundary_Fluid:
+			return m_rho_fluid;
+		case Type_Inter::Fluid_Boundary_Air:
+			return m_rho_inter;
+		case Type_Inter::Fluid_Boundary_Fluid_Boundary:
+			return m_rho_fluid;
 	}
 	throw logic_error("GetInter is not of a know type");
 }
@@ -291,6 +315,14 @@ const typename GetCellType<TypeWorld>::type_data& GetCellType<TypeWorld>::Get1_R
 			return m_1_rho_inter_bound;
 		case Type_Inter::Air_Boundary_Air_Boundary:
 			return m_1_rho_air;
+		case Type_Inter::Fluid_Boundary_Air_Boundary:
+			return m_1_rho_inter_bound;
+		case Type_Inter::Fluid_Boundary_Fluid:
+			return m_1_rho_fluid;
+		case Type_Inter::Fluid_Boundary_Air:
+			return m_1_rho_inter;
+		case Type_Inter::Fluid_Boundary_Fluid_Boundary:
+			return m_1_rho_fluid;
 	}
 	throw logic_error("GetInter is not of a know type");
 }

@@ -1,17 +1,14 @@
 #ifndef Math_Set2_H
+#define Math_Set2_H
 #include <map>
 #include "Physvector.h"
+#include "Rel_Ensemble.h"
 #include <deque>
 #include <iostream>
 #include <set>
 #include <cassert>
 #include <stdexcept>
 using namespace std;
-/**
- * @brief
- * Enum that contain value for relation between two set.
- **/
-enum class Rel_Ensemble{A_In_B,B_In_A,A_Empty,B_Empty,Both_Empty,NONE};
 
 /**
  * @brief
@@ -30,6 +27,9 @@ public:
 	 * Default constructor.
 	 **/
 	Math_Set2()=default;
+	void clear();
+	void CleanDouble();
+	bool testBounded();
 	/**
 	 * @deprecated
 	 **/
@@ -42,7 +42,7 @@ public:
 	 * This is usefull because we normally don't know if it's minimun or maximun.
 	 * @param key To add in set. 
 	 **/
-	void InsertMax(Physvector<DIM,TypeData> & key);
+	void InsertMax(const Physvector<DIM,TypeData> & key);
 	/**
 	 * @brief
 	 * Insert a minimal value with a given key.
@@ -51,7 +51,7 @@ public:
 	 * This is usefull because we normally don't know if it's minimun or maximun 
 	 * @param key To add in set. 
 	 **/
-	void InsertMin(Physvector<DIM,TypeData> & key);
+	void InsertMin(const Physvector<DIM,TypeData> & key);
 	/**
 	 * @brief
 	 * Deprecated.
@@ -67,7 +67,7 @@ public:
 	 * @param key To add in set. 
 	 **/
 	template<int DIM2>
-	void InsertMax(Physvector<DIM2,TypeData> & key,int i);
+	void InsertMax(const Physvector<DIM2,TypeData> & key,int i);
 	/**
 	 * @brief
 	 * Insert a minimal value with a given key.
@@ -77,7 +77,7 @@ public:
 	 * @param key To add in set. 
 	 **/
 	template<int DIM2>
-	void InsertMin(Physvector<DIM2,TypeData> & key,int i);
+	void InsertMin(const Physvector<DIM2,TypeData> & key,int i);
 	/**
 	 * @brief
 	 * Return an Rel_Ensemble enum value of the relation with respect to B.
@@ -170,6 +170,9 @@ public:
 	 * Default constructor.
 	 **/
 	Math_Set2();
+	void clear();
+	void CleanDouble();
+	bool testBounded();
 	/**
 	 * @deprecated
 	 **/
@@ -182,7 +185,7 @@ public:
 	 * This is usefull because we normally don't know if it's minimun or maximun.
 	 * @param key To add in set. 
 	 **/
-	void InsertMax(Physvector<1,TypeData> & key);
+	void InsertMax(const Physvector<1,TypeData> & key);
 	/**
 	 * @brief
 	 * Insert a minimal value with a given key.
@@ -191,7 +194,7 @@ public:
 	 * This is usefull because we normally don't know if it's minimun or maximun 
 	 * @param key To add in set. 
 	 **/
-	void InsertMin(Physvector<1,TypeData> & key);
+	void InsertMin(const Physvector<1,TypeData> & key);
 	/**
 	 * @brief
 	 * Deprecated.
@@ -207,7 +210,7 @@ public:
 	 * @param key To add in set. 
 	 **/
 	template<int DIM2>
-	void InsertMax(Physvector<DIM2,TypeData> & key,int i);
+	void InsertMax(const Physvector<DIM2,TypeData> & key,int i);
 	/**
 	 * @brief
 	 * Insert a minimal value with a given key.
@@ -217,7 +220,7 @@ public:
 	 * @param key To add in set. 
 	 **/
 	template<int DIM2>
-	void InsertMin(Physvector<DIM2,TypeData> & key,int i);
+	void InsertMin(const Physvector<DIM2,TypeData> & key,int i);
 	/**
 	 * @brief
 	 * Return an Rel_Ensemble enum value of the relation with respect to B.

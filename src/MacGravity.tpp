@@ -17,7 +17,7 @@ void MacGravity<TypeWorld,GetCellType>::Calculate()
 	{
 		for(int i=1;i<=type_dim;++i)
 		{
-		if(m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Air||m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Air_Boundary)
+		if(m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Air||m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Air_Boundary||m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Fluid||m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Air_Boundary||m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Air_Boundary||m_GetCellType.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Fluid_Boundary)
 		{
 			type_data temp;
 	 		it.data().GetInterSpeed(i,temp);

@@ -285,6 +285,7 @@ vtkSmartPointer<vtkFloatArray> vpress=vtkSmartPointer<vtkFloatArray>::New();
 vtkSmartPointer<vtkIntArray> vtype=vtkSmartPointer<vtkIntArray>::New();
 vtkSmartPointer<vtkFloatArray> vdiv=vtkSmartPointer<vtkFloatArray>::New();
 vtkSmartPointer<vtkFloatArray> vcirculation=vtkSmartPointer<vtkFloatArray>::New();
+
 int k=0;
 		for(typename KeyTableMap<Physvector<type_dim,int>,int,PhysvectorKeyOrder<type_dim,int> >::iterator it= m_point2.begin();it!=m_point2.end();++it)
 	{
@@ -315,11 +316,11 @@ int k=0;
 	vtkunstruct->GetCellData()->AddArray(vtype);
 	vtkunstruct->GetCellData()->AddArray(vdiv);
 	vtkunstruct->GetCellData()->AddArray(vcirculation);
-  vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+  	vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   //writer->SetDataModeToAscii();
-  writer->SetInput(vtkunstruct);
-  writer->SetFileName(filename);
-  writer->Write();
+ 	writer->SetInput(vtkunstruct);
+  	writer->SetFileName(filename);
+	writer->Write();
 }
 
 
@@ -353,6 +354,46 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputParticle(const char * fi
 		vtkIdType temp[1];
 		temp[0]=i;
 		vtkunstruct->InsertNextCell(1,1,temp);
+	}
+	
+  vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+  //writer->SetDataModeToAscii();
+  writer->SetInput(vtkunstruct);
+  writer->SetFileName(filename);
+  writer->Write();
+}
+
+template <class TypeWorld,class TypeGetStagSpeedPos>
+void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputParticle2(const char * filename)
+{
+	vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
+	vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
+	int nbCell=0;
+	for(typename TypeWorld::type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
+	{
+		int size=it->second.m_list.size();
+		vtkIdType pointlist[size];
+		int i=0;
+		for(typename TypeWorld::type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
+		{
+			Physvector<type_dim,type_data> pos;
+			(*it2)->GetPos(pos);
+			type_data temp[type_dim];
+			for(int i=1;i<=type_dim;++i)
+			{
+				temp[i-1]=pos.Get(i);
+			}
+			for(int i=type_dim+1;i<=3;++i)
+			{
+				temp[i-1]=0;
+			}
+			vtkpoints->InsertPoint(nbCell,temp);
+			pointlist[i]=nbCell;
+			++nbCell;
+			++i;
+		}
+	 	vtkunstruct->SetPoints(vtkpoints);
+		vtkunstruct->InsertNextCell(4,size,pointlist);
 	}
 	
   vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();

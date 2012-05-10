@@ -7,6 +7,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkPoints.h>
+#include <vtkPoints2D.h>
 #include <vtkFloatArray.h>
 #include <vtkDoubleArray.h>
 #include <vtkIntArray.h>
@@ -73,6 +74,7 @@ public:
 	 * @param filename Filename.
 	 **/
 	void OutputParticle(const char * filename);
+	void OutputParticle2(const char * filename);
 }
 ;
 #include "OutputXMLVTK.tpp"

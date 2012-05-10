@@ -61,7 +61,7 @@ void Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTyp
 		it.data().SpeedToTemp();
 		for(int i=1;i<=type_dim;++i)
 		{
-			if(m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air_Boundary)
+			if(m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Air_Boundary||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Air_Boundary||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Air||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Fluid_Boundary)
 			{
 				type_data v;
 				it.data().GetInterTempSpeed(i,v);

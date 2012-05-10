@@ -4,5 +4,5 @@
  * @brief
  * Enum giving type of interface.
  **/
-enum class Type_Inter{Fluid_Fluid,Air_Air,Fluid_Air,Fluid_Air_Boundary,Air_Boundary_Air_Boundary};
+enum class Type_Inter{Fluid_Fluid,Air_Air,Fluid_Air,Fluid_Air_Boundary,Air_Boundary_Air_Boundary,Fluid_Boundary_Air_Boundary,Fluid_Boundary_Fluid,Fluid_Boundary_Air,Fluid_Boundary_Fluid_Boundary};
 #endif

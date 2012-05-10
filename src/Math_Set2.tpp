@@ -1,24 +1,156 @@
 template<int DIM,class TypeData>
-void Math_Set2<DIM,TypeData>::InsertMax(Physvector<DIM,TypeData> & key)
+void Math_Set2<DIM,TypeData>::CleanDouble()
+{
+	for(typename map<TypeData,Math_Set2<DIM-1,TypeData> >::iterator it=m_data.begin();it!=m_data.end();++it)
+	{
+		cout<<"first "<<it->first<<endl;
+		it->second.CleanDouble();
+	}		
+}
+
+template<class TypeData>
+void Math_Set2<1,TypeData>::CleanDouble()
+{	
+	if(m_inter_min.size()!=m_inter_max.size())
+	{
+		set<TypeData> min;
+		set<TypeData> max;
+		iterator it=m_inter_min.begin();
+		iterator it2=m_inter_max.begin();
+		while(it!=m_inter_min.end()||it2!=m_inter_max.end())
+		{
+			bool b=true;
+			if(*it2==*it)
+			{
+				iterator it3=it;
+				iterator it4=it2;
+				++it3;
+				++it4;
+				if(it4==m_inter_max.end()||(it3!=m_inter_min.end()&&*it3<=*it4))
+				{
+					
+					cout<<"min,max "<<endl;
+					min.insert(*it);
+					max.insert(*it2);
+					cout<<"insertmax1 "<<*it2<<endl;
+					++it;
+					++it2;
+					b=false;
+				}
+			}
+			
+			if(b)
+			{
+				bool b=false;
+				iterator it3=it;
+				++it3;
+				while(it3!=m_inter_min.end()&&*it3<=*it2)
+				{
+					if(*it2==*it3)
+					{
+						iterator it4=it2;
+						++it2;
+						if(it2==m_inter_max.end())
+						{
+							min.insert(*it);
+							max.insert(*it4);
+							cout<<"insertmax2 "<<*it4<<endl;
+							cout<<"break "<<endl;
+							b=true;
+							break;
+						}
+					}
+					++it3;
+				}
+				if(b)
+				{
+					break;
+				}
+				min.insert(*it);
+				it=it3;
+				it3=it2;
+				++it3;
+				while(it3!=m_inter_max.end()&&(it==m_inter_min.end()||*it>*it3))
+				{
+					it2=it3;
+					++it3;
+				}
+				cout<<"insertmax3 "<<*it2<<endl;
+				max.insert(*it2);
+				++it2;
+			}
+		}
+		m_inter_max=max;
+		m_inter_min=min;
+	}
+}	
+template<int DIM,class TypeData>
+void Math_Set2<DIM,TypeData>::clear()
+{
+	m_data.clear();
+}
+template<int DIM,class TypeData>
+bool Math_Set2<DIM,TypeData>::testBounded()
+{
+	for(typename map<TypeData,Math_Set2<DIM-1,TypeData> >::iterator it=m_data.begin();it!=m_data.end();++it)
+	{
+		if(!it->second.testBounded())
+		{
+			cout<<"failed "<<it->first<<endl;
+			return false;
+		}
+	}
+	return true;
+}
+
+template<class TypeData>
+bool Math_Set2<1,TypeData>::testBounded()
+{
+	if(m_inter_min.empty()&&m_inter_max.empty())
+	{
+		return true;
+	}
+
+	if(m_inter_min.empty())
+	{
+		return false;
+	}
+	if(m_inter_max.empty())
+	{
+		return false;
+	}
+	TypeData beg=*m_inter_min.begin();
+	TypeData end=*m_inter_max.rbegin();
+	return beg<=end;
+}
+template<class TypeData>
+void Math_Set2<1,TypeData>::clear()
+{
+	m_inter_min.clear();
+	m_inter_max.clear();
+}
+
+template<int DIM,class TypeData>
+void Math_Set2<DIM,TypeData>::InsertMax(const Physvector<DIM,TypeData> & key)
 {
 	m_data[key.Get(1)].InsertMax(key,2);
 }
 template<int DIM,class TypeData>
-void Math_Set2<DIM,TypeData>::InsertMin(Physvector<DIM,TypeData> & key)
+void Math_Set2<DIM,TypeData>::InsertMin(const Physvector<DIM,TypeData> & key)
 {
 	m_data[key.Get(1)].InsertMin(key,2);
 }
 
 template<int DIM,class TypeData>
 template<int DIM2>
-void Math_Set2<DIM,TypeData>::InsertMax(Physvector<DIM2,TypeData> & key,int i)
+void Math_Set2<DIM,TypeData>::InsertMax(const Physvector<DIM2,TypeData> & key,int i)
 {
 	m_data[key.Get(i)].InsertMax(key,i+1);
 }
 
 template<int DIM,class TypeData>
 template<int DIM2>
-void Math_Set2<DIM,TypeData>::InsertMin(Physvector<DIM2,TypeData> & key,int i)
+void Math_Set2<DIM,TypeData>::InsertMin(const Physvector<DIM2,TypeData> & key,int i)
 {
 	m_data[key.Get(i)].InsertMin(key,i+1);
 }
@@ -88,27 +220,27 @@ Math_Set2<1,TypeData>::Math_Set2()
 }
 
 template<class TypeData>
-void Math_Set2<1,TypeData>::InsertMin(Physvector<1,TypeData> & key)
+void Math_Set2<1,TypeData>::InsertMin(const Physvector<1,TypeData> & key)
 {
 	InsertMin(key,1);
 }
 
 template<class TypeData>
-void Math_Set2<1,TypeData>::InsertMax(Physvector<1,TypeData> & key)
+void Math_Set2<1,TypeData>::InsertMax(const Physvector<1,TypeData> & key)
 {
 	InsertMax(key,1);
 }
 
 template<class TypeData>
 template<int DIM2>
-void Math_Set2<1,TypeData>::InsertMin(Physvector<DIM2,TypeData> & key,int i)
+void Math_Set2<1,TypeData>::InsertMin(const Physvector<DIM2,TypeData> & key,int i)
 {
 	m_inter_min.insert(key.Get(i));
 }
 
 template<class TypeData>
 template<int DIM2>
-void Math_Set2<1,TypeData>::InsertMax(Physvector<DIM2,TypeData> & key,int i)
+void Math_Set2<1,TypeData>::InsertMax(const Physvector<DIM2,TypeData> & key,int i)
 {
 	m_inter_max.insert(key.Get(i));
 }

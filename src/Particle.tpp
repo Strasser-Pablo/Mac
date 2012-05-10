@@ -3,6 +3,17 @@
  * @brief
  * Implementation file for class Particle.
  **/
+template <class TypeVector> 
+void Particle<TypeVector>::SetToErase(bool berase)
+{
+	m_berase=berase;
+}
+
+template <class TypeVector> 
+bool Particle<TypeVector>::GetToErase()
+{
+	return m_berase;
+}
 
 template <class TypeVector> 
 Particle<TypeVector>::Particle(){
