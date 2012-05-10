@@ -93,6 +93,12 @@ struct MacWorld2<KeyTable,TableContainer,2>
 	{
 		dir_exterior m_dir;
 		type_list_surface_elem m_list;
+		template <class Archive>
+		void serialize(Archive & ar,const unsigned int version)
+		{
+			ar & boost::serialization::make_nvp("dir_exterior",m_dir);
+			ar & boost::serialization::make_nvp("list_surf",m_list);
+		}
 	};
 	typedef list_elem type_list_elem;
 	typedef unordered_map<int,list_elem> type_list_surface;
@@ -139,6 +145,58 @@ struct MacWorld2<KeyTable,TableContainer,2>
 	{
 		ar & boost::serialization::make_nvp("Cell",m_mac_grid);
 		ar & boost::serialization::make_nvp("Particle",m_particle_list);
+		ar & boost::serialization::make_nvp("max_id",m_max_id);
+		if(typename Archive::is_loading())
+		{
+			cout<<"loading"<<endl;
+			size_t size;
+			ar & boost::serialization::make_nvp("Size",size);
+			for(size_t i=0;i<size;++i)
+			{
+				typename unordered_map<int,list_elem>::value_type in;
+				ar & boost::serialization::make_nvp("Pair",in);
+				m_list_surface.insert(in);	
+			}
+			cout<<"loading hash"<<endl;
+			ar & boost::serialization::make_nvp("Size",size);
+			cout<<"after size "<<endl;
+			for(size_t i=0;i<size;++i)
+			{
+				int in;
+				ar & boost::serialization::make_nvp("Pair",in);
+				m_id_stack.push(in);	
+			}
+			cout<<"after loading"<<endl;
+		}
+		else if(typename Archive::is_saving())
+		{
+			size_t size=m_list_surface.size();
+			ar & boost::serialization::make_nvp("Size",size);
+			for(typename unordered_map<int,list_elem>::const_iterator it=m_list_surface.begin();it!=m_list_surface.end();++it)
+			{
+
+				typename unordered_map<int,list_elem>::value_type out=*it;
+				ar & boost::serialization::make_nvp("Pair",out);
+			}
+			
+
+			type_stack_id m_stack;
+			size=m_id_stack.size();
+			ar & boost::serialization::make_nvp("Size",size);
+			while(!m_id_stack.empty())
+			{
+				m_stack.push(m_id_stack.top());
+				int out=m_id_stack.top();
+				ar & boost::serialization::make_nvp("Pair",out);
+				m_id_stack.pop();
+			}
+
+			while(!m_stack.empty())
+			{
+				m_id_stack.push(m_stack.top());
+				m_stack.pop();
+			}
+		}
 	}
 };
 #endif

@@ -15,6 +15,12 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 	m_set.clear();
 	m_trav.clear();
 	m_plein.clear();
+	struct tms m_time_deb;
+	struct tms m_time_end;
+	long m_time_ticks_deb;
+	long m_time_ticks_end;
+	double m_conv_time=double(sysconf(_SC_CLK_TCK));
+	m_time_ticks_deb=times(&m_time_deb);
 	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
 	{
 		for(typename type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
@@ -28,6 +34,9 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 			}
 		}
 	}
+	m_time_ticks_end=times(&m_time_end);
+	cout<<"timing end 1 "<<(m_time_ticks_end-m_time_ticks_deb)/m_conv_time<<endl;
+	m_time_ticks_deb=times(&m_time_deb);
 	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
 	{
 		Physvector<type_dim,type_data> pos1;
@@ -41,19 +50,41 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 		}
 	}
 
+	m_time_ticks_end=times(&m_time_end);
+	cout<<"timing end 2 "<<(m_time_ticks_end-m_time_ticks_deb)/m_conv_time<<endl;
+	m_time_ticks_deb=times(&m_time_deb);
 	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
 	{
 		Physvector<type_dim,type_data> pos1;
 		Physvector<type_dim,type_data> pos2;
 		it->second.m_list.back()->GetPos(pos1);
+		int mode=2;
+		type_data keyx;
+		bool bcontend=false;
 		for(typename type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
 		{	
 			(*it2)->GetPos(pos2);
-			CountTrav(pos1,pos2,it->second.m_dir);
+			CountTrav(pos1,pos2,it->second.m_dir,mode,keyx,bcontend);
 			pos1=pos2;
 		}
+		bcontend=true;
+		for(typename type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
+		{	
+			(*it2)->GetPos(pos2);
+			CountTrav(pos1,pos2,it->second.m_dir,mode,keyx,bcontend);
+			if(!bcontend)
+			{
+				break;
+			}
+			pos1=pos2;
+		}
+
 	}
 
+	m_time_ticks_end=times(&m_time_end);
+	cout<<"timing end 3 "<<(m_time_ticks_end-m_time_ticks_deb)/m_conv_time<<endl;
+	m_time_ticks_deb=times(&m_time_deb);
+	bool b=false;
 	for(typename unordered_map<Physvector<type_dim,int>, int,Hash>::iterator it=m_trav.begin();it!=m_trav.end();++it)
 	{
 		switch(it->second)
@@ -74,10 +105,18 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 			default:
 				cout<<"it second wront value "<<it->second<<endl;
 				cout<<"it first "<<it->first<<endl;
-				abort();
+				b=true;
 				break;
 		}
 	}
+	if(b)
+	{
+		abort();
+	}
+
+	m_time_ticks_end=times(&m_time_end);
+	cout<<"timing end 4 "<<(m_time_ticks_end-m_time_ticks_deb)/m_conv_time<<endl;
+	m_time_ticks_deb=times(&m_time_deb);
 
 	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
 	{
@@ -90,7 +129,11 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 			m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetFluidBoundary());
 		}
 	}
-	m_set.CoutDebInfo();
+
+	m_time_ticks_end=times(&m_time_end);
+	cout<<"timing end 5 "<<(m_time_ticks_end-m_time_ticks_deb)/m_conv_time<<endl;
+	m_time_ticks_deb=times(&m_time_deb);
+	//m_set.CoutDebInfo();
 	std::function<void(Physvector<type_dim,int>)> f=[&](Physvector<type_dim,int> key)
 	{
 		int lay;
@@ -103,46 +146,64 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 		m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetFluid());
 	};
 	m_set.FillSet(f);
+
+	m_time_ticks_end=times(&m_time_end);
+	cout<<"timing end 6 "<<(m_time_ticks_end-m_time_ticks_deb)/m_conv_time<<endl;
 }
 
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
-	void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::CountTrav(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir)
+	void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::CountTrav(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir,int &mode,double &keyx,bool &bcontend)
 {
 
 	Physvector<type_dim,int> key1=m_to_key.ToKey(pos1);
 	Physvector<type_dim,int> key2=m_to_key.ToKey(pos2);
-	int deb;
-	int end;
+	type_data posmin=pos1.Get(1);
+	type_data posmax=pos2.Get(1);
+	type_data eps=0.001*m_h.Get(1);
+	if(mode==2)
+	{
+		keyx=pos1.Get(1);
+		mode=3;
+	}
+		
+	if(posmin>posmax)
+	{
+		swap(posmin,posmax);
+	}
+	bool b3=true;
+	bool b4=true;
+	if(mode==3)
+	{
+		b3=abs(keyx-posmin)>eps;
+		b4=abs(keyx-posmax)>eps;
+		if(b3||b4)
+		{
+			mode=0;
+		}
+	}
+	int si=1;
 	if(key1.Get(1)>key2.Get(1))
 	{
-		end=key1.Get(1);
-		deb=key2.Get(1);
-	}
-	else
-	{
-		deb=key1.Get(1);
-		end=key2.Get(1);
+		si=-1;
 	}
 	type_data lambda_part=1/(pos2.Get(1)-pos1.Get(1));
-	for(int i=deb;i<=end;++i)
+	for(int i=key1.Get(1);(si==1&&i<=key2.Get(1))||(si==-1&&i>=key2.Get(1));i+=si)
 	{
 		type_data lambda=(i*m_h.Get(1)-pos1.Get(1))*lambda_part;
 		Round<type_data,int> R;
 		Physvector<type_dim,type_data> pos=pos1+lambda*(pos2-pos1);
-		cout<<"pos "<<pos<<endl;
 		for(int j=1;j<=2;++j)
 		{
 			pos.GetRef(j)*=m_1_h.Get(j);
 			key1.GetRef(j)=R(pos.GetRef(j));
 		}
-		if(0<=lambda &&lambda<1)
+		//Pass throught the line of width eps. We have no Numerical Analysis Heissenberg incertitude.
+		bool b1=b4&&i*m_h.Get(1)-posmin>eps;
+		bool b2=b3&&posmax-i*m_h.Get(1)>eps;
+		bool b5=b3&&abs(posmin-i*m_h.Get(1))<eps;
+		bool b6=b4&&abs(posmax-i*m_h.Get(1))<eps;
+		if(b1&&b2&&mode==0)
 		{
-			cout<<"pos1 "<<pos1<<endl;
-			cout<<"pos2 "<<pos2<<endl;
-			cout<<"lambda "<<lambda<<endl;
-			cout<<"key "<<key1<<endl;
-			cout<<"pos "<<pos<<endl;
-			cout<<"in "<<endl;
 			if(m_trav.count(key1)==0)
 			{
 				m_trav[key1]=0;
@@ -154,11 +215,9 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 				{
 					case dir_exterior::LEFT:
 						m_trav[key1]+=1;
-						cout<<"+1 "<<endl;
 						m_plein[key1]=true;
 					break;
 					case dir_exterior::RIGHT:
-						cout<<"-1 "<<endl;
 						m_trav[key1]-=1;
 						m_plein[key1]=true;
 					break;
@@ -169,18 +228,92 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 				switch(dir)
 				{
 					case dir_exterior::LEFT:
-						cout<<"-1 "<<endl;
 						m_trav[key1]-=1;
 						m_plein[key1]=true;
 					break;
 					case dir_exterior::RIGHT:
 						m_trav[key1]+=1;
-						cout<<"+1 "<<endl;
 						m_plein[key1]=true;
 					break;
 				}
 			}
-
+			if(bcontend)
+			{
+				bcontend=false;
+				return;
+			}
+		}
+		else if(b5&&b6)
+		{
+		}
+		else if(b6&&mode==0)
+		{
+			mode=1;
+		}
+		else if(b5&&mode==0)
+		{
+			mode=-1;
+		}
+		else if(b6&&mode==-1)
+		{
+			if(m_trav.count(key1)==0)
+			{
+				m_trav[key1]=0;
+				m_plein[key1]=false;
+			}
+			switch(dir)
+			{
+				case dir_exterior::LEFT:
+					m_trav[key1]-=1;
+					m_plein[key1]=true;
+				break;
+				case dir_exterior::RIGHT:
+					m_trav[key1]+=1;
+					m_plein[key1]=true;
+				break;
+			}
+			mode=0;
+			if(bcontend)
+			{
+				bcontend=false;
+				return;
+			}
+		}
+		else if(b5&&mode==1)
+		{
+			if(m_trav.count(key1)==0)
+			{
+				m_trav[key1]=0;
+				m_plein[key1]=false;
+			}
+			switch(dir)
+			{
+				case dir_exterior::LEFT:
+					m_trav[key1]+=1;
+					m_plein[key1]=true;
+				break;
+				case dir_exterior::RIGHT:
+					m_trav[key1]-=1;
+					m_plein[key1]=true;
+				break;
+			}
+			mode=0;
+			if(bcontend)
+			{
+				bcontend=false;
+				return;
+			}
+		}
+		else if(b6&&mode==1)
+		{
+			mode=0;
+		}
+		else if(b5&&mode==-1)
+		{
+			mode=0;
+		}
+		else
+		{
 		}
 	}
 	
@@ -216,7 +349,6 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 	Physvector<type_dim,type_data> pos2;
 	if((key.Get(1)-keyaft.Get(1))*(keybef.Get(1)-key.Get(1))<0)
 	{
-		cout<<"ret "<<keybef<<" "<<key<<" "<<keyaft<<endl;
 		return;
 	}
 	bool b=false;
@@ -241,29 +373,18 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 		pos2=posbef;
 		b2=true;
 	}
-	cout<<"pos13123 "<<pos<<" "<<pos2<<endl;
 	type_data lambdapart=1/(pos2.Get(1)-pos.Get(1));
-	cout<<"pos2 "<<pos2.Get(1)<<" "<<pos.Get(1)<<endl;
-	cout<<"lambda part "<<lambdapart<<endl;
 	type_data lambda=lambdapart*(key.Get(1)*m_h.Get(1)-pos.Get(1));
-	cout<<"lambda "<<lambda<<endl;
 	pos+=lambda*(pos2-pos);	
-	cout<<"pos aft "<<pos<<endl;
 	if(b)
 	{
 		switch(dir)
 		{
 			case dir_exterior::LEFT:
 				m_set2.InsertMax(key,pos);
-				cout<<"insert max left "<<key<<" "<<pos<<endl;
-				cout<<"key "<<keybef<<" "<<key<<" "<<keyaft<<endl;
-				cout<<"pos "<<posbef<<" "<<pos<<" "<<posaft<<endl;
 			break;
 			case dir_exterior::RIGHT:
 				m_set2.InsertMin(key,pos);
-				cout<<"insert min right "<<key<<" "<<pos<<endl;
-				cout<<"key "<<keybef<<" "<<key<<" "<<keyaft<<endl;
-				cout<<"pos "<<posbef<<" "<<pos<<" "<<posaft<<endl;
 			break;
 		}
 	}
@@ -273,15 +394,9 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 		{
 			case dir_exterior::LEFT:
 				m_set2.InsertMin(key,pos);
-				cout<<"insert min left "<<key<<" "<<pos<<endl;
-				cout<<"key "<<keybef<<" "<<key<<" "<<keyaft<<endl;
-				cout<<"pos "<<posbef<<" "<<pos<<" "<<posaft<<endl;
 			break;
 			case dir_exterior::RIGHT:
 				m_set2.InsertMax(key,pos);
-				cout<<"insert max right "<<key<<" "<<pos<<endl;
-				cout<<"key "<<keybef<<" "<<key<<" "<<keyaft<<endl;
-				cout<<"pos "<<posbef<<" "<<pos<<" "<<posaft<<endl;
 			break;
 		}
 	}
@@ -293,8 +408,6 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 	Physvector<type_dim,int> key1=m_to_key.ToKey(pos1);
 	Physvector<type_dim,int> key2=m_to_key.ToKey(pos2);
 	set<type_data> s;
-	cout<<"raf pos1 "<<pos1<<" "<<pos2<<endl;
-	cout<<"raf key1 "<<key1<<" "<<key2<<endl;
 	for(int i=1;i<=type_dim;++i)
 	{
 		type_data lambda;
@@ -332,7 +445,6 @@ template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCond
 		{
 			Physvector<type_dim,type_data> pos;
 			pos=pos1+0.5*(lambda+lambda2)*(pos2-pos1);	
-			cout<<"pos add "<<pos<<endl;
 			m_world.m_particle_list.push_back(type_particle(pos));
 			type_particle* p=&m_world.m_particle_list.back();
 			list_surface.insert(it2,p);

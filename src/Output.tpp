@@ -1,5 +1,5 @@
 template <class TypeWorld,class TypeGetStagSpeedPos>
-Output<TypeWorld,TypeGetStagSpeedPos>::Output(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,double & t,type_cell fluid,int &i,streampos &spos):m_out_speed(world,stag,h,fluid),m_t(t),m_i(i),m_spos(spos)
+Output<TypeWorld,TypeGetStagSpeedPos>::Output(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,double & t,type_cell fluid,int &i,streampos &spos,bool with_part):m_out_speed(world,stag,h,fluid),m_t(t),m_i(i),m_spos(spos),b_with_part(with_part)
 {
 
 }
@@ -27,8 +27,16 @@ void Output<TypeWorld,TypeGetStagSpeedPos>::Calculate()
 		ss4<<type_dim+2;
 		string str3=str+string("_")+ss4.str()+string(".vtu");
 		//fstream p2(str3.c_str(),fstream::out);
-		m_out_speed.OutputParticle2(str3.c_str());
-	for(int i=1;i<=type_dim+2;++i)
+		if(b_with_part)
+		{
+			m_out_speed.OutputParticle2(str3.c_str());
+		}
+		int mod=0;
+		if(b_with_part)
+		{
+			mod=1;
+		}
+	for(int i=1;i<=type_dim+1+mod;++i)
 	{
 		m_out<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\""<<i<<"\" file=\""<<str<<"_"<<i<<".vtu\" />"<<endl;
 	}

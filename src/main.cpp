@@ -3,13 +3,13 @@
 #include <boost/archive/xml_iarchive.hpp>
 using namespace std;
 
-const bool bstop=true;
+const bool bstop=false;
 const int nb_stop=100;
 const bool barchive=true;
-const int nb_archive=10;
+const int nb_archive=100;
 
 const bool bload=false;
-const char* file_to_load="backup5.xml";
+const char* file_to_load="backup40.xml";
 const char* file_save_prefixe="backup";
 const char* file_save_extension=".xml";
 

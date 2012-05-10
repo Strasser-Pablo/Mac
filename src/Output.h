@@ -25,6 +25,7 @@ class Output
 	streampos &m_spos;
 	int & m_i;
 	double & m_t;
+	bool b_with_part;
 	public:
 	/**
 	 * @brief
@@ -37,7 +38,7 @@ class Output
 	 * @param i Reference to the output file number.
 	 * @param spos Streampos reference used in backup function.
 	 **/
-	Output(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,double &t,type_cell fluid,int &i,streampos &spos);
+	Output(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,double &t,type_cell fluid,int &i,streampos &spos,bool with_part=true);
 	/**
 	 * @brief
 	 * Make an output.

@@ -47,11 +47,6 @@ if(USE_DOXYGEN)
 find_package (Doxygen)
 endif(USE_DOXYGEN)
 
-file(
-	GLOB_RECURSE
-	source_files
-	 ${CMAKE_CURRENT_SOURCE_DIR}/src/*
-)
 
 if(USE_GOOGLE_PERF)
 Set(USE_GOOGLE_PERF_DEFINE 1)
@@ -192,7 +187,7 @@ if(COMPILER_OPTIMISATION_FLAG)
 	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -flto -fwhole-program")
        	set(COMPUTATION_LINK_FLAGS "${COMPUTATION_LINK_FLAGS} -flto"  )
 endif()
-add_executable(computation ${source_files})
+add_executable(computation ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 set_target_properties(computation PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 add_library(lib_computation STATIC)
 set_target_properties(lib_computation PROPERTIES LINKER_LANGUAGE "CXX")
@@ -206,6 +201,11 @@ if(USE_GOOGLE_PERF)
 endif(USE_GOOGLE_PERF)
 TARGET_LINK_LIBRARIES(computation lib_computation)
 install (TARGETS computation DESTINATION bin)
+
+
+add_executable(Diffusion_Jet ${CMAKE_CURRENT_SOURCE_DIR}/src/mainDiffusion.cpp)
+set_target_properties(Diffusion_Jet PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Diffusion_Jet lib_computation)
 
 if (USE_TESTING)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
@@ -348,4 +348,7 @@ AddTestProperty(test_cov_Stationar)
 
 	CXXTEST_ADD_TEST(test_cov_UpdateCellFluid3 test/TestUpdateCellFluid3.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellFluid3.h)
 	AddTestProperty(test_cov_UpdateCellFluid3)
+
+	CXXTEST_ADD_TEST(test_cov_MacCirculation test/TestMacCirculation.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacCirculation.h)
+	AddTestProperty(test_cov_MacCirculation)
 endif(USE_TESTING)

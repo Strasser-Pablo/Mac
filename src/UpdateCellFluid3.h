@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include "HashPhysvector.h"
 #include "RundingFunction.h"
+#include <sys/times.h>
 using namespace std;
 /**
  * @file UpdateCellFluid.h
@@ -58,7 +59,7 @@ class UpdateCellFluid3
 	unordered_map<Physvector<type_dim,int>, bool,Hash> m_plein;
 
 	void Rafine(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,typename type_list_surface_elem::iterator & it2,type_list_surface_elem & list_surface);
-	void CountTrav(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir);
+	void CountTrav(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir,int &mode,double &keyx,bool &bcontend);
 	void AddToSet(const typename type_list_surface_elem::iterator & it,type_list_surface_elem & list_surface,dir_exterior dir);
 public:
 	/**
