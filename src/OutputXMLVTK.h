@@ -31,7 +31,7 @@ class VTKDimensionError:public std::exception{
  * @tparam TypeWorld Type used for World.
  * @tparam TypeGetStagSpeedPos Type used for GetStagSpeedPos.
  **/
-template <class TypeWorld,class TypeGetStagSpeedPos>
+template <class TypeWorld,class TypeGetStagSpeedPos,class TypeGetSpeed>
 class OutputXMLVTK
 {
 	static const int type_dim=TypeWorld::type_dim;
@@ -43,6 +43,7 @@ class OutputXMLVTK
 	KeyTableMap<typename TypeWorld::type_key,int,PhysvectorKeyOrder<type_dim,int> > m_point;
 	int m_i;
 	TypeGetStagSpeedPos m_stag_pos;
+	TypeGetSpeed &m_GetSpeed;
 	const Physvector<type_dim,type_data>& m_h;
 	type_cell m_fluid;
 public:
@@ -54,7 +55,7 @@ public:
 	 * @param h Spacing used.
 	 * @param fluid Value used for fluid.
 	 **/
-	OutputXMLVTK(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,type_cell fluid);
+	OutputXMLVTK(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,type_cell fluid,TypeGetSpeed &GetSpeed);
 	/**
 	 * @brief
 	 * Output speed.

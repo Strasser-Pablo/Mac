@@ -4,7 +4,7 @@ m_stag(m_v_h),m_get_v(m_w,m_stag,m_v_1_h),m_boundary_air(2),m_boundary_fluid(3),
 m_conv(m_w,m_rungeKutta,m_get_v,m_stag,m_dt,m_GetCellType),
 m_grav(m_w,m_g,m_dt,m_fluid,m_GetCellType),
 m_viscosity(m_w,m_viscosity_const,m_dt,m_v_1_h,m_GetCellType),
-m_out(m_w,m_stag,m_v_h,m_t,1,m_i,m_spos),m_time_step(m_w,m_v_1_h,m_cfl_factor,m_dt,m_GetCellType),
+m_out(m_w,m_stag,m_v_h,m_t,1,m_i,m_spos,m_get_v),m_time_step(m_w,m_v_1_h,m_cfl_factor,m_dt,m_GetCellType),
 m_pres(m_w,m_v_1_h,m_GetCellType),m_pres_umf(m_w,m_v_1_h,m_GetCellType),m_extrapolate_v(m_w,m_GetCellType,m_v_h,m_v_1_h),
 m_move_part(m_w,m_rungeKutta,m_get_v,m_dt),
 m_time_out("timing.csv", fstream::out),
@@ -27,13 +27,12 @@ void JetDEau::SetUp()
 	m_out.SetUp();
 	m_t=0; 
 	m_viscosity_const=1.307e-6;
-	m_viscosity_const=0;
 	Physvector<dim,double> speed;
 	speed.SetAll(0);
 	double speedmax=55;
-	int Nx=10;
+	int Nx=50;
 	int Nz=0;
-	int r=10;
+	int r=50;
 	m_v_1_h.SetAll(20.0*Nx);
 	m_v_h.SetAll(1./(20.0*Nx));
 	//m_v_h.Set(2,1);

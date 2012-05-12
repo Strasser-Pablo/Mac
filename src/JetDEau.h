@@ -66,7 +66,7 @@ class JetDEau
 	typedef std::function<bool(Physvector<dim,int>)> type_partcondfunc;
 	typedef std::function<double(Physvector<dim,int>)> type_pres_func;
 	typedef ExtrapolateCellFluid2<world,type_get_cell_type> type_extrapolate;
- 	typedef Output<world,type_stag> type_out;
+ 	typedef Output<world,type_stag,type_vel> type_out;
 	Hash m_hash;
 	type_partcondfunc m_part_cond;
 	type_pres_func m_pres_func;
@@ -92,7 +92,7 @@ class JetDEau
 	list_part m_part;
 	keytable m_table;
 	world m_w;
-	Output<world,type_stag> m_out;
+	type_out m_out;
 	MacConvectSpeed<world,type_meth,type_vel,type_stag,type_get_cell_type> m_conv;
 	Mac_1_Order_UpWindConvect<world,type_vel,type_stag,type_get_cell_type> m_conv_1_up;
 	MacConvectCenter<world,type_vel,type_stag,type_get_cell_type> m_conv_center;

@@ -1,11 +1,11 @@
-template <class TypeWorld,class TypeGetStagSpeedPos>
-OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputXMLVTK(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,type_cell fluid):m_world(world),m_point(m_o),m_stag_pos(stag),m_h(h),m_fluid(fluid)
+template <class TypeWorld,class TypeGetStagSpeedPos,class TypeGetSpeed>
+OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos,TypeGetSpeed>::OutputXMLVTK(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,type_cell fluid,TypeGetSpeed &GetSpeed):m_world(world),m_point(m_o),m_stag_pos(stag),m_h(h),m_fluid(fluid),m_GetSpeed(GetSpeed)
 {
 	
 }
 
-template <class TypeWorld,class TypeGetStagSpeedPos>
-void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::Output(const char * filename,int ind)
+template <class TypeWorld,class TypeGetStagSpeedPos,class TypeGetSpeed>
+void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos,TypeGetSpeed>::Output(const char * filename,int ind)
 {
 	 vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 	m_i=0;
@@ -153,8 +153,8 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::Output(const char * filename,i
 }
 
 
-template <class TypeWorld,class TypeGetStagSpeedPos>
-void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputPressure(const char * filename)
+template <class TypeWorld,class TypeGetStagSpeedPos,class TypeGetSpeed>
+void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos,TypeGetSpeed>::OutputPressure(const char * filename)
 {
 	vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 	m_i=0;
@@ -165,6 +165,7 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputPressure(const char * fi
 	int nbexist=0;
 	m_i=0;
 	KeyTableMap<typename TypeWorld::type_key,int,PhysvectorKeyOrder<type_dim,int> > m_point2(m_o);
+	
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
 		Physvector<type_dim,int> temp=it.key();
@@ -183,6 +184,7 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputPressure(const char * fi
 			if(!m_point.Exist(vkey))
 			{
 				m_point[vkey]=nbPoint;
+				Physvector<type_dim,type_data> temp_vect;
 			for(int i=1;i<=type_dim;++i)
 			{
 			vtemp[i-1]=0.5*vkey.Get(i)*m_h.Get(i);
@@ -280,10 +282,37 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputPressure(const char * fi
 		vtkunstruct->InsertNextCell(ntype,nbcont,con);
 		++nbCell;
 	}
-	
+
+  vtkSmartPointer<vtkDoubleArray> vtkspeedarray=vtkSmartPointer<vtkDoubleArray>::New();
+  vtkspeedarray->SetNumberOfComponents(3);
+
+	for(typename type_table_point::iterator it= m_point.begin();it!=m_point.end();++it)
+	{
+		Physvector<type_dim,type_data> pos;
+		for(int i=1;i<=type_dim;++i)
+		{
+			pos.GetRef(i)=0.5*it.key().Get(i)*m_h.Get(i);
+		}
+		for(int i=1;i<=3;++i)
+		{
+			if(i<=type_dim)
+			{
+				vtkspeedarray->InsertComponent(it.data(),i-1,m_GetSpeed.Get(pos,i));
+			}
+			else
+			{
+				vtkspeedarray->InsertComponent(it.data(),i-1,0);
+			}
+		}
+	}
+
+	vtkspeedarray->SetName("speed");
+	vtkunstruct->GetPointData()->AddArray(vtkspeedarray);
+
 vtkSmartPointer<vtkFloatArray> vpress=vtkSmartPointer<vtkFloatArray>::New();
 vtkSmartPointer<vtkIntArray> vtype=vtkSmartPointer<vtkIntArray>::New();
 vtkSmartPointer<vtkFloatArray> vdiv=vtkSmartPointer<vtkFloatArray>::New();
+vtkSmartPointer<vtkFloatArray> vViscosityForce=vtkSmartPointer<vtkFloatArray>::New();
 vtkSmartPointer<vtkFloatArray> vcirculation=vtkSmartPointer<vtkFloatArray>::New();
 
 int k=0;
@@ -299,6 +328,8 @@ int k=0;
 		m_world.m_mac_grid[key].GetPressure(temp);
 		m_world.m_mac_grid[key].GetCellType(type);
 		double div;
+		double viscos_force;
+		m_world.m_mac_grid[key].GetViscosityForce(viscos_force);
 		m_world.m_mac_grid[key].GetDivergence(div);
 		type_data circ;
 		m_world.m_mac_grid[key].GetCirculation(circ);
@@ -306,16 +337,19 @@ int k=0;
 		vtype->InsertValue(k,type);
 		vdiv->InsertValue(k,div);
 		vcirculation->InsertValue(k,circ);
+		vViscosityForce->InsertValue(k,viscos_force);
 		++k;
 	}
 	vpress->SetName("pressure");
 	vtype->SetName("type");
 	vdiv->SetName("Divergence");
 	vcirculation->SetName("Circulation");
+	vViscosityForce->SetName("Viscosity Force");
 	vtkunstruct->GetCellData()->AddArray(vpress);
 	vtkunstruct->GetCellData()->AddArray(vtype);
 	vtkunstruct->GetCellData()->AddArray(vdiv);
 	vtkunstruct->GetCellData()->AddArray(vcirculation);
+	vtkunstruct->GetCellData()->AddArray(vViscosityForce);
   	vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   //writer->SetDataModeToAscii();
  	writer->SetInput(vtkunstruct);
@@ -325,8 +359,8 @@ int k=0;
 
 
 
-template <class TypeWorld,class TypeGetStagSpeedPos>
-void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputParticle(const char * filename)
+template <class TypeWorld,class TypeGetStagSpeedPos,class TypeGetSpeed>
+void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos,TypeGetSpeed>::OutputParticle(const char * filename)
 {
 	vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 	vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
@@ -363,8 +397,8 @@ void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputParticle(const char * fi
   writer->Write();
 }
 
-template <class TypeWorld,class TypeGetStagSpeedPos>
-void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos>::OutputParticle2(const char * filename)
+template <class TypeWorld,class TypeGetStagSpeedPos,class TypeGetSpeed>
+void OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos,TypeGetSpeed>::OutputParticle2(const char * filename)
 {
 	vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 	vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();

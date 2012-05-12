@@ -28,6 +28,7 @@ class MacCell{
         TypeData m_div;	
 	TypeData m_circulation;
 	TypeCell m_cell_type;
+	TypeData m_viscosity_force;
 	bool m_const_speed[DIM];
 	bool m_one_const;
 	int m_layer;
@@ -92,6 +93,9 @@ static const int type_dim=DIM;
 	~MacCell();
 	void SetCirculation(const TypeData &circulation);
 	void GetCirculation(TypeData & Circulation);
+
+	void SetViscosityForce(const TypeData &Viscosity);
+	void GetViscosityForce(TypeData & Viscosity);
 	/**
 	 * @brief
 	 * Set the speed.

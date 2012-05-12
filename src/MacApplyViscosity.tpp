@@ -30,12 +30,15 @@ void MacApplyViscosity<TypeWorld,GetTypeCell>::Calculate()
 	
 	for(typename TypeWorld::type_keytable::iterator it= m_world.m_mac_grid.begin();it!=m_world.m_mac_grid.end();++it)
 	{
+		Physvector<type_dim,type_data> visc_force;
+		visc_force.SetAll(0);
 		for(int i=1;i<=type_dim;++i)
 		{
 			if(m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Fluid||m_GetTypeCell.GetInter(it.key(),i)==Type_Inter::Fluid_Boundary_Fluid_Boundary)
 			{
 				type_data d;
 				it.data().GetInterTempSpeed(i,d);
+				visc_force.GetRef(i)=d*m_viscosity;
 				d*=m_dt*m_viscosity;
 				type_data s;
 				it.data().GetInterSpeed(i,s);
@@ -43,5 +46,6 @@ void MacApplyViscosity<TypeWorld,GetTypeCell>::Calculate()
 				it.data().SetInterSpeed(i,s);
 			}
 		}
+		it.data().SetViscosityForce(visc_force.Norm());
 	}
 }

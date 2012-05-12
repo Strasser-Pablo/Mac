@@ -16,7 +16,7 @@ void MacCell<DIM,TypeData,TypeCell,ID>::GetCirculation(TypeData & Circulation)
 }
 
 template <int DIM,class TypeData, class TypeCell,int ID>
-MacCell<DIM,TypeData,TypeCell,ID>::MacCell():m_layer(-1),m_div(0)
+MacCell<DIM,TypeData,TypeCell,ID>::MacCell():m_layer(-1),m_div(0),m_viscosity_force(0)
 {
 	for(int i=0;i<DIM;++i)
 	{
@@ -28,7 +28,7 @@ MacCell<DIM,TypeData,TypeCell,ID>::MacCell():m_layer(-1),m_div(0)
 
 
 template <int DIM,class TypeData, class TypeCell,int ID>
-MacCell<DIM,TypeData,TypeCell,ID>::MacCell(Physvector<DIM,TypeData> &speed,const TypeData &pressure,const int layer):m_speed(speed),m_pressure(pressure),m_layer(layer),m_div(0)
+MacCell<DIM,TypeData,TypeCell,ID>::MacCell(Physvector<DIM,TypeData> &speed,const TypeData &pressure,const int layer):m_speed(speed),m_pressure(pressure),m_layer(layer),m_div(0),m_viscosity_force(0)
 {
 	for(int i=0;i<DIM;++i)
 	{
@@ -231,4 +231,16 @@ template <int DIM,class TypeData, class TypeCell,int ID>
 void MacCell<DIM,TypeData,TypeCell,ID>::GetDivergence(TypeData & div)
 {
 	div=m_div;
+}
+
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::SetViscosityForce(const TypeData &Viscosity)
+{
+	m_viscosity_force=Viscosity;
+}
+
+template <int DIM,class TypeData, class TypeCell,int ID>
+void MacCell<DIM,TypeData,TypeCell,ID>::GetViscosityForce(TypeData & Viscosity)
+{
+	Viscosity=m_viscosity_force;
 }
