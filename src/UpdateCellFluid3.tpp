@@ -556,3 +556,35 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::AddTo
 	m_key_seg_list[key1][id].push_back(seg);
 	m_key_seg_list[key2][id].push_back(seg);
 }
+
+
+
+
+template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
+bool UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::CalculateIntersection(type_seg seg1,type_seg seg2,Physvector<type_dim,type_data> & pos)
+{
+	Physvector<type_dim,type_data>  pos1;
+	(*seg1.first)->GetPos(pos1);
+	Physvector<type_dim,type_data>  pos2;
+	(*seg1.second)->GetPos(pos2);
+	Physvector<type_dim,type_data>  pos3;
+	(*seg2.first)->GetPos(pos3);
+	Physvector<type_dim,type_data>  pos4;
+	(*seg2.second)->GetPos(pos4);
+	
+	type_data r;
+	type_data s;
+	type_data d;
+	type_data _1_d;
+	d=(pos2.Get(1)-pos1.Get(1))*(pos4.Get(2)-pos3.Get(2))-(pos2.Get(2)-pos1.Get(2))*(pos4.Get(1)-pos3.Get(1));
+	_1_d=1/d;	
+	r=_1_d*((pos1.Get(2)-pos3.Get(2))*(pos4.Get(1)-pos3.Get(1))-(pos1.Get(1)-pos3.Get(1))*(pos4.Get(2)-pos3.Get(2)));
+	s=_1_d*((pos1.Get(2)-pos3.Get(2))*(pos2.Get(1)-pos1.Get(1))-(pos1.Get(1)-pos3.Get(1))*(pos2.Get(2)-pos1.Get(2)));
+	if(r>1 || s>1 ||s<0 || r<0)
+	{
+		return false;
+	}
+	pos.GetRef(1)=pos1.Get(1)+r*(pos2.Get(1)-pos1.Get(1));
+	pos.GetRef(2)=pos1.Get(2)+r*(pos2.Get(2)-pos1.Get(2));
+	return true;
+}
