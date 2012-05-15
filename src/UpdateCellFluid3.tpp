@@ -12,6 +12,8 @@ UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCell
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
 void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Update()
 {
+	m_inter_map.clear();
+	m_id_inter_map.clear();
 	m_set.clear();
 	m_trav.clear();
 	m_plein.clear();
@@ -64,6 +66,30 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 			it3=it2;
 			pos1=pos2;
 		}
+	}
+
+	for(type_key_id_list_seg_iterator it=m_key_seg_list.begin();it!=m_key_seg_list.end();++it)
+	{
+		for(type_id_list_seg_iterator it2=it->second.begin();it2!=it->second.end();++it2)
+		{
+			int id1=it2->first;
+			for(type_id_list_seg_iterator it3=it->second.begin();it3!=it->second.end();++it3)
+			{
+				int id2=it2->first;
+				for(type_list_seg_iterator it4=it2->second.begin();it4!=it2->second.end();++it4)
+				{
+					for(type_list_seg_iterator it5=id1==id2?it4:it3->second.begin();it5!=it3->second.end();++it5)
+					{
+						if(it5==it4)
+						{
+							continue;
+						}
+						DoElemIntersectProcessing(*it4,*it5,id1,id2);
+					}
+				}
+			}
+		}
+
 	}
 
 	m_time_ticks_end=times(&m_time_end);
@@ -558,20 +584,9 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::AddTo
 }
 
 
-
-
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
-bool UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::CalculateIntersection(type_seg seg1,type_seg seg2,Physvector<type_dim,type_data> & pos)
+bool UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::CalculateIntersection(const Physvector<type_dim,type_data>&  pos1,const Physvector<type_dim,type_data> & pos2,const Physvector<type_dim,type_data>&  pos3,const Physvector<type_dim,type_data>&  pos4,Physvector<type_dim,type_data> & pos)
 {
-	Physvector<type_dim,type_data>  pos1;
-	(*seg1.first)->GetPos(pos1);
-	Physvector<type_dim,type_data>  pos2;
-	(*seg1.second)->GetPos(pos2);
-	Physvector<type_dim,type_data>  pos3;
-	(*seg2.first)->GetPos(pos3);
-	Physvector<type_dim,type_data>  pos4;
-	(*seg2.second)->GetPos(pos4);
-	
 	type_data r;
 	type_data s;
 	type_data d;
@@ -580,11 +595,46 @@ bool UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Calcu
 	_1_d=1/d;	
 	r=_1_d*((pos1.Get(2)-pos3.Get(2))*(pos4.Get(1)-pos3.Get(1))-(pos1.Get(1)-pos3.Get(1))*(pos4.Get(2)-pos3.Get(2)));
 	s=_1_d*((pos1.Get(2)-pos3.Get(2))*(pos2.Get(1)-pos1.Get(1))-(pos1.Get(1)-pos3.Get(1))*(pos2.Get(2)-pos1.Get(2)));
-	if(r>1 || s>1 ||s<0 || r<0)
+	if(r>=1 || s>=1 ||s<=0 || r<=0 ||std::isnan(r)||std::isnan(s))
 	{
 		return false;
 	}
 	pos.GetRef(1)=pos1.Get(1)+r*(pos2.Get(1)-pos1.Get(1));
 	pos.GetRef(2)=pos1.Get(2)+r*(pos2.Get(2)-pos1.Get(2));
 	return true;
+}
+
+
+
+template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
+void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::DoElemIntersectProcessing(type_seg & seg1,type_seg & seg2,int id1,int id2)
+{
+	Physvector<type_dim,type_data> pos1;
+	(*seg1.first)->GetPos(pos1);
+	Physvector<type_dim,type_data> pos2;
+	(*seg1.second)->GetPos(pos2);
+	Physvector<type_dim,type_data> pos3;
+	(*seg2.first)->GetPos(pos3);
+	Physvector<type_dim,type_data> pos4;
+	(*seg2.second)->GetPos(pos4);
+	Physvector<type_dim,type_data> pos;
+	bool b=CalculateIntersection(pos1,pos2,pos3,pos4,pos);
+	if(!b)
+	{
+		return;
+	}
+
+	type_unord_id_pair_to_inter_iterator it=m_inter_map.insert(typename type_unord_id_pair_to_inter::value_type(type_id_pair(id1,id2),type_inter(type_seg_pair(seg1,seg2),pos)));
+	Intersection_Iterator_List inter1;
+	inter1.m_intersection=it;
+	type_intersection_list_iterator it2=m_id_inter_map[id1].insert(m_id_inter_map[id1].end(),inter1);
+
+	Intersection_Iterator_List inter2;
+	inter2.m_intersection=it;
+	type_intersection_list_iterator it3=m_id_inter_map[id2].insert(m_id_inter_map[id2].end(),inter2);
+
+	it2->m_other=new type_intersection_list_iterator;
+	*(it2->m_other)=it3;
+	it3->m_other=new type_intersection_list_iterator;
+	*(it3->m_other)=it2;
 }
