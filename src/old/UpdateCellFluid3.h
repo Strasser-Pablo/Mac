@@ -67,6 +67,7 @@ class UpdateCellFluid3
 	void CountTrav(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir,int &mode,double &keyx,bool &bcontend);
 	void AddToSet(const typename type_list_surface_elem::iterator & it,type_list_surface_elem & list_surface,dir_exterior dir);
 	void AddToSegment(typename type_list_surface_elem::iterator & it,typename type_list_surface_elem::iterator &it2,const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,int id);
+	bool CalculateIntersection(type_seg seg1,type_seg seg2,Physvector<type_dim,type_data> & pos);
 public:
 	/**
 	 * @brief
