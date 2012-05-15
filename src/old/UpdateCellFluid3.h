@@ -11,6 +11,8 @@
 #include "HashPhysvector.h"
 #include "RundingFunction.h"
 #include <sys/times.h>
+#include "Hash_Pair.h"
+#include <limits>
 using namespace std;
 /**
  * @file UpdateCellFluid.h
@@ -48,9 +50,25 @@ class UpdateCellFluid3
 	typedef typename type_list_surface_elem::iterator ppart_it;
 	typedef pair<ppart_it,ppart_it> type_seg;
 	typedef list<type_seg> type_list_seg; 
+	typedef typename type_list_seg::iterator type_list_seg_iterator; 
 	typedef unordered_map<int,type_list_seg> type_id_list_seg;
+	typedef typename type_id_list_seg::iterator type_id_list_seg_iterator;
 	typedef HashPhysvector<type_dim,int> Hash;
 	typedef unordered_map<Physvector<type_dim,int>,type_id_list_seg,Hash> type_key_id_list_seg;
+	typedef typename type_key_id_list_seg::iterator type_key_id_list_seg_iterator;
+	typedef pair<int,int> type_id_pair;
+	typedef pair<type_seg,type_seg> type_seg_pair;
+	typedef pair<type_seg_pair,Physvector<type_dim,type_data> > type_inter;
+	typedef unordered_multimap<type_id_pair,type_inter> type_unord_id_pair_to_inter;
+	typedef typename type_unord_id_pair_to_inter::iterator type_unord_id_pair_to_inter_iterator;
+	struct Intersection_Iterator_List
+	{
+		typename list<Intersection_Iterator_List>::iterator * m_other;		
+		type_unord_id_pair_to_inter_iterator m_intersection;
+	};
+	typedef list<Intersection_Iterator_List> type_intersection_list;
+	typedef typename type_intersection_list::iterator type_intersection_list_iterator;
+	typedef unordered_map<int,type_intersection_list> type_intersection_map;
 	ParticleToKey< type_particle,type_key_vect_data,type_data,type_dim> m_to_key;
 	TypeGetCellType &m_GetCellType;
 	TypeStagPos & m_stag_pos;
@@ -63,11 +81,14 @@ class UpdateCellFluid3
 	unordered_map<Physvector<type_dim,int>, int,Hash> m_trav;
 	unordered_map<Physvector<type_dim,int>, bool,Hash> m_plein;
 	type_key_id_list_seg m_key_seg_list;
+	type_unord_id_pair_to_inter m_inter_map;
+	type_intersection_map m_id_inter_map;
 	void Rafine(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,typename type_list_surface_elem::iterator & it2,type_list_surface_elem & list_surface);
 	void CountTrav(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir,int &mode,double &keyx,bool &bcontend);
 	void AddToSet(const typename type_list_surface_elem::iterator & it,type_list_surface_elem & list_surface,dir_exterior dir);
 	void AddToSegment(typename type_list_surface_elem::iterator & it,typename type_list_surface_elem::iterator &it2,const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,int id);
-	bool CalculateIntersection(type_seg seg1,type_seg seg2,Physvector<type_dim,type_data> & pos);
+	bool CalculateIntersection(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data>&  pos2,const Physvector<type_dim,type_data> & pos3,const Physvector<type_dim,type_data> & pos4,Physvector<type_dim,type_data> & pos);
+	void DoElemIntersectProcessing(type_seg & seg1,type_seg  & seg2,int id1,int id2);
 public:
 	/**
 	 * @brief
