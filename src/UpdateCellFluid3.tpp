@@ -4,7 +4,7 @@
  * Implementation file for class UpdateCellFluid.
  **/
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
-UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCellFluid3(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart):m_world(world),m_to_key(_1_h,h),m_stag_pos(stag_pos),m_h(h),m_GetCellType(GetCellType),m_condpart(condpart),m_trav(30,m_hash),m_plein(30,m_hash),m_1_h(_1_h)
+UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCellFluid3(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart):m_world(world),m_to_key(_1_h,h),m_stag_pos(stag_pos),m_h(h),m_GetCellType(GetCellType),m_condpart(condpart),m_trav(30,m_hash),m_plein(30,m_hash),m_key_seg_list(30,m_hash),m_1_h(_1_h)
 {
 	
 }
@@ -46,6 +46,22 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 		{	
 			(*it2)->GetPos(pos2);
 			Rafine(pos1,pos2,it2,it->second.m_list);
+			pos1=pos2;
+		}
+	}
+
+	for(typename type_list_surface::iterator it=m_world.m_list_surface.begin();it!=m_world.m_list_surface.end();++it)
+	{
+		Physvector<type_dim,type_data> pos1;
+		Physvector<type_dim,type_data> pos2;
+		int id= it->first;
+		it->second.m_list.back()->GetPos(pos1);
+		typename type_list_surface_elem::iterator it3=--it->second.m_list.end();
+		for(typename type_list_surface_elem::iterator it2=it->second.m_list.begin();it2!=it->second.m_list.end();++it2)
+		{	
+			(*it2)->GetPos(pos2);
+			AddToSegment(it3,it2,pos1,pos2,id);
+			it3=it2;
 			pos1=pos2;
 		}
 	}
@@ -527,4 +543,16 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Prepa
 			}
 		}
 	}
+}
+
+
+
+template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
+void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::AddToSegment(typename type_list_surface_elem::iterator & it1,typename type_list_surface_elem::iterator &it2,const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,int id)
+{
+	Physvector<type_dim,int> key1=m_to_key.ToKey(pos1);
+	Physvector<type_dim,int> key2=m_to_key.ToKey(pos2);
+	type_seg seg(it1,it2);
+	m_key_seg_list[key1][id].push_back(seg);
+	m_key_seg_list[key2][id].push_back(seg);
 }

@@ -45,6 +45,12 @@ class UpdateCellFluid3
 	typedef typename TypeWorld::type_list_surface_elem type_list_surface_elem;
 	typedef typename TypeWorld::type_list_elem type_list_elem;
 	typedef typename TypeWorld::type_list_surface type_list_surface;
+	typedef typename type_list_surface_elem::iterator ppart_it;
+	typedef pair<ppart_it,ppart_it> type_seg;
+	typedef list<type_seg> type_list_seg; 
+	typedef unordered_map<int,type_list_seg> type_id_list_seg;
+	typedef HashPhysvector<type_dim,int> Hash;
+	typedef unordered_map<Physvector<type_dim,int>,type_id_list_seg,Hash> type_key_id_list_seg;
 	ParticleToKey< type_particle,type_key_vect_data,type_data,type_dim> m_to_key;
 	TypeGetCellType &m_GetCellType;
 	TypeStagPos & m_stag_pos;
@@ -53,14 +59,14 @@ class UpdateCellFluid3
 	const Physvector<type_dim,type_data> &m_1_h;
 	Math_Set2<type_dim,int> m_set;
 	Math_Set3<type_dim,int,type_data> m_set2;
-	typedef HashPhysvector<type_dim,int> Hash;
 	Hash m_hash;
 	unordered_map<Physvector<type_dim,int>, int,Hash> m_trav;
 	unordered_map<Physvector<type_dim,int>, bool,Hash> m_plein;
-
+	type_key_id_list_seg m_key_seg_list;
 	void Rafine(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,typename type_list_surface_elem::iterator & it2,type_list_surface_elem & list_surface);
 	void CountTrav(const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,dir_exterior dir,int &mode,double &keyx,bool &bcontend);
 	void AddToSet(const typename type_list_surface_elem::iterator & it,type_list_surface_elem & list_surface,dir_exterior dir);
+	void AddToSegment(typename type_list_surface_elem::iterator & it,typename type_list_surface_elem::iterator &it2,const Physvector<type_dim,type_data> & pos1,const Physvector<type_dim,type_data> & pos2,int id);
 public:
 	/**
 	 * @brief
