@@ -14,6 +14,7 @@ void UpdateCellFluid3<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::Updat
 {
 	m_inter_map.clear();
 	m_id_inter_map.clear();
+	m_key_seg_list.clear();
 	m_set.clear();
 	m_trav.clear();
 	m_plein.clear();
