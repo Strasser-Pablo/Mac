@@ -60,7 +60,7 @@ class DiffusionJet
 	typedef MacGetStagPos<world>  type_stag;
 	typedef MacGetVelocity<world,type_stag > type_vel;
 	typedef GetCellType<world> type_get_cell_type;
- 	typedef Output<world,type_stag> type_out;
+ 	typedef Output<world,type_stag,type_vel> type_out;
 	typedef RungeKutta<Physvector<2,double> ,MacConvectSpeedFunctor<world,type_vel>,double >  type_meth;
 	type_meth m_rungeKutta;
 	Hash m_hash;
@@ -83,7 +83,7 @@ class DiffusionJet
 	order m_O;
 	keytable m_table;
 	world m_w;
-	Output<world,type_stag> m_out;
+	Output<world,type_stag,type_vel> m_out;
 	MacConvectSpeed<world,type_meth,type_vel,type_stag,type_get_cell_type> m_conv;
 	Mac_1_Order_UpWindConvect<world,type_vel,type_stag,type_get_cell_type> m_conv_1_up;
 	double m_dt;
