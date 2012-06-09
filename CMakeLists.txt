@@ -326,9 +326,9 @@ AddTestProperty(test_cov_Math_Set2)
 CXXTEST_ADD_TEST(test_cov_Mac_1_Order_UpWindConvect test/TestMac_1_OrderUpWindConvect.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMac_1_OrderUpWindConvect.h)
 AddTestProperty(test_cov_Mac_1_Order_UpWindConvect)
 
-CXXTEST_ADD_TEST(test_cov_Serialization test/TestSerialization.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSerialization.h)
-AddTestProperty(test_cov_Serialization)
-	TARGET_LINK_LIBRARIES(test_cov_Serialization lib_computation)
+# CXXTEST_ADD_TEST(test_cov_Serialization test/TestSerialization.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSerialization.h)
+# AddTestProperty(test_cov_Serialization)
+#	TARGET_LINK_LIBRARIES(test_cov_Serialization lib_computation)
 
 	
 CXXTEST_ADD_TEST(test_cov_KeyTableUnorderedMap test/TestKeyTableUnorderedMap.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestKeyTableUnorderedMap.h)
