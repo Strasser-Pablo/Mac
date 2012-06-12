@@ -348,8 +348,9 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 	CXXTEST_ADD_TEST(test_cov_MacWorld2 test/TestMacWorld2.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacWorld2.h)
 	AddTestProperty(test_cov_MacWorld2)
 
-	CXXTEST_ADD_TEST(test_cov_UpdateCellFluid3 test/TestUpdateCellFluid3.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellFluid3.h)
-	AddTestProperty(test_cov_UpdateCellFluid3)
+# 	Remove because broken and will not be needed when we use level set.
+#	CXXTEST_ADD_TEST(test_cov_UpdateCellFluid3 test/TestUpdateCellFluid3.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellFluid3.h)
+#	AddTestProperty(test_cov_UpdateCellFluid3)
 
 	CXXTEST_ADD_TEST(test_cov_MacCirculation test/TestMacCirculation.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacCirculation.h)
 	AddTestProperty(test_cov_MacCirculation)

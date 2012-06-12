@@ -34,20 +34,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Up
 		{	
 			if(type_dim==2)
 			{
-				Physvector<type_dim,type_data> keytemp=m_to_key.FromKey(key);
-				keytemp.GetRef(1)+=0.25*m_h.Get(1);
-				m_world.m_particle_list.push_back(type_particle(keytemp));
-				keytemp.GetRef(1)-=0.5*m_h.Get(1);
-				m_world.m_particle_list.push_back(type_particle(keytemp));
-				keytemp.GetRef(2)+=0.25*m_h.Get(2);
-				m_world.m_particle_list.push_back(type_particle(keytemp));
-				keytemp.GetRef(2)-=0.5*m_h.Get(2);
-				m_world.m_particle_list.push_back(type_particle(keytemp));
-				keytemp.GetRef(1)+=0.5*m_h.Get(1);
-				m_world.m_particle_list.push_back(type_particle(keytemp));
-				keytemp.GetRef(2)+=0.5*m_h.Get(2);
-				m_world.m_particle_list.push_back(type_particle(keytemp));
-				m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetFluid());
+				m_world.m_mac_grid[key].SetCellType(m_GetCellType.GetAirBoundary());
 				m_world.m_mac_grid[key].SetLayer(0);
 			}
 		}
