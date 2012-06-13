@@ -13,6 +13,7 @@
 #include "MacConvectSpeed.h"
 #include "SolvePressureCG.h"
 #include "Output.h"
+#include "OutputXMLVTK_With_Line.h"
 #include "MacGravity.h"
 #include "MacInitializeCell4.h"
 #include "MacApplyViscosity.h"
@@ -66,7 +67,8 @@ class JetDEau
 	typedef std::function<bool(Physvector<dim,int>)> type_partcondfunc;
 	typedef std::function<double(Physvector<dim,int>)> type_pres_func;
 	typedef ExtrapolateCellFluid2<world,type_get_cell_type> type_extrapolate;
- 	typedef Output<world,type_stag,type_vel> type_out;
+	typedef OutputXMLVTK_With_Line<world,type_stag,type_vel> type_out_aux;
+ 	typedef Output<type_out_aux,dim> type_out;
 	Hash m_hash;
 	type_partcondfunc m_part_cond;
 	type_pres_func m_pres_func;
@@ -93,6 +95,7 @@ class JetDEau
 	keytable m_table;
 	world m_w;
 	type_out m_out;
+	type_out_aux m_out_aux;
 	MacConvectSpeed<world,type_meth,type_vel,type_stag,type_get_cell_type> m_conv;
 	Mac_1_Order_UpWindConvect<world,type_vel,type_stag,type_get_cell_type> m_conv_1_up;
 	MacConvectCenter<world,type_vel,type_stag,type_get_cell_type> m_conv_center;

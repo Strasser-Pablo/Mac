@@ -1,8 +1,8 @@
 DiffusionJet::DiffusionJet():m_fluid(1),m_air(0),m_cfl_factor(0.25),m_GetCellType(m_w,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound),
 m_table(m_hash),m_w(m_table,m_part),
 m_stag(m_v_h),m_get_v(m_w,m_stag,m_v_1_h),m_boundary_air(2),m_boundary_fluid(3),
-m_conv(m_w,m_rungeKutta,m_get_v,m_stag,m_dt,m_GetCellType),
-m_out(m_w,m_stag,m_v_h,m_t,1,m_i,m_spos,m_get_v,false),m_time_step(m_w,m_v_1_h,m_cfl_factor,m_dt,m_GetCellType),
+m_conv(m_w,m_rungeKutta,m_get_v,m_stag,m_dt,m_GetCellType),m_out_aux(m_w,m_stag,m_v_h,1,m_get_v),
+m_out(m_out_aux,m_t,m_i,m_spos,false),m_time_step(m_w,m_v_1_h,m_cfl_factor,m_dt,m_GetCellType),
 m_rho_fluid(1000),m_rho_air(1),m_1_rho_fluid(0.001),m_1_rho_air(1),m_rho_inter(1000),m_1_rho_inter(0.001),m_rho_inter_bound(1000),m_1_rho_inter_bound(0.001),m_conv_1_up(m_w,m_get_v,m_stag,m_dt,m_GetCellType,m_v_h,m_v_1_h)
 ,m_calc_circ(m_w,m_v_h)
 {

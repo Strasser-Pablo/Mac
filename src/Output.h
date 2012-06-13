@@ -1,7 +1,5 @@
 #ifndef Output_H
 #define Output_H
-//#include "OutputVectorSpeed.h"
-#include "OutputXMLVTK.h"
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -13,19 +11,15 @@ using namespace std;
  * @tparam TypeWorld World type used.
  * @tparam TypeGetStagSpeedPos TypeGetStagSpeedPos used.
  **/
-template <class TypeWorld,class TypeGetStagSpeedPos,class TypeGetSpeed>
+template <class OutputMethod,int type_dim>
 class Output
 {
-	static const int type_dim=TypeWorld::type_dim;
-	typedef typename TypeWorld::type_data type_data;
-	typedef KeyTableMap<typename TypeWorld::type_key,int,PhysvectorKeyOrder<type_dim,int> > type_table_point;
-	typedef typename TypeWorld::type_cell type_cell;
-	OutputXMLVTK<TypeWorld,TypeGetStagSpeedPos,TypeGetSpeed> m_out_speed;
 	fstream m_out; 
 	streampos &m_spos;
 	int & m_i;
 	double & m_t;
 	bool b_with_part;
+	OutputMethod& m_out_meth;
 	public:
 	/**
 	 * @brief
@@ -38,7 +32,7 @@ class Output
 	 * @param i Reference to the output file number.
 	 * @param spos Streampos reference used in backup function.
 	 **/
-	Output(TypeWorld &world,TypeGetStagSpeedPos & stag,const Physvector<type_dim,type_data>& h,double &t,type_cell fluid,int &i,streampos &spos,TypeGetSpeed &GetSpeed,bool with_part=true);
+	Output(OutputMethod& outmethod,double t,int &i,streampos &spos,bool with_part=true);
 	/**
 	 * @brief
 	 * Make an output.
