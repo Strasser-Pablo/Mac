@@ -207,6 +207,11 @@ add_executable(Diffusion_Jet ${CMAKE_CURRENT_SOURCE_DIR}/src/mainDiffusion.cpp)
 set_target_properties(Diffusion_Jet PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(Diffusion_Jet lib_computation)
 
+
+add_executable(Container_Filling ${CMAKE_CURRENT_SOURCE_DIR}/src/Container_Filling.cpp)
+set_target_properties(Container_Filling PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Container_Filling lib_computation)
+
 if (USE_TESTING)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 

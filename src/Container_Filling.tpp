@@ -1,10 +1,9 @@
-JetDEau::JetDEau():m_fluid(1),m_air(0),m_cfl_factor(0.25),m_GetCellType(m_w,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound),
-m_table(m_hash),m_w(m_table,m_part),m_init(m_w,m_GetCellType,m_v_1_h,m_v_h,5,m_stag,m_part_cond,m_pres_func,m_extrapolate_v,m_out),
+Container_Filling::Container_Filling():m_fluid(1),m_air(0),m_cfl_factor(0.25),m_GetCellType(m_w,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound),
+m_table(m_hash),m_w(m_table,m_part),m_init(m_w,m_GetCellType,m_v_1_h,m_v_h,5,m_stag,m_part_cond,m_pres_func,m_extrapolate_v),
 m_stag(m_v_h),m_get_v(m_w,m_stag,m_v_1_h),m_boundary_air(2),m_boundary_fluid(3),
 m_conv(m_w,m_rungeKutta,m_get_v,m_stag,m_dt,m_GetCellType),
 m_grav(m_w,m_g,m_dt,m_fluid,m_GetCellType),
-m_viscosity(m_w,m_viscosity_const,m_dt,m_v_1_h,m_GetCellType),
-m_out_aux(m_w,m_stag,m_v_h,1,m_get_v),
+m_viscosity(m_w,m_viscosity_const,m_dt,m_v_1_h,m_GetCellType),m_out_aux(m_w,m_stag,m_v_h,1,m_get_v),
 m_out(m_out_aux,m_t,m_i,m_spos),m_time_step(m_w,m_v_1_h,m_cfl_factor,m_dt,m_GetCellType),
 m_pres(m_w,m_v_1_h,m_GetCellType),m_pres_umf(m_w,m_v_1_h,m_GetCellType),m_extrapolate_v(m_w,m_GetCellType,m_v_h,m_v_1_h),
 m_move_part(m_w,m_rungeKutta,m_get_v,m_dt),
@@ -22,7 +21,7 @@ m_conv_center(m_w,m_get_v,m_stag,m_dt,m_GetCellType,m_v_h,m_v_1_h)
 	m_N_V=m_stag.GetNeighborsVelocity();
 }
 
-void JetDEau::SetUp()
+void Container_Filling::SetUp()
 {
 	m_i=0;
 	m_out.SetUp();
@@ -94,7 +93,7 @@ void JetDEau::SetUp()
 	m_t=0;
 }
 
-void JetDEau::Calculate()
+void Container_Filling::Calculate()
 {
 	cout<<"update"<<endl;
 	m_time_ticks_deb=times(&m_time_deb);
@@ -171,7 +170,7 @@ void JetDEau::Calculate()
 	#endif
 }
 template <class Archive>
-void JetDEau::serialize(Archive & ar,const unsigned int version)
+void Container_Filling::serialize(Archive & ar,const unsigned int version)
 {
 	ar & boost::serialization::make_nvp("Time",m_t);
 	ar & boost::serialization::make_nvp("TimeStep",m_dt);
@@ -209,13 +208,13 @@ void JetDEau::serialize(Archive & ar,const unsigned int version)
 		m_out.Load();
 	}
 }
-	int& JetDEau::GetFileNumber()
+	int& Container_Filling::GetFileNumber()
 {
 	return m_i;
 }
 	
 
-void JetDEau::SetIfOutput(bool b)
+void Container_Filling::SetIfOutput(bool b)
 {
 	m_no_output=b;
 }
