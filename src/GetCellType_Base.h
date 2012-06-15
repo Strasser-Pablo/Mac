@@ -18,7 +18,10 @@ template <class TypeWorld>
 class GetCellType_Base
 {
 	public:
-	typedef GetCellType_Base_Argument<TypeWorld> type_input_struct; 
+	typedef GetCellType_Base_Argument<TypeWorld> type_input_struct;
+	void Compute()
+	{
+	}
 	private:
 	typedef typename TypeWorld::type_cell type_cell;
 	typedef typename TypeWorld::type_data type_data;

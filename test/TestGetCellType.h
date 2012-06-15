@@ -10,6 +10,7 @@
 #include "../src/GetCellType_Air.h"
 #include "../src/GetCellType_Base.h"
 #include "../src/GetCellType_Rho.h"
+#include "../src/GetCellType_Fluid_Air_Interface.h"
 #define eps 1e-10
 class Test_GetCellType : public CxxTest::TestSuite
 {
@@ -211,5 +212,70 @@ class Test_GetCellType : public CxxTest::TestSuite
 		TS_ASSERT_THROWS(g_r.GetRho(3),runtime_error);
 		vkey.Set(1,10);
 		TS_ASSERT_THROWS(g_r.GetRho(vkey),runtime_error);
+	}
+	void testfluid_air_interface()
+	{
+		typedef Physvector<1,int> keyvect;
+		typedef Physvector<1,double> vect;
+		typedef Particle<vect> part;
+		typedef MacCell<1,double,int> mac;
+		typedef TableContainerList<part> list_part;
+		typedef PhysvectorKeyOrder<1,int> order;
+		typedef KeyTableMap<keyvect,mac,order> keytable;
+		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType_Base<world> type_base;
+		typedef GetCellType_Fluid<world,type_base> type_fluid;
+		typedef GetCellType_Air<world,type_fluid> type_comp;
+		typedef GetCellType_Fluid_Air_Interface<world,type_comp> type_int;
+		Physvector<1,double> temp;
+		temp.Set(1,2.0);
+		mac c1(temp,0,1,0);
+		mac c2(temp,0,0,1);
+		mac c3(temp,0,0,1);
+		order o;
+		keytable k(o);
+		Physvector<1,int> vkey;
+		vkey.Set(1,0);
+		k[vkey]=c1;
+		vkey.Set(1,1);
+		k[vkey]=c2;
+		vkey.Set(1,-1);
+		k[vkey]=c3;
+		list_part lp;
+ 		world W(k,lp);
+		Inversible_Value<double> rho_air(3.0);
+		Inversible_Value<double> rho_fluid(4.0);
+		type_base::type_input_struct in_base(W,-1);
+		type_fluid::type_input_struct in_fluid(in_base,1,rho_fluid);
+		type_comp::type_input_struct in(in_fluid,0,rho_air);
+		type_int g_i(in);
+		TS_ASSERT(g_i.GetIsFluid(1));
+		vkey.Set(1,0);
+		TS_ASSERT(g_i.GetIsFluid(vkey));
+		vkey.Set(1,1);
+		TS_ASSERT(!g_i.GetIsFluid(vkey));
+		vkey.Set(1,20);
+		TS_ASSERT(!g_i.GetIsFluid(vkey));
+		TS_ASSERT_DELTA(g_i.GetRhoFluid().Get(),4.0,eps);
+		TS_ASSERT(g_i.GetIsAir(0));
+		vkey.Set(1,0);
+		TS_ASSERT(!g_i.GetIsAir(vkey));
+		vkey.Set(1,1);
+		TS_ASSERT(g_i.GetIsAir(vkey));
+		vkey.Set(1,20);
+		TS_ASSERT(!g_i.GetIsAir(vkey));
+
+		TS_ASSERT(g_i.GetIsFluidAirInterface(1,0));
+		TS_ASSERT(!g_i.GetIsFluidAirInterface(1,-1));
+		TS_ASSERT(!g_i.GetIsFluidAirInterface(0,-1));
+		TS_ASSERT(!g_i.GetIsFluidAirInterface(0,0));
+		TS_ASSERT(!g_i.GetIsFluidAirInterface(1,1));
+		vkey.Set(1,0);
+		Physvector<1,int> vkey2;
+		vkey2.Set(1,1);
+		TS_ASSERT(g_i.GetIsFluidAirInterface(vkey,vkey2));
+		vkey2.Set(1,3);
+		TS_ASSERT(!g_i.GetIsFluidAirInterface(vkey,vkey2));
+		TS_ASSERT(g_i.GetIsFluidAirInterface(vkey,1,1));
 	}
 };
