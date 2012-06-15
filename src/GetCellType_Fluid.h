@@ -32,6 +32,7 @@ class GetCellType_Fluid : public GetCellType_Fluid_Base<TypeWorld,Base,GetCellTy
 	public:
 	GetCellType_Fluid(type_input_struct in);
 	bool GetIsFluid_Implementation(const type_cell& c);
+	auto GetRhoFluid()->const Inversible_Value<type_data>;
 };
 #include "GetCellType_Fluid.tpp"
 #endif

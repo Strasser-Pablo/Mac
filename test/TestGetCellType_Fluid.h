@@ -51,5 +51,6 @@ class Test_GetCellType_Fluid : public CxxTest::TestSuite
 		TS_ASSERT(!g_f.GetIsFluid(vkey));
 		vkey.Set(1,20);
 		TS_ASSERT(!g_f.GetIsFluid(vkey));
+		TS_ASSERT_DELTA(g_f.GetRhoFluid().Get(),3.0,eps);
 	}
 };

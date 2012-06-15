@@ -9,3 +9,9 @@ bool GetCellType_Fluid<TypeWorld,Base>::GetIsFluid_Implementation(const type_cel
 {
 	return c==m_fluid;
 }
+
+template <class TypeWorld,class Base>
+auto GetCellType_Fluid<TypeWorld,Base>::GetRhoFluid() -> const Inversible_Value<type_data>
+{
+	return m_rho;
+}
