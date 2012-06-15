@@ -20,11 +20,11 @@ class Inversible_Value_Base
 		m_data=data;
 		m_1_data=Inverse_Abstract(data);
 	}
-	Data Get()
+	Data Get() const
 	{
 		return m_data;
 	}
-	Data Get_Inv()
+	Data Get_Inv() const
 	{
 		return m_1_data;
 	}
