@@ -363,6 +363,6 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 	CXXTEST_ADD_TEST(test_cov_Inversible_Value test/TestInversible_Value.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestInversible_Value.h)
 	AddTestProperty(test_cov_Inversible_Value)
 
-	CXXTEST_ADD_TEST(test_cov_GetCellType_Fluid test/TestGetCellType_Fluid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestGetCellType_Fluid.h)
-	AddTestProperty(test_cov_GetCellType_Fluid)
+	CXXTEST_ADD_TEST(test_cov_GetCellType test/TestGetCellType.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestGetCellType.h)
+	AddTestProperty(test_cov_GetCellType)
 endif(USE_TESTING)
