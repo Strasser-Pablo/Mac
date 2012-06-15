@@ -359,4 +359,7 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 
 	CXXTEST_ADD_TEST(test_cov_MacCirculation test/TestMacCirculation.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacCirculation.h)
 	AddTestProperty(test_cov_MacCirculation)
+
+	CXXTEST_ADD_TEST(test_cov_Inversible_Value test/TestInversible_Value.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestInversible_Value.h)
+	AddTestProperty(test_cov_Inversible_Value)
 endif(USE_TESTING)
