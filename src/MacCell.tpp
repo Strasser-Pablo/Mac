@@ -163,10 +163,9 @@ void MacCell<DIM,TypeData,TypeCell,ID>::SetConstSpeed(int i,bool b)
 }
 
 template <int DIM,class TypeData, class TypeCell,int ID>
-void MacCell<DIM,TypeData,TypeCell,ID>::GetConstSpeed(int i,bool &b)
+void MacCell<DIM,TypeData,TypeCell,ID>::GetConstSpeed(int i,bool &b) const
 {
 	b=m_const_speed[i-1];
-	m_one_const=true;
 }
 
 template <int DIM,class TypeData, class TypeCell,int ID>

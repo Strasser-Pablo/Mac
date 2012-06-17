@@ -218,7 +218,7 @@ static const int type_dim=DIM;
 	 * @param i Component to get.
 	 * @param b Reference to the value where to put the value.
 	 **/
-	void GetConstSpeed(int i,bool &b);
+	void GetConstSpeed(int i,bool &b) const;
 };
 
 #include "MacCell.tpp"

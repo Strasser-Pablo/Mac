@@ -14,6 +14,7 @@
 #include "../src/GetCellType_Pressure_In_Domaine_Fluid_Only.h"
 #include "../src/GetCellType_Pressure_Boundary_Domaine.h"
 #include "../src/GetCellType_Pressure_Boundary_Non_Constant.h"
+#include "../src/GetCellType_Pressure_Boundary_Constant.h"
 #define eps 1e-10
 class Test_GetCellType : public CxxTest::TestSuite
 {
@@ -449,5 +450,157 @@ class Test_GetCellType : public CxxTest::TestSuite
 
 		TS_ASSERT(g_b.GetIsPressure_Boundary(vkey,-1,1));
 		TS_ASSERT(g_b.GetIsPressure_Boundary(vkey,1,1));
+	}
+
+	void testfluid_air_Boundary_Constant1()
+	{
+		typedef Physvector<1,int> keyvect;
+		typedef Physvector<1,double> vect;
+		typedef Particle<vect> part;
+		typedef MacCell<1,double,int> mac;
+		typedef TableContainerList<part> list_part;
+		typedef PhysvectorKeyOrder<1,int> order;
+		typedef KeyTableMap<keyvect,mac,order> keytable;
+		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType_Base<world> type_base;
+		typedef GetCellType_Fluid<world,type_base> type_fluid;
+		typedef GetCellType_Air<world,type_fluid> type_comp;
+		typedef GetCellType_Rho<world,type_comp> type_rho;
+		typedef GetCellType_Pressure_In_Domaine_Fluid_Only<world,type_rho> type_pres;
+		typedef GetCellType_Pressure_Boundary_Constant<world,type_pres> type_const;
+		typedef GetCellType_Pressure_Boundary_Domaine<world,type_const> type_bound;
+		Physvector<1,double> temp;
+		temp.Set(1,2.0);
+		mac c1(temp,0,1,0);
+		mac c2(temp,0,0,1);
+		mac c3(temp,0,0,1);
+		order o;
+		keytable k(o);
+		Physvector<1,int> vkey;
+		vkey.Set(1,0);
+		k[vkey]=c1;
+		vkey.Set(1,1);
+		k[vkey]=c2;
+		vkey.Set(1,-1);
+		k[vkey]=c3;
+		list_part lp;
+ 		world W(k,lp);
+		Inversible_Value<double> rho_air(3.0);
+		Inversible_Value<double> rho_fluid(4.0);
+		type_base::type_input_struct in_base(W,-1);
+		type_fluid::type_input_struct in_fluid(in_base,1,rho_fluid);
+		type_comp::type_input_struct in(in_fluid,0,rho_air);
+		type_bound g_b(in);
+		TS_ASSERT(g_b.GetIsFluid(1));
+		vkey.Set(1,0);
+		TS_ASSERT(g_b.GetIsFluid(vkey));
+		vkey.Set(1,1);
+		TS_ASSERT(!g_b.GetIsFluid(vkey));
+		vkey.Set(1,20);
+		TS_ASSERT(!g_b.GetIsFluid(vkey));
+		TS_ASSERT_DELTA(g_b.GetRhoFluid().Get(),4.0,eps);
+		TS_ASSERT(g_b.GetIsAir(0));
+		vkey.Set(1,0);
+		TS_ASSERT(!g_b.GetIsAir(vkey));
+		vkey.Set(1,1);
+		TS_ASSERT(g_b.GetIsAir(vkey));
+		vkey.Set(1,20);
+		TS_ASSERT(!g_b.GetIsAir(vkey));
+		TS_ASSERT_DELTA(g_b.GetRhoAir().Get(),3.0,eps);
+
+		TS_ASSERT_DELTA(g_b.GetRho(1).Get(),4.0,eps);
+		TS_ASSERT_DELTA(g_b.GetRho(0).Get(),3.0,eps);
+		vkey.Set(1,0);
+		TS_ASSERT_DELTA(g_b.GetRho(vkey).Get(),4.0,eps);
+		vkey.Set(1,1);
+		TS_ASSERT_DELTA(g_b.GetRho(vkey).Get(),3.0,eps);
+		TS_ASSERT_THROWS(g_b.GetRho(3),runtime_error);
+		vkey.Set(1,10);
+		TS_ASSERT_THROWS(g_b.GetRho(vkey),runtime_error);
+
+		TS_ASSERT(g_b.GetIsPressureInDomaine(1));
+		TS_ASSERT(!g_b.GetIsPressureInDomaine(0));
+		TS_ASSERT(!g_b.GetIsPressureInDomaine(-1));
+		vkey.Set(1,0);
+		TS_ASSERT(g_b.GetIsPressureInDomaine(vkey));
+		vkey.Set(1,1);
+		TS_ASSERT(!g_b.GetIsPressureInDomaine(vkey));
+		vkey.Set(1,10);
+		TS_ASSERT(!g_b.GetIsPressureInDomaine(vkey));
+
+		vkey.Set(1,0);
+		Physvector<1,int> vkey2;
+		vkey2.Set(1,1);
+		TS_ASSERT(g_b.GetIsPressure_Boundary(vkey,vkey2));
+
+		vkey.Set(1,-1);
+		vkey2.Set(1,1);
+		TS_ASSERT_THROWS(!g_b.GetIsPressure_Boundary(vkey,vkey2),logic_error);
+
+		vkey.Set(1,0);
+		vkey2.Set(1,10);
+		TS_ASSERT(g_b.GetIsPressure_Boundary(vkey,vkey2));
+
+		TS_ASSERT(g_b.GetIsPressure_Boundary(vkey,-1,1));
+		TS_ASSERT(g_b.GetIsPressure_Boundary(vkey,1,1));
+	}
+
+	void testfluid_air_Boundary_Constant2()
+	{
+		typedef Physvector<1,int> keyvect;
+		typedef Physvector<1,double> vect;
+		typedef Particle<vect> part;
+		typedef MacCell<1,double,int> mac;
+		typedef TableContainerList<part> list_part;
+		typedef PhysvectorKeyOrder<1,int> order;
+		typedef KeyTableMap<keyvect,mac,order> keytable;
+		typedef MacWorld<keytable,list_part> world;
+		typedef GetCellType_Base<world> type_base;
+		typedef GetCellType_Fluid<world,type_base> type_fluid;
+		typedef GetCellType_Air<world,type_fluid> type_comp;
+		typedef GetCellType_Rho<world,type_comp> type_rho;
+		typedef GetCellType_Pressure_In_Domaine_Fluid_Only<world,type_rho> type_pres;
+		typedef GetCellType_Pressure_Boundary_Constant<world,type_pres> type_const;
+		typedef GetCellType_Pressure_Boundary_Domaine<world,type_const> type_bound;
+		Physvector<1,double> temp;
+		temp.Set(1,2.0);
+		mac c1(temp,0,1,0);
+		mac c2(temp,0,1,0);
+		mac c3(temp,0,1,0);
+		c2.SetConstSpeed(1,true);
+		order o;
+		keytable k(o);
+		Physvector<1,int> vkey;
+		vkey.Set(1,0);
+		k[vkey]=c1;
+		vkey.Set(1,1);
+		k[vkey]=c2;
+		vkey.Set(1,-1);
+		k[vkey]=c3;
+		list_part lp;
+ 		world W(k,lp);
+		Inversible_Value<double> rho_air(3.0);
+		Inversible_Value<double> rho_fluid(4.0);
+		type_base::type_input_struct in_base(W,-1);
+		type_fluid::type_input_struct in_fluid(in_base,1,rho_fluid);
+		type_comp::type_input_struct in(in_fluid,0,rho_air);
+		type_bound g_b(in);
+
+		vkey.Set(1,0);
+		Physvector<1,int> vkey2;
+		vkey2.Set(1,1);
+		TS_ASSERT(g_b.GetIsPressure_Boundary(vkey,vkey2));
+
+		vkey.Set(1,0);
+		vkey2.Set(1,-1);
+		TS_ASSERT(!g_b.GetIsPressure_Boundary(vkey,vkey2));
+
+		vkey.Set(1,1);
+		vkey2.Set(1,0);
+		TS_ASSERT(g_b.GetIsPressure_Boundary(vkey,vkey2));
+
+		vkey.Set(1,-1);
+		vkey2.Set(1,0);
+		TS_ASSERT(!g_b.GetIsPressure_Boundary(vkey,vkey2));
 	}
 };
