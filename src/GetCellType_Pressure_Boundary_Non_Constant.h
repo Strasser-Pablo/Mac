@@ -11,9 +11,10 @@ class GetCellType_Pressure_Boundary_Non_Constant: public Base
 	typedef typename TypeWorld::type_data type_data;
 	typedef typename TypeWorld::type_key type_key;
 	typedef typename TypeWorld::type_mac_cell type_mac_cell;
+	static const int type_dim=TypeWorld::type_dim;
 	public:
 	GetCellType_Pressure_Boundary_Non_Constant(type_input_struct in);
-	bool GetIsPressure_Boundary_Implementation_Const(const type_key& key1,const type_key& key2,const type_mac_cell& mac1,const type_mac_cell& mac2,bool b1,bool b2,const type_cell & c1,const type_cell & c2,bool b);
+	bool GetIsPressure_Boundary_Implementation_Const(const type_key& __attribute__((unused)) key1,const type_key& __attribute__((unused)) key2,const type_mac_cell& __attribute__((unused)) mac1,const type_mac_cell& __attribute__((unused)) mac2,bool __attribute__((unused)) b1,bool __attribute__((unused)) b2,const type_cell & __attribute__((unused)) c1,const type_cell & __attribute__((unused)) c2,bool __attribute__((unused)) b,int __attribute__((unused)) sign,int __attribute__((unused)) dim,bool bret);
 };
 
 #include "GetCellType_Pressure_Boundary_Non_Constant.tpp"

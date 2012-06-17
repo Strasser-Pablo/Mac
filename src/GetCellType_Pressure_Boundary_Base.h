@@ -8,6 +8,7 @@ class GetCellType_Pressure_Boundary_Base: public Base
 	typedef typename TypeWorld::type_key type_key;
 	typedef typename TypeWorld::type_mac_cell type_mac_cell;
 	typedef typename Base::type_input_struct type_input_Base;
+	bool GetIsPressure_Boundary_Impl(const type_key& key1,const type_key & key2,bool b,int sign,int dim);
 	public:
 	GetCellType_Pressure_Boundary_Base(type_input_Base in_base);
 	bool GetIsPressure_Boundary(const type_key& key1,const type_key& key2);
