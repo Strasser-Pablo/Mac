@@ -14,3 +14,14 @@ auto GetCellType_Base<TypeWorld>::KeyToType(const type_key & key)-> type_cell
 	}
 	return m_default;
 }
+
+template <class TypeWorld>
+bool GetCellType_Base<TypeWorld>::KeyToMacCell(const type_key & key,type_mac_cell & mac)
+{
+	if(m_world.m_mac_grid.Exist(key))
+	{
+		mac=m_world.m_mac_grid[key];
+		return true;
+	}
+	return false;
+}
