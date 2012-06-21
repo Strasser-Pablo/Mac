@@ -2,7 +2,7 @@
 #include "../src/Data_Base_Dim_Type.h"
 #include "../src/Data_Grid_Base_Spacing.h"
 #define eps 1e-10
-class Test_Data_Grid : public CxxTest::TestSuite
+class Test_Data_Grid : public CxxTest::TestSuite   //LCOV_EXCL_LINE 
 {
 	public:
 	void testBaseSpacing()

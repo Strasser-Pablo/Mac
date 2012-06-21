@@ -2,7 +2,7 @@
 #include "../src/Data_CellType_Fluid_Air.h"
 #include "../src/Data_Base_Dim_Type.h"
 #define eps 1e-10
-class Test_Data_CellType_Fluid_Air : public CxxTest::TestSuite
+class Test_Data_CellType_Fluid_Air : public CxxTest::TestSuite  //LCOV_EXCL_LINE 
 {
 	public:
 	void test_Base()
@@ -12,10 +12,13 @@ class Test_Data_CellType_Fluid_Air : public CxxTest::TestSuite
 		typedef Data_CellType_Fluid_Air<DataBase>::Material_Type Material_Type;
 		typedef Data_CellType_Fluid_Air<DataBase>::Material_Type_Fluid Material_Type_Fluid;
 		Data_CellType_Fluid_Air<DataBase> D;
+		Material_Type invalid=Material_Type(10);
 		TS_ASSERT_EQUALS(D.MaterialToInt(Material_Type::Fluid),1);
 		TS_ASSERT_EQUALS(D.MaterialToInt(Material_Type::Air),0);
 		TS_ASSERT_EQUALS(D.Material_To_Type_Fluid(Material_Type::Air),Material_Type_Fluid::Air);
 		TS_ASSERT_EQUALS(D.Material_To_Type_Fluid(Material_Type::Fluid),Material_Type_Fluid::Fluid);
+		TS_ASSERT_THROWS_ANYTHING(D.Material_To_Type_Fluid(invalid));
+		TS_ASSERT_THROWS_ANYTHING(D.MaterialToInt(invalid));
 	}
 	void test_Air()
 	{
