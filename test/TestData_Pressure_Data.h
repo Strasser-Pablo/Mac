@@ -37,4 +37,29 @@ class Test_Data_Pressure_Data : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		TS_ASSERT((pressure2>=pressure));
 		TS_ASSERT(!(pressure>=pressure2));
 	}
+	void test_Arithmetic()
+	{
+		typedef double type_data;
+		typedef Data_Pressure_Data<double> type_pressure;
+		type_data data=2.0;
+		type_data data2=4.0;
+		type_pressure pressure(data);
+		type_pressure pressure2(data2);
+		TS_ASSERT_DELTA(pressure+pressure2,type_pressure(6),eps);
+		TS_ASSERT_DELTA(pressure-pressure2,type_pressure(-2),eps);
+		TS_ASSERT_DELTA(pressure*pressure2,type_pressure(8),eps);
+		TS_ASSERT_DELTA(pressure/pressure2,type_pressure(0.5),eps);
+		pressure.Set(data);
+		pressure+=pressure2;
+		TS_ASSERT_DELTA(pressure,type_pressure(6),eps);
+		pressure.Set(data);
+		pressure-=pressure2;
+		TS_ASSERT_DELTA(pressure,type_pressure(-2),eps);
+		pressure.Set(data);
+		pressure*=pressure2;
+		TS_ASSERT_DELTA(pressure,type_pressure(8),eps);
+		pressure.Set(data);
+		pressure/=pressure2;
+		TS_ASSERT_DELTA(pressure,type_pressure(0.5),eps);
+	}
 };
