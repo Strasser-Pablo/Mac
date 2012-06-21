@@ -1,6 +1,6 @@
 #include <stdexcept>
-template <typename TypeData>
-int Data_CellType_Fluid_Air<TypeData>::MaterialToInt(Material_Type m)
+template <typename DataBase>
+int Data_CellType_Fluid_Air<DataBase>::MaterialToInt(Material_Type m)
 {
 	switch(m)
 	{
@@ -13,8 +13,8 @@ int Data_CellType_Fluid_Air<TypeData>::MaterialToInt(Material_Type m)
 	}
 }
 
-template <typename TypeData>
-auto Data_CellType_Fluid_Air<TypeData>::Material_To_Type_Fluid(Material_Type m) -> Material_Type_Fluid
+template <typename DataBase>
+auto Data_CellType_Fluid_Air<DataBase>::Material_To_Type_Fluid(Material_Type m) -> Material_Type_Fluid
 {
 	switch(m)
 	{
@@ -27,38 +27,38 @@ auto Data_CellType_Fluid_Air<TypeData>::Material_To_Type_Fluid(Material_Type m) 
 	}
 }
 
-template <typename TypeData>
-auto Data_CellType_Fluid_Air<TypeData>::GetFluid() -> Material_Type
+template <typename DataBase>
+auto Data_CellType_Fluid_Air<DataBase>::GetFluid() -> Material_Type
 {
 	return Material_Type::Fluid;
 }
 
-template <typename TypeData>
-auto Data_CellType_Fluid_Air<TypeData>::GetAir() -> Material_Type
+template <typename DataBase>
+auto Data_CellType_Fluid_Air<DataBase>::GetAir() -> Material_Type
 {
 	return Material_Type::Air;
 }
 
-template <typename TypeData>
-auto Data_CellType_Fluid_Air<TypeData>::GetRhoAir()->Inversible_Value<TypeData>
+template <typename DataBase>
+auto Data_CellType_Fluid_Air<DataBase>::GetRhoAir()->Inversible_Value<Data_CellType_Fluid_Air<DataBase>::type_data_value>
 {
 	return m_rho_air;
 }
 
-template <typename TypeData>
-auto Data_CellType_Fluid_Air<TypeData>::GetRhoFluid()->Inversible_Value<TypeData>
+template <typename DataBase>
+auto Data_CellType_Fluid_Air<DataBase>::GetRhoFluid()->Inversible_Value<Data_CellType_Fluid_Air<DataBase>::type_data_value>
 {
 	return m_rho_fluid;
 }
 	
-template <typename TypeData>
-void Data_CellType_Fluid_Air<TypeData>::SetRhoFluid(Inversible_Value<TypeData>& rho_fluid)
+template <typename DataBase>
+void Data_CellType_Fluid_Air<DataBase>::SetRhoFluid(Inversible_Value<type_data_value>& rho_fluid)
 {
 	m_rho_fluid=rho_fluid;
 }
 
-template <typename TypeData>
-void Data_CellType_Fluid_Air<TypeData>::SetRhoAir(Inversible_Value<TypeData>& rho_air)
+template <typename DataBase>
+void Data_CellType_Fluid_Air<DataBase>::SetRhoAir(Inversible_Value<type_data_value>& rho_air)
 {
 	m_rho_air=rho_air;
 }
