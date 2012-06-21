@@ -371,4 +371,7 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 
 	CXXTEST_ADD_TEST(test_cov_Data_Grid test/TestData_Grid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Grid.h)
 	AddTestProperty(test_cov_Data_Grid)
+
+	CXXTEST_ADD_TEST(test_cov_Data_Pressure_Data test/TestData_Pressure_Data.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Pressure_Data.h)
+	AddTestProperty(test_cov_Data_Pressure_Data)
 endif(USE_TESTING)
