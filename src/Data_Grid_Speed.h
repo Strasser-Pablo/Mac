@@ -9,6 +9,7 @@ class Data_Grid_Speed
 	typedef typename DataBase::type_data_value type_data_value;
 	typedef Data_Speed_Data<type_dim,type_data_value> type_speed;
 	type_speed m_speed;
+	type_speed m_temp_speed;
 	bool m_const[type_dim];
 	bool m_has_const; 
 	public:
@@ -26,6 +27,12 @@ class Data_Grid_Speed
 	auto Speed_Get(int i) const ->type_data_value;
 	auto Speed_Get() const ->type_speed;
 	void Speed_Set(const type_speed &val);
+	void Speed_Temp_Set(int i,const type_data_value& val);
+	auto Speed_Temp_Get(int i) const ->type_data_value;
+	auto Speed_Temp_Get() const ->type_speed;
+	void Speed_Temp_Set(const type_speed &val);
+	void Speed_Temp_To_Speed();
+	void Speed_Speed_To_Temp();
 };
 #include "Data_Grid_Speed.tpp"
 #endif
