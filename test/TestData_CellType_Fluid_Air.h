@@ -69,5 +69,12 @@ class Test_Data_CellType_Fluid_Air : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		TS_ASSERT_DELTA(D.GetRhoAir().Get_Inv(),1,eps);
 		TS_ASSERT_DELTA(D.GetRhoFluid().Get(),1000,eps);
 		TS_ASSERT_DELTA(D.GetRhoFluid().Get_Inv(),1./1000,eps);
+
+		typedef Data_CellType_Fluid_Air<DataBase>::Material_Type Material_Type;
+
+		TS_ASSERT_DELTA(D.GetRho(Material_Type::Air).Get(),1,eps);
+		TS_ASSERT_DELTA(D.GetRho(Material_Type::Air).Get_Inv(),1,eps);
+		TS_ASSERT_DELTA(D.GetRho(Material_Type::Fluid).Get(),1000,eps);
+		TS_ASSERT_DELTA(D.GetRho(Material_Type::Fluid).Get_Inv(),1./1000,eps);
 	}
 };

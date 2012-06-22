@@ -50,6 +50,21 @@ auto Data_CellType_Fluid_Air<DataBase>::GetRhoFluid()->Inversible_Value<Data_Cel
 {
 	return m_rho_fluid;
 }
+
+
+template <typename DataBase>
+auto Data_CellType_Fluid_Air<DataBase>::GetRho(Material_Type c)->Inversible_Value<Data_CellType_Fluid_Air<DataBase>::type_data_value>
+{
+	switch(c)
+	{
+		case Material_Type::Air:
+			return GetRhoAir();
+		case Material_Type::Fluid:
+			return GetRhoFluid();
+		default:
+			throw std::logic_error("In Data_GetCellType_Fluid_Air.tpp Function GetRho : Enum Value not in Enum.");
+	}
+}
 	
 template <typename DataBase>
 void Data_CellType_Fluid_Air<DataBase>::SetRhoFluid(Inversible_Value<type_data_value>& rho_fluid)

@@ -27,6 +27,7 @@ class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_
 		auto GetAir() -> Material_Type;
 		auto GetRhoAir()->Inversible_Value<type_data_value>;
 		auto GetRhoFluid()->Inversible_Value<type_data_value>;
+		auto GetRho(Material_Type c)->Inversible_Value<type_data_value>;
 		void SetRhoFluid(Inversible_Value<type_data_value>& rho_fluid);
 		void SetRhoAir(Inversible_Value<type_data_value>& rho_air);
 		Data_CellType_Fluid_Air(Inversible_Value<type_data_value>& rho_fluid,Inversible_Value<type_data_value>& rho_air):m_rho_fluid(rho_fluid),m_rho_air(rho_air)
