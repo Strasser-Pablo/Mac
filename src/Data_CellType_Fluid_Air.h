@@ -41,6 +41,7 @@ class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_
 		{
 		}
 		typedef Data_CellType_Fluid_Air__InCell<DataBase> type_Cell_type__InCell;
+		typedef void type_Cell_type__InCell_exist;
 		auto GetInCell() const -> type_Cell_type__InCell;
 };
 
