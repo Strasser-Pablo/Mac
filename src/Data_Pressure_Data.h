@@ -10,6 +10,9 @@ class Data_Pressure_Data : private Data_Operation_Scalar_Relation<Data_Pressure_
 	
 	typedef TypeData type_data;
 	TypeData m_pres;
+	Data_Pressure_Data()
+	{
+	}
 	Data_Pressure_Data(TypeData & pres):m_pres(pres)
 	{
 	}

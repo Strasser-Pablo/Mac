@@ -384,4 +384,7 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 
 	CXXTEST_ADD_TEST(test_cov_Data_Grid_Speed test/TestData_Grid_Speed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Grid_Speed.h)
 	AddTestProperty(test_cov_Data_Grid_Speed)
+
+	CXXTEST_ADD_TEST(test_cov_Data_Grid_Pressure test/TestData_Grid_Pressure.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Grid_Pressure.h)
+	AddTestProperty(test_cov_Data_Grid_Pressure)
 endif(USE_TESTING)
