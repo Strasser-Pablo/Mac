@@ -378,4 +378,10 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 
 	CXXTEST_ADD_TEST(test_cov_Data_Speed_Data test/TestData_Speed_Data.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Speed_Data.h)
 	AddTestProperty(test_cov_Data_Speed_Data)
+
+	CXXTEST_ADD_TEST(test_cov_Data_Grid_MacCell test/TestData_Grid_MacCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Grid_MacCell.h)
+	AddTestProperty(test_cov_Data_Grid_MacCell)
+
+	CXXTEST_ADD_TEST(test_cov_Data_Grid_Speed test/TestData_Grid_Speed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Grid_Speed.h)
+	AddTestProperty(test_cov_Data_Grid_Speed)
 endif(USE_TESTING)

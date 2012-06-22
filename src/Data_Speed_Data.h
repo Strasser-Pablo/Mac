@@ -42,7 +42,7 @@ class Data_Speed_Data : public Data_Speed_Get<Dim,TypeData>
 	}
 
 	void Set(int i,const TypeData& d);
-	TypeData Get(int i);
+	TypeData Get(int i) const;
 	TypeData& GetRef(int i);
 	friend Data_Speed_Get<Dim,TypeData>;
 };
