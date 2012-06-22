@@ -8,6 +8,7 @@ class Data_Grid_Speed
 	const static int type_dim=DataBase::type_dim;
 	typedef typename DataBase::type_data_value type_data_value;
 	typedef Data_Speed_Data<type_dim,type_data_value> type_speed;
+	typedef Data_Grid_Speed<DataBase> type_cell_speed;
 	type_speed m_speed;
 	type_speed m_temp_speed;
 	bool m_const[type_dim];
