@@ -34,4 +34,11 @@ class Data_CellType_Implemented_Fluid_Air : public Data_CellType_Implemented_Flu
 	typedef Data_CellType_Implemented_Fluid_Air_Material_Type_Fluid Material_Type_Fluid;
 	typedef typename Data_CellType_Implemented_Fluid_Air_Traits<Implementation>::Material_Type Material_Type;
 };
+
+
+template <typename Implementation>
+class Data_CellType_Implemented_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid__InCell<Implementation,typename Data_CellType_Implemented_Fluid_Air_Traits<Implementation>::Material_Type> , public Data_CellType_Implemented_Air__InCell<Implementation,typename Data_CellType_Implemented_Fluid_Air_Traits<Implementation>::Material_Type>
+{
+};
+
 #endif
