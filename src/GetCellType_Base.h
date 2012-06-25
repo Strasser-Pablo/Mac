@@ -14,10 +14,9 @@ struct GetCellType_Base_Argument
 	}
 };
 
-template <typename Policy,typename Data>
+template <typename TypeWorld>
 class GetCellType_Base
 {
-	using Data::m_world;
 	public:
 	typedef GetCellType_Base_Argument<TypeWorld> type_input_struct;
 	void Compute()
