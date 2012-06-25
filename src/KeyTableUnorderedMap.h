@@ -22,6 +22,7 @@ using namespace std;
  **/
 template<class TypeKey,class TypeData,class TypeHash=std::hash<TypeKey>,class TypeComp=equal_to<TypeKey> >
 class KeyTableUnorderedMap:public KeyTable<TypeKey,TypeData,KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>,KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp>,typename map<TypeKey,TypeData>::size_type>{
+protected:
 	unordered_map<TypeKey,TypeData,TypeHash,TypeComp> m_map;
 	friend class boost::serialization::access;
 	template <class Archive>
