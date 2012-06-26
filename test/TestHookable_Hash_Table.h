@@ -8,17 +8,20 @@
 template<class HashTable>
 struct Hook
 {
-
-	static void insert(const pair<typename HashTable::iterator,bool>&  in)
+	HashTable * m_hash;
+	void insert(const pair<typename HashTable::iterator,bool>&  in)
 	{
 	}
-	static void erase(typename HashTable::iterator it)
+	void erase(typename HashTable::iterator it)
 	{
 	}
-	static void erase(const typename HashTable::type_key &)
+	void erase(const typename HashTable::type_key &)
 	{
 	}
-	static void directacess(const typename HashTable::type_key & key,typename HashTable::type_data & data)
+	void directacess(const typename HashTable::type_key & key,typename HashTable::type_data & data)
+	{
+	}
+	Hook(HashTable * hash) : m_hash(hash)
 	{
 	}
 };

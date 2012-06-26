@@ -394,4 +394,6 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 	CXXTEST_ADD_TEST(test_cov_Data_Hookable_Hash_Table test/TestHookable_Hash_Table.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestHookable_Hash_Table.h)
 	AddTestProperty(test_cov_Data_Hookable_Hash_Table)
 
+	CXXTEST_ADD_TEST(test_cov_Data_Hook_Neighbour_List test/TestData_Hook_Neighbour_List.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Hook_Neighbour_List.h)
+	AddTestProperty(test_cov_Data_Hook_Neighbour_List)
 endif(USE_TESTING)

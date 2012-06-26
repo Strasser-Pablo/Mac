@@ -5,18 +5,25 @@ template<int DIM,typename Data>
 class Neighbour_List
 {
 	Data m_data;
-	Data* m_neigh[2*DIM];
-	Neighbour_List(const Neighbour_List&)=delete;
-	Neighbour_List(Neighbour_List&&)=delete;
+	Neighbour_List* m_neigh[2*DIM];
 	public:
+	typedef Data type_data;
 	Neighbour_List(const Data &data):m_data(data)
 	{
+		for(int i=0;i<2*DIM;++i)
+		{
+			m_neigh[i]=nullptr;
+		}
 	};
 	Neighbour_List()
 	{
+		for(int i=0;i<2*DIM;++i)
+		{
+			m_neigh[i]=nullptr;
+		}
 	}
-	void SetNeighbour(int dim,int sign,Data* point);
-	Data* GetNeighbour(int dim,int sign);
+	void SetNeighbour(int dim,int sign,Neighbour_List<DIM,Data>* point);
+	Neighbour_List<DIM,Data>* GetNeighbour(int dim,int sign);
 	Data& GetRef();
 	const Data& Get();
 	void Set(const Data& data);

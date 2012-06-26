@@ -2,7 +2,6 @@
 #define Hookable_Hash_Table_H
 
 #include <unordered_map>
-#include "Hookable_Hash_Table_Iterator.h"
 #include "KeyTableUnorderedMap.h"
 using namespace std;
 
@@ -23,6 +22,7 @@ using namespace std;
 template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash=std::hash<TypeKey>,class TypeComp=equal_to<TypeKey> >
 class Hookable_Hash_Table : public KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>
 {
+	Hook<Hookable_Hash_Table<Hook,TypeKey,TypeData,TypeHash,TypeComp> > m_hook;
 public:
 	/**
 	 * @brief
