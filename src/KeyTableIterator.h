@@ -65,12 +65,14 @@ public:
 	 * @brief 
 	 * Get the key pointed by the iterator.
 	 **/
-	virtual  TypeKey key()=0;
+	virtual  TypeKey key() const =0;
 	/**
 	 * @brief
 	 * Get the data pointed by the iterator.
 	 **/
 	virtual TypeData& data()=0;
+
+	virtual const TypeData& data() const=0;
 };
 
 /**
@@ -130,12 +132,12 @@ public:
 	 * @brief 
 	 * Get the key pointed by the iterator.
 	 **/
-	virtual const TypeKey key()=0;
+	virtual const TypeKey key() const =0;
 		/**
 	 * @brief
 	 * Get the data pointed by the iterator.
 	 **/
-	virtual const TypeData& data()=0;
+	virtual const TypeData& data() const=0;
 };
 
 #endif

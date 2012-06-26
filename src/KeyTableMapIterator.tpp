@@ -56,7 +56,7 @@ TypeData&  KeyTableMapIterator<TypeKey,TypeData,TypeComp>::operator*()
 }
 
 template<class TypeKey,class TypeData,class TypeComp>
-TypeKey  KeyTableMapIterator<TypeKey,TypeData,TypeComp>::key()
+TypeKey  KeyTableMapIterator<TypeKey,TypeData,TypeComp>::key() const
 {
 	return m_iterator->first;
 }
@@ -67,6 +67,12 @@ TypeData&  KeyTableMapIterator<TypeKey,TypeData,TypeComp>::data()
 	return m_iterator->second;
 }
 
+
+template<class TypeKey,class TypeData,class TypeComp>
+const TypeData&  KeyTableMapIterator<TypeKey,TypeData,TypeComp>::data() const
+{
+	return m_iterator->second;
+}
 
 template<class TypeKey,class TypeData,class TypeComp>
 typename map<TypeKey,TypeData,TypeComp>::iterator& KeyTableMapIterator<TypeKey,TypeData,TypeComp>::GetMapIterator()
@@ -143,13 +149,13 @@ const TypeData&  KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>::operator*(
 }
 
 template<class TypeKey,class TypeData,class TypeComp>
-const TypeKey  KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>::key()
+const TypeKey  KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>::key() const
 {
 	return m_iterator->first;
 }
 
 template<class TypeKey,class TypeData,class TypeComp>
-const TypeData&  KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>::data()
+const TypeData&  KeyTableMapConstIterator<TypeKey,TypeData,TypeComp>::data() const
 {
 	return m_iterator->second;
 }

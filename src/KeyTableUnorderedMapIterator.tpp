@@ -56,7 +56,7 @@ TypeData&  KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>::ope
 }
 
 template <class TypeKey,class TypeData,class TypeHash,class TypeComp>
-TypeKey  KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>::key()
+TypeKey  KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>::key() const
 {
 	return m_iterator->first;
 }
@@ -67,6 +67,11 @@ TypeData&  KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>::dat
 	return m_iterator->second;
 }
 
+template <class TypeKey,class TypeData,class TypeHash,class TypeComp>
+const TypeData&  KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>::data() const
+{
+	return m_iterator->second;
+}
 
 template <class TypeKey,class TypeData,class TypeHash,class TypeComp>
 typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>::GetMapIterator()
@@ -143,13 +148,13 @@ const TypeData&  KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,Typ
 }
 
 template <class TypeKey,class TypeData,class TypeHash,class TypeComp>
-const TypeKey  KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp>::key()
+const TypeKey  KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp>::key() const
 {
 	return m_iterator->first;
 }
 
 template <class TypeKey,class TypeData,class TypeHash,class TypeComp>
-const TypeData&  KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp>::data()
+const TypeData&  KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp>::data() const
 {
 	return m_iterator->second;
 }

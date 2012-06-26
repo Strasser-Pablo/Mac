@@ -73,13 +73,14 @@ class KeyTableMapIterator:public KeyTableIterator<TypeKey,TypeData,KeyTableMapIt
 	 * Return the value of the key pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual TypeKey key() __attribute__((pure));
+	virtual TypeKey key() const __attribute__((pure));
 	/**
 	 * @brief
 	 * Return the value of the data pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
 	virtual TypeData& data() __attribute__((pure));
+	virtual const TypeData& data() const  __attribute__((pure));
 	/**
 	 * @brief 
 	 * Return the map iterator used internaly.
@@ -162,13 +163,13 @@ class KeyTableMapConstIterator:public KeyTableConstIterator<TypeKey,TypeData,Key
 	 * Return the value of the key pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual const TypeKey key() __attribute__((pure));
+	virtual const TypeKey key() const  __attribute__((pure));
 	/**
 	 * @brief
 	 * Return the value of the data pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual const TypeData& data() __attribute__((pure));
+	virtual const TypeData& data() const __attribute__((pure));
 	/**
 	 * @brief 
 	 * Return the map iterator used internaly.

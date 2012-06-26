@@ -73,13 +73,14 @@ class KeyTableUnorderedMapIterator:public KeyTableIterator<TypeKey,TypeData,KeyT
 	 * Return the value of the key pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual TypeKey key() __attribute__((pure));
+	virtual TypeKey key() const  __attribute__((pure));
 	/**
 	 * @brief
 	 * Return the value of the data pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
 	virtual TypeData& data() __attribute__((pure));
+	virtual const TypeData& data() const  __attribute__((pure));
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
@@ -163,13 +164,13 @@ class KeyTableUnorderedMapConstIterator:public KeyTableConstIterator<TypeKey,Typ
 	 * Return the value of the key pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual const TypeKey key() __attribute__((pure));
+	virtual const TypeKey key() const  __attribute__((pure));
 	/**
 	 * @brief
 	 * Return the value of the data pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual const TypeData& data() __attribute__((pure));
+	virtual const TypeData& data() const __attribute__((pure));
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
