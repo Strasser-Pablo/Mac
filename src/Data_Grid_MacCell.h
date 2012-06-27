@@ -71,6 +71,7 @@ class Data_Grid_MacCell : public Data_Grid_MacCell_InCell<Data>, public Data_Gri
 		Data_Grid_MacCell(const T & data)
 		{
 		}
+		typedef typename Data::type_data_value type_data_value;
 };
 
 #endif

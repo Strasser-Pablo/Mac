@@ -4,7 +4,6 @@ template<int DIM,typename Data>
 void Neighbour_List<DIM,Data>::SetNeighbour(int dim,int sign,Neighbour_List<DIM,Data>* point)
 {
 	unsigned i=((dim-1)<<1)+((sign+1)>>1);
-	cout<<i<<endl;
 	m_neigh[i]=point;
 }
 

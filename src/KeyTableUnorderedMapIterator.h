@@ -21,7 +21,8 @@ class KeyTableUnorderedMapIterator;
  * \tparam TypeData TypeData to use. Has no constraint.
  **/
 template <class TypeKey,class TypeData,class TypeHash,class TypeComp>
-class KeyTableUnorderedMapIterator:public KeyTableIterator<TypeKey,TypeData,KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp> >{
+class KeyTableUnorderedMapIterator
+{
 	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator m_iterator;
 	public:
 	/**
@@ -39,60 +40,60 @@ class KeyTableUnorderedMapIterator:public KeyTableIterator<TypeKey,TypeData,KeyT
 	 * @brief
 	 * Destructor.
 	 **/
-	virtual ~KeyTableUnorderedMapIterator();
+	~KeyTableUnorderedMapIterator();
 	/**
 	 * @brief
 	 * Equality operator. Check if two iterator represent the same target.
 	 * \param B Iterator to compare with.
 	 **/
-	virtual bool operator==(const KeyTableUnorderedMapIterator &B) __attribute__((pure));
+	bool operator==(const KeyTableUnorderedMapIterator &B) __attribute__((pure));
 	/**
 	 * @brief
 	 * Inequality operator. Check is two iterator represent different target.
 	 * \param B Iterator to compare with.
 	 **/
-	virtual bool operator!=(const KeyTableUnorderedMapIterator &B) __attribute__((pure));
+	bool operator!=(const KeyTableUnorderedMapIterator &B) __attribute__((pure));
 	/**
 	 * @brief
 	 * Increment the iterator to point to the next element.
 	 **/
-	virtual KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>& operator++();
+	KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>& operator++();
 	/**
 	 * @brief
 	 * Increment the iterator to point to the next element.
 	 **/
-	virtual KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp> operator++(int);
+	KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp> operator++(int);
 	/**
 	 * @brief
 	 * Operator that return the value pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual TypeData& operator*() __attribute__((pure));
+	TypeData& operator*() __attribute__((pure));
 	/**
 	 * @brief
 	 * Return the value of the key pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual TypeKey key() const  __attribute__((pure));
+	TypeKey key() const  __attribute__((pure));
 	/**
 	 * @brief
 	 * Return the value of the data pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual TypeData& data() __attribute__((pure));
-	virtual const TypeData& data() const  __attribute__((pure));
+	TypeData& data() __attribute__((pure));
+	const TypeData& data() const  __attribute__((pure));
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
 	 * @return unordered_Map iterator.
 	 **/
-	virtual typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator() __attribute__((const));
+	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator() __attribute__((const));
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
 	 * @return unordered_Map iterator.
 	 **/
-	virtual const typename  unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator() const __attribute__((const));
+	const typename  unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator() const __attribute__((const));
 };
 
 template <class TypeKey,class TypeData,class TypeHash,class TypeComp>
@@ -106,7 +107,8 @@ class KeyTableUnorderedMapConstIterator;
  * \tparam TypeData TypeData to use. Has no constraint.
  **/
 template <class TypeKey,class TypeData,class TypeHash,class TypeComp>
-class KeyTableUnorderedMapConstIterator:public KeyTableConstIterator<TypeKey,TypeData,KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp> > {
+class KeyTableUnorderedMapConstIterator
+{
 	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator m_iterator;
 	public:
 	/**
@@ -130,59 +132,59 @@ class KeyTableUnorderedMapConstIterator:public KeyTableConstIterator<TypeKey,Typ
 	 * @brief
 	 * Destructor.
 	 **/
-	virtual ~KeyTableUnorderedMapConstIterator();
+	~KeyTableUnorderedMapConstIterator();
 	/**
 	 * @brief
 	 * Equality operator. Check if two iterator represent the same target.
 	 * \param B Iterator to compare with.
 	 **/
-	virtual bool operator==(const KeyTableUnorderedMapConstIterator &B) __attribute__((pure));
+	bool operator==(const KeyTableUnorderedMapConstIterator &B) __attribute__((pure));
 	/**
 	 * @brief
 	 * Inequality operator. Check is two iterator represent different target.
 	 * \param B Iterator to compare with.
 	 **/
-	virtual bool operator!=(const KeyTableUnorderedMapConstIterator &B) __attribute__((pure));
+	bool operator!=(const KeyTableUnorderedMapConstIterator &B) __attribute__((pure));
 	/**
 	 * @brief
 	 * Increment the iterator to point to the next element.
 	 **/
-	virtual KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp>& operator++();
+	KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp>& operator++();
 	/**
 	 * @brief
 	 * Increment the iterator to point to the next element.
 	 **/
-	virtual KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp> operator++(int);
+	KeyTableUnorderedMapConstIterator<TypeKey,TypeData,TypeHash,TypeComp> operator++(int);
 	/**
 	 * @brief
 	 * Operator that return the value pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual const TypeData& operator*() __attribute__((pure));
+	const TypeData& operator*() __attribute__((pure));
 	/**
 	 * @brief
 	 * Return the value of the key pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual const TypeKey key() const  __attribute__((pure));
+	const TypeKey key() const  __attribute__((pure));
 	/**
 	 * @brief
 	 * Return the value of the data pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	virtual const TypeData& data() const __attribute__((pure));
+	const TypeData& data() const __attribute__((pure));
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
 	 * @return unordered_Map iterator.
 	 **/
-	virtual typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator& GetMapIterator() __attribute__((const));
+	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator& GetMapIterator() __attribute__((const));
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
 	 * @return unordered_Map iterator.
 	 **/
-	virtual const typename  unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator& GetMapIterator() const __attribute__((const));
+	const typename  unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator& GetMapIterator() const __attribute__((const));
 };
 
 #include "KeyTableUnorderedMapIterator.tpp"

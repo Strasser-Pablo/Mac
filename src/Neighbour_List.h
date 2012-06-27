@@ -1,6 +1,9 @@
 #ifndef Neighbour_List_H
 #define Neighbour_List_H
 
+#include <iostream>
+using namespace std;
+
 template<int DIM,typename Data>
 class Neighbour_List
 {
