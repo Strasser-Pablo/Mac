@@ -49,6 +49,20 @@ struct Data_Grid_MacCell_cell_speed<Enable,typename Enable::type_cell_speed_exis
 {
 };
 
+
+template <typename Enable,typename Dummy=void>
+class Data_Grid_MacCell_cell_DataBase
+{
+};
+
+template <typename Enable>
+struct Data_Grid_MacCell_cell_DataBase<Enable,typename Enable::type_Mac_DataBase_Exist> : public Enable::type_Mac_DataBase
+{
+	Data_Grid_MacCell_cell_DataBase(const Enable& base):Enable::type_Mac_DataBase(base)
+	{
+	}
+};
+
 template <typename Enable,typename Dummy=void>
 class Data_Grid_MacCell_cell_pressure
 {
@@ -60,15 +74,15 @@ struct Data_Grid_MacCell_cell_pressure<Enable,typename Enable::type_cell_pressur
 };
 
 template<typename Data>
-class Data_Grid_MacCell : public Data_Grid_MacCell_InCell<Data>, public Data_Grid_MacCell_cell_speed<Data> , public Data_Grid_MacCell_cell_pressure<Data>
+class Data_Grid_MacCell : public Data_Grid_MacCell_InCell<Data>, public Data_Grid_MacCell_cell_speed<Data> , public Data_Grid_MacCell_cell_pressure<Data>, public Data_Grid_MacCell_cell_DataBase<Data>
 {
 	public:
 		template<typename T,typename Data_Grid_MacCell_InCell2<T,Data>::type =0>
-		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_InCell<Data>(data)
+		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_InCell<Data>(data),Data_Grid_MacCell_cell_DataBase<Data>(data)
 		{
 		}
 		template<typename T,typename Data_Grid_MacCell_InCell3<T,Data>::type =0>
-		Data_Grid_MacCell(const T & data)
+		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_cell_DataBase<Data>(data)
 		{
 		}
 		typedef typename Data::type_data_value type_data_value;

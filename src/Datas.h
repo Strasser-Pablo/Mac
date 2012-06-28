@@ -18,6 +18,8 @@ class Datas : public DataBase::template type_base_base<DataBase,Datas_Without_Ba
 	Datas(DataBase base,Data& ... in) : DataBase::template type_base_base<DataBase,Datas_Without_Base<Data...> >(base,Datas_Without_Base<Data...>(in...))	
 	{
 	}
+	typedef DataBase type_Mac_DataBase;
+	typedef void type_Mac_DataBase_Exist;
 };
 	
 #endif

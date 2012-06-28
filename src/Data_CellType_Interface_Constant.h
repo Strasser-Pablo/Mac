@@ -2,7 +2,7 @@
 #define Data_CellType_Interface_Constant_H
 
 #include "Data_CellType_Interface_Implement_Constant.h"
-
+#include "Data_Staggered_Left.h"
 template <class Base>
 class Data_CellType_Interface_Constant;
 
@@ -25,8 +25,9 @@ class Data_CellType_Interface_Constant : public Data_CellType_Interface_Implemen
 	Data_CellType_Interface_Constant(const Base & base) : Data_CellType_Interface_Implement_Constant<Data_CellType_Interface_Constant<Base>,Base>(base)
 	{
 	}
-	//TODO change if stag or not.
-	bool GeIsConstantInterface_Impl(const type_data_key &k1,int dim,int sign) const
+
+	template <class T_INT, typename Is_Staggered_Left_SFINAE<T_INT,Base,int>::type =0>
+	bool GeIsConstantInterface_Impl(const type_data_key &k1,T_INT dim,T_INT sign) const
 	{
 		type_data_neigh neigh=this->at(k1);
 		type_data_neigh* neigh2=neigh.GetNeighbour(dim,sign);
