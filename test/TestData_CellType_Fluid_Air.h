@@ -77,27 +77,4 @@ class Test_Data_CellType_Fluid_Air : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		TS_ASSERT_DELTA(D.GetRho(Material_Type::Fluid).Get(),1000,eps);
 		TS_ASSERT_DELTA(D.GetRho(Material_Type::Fluid).Get_Inv(),1./1000,eps);
 	}
-	void test_InCell()
-	{
-		typedef Data_Base_Dim_Type<double,3> DataBase;
-		typedef typename DataBase::type_data_value type_data_value;
-		typedef Data_CellType_Fluid_Air<DataBase> type_cell_type;
-		Data_CellType_Fluid_Air<DataBase> D;
-		Inversible_Value<type_data_value> rho_air(1);
-		Inversible_Value<type_data_value> rho_fluid(1000);
-		D.SetRhoAir(rho_air);
-		D.SetRhoFluid(rho_fluid);
-		typedef typename type_cell_type::type_Cell_type__InCell type_Cell_type__InCell;
-		type_Cell_type__InCell Din=D.GetInCell();
-
-		Din.SetFluid();
-		TS_ASSERT(Din.GetIsFluid());
-		TS_ASSERT(!Din.GetIsAir());
-		TS_ASSERT_DELTA(Din.GetRho().Get(),1000,eps);
-
-		Din.SetAir();
-		TS_ASSERT(!Din.GetIsFluid());
-		TS_ASSERT(Din.GetIsAir());
-		TS_ASSERT_DELTA(Din.GetRho().Get(),1,eps);
-	}
 };
