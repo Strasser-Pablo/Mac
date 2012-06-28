@@ -56,7 +56,7 @@ void testPhysvector()
 	typedef Physvector<3,int> vect;
 	typedef HashPhysvector<3,int> Hash;
 	Hash hash;
-	Hookable_Hash_Table<Hook,vect,double,Hash> table(hash);
+	Hookable_Hash_Table<Hook,vect,double,false,Hash> table(hash);
 	vect v;
 	v.Set(1,4);
 	v.Set(2,6);
