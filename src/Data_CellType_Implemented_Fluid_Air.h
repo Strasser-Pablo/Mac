@@ -2,6 +2,7 @@
 #define Data_CellType_Implemented_Fluid_Air_H
 #include "Data_CellType_Implemented_Fluid.h"
 #include "Data_CellType_Implemented_Air.h"
+#include "Data_CellType_SFINAE.h"
 
 enum class Data_CellType_Implemented_Fluid_Air_Material_Type_Fluid{Fluid,Air};
 
@@ -36,9 +37,18 @@ class Data_CellType_Implemented_Fluid_Air : public Data_CellType_Implemented_Flu
 };
 
 
-template <typename Implementation>
-class Data_CellType_Implemented_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid__InCell<Implementation,typename Data_CellType_Implemented_Fluid_Air_Traits<Implementation>::Material_Type> , public Data_CellType_Implemented_Air__InCell<Implementation,typename Data_CellType_Implemented_Fluid_Air_Traits<Implementation>::Material_Type>
+template <typename Implementation,typename Base>
+class Data_CellType_Implemented_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid__InCell<Implementation,typename Data_CellType_Implemented_Fluid_Air_Traits<Implementation>::Material_Type> , public Data_CellType_Implemented_Air__InCell<Implementation,typename Data_CellType_Implemented_Fluid_Air_Traits<Implementation>::Material_Type> , public Data_CellType_Derivate_SFINAE<Base>
 {
+	public:
+	template<typename T,typename Data_CellType_Constructor_Derivate_SFINAE<T,Base>::type =0>
+	Data_CellType_Implemented_Fluid_Air__InCell(const T& base):Data_CellType_Derivate_SFINAE<Base>(base)
+	{
+	}
+	template<typename T,typename Data_CellType_Constructor_Not_Derivate_SFINAE<T,Base>::type =0>
+	Data_CellType_Implemented_Fluid_Air__InCell(const T& base)
+	{
+	}
 };
 
 #endif

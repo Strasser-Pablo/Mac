@@ -79,13 +79,6 @@ void Data_CellType_Fluid_Air<DataBase>::SetRhoAir(Inversible_Value<type_data_val
 }
 
 template <typename DataBase>
-auto Data_CellType_Fluid_Air<DataBase>::GetInCell() const -> Data_CellType_Fluid_Air<DataBase>::type_Cell_type__InCell
-{
-	return type_Cell_type__InCell(*this);
-}
-
-
-template <typename DataBase>
 void Data_CellType_Fluid_Air__InCell<DataBase>::SetAir()
 {
 	m_mat=Material_Type::Air;

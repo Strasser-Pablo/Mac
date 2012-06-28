@@ -15,7 +15,7 @@ template <typename DataBase>
 class Data_CellType_Fluid_Air__InCell;
 
 template <typename DataBase>
-class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_CellType_Fluid_Air<DataBase> > 
+class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_CellType_Fluid_Air<DataBase> >, public DataBase
 {
 	public:
 		typedef typename DataBase::type_data_value type_data_value;
@@ -40,9 +40,14 @@ class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_
 		Data_CellType_Fluid_Air()
 		{
 		}
+		Data_CellType_Fluid_Air(Inversible_Value<type_data_value>& rho_fluid,Inversible_Value<type_data_value>& rho_air,const DataBase& base):m_rho_fluid(rho_fluid),m_rho_air(rho_air),DataBase(base)
+		{
+		}
+		Data_CellType_Fluid_Air(const DataBase& base):DataBase(base)
+		{
+		}
 		typedef Data_CellType_Fluid_Air__InCell<DataBase> type_Cell_type__InCell;
 		typedef void type_Cell_type__InCell_exist;
-		auto GetInCell() const -> type_Cell_type__InCell;
 };
 
 template<typename DataBase>
@@ -52,13 +57,13 @@ struct Data_CellType_Implemented_Fluid_Air_Traits<Data_CellType_Fluid_Air__InCel
 };
 
 template <typename DataBase>
-class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> >
+class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase>,DataBase >
 {
 	public:
 		typedef typename DataBase::type_data_value type_data_value;
 		typedef typename Data_CellType_Fluid_Air<DataBase>::Material_Type Material_Type;
 		typedef typename Data_CellType_Fluid_Air<DataBase>::Material_Type_Fluid Material_Type_Fluid;
-		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data):m_mat(Material_Type::Air),m_data_cell_type(data)
+		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data):m_mat(Material_Type::Air),m_data_cell_type(data),Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> ,DataBase>(static_cast<const DataBase&>(data))
 		{
 		}
 		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data,Material_Type mat):m_mat(mat),m_data_cell_type(data)

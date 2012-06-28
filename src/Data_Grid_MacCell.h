@@ -9,7 +9,7 @@ class Data_Grid_MacCell_InCell
 template <typename Enable>
 struct Data_Grid_MacCell_InCell<Enable,typename Enable::type_Cell_type__InCell_exist> : public Enable::type_Cell_type__InCell
 {
-	Data_Grid_MacCell_InCell(const typename Enable::type_Cell_type__InCell& data) :  Enable::type_Cell_type__InCell(data)
+	Data_Grid_MacCell_InCell(const Enable& base) :  Enable::type_Cell_type__InCell(base)
 	{
 	}
 };
@@ -64,7 +64,7 @@ class Data_Grid_MacCell : public Data_Grid_MacCell_InCell<Data>, public Data_Gri
 {
 	public:
 		template<typename T,typename Data_Grid_MacCell_InCell2<T,Data>::type =0>
-		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_InCell<Data>(data.GetInCell())
+		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_InCell<Data>(data)
 		{
 		}
 		template<typename T,typename Data_Grid_MacCell_InCell3<T,Data>::type =0>
