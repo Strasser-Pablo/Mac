@@ -5,7 +5,7 @@
  **/
 
 template <class MacWorld,class TypeData,class TypeGetCellType>
-CalculateTimeStep<MacWorld,TypeData,TypeGetCellType>::CalculateTimeStep(const MacWorld &world,const TypeData &h,TypeData& factor,TypeData &dt,TypeGetCellType &GetCellType):m_h(h),m_factor(factor),m_world(world),m_dt(dt),m_GetCellType(GetCellType)
+CalculateTimeStep<MacWorld,TypeData,TypeGetCellType>::CalculateTimeStep(const MacWorld &world,const TypeData &h,TypeData& factor,TypeData &dt,TypeGetCellType &GetCellType):m_factor(factor),m_GetCellType(GetCellType),m_h(h),m_dt(dt),m_world(world)
 {
 	
 }

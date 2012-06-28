@@ -28,7 +28,7 @@ MacCell<DIM,TypeData,TypeCell,ID>::MacCell():m_layer(-1),m_div(0),m_viscosity_fo
 
 
 template <int DIM,class TypeData, class TypeCell,int ID>
-MacCell<DIM,TypeData,TypeCell,ID>::MacCell(Physvector<DIM,TypeData> &speed,const TypeData &pressure,const int layer):m_speed(speed),m_pressure(pressure),m_layer(layer),m_div(0),m_viscosity_force(0)
+MacCell<DIM,TypeData,TypeCell,ID>::MacCell(Physvector<DIM,TypeData> &speed,const TypeData &pressure,const int layer):m_speed(speed),m_pressure(pressure),m_div(0),m_viscosity_force(0),m_layer(layer)
 {
 	for(int i=0;i<DIM;++i)
 	{
