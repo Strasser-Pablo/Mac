@@ -15,7 +15,7 @@ Neighbour_List<DIM,Data>* Neighbour_List<DIM,Data>::GetNeighbour(int dim,int sig
 }
 
 template<int DIM,typename Data>
-const Data& Neighbour_List<DIM,Data>::Get()
+const Data& Neighbour_List<DIM,Data>::Get() const
 {
 	return m_data;
 }

@@ -57,8 +57,28 @@ TypeData& Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp>::ope
 	return ret;
 }
 
+template<template<class Self> class Hook,class TypeKey,class TypeData,bool copy,class TypeHash,class TypeComp >
+TypeData& Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp>::at(const TypeKey & key)
+{
+	if(!this->Exist(key))
+	{
+		throw runtime_error("At With non existent key.");
+	}
+	return this->m_map.at(key);
+}
+
+template<template<class Self> class Hook,class TypeKey,class TypeData,bool copy,class TypeHash,class TypeComp >
+const TypeData& Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp>::at(const TypeKey & key) const
+{
+	if(!this->Exist(key))
+	{
+		throw runtime_error("At With non existent key.");
+	}
+	return this->m_map.at(key);
+}
+
 template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash,class TypeComp>
-Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::Hookable_Hash_Table(const TypeData& copy_data,const TypeHash& hash,const TypeComp& comp) : KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>(hash,comp), m_hook(this),m_copy(copy_data)
+Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::Hookable_Hash_Table(const TypeData& copy_data,const TypeHash& hash,const TypeComp& comp) : KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>(hash,comp), m_hook(this),TypeData(copy_data)
 {
 }
 
@@ -69,7 +89,7 @@ Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp> & Hookable_Has
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash,class TypeComp>
-Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::Hookable_Hash_Table(const Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp> & cop) : KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>(cop), m_hook(this),m_copy(cop.m_copy)
+Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::Hookable_Hash_Table(const Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp> & cop) : KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>(cop), m_hook(this),TypeData(cop)
 {
 }
 
@@ -104,7 +124,27 @@ TypeData& Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::ope
 	bool b=this->Exist(key);
 	if(!b)
 	{
-		insert(key,m_copy);
+		insert(key,*this);
+	}
+	return this->m_map.at(key);
+}
+
+template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash,class TypeComp >
+TypeData& Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::at(const TypeKey & key)
+{
+	if(!this->Exist(key))
+	{
+		throw runtime_error("At With non existent key.");
+	}
+	return this->m_map.at(key);
+}
+
+template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash,class TypeComp >
+const TypeData& Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::at(const TypeKey & key) const
+{
+	if(!this->Exist(key))
+	{
+		throw runtime_error("At With non existent key.");
 	}
 	return this->m_map.at(key);
 }

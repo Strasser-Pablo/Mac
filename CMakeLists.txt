@@ -402,4 +402,7 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 
 	CXXTEST_ADD_TEST(test_cov_Data_CellType_Domain_Fluid test/Test_Data_CellType_Domain_Fluid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Data_CellType_Domain_Fluid.h)
 	AddTestProperty(test_cov_Data_CellType_Domain_Fluid)
+
+	CXXTEST_ADD_TEST(test_cov_Data_Interface_Domain_Rho_Fluid test/TestData_Interface_Domain_Rho_Fluid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Interface_Domain_Rho_Fluid.h)
+	AddTestProperty(test_cov_Data_Interface_Domain_Rho_Fluid)
 endif(USE_TESTING)

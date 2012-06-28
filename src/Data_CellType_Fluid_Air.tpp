@@ -95,3 +95,16 @@ auto Data_CellType_Fluid_Air__InCell<DataBase>::GetRho() const ->Inversible_Valu
 {
 	return m_data_cell_type.GetRho(m_mat);
 }
+
+
+template<typename DataBase>
+auto Data_CellType_Fluid_Air__InCell<DataBase>::GetRhoAir() const ->Inversible_Value<type_data_value>
+{
+	return m_data_cell_type.GetRhoAir();
+}
+
+template<typename DataBase>
+auto Data_CellType_Fluid_Air__InCell<DataBase>::GetRhoFluid() const ->Inversible_Value<type_data_value>
+{
+	return m_data_cell_type.GetRhoFluid();
+}

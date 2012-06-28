@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include "KeyTableUnorderedMap.h"
+#include <stdexcept>
 using namespace std;
 /**
  * @file KeyTableMap.h
@@ -22,6 +23,10 @@ using namespace std;
 template<template<class Self> class Hook,class TypeKey,class TypeData,bool copy=false,class TypeHash=std::hash<TypeKey>,class TypeComp=equal_to<TypeKey> >
 class Hookable_Hash_Table : public KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>
 {
+public:
+	typedef TypeData type_data;
+	typedef TypeKey type_key;
+private:
 	Hook<Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp> > m_hook;
 public:
 
@@ -58,13 +63,18 @@ public:
 	 **/
 	void erase(const TypeKey & key);
 	TypeData& operator[](const TypeKey & key);
+	TypeData& at(const TypeKey & key);
+	const TypeData& at(const TypeKey & key) const;
 };
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash,class TypeComp>
-class Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>: public KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>
+class Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>: public KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>,public TypeData
 {
+public:
+	typedef TypeData type_data;
+	typedef TypeKey type_key;
+private:
 	Hook<Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp> > m_hook;
-	const TypeData& m_copy;
 public:
 	/**
 	 * @brief
@@ -99,6 +109,8 @@ public:
 	 **/
 	void erase(const TypeKey & key);
 	TypeData& operator[](const TypeKey & key);
+	TypeData& at(const TypeKey & key);
+	const TypeData& at(const TypeKey & key) const;
 };
 #include "Hookable_Hash_Table.tpp"
 #endif

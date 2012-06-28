@@ -28,7 +28,7 @@ class Neighbour_List
 	void SetNeighbour(int dim,int sign,Neighbour_List<DIM,Data>* point);
 	Neighbour_List<DIM,Data>* GetNeighbour(int dim,int sign);
 	Data& GetRef();
-	const Data& Get();
+	const Data& Get() const;
 	void Set(const Data& data);
 };
 

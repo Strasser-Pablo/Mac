@@ -33,7 +33,7 @@ typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::size_type Key
 }
 
 template<class TypeKey,class TypeData,class TypeHash,class TypeComp>
-bool KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::Exist(const TypeKey & key)
+bool KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::Exist(const TypeKey & key) const
 {
 	return m_map.count(key)>0;
 }

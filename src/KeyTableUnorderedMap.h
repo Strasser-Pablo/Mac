@@ -87,7 +87,7 @@ public:
 	 * Return if key Exist.
 	 * @param key Key to test existance.
 	 **/
-	bool Exist(const TypeKey& key);
+	bool Exist(const TypeKey& key) const;
 	/**
 	 * @brief
 	 * Return a reference to the value at the given key.
