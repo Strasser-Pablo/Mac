@@ -48,7 +48,7 @@ public:
 		double m_1_rho_inter=0.001;
 		double m_1_rho_inter_bound=0.001;
 		type_getcelltype m_GetCellType(w,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
-		type_pres_func m_pres_func=[](Physvector<2,int> key){return 0;};
+		type_pres_func m_pres_func=[](Physvector<2,int> key __attribute__ ((unused))){return 0;};
 		Physvector<2,double> h;
 		h.SetAll(1);
 		UpdateCellTypeAndLayer3<world,type_getcelltype,type_pres_func> Up(w,m_GetCellType,2,m_pres_func,h,h);
@@ -118,7 +118,7 @@ public:
 		double m_1_rho_inter=0.001;
 		double m_1_rho_inter_bound=0.001;
 		type_getcelltype m_GetCellType(w,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
-		type_pres_func m_pres_func=[](Physvector<2,int> key){return 0;};
+		type_pres_func m_pres_func=[](Physvector<2,int> key __attribute__ ((unused))){return 0;};
 		Physvector<2,double> h;
 		h.SetAll(1);
 		UpdateCellTypeAndLayer3<world,type_getcelltype,type_pres_func> Up(w,m_GetCellType,2,m_pres_func,h,h);
@@ -220,7 +220,7 @@ public:
 		double m_1_rho_inter=0.001;
 		double m_1_rho_inter_bound=0.001;
 		type_getcelltype m_GetCellType(w,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
-		type_pres_func m_pres_func=[](Physvector<2,int> key){return 0;};
+		type_pres_func m_pres_func=[](Physvector<2,int> key __attribute__ ((unused))){return 0;};
 		Physvector<2,double> h;
 		h.SetAll(1);
 		UpdateCellTypeAndLayer3<world,type_getcelltype,type_pres_func> Up(w,m_GetCellType,2,m_pres_func,h,h);
@@ -341,7 +341,7 @@ public:
 		double m_1_rho_inter=0.001;
 		double m_1_rho_inter_bound=0.001;
 		type_getcelltype m_GetCellType(w,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
-		type_pres_func m_pres_func=[](Physvector<2,int> key){return 0;};
+		type_pres_func m_pres_func=[](Physvector<2,int> key __attribute__ ((unused))){return 0;};
 		Physvector<2,double> h;
 		h.SetAll(1);
 		UpdateCellTypeAndLayer3<world,type_getcelltype,type_pres_func> Up(w,m_GetCellType,2,m_pres_func,h,h);

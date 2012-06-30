@@ -4,7 +4,7 @@
  * Implementation file for class UpdateCellTypeAndLayer3.
  **/
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
-UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres,const Physvector<type_dim,type_data>& h,const Physvector<type_dim,type_data>& _1_h):m_level(level),m_GetCellType(GetCellType),m_world(world),m_func_pres(func_pres),m_bound_set(m_O),m_delete_cell(world),m_stat_out("top_res.txt",fstream::out),m_to_key(_1_h,h),m_h(h)
+UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres,const Physvector<type_dim,type_data>& h,const Physvector<type_dim,type_data>& _1_h):m_GetCellType(GetCellType),m_world(world),m_level(level),m_func_pres(func_pres),m_bound_set(m_O),m_delete_cell(world),m_stat_out("top_res.txt",fstream::out),m_to_key(_1_h,h),m_h(h)
 {
 	m_i_out=0;	
 }
@@ -277,7 +277,7 @@ void UpdateCellTypeAndLayer3<TypeWorld,TypeGetCellType,TypeFunctionPressure>::Cr
 	{
 		it->second.FillBoundary(f);	
 	}
-	g=[&](Physvector<type_dim,int> key)
+	g=[&](Physvector<type_dim,int> key __attribute__ ((unused)))
 	 {
 	 };
 	for(iterator_set it=m_bound_set.begin();it!=m_bound_set.end();++it)

@@ -5,7 +5,7 @@
  **/
 
 template<class TypeWorld,class TypeGetCellType>
-SolvePressureUmfpack<TypeWorld,TypeGetCellType>::SolvePressureUmfpack(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,TypeGetCellType &GetCellType):m_world(world),m_1_h(_1_h),m_key_to_num(m_o),m_GetCellType(GetCellType)
+SolvePressureUmfpack<TypeWorld,TypeGetCellType>::SolvePressureUmfpack(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,TypeGetCellType &GetCellType):m_GetCellType(GetCellType),m_world(world),m_1_h(_1_h),m_key_to_num(m_o)
 ,m_stat_out("umfpack_div.txt",fstream::out){
 	
 }

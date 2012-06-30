@@ -5,7 +5,7 @@
  **/
 
 template<class TypeWorld,class TypeGetCellType>
-SolvePressureCG<TypeWorld,TypeGetCellType>::SolvePressureCG(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,TypeGetCellType & GetCellType):m_world(world),m_r(m_o),m_p(m_o),m_1_h(_1_h),m_vois(m_o),m_GetCellType(GetCellType)
+SolvePressureCG<TypeWorld,TypeGetCellType>::SolvePressureCG(TypeWorld & world,const Physvector<type_dim,type_data> & _1_h,TypeGetCellType & GetCellType):m_GetCellType(GetCellType),m_world(world),m_1_h(_1_h),m_r(m_o),m_p(m_o),m_vois(m_o)
 ,m_stat_out("cg_stat.csv", fstream::out)
 {
 	
