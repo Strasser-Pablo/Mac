@@ -6,7 +6,7 @@
 
 
 template <class TypeWorld,class TypeMethod,class TypeGetSpeed,class TypeGetStagSpeedPos,class GetTypeCell>
-MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::MacConvectSpeed(TypeWorld & world,TypeMethod &method,TypeGetSpeed & GetSpeed,TypeGetStagSpeedPos &GetStagPos,type_data &dt,GetTypeCell& getTypeCell):m_world(world),m_ode(m_speed,m_functor,0,method),m_stag_pos(GetStagPos),m_dt(dt),m_functor(GetSpeed),m_GetSpeed(GetSpeed),m_GetTypeCell(getTypeCell)
+MacConvectSpeed<TypeWorld,TypeMethod,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::MacConvectSpeed(TypeWorld & world,TypeMethod &method,TypeGetSpeed & GetSpeed,TypeGetStagSpeedPos &GetStagPos,type_data &dt,GetTypeCell& getTypeCell):m_ode(m_speed,m_functor,0,method),m_world(world),m_stag_pos(GetStagPos),m_GetSpeed(GetSpeed),m_dt(dt),m_GetTypeCell(getTypeCell),m_functor(GetSpeed)
 {
 }
 

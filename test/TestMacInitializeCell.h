@@ -57,8 +57,8 @@ class Test_TestUpdateCellTypeAndLayer : public CxxTest::TestSuite
 		double m_1_rho_inter=0.001;
 		double m_1_rho_inter_bound=0.001;
 		type_getcelltype m_GetCellType(w,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_rho_inter_bound,m_1_rho_inter,m_1_rho_inter_bound);
-		type_part_cond m_part_cond=[](Physvector<3,int> key){return false;};
-		type_pres_func m_pres_func=[](Physvector<3,int> key){return 0;};
+		type_part_cond m_part_cond=[](Physvector<3,int> key __attribute__ ((unused))){return false;};
+		type_pres_func m_pres_func=[](Physvector<3,int> key __attribute__ ((unused))){return 0;};
 		ExtrapolateCellFluid<world,type_getcelltype>  Ex(w,m_GetCellType,1);
 		MacInitializeCell<world,type_stag,type_getcelltype,type_part_cond,type_pres_func,ExtrapolateCellFluid<world,type_getcelltype> >init(w,m_GetCellType,m_v_h,m_v_h,2,m_stag,m_part_cond,m_pres_func,Ex);
 		init.Update();

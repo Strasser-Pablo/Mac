@@ -12,7 +12,7 @@ Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp>::Hookable_Hash
 template<template<class Self> class Hook,class TypeKey,class TypeData,bool copy,class TypeHash,class TypeComp>
 Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp> & Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp>::operator=(const Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp> & cop)
 {
-	KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::operator=(cop);
+	return KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::operator=(cop);
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,bool copy,class TypeHash,class TypeComp>
@@ -89,7 +89,7 @@ Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp> & Hookable_Has
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash,class TypeComp>
-Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::Hookable_Hash_Table(const Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp> & cop) : KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>(cop), m_hook(this),TypeData(cop)
+Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::Hookable_Hash_Table(const Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp> & cop) : KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>(cop),TypeData(cop),m_hook(this)
 {
 }
 

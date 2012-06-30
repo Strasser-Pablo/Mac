@@ -5,7 +5,7 @@
  **/
 
 template<class TypeWorld,class GetTypeCell>
-MacApplyViscosity<TypeWorld,GetTypeCell>::MacApplyViscosity(TypeWorld &world,const type_data &viscosity, const type_data & dt,const Physvector<type_dim,type_data> & _1_h,GetTypeCell &getTypeCell):m_world(world),m_viscosity(viscosity),m_dt(dt),m_lap(m_world,_1_h),m_GetTypeCell(getTypeCell)
+MacApplyViscosity<TypeWorld,GetTypeCell>::MacApplyViscosity(TypeWorld &world,const type_data &viscosity, const type_data & dt,const Physvector<type_dim,type_data> & _1_h,GetTypeCell &getTypeCell):m_viscosity(viscosity),m_dt(dt),m_world(world),m_lap(m_world,_1_h),m_GetTypeCell(getTypeCell)
 {
 	
 }

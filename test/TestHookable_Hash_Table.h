@@ -9,16 +9,16 @@ template<class HashTable>
 struct Hook
 {
 	HashTable * m_hash;
-	void insert(const pair<typename HashTable::iterator,bool>&  in)
+	void insert(const pair<typename HashTable::iterator,bool>&  in __attribute__ ((unused)))
 	{
 	}
-	void erase(typename HashTable::iterator it)
+	void erase(typename HashTable::iterator it __attribute__ ((unused)))
 	{
 	}
-	void erase(const typename HashTable::type_key &)
+	void erase(const typename HashTable::type_key & __attribute__ ((unused)))
 	{
 	}
-	void directacess(const typename HashTable::type_key & key,typename HashTable::type_data & data)
+	void directacess(const typename HashTable::type_key & key __attribute__ ((unused)),typename HashTable::type_data & data __attribute__ ((unused)))
 	{
 	}
 	Hook(HashTable * hash) : m_hash(hash)

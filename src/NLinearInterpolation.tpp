@@ -5,7 +5,7 @@
  **/
 
 template <class TypeWorld>
-NLinearInterpolation<TypeWorld>::NLinearInterpolation(TypeWorld &world,const Physvector<type_dim,type_data> &_1_h ):m_1_h(_1_h),m_world(world)
+NLinearInterpolation<TypeWorld>::NLinearInterpolation(TypeWorld &world,const Physvector<type_dim,type_data> &_1_h ):m_world(world),m_1_h(_1_h)
 {
 }
 

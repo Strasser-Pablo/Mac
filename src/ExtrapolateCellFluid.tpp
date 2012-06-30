@@ -5,7 +5,7 @@
  **/
 
 template <class TypeWorld,class TypeGetCellType>
-ExtrapolateCellFluid<TypeWorld,TypeGetCellType>::ExtrapolateCellFluid(TypeWorld & world, TypeGetCellType & GetCellType,int level):m_world(world),m_level(level),m_layer_fluid(world,GetCellType),m_GetCellType(GetCellType)
+ExtrapolateCellFluid<TypeWorld,TypeGetCellType>::ExtrapolateCellFluid(TypeWorld & world, TypeGetCellType & GetCellType,int level):m_world(world),m_layer_fluid(world,GetCellType),m_GetCellType(GetCellType),m_level(level)
 {
 	
 }

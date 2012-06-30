@@ -9,7 +9,7 @@ struct GetCellType_Base_Argument
 	typedef typename TypeWorld::type_key type_key;
 	const type_cell &m_default;
 	TypeWorld &m_world;
-	GetCellType_Base_Argument(TypeWorld & world,const type_cell & _default):m_world(world),m_default(_default)
+	GetCellType_Base_Argument(TypeWorld & world,const type_cell & _default):m_default(_default),m_world(world)
 	{
 	}
 };
