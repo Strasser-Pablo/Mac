@@ -19,7 +19,7 @@ using namespace std;
  * @brief
  * Declaration file for class UpdateCellTypeAndLayer3.
  **/
- 
+
  /**
   * @brief GR_Topology
   * @brief
@@ -65,7 +65,7 @@ public:
  * @param level Depth of air layer to use.
  **/
 	UpdateCellTypeAndLayer3(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres,const Physvector<type_dim,type_data>& h,const Physvector<type_dim,type_data>& _1_h);
-	
+
 	/**
 	 * @brief
 	 * Do the calculation.
