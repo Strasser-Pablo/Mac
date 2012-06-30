@@ -4,7 +4,7 @@
  * Implementation file for class UpdateCellFluid.
  **/
 template <class TypeWorld,class TypeStagPos,class TypeGetCellType,class TypeCondPart>
-UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCellFluid(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart):m_world(world),m_to_key(_1_h,h),m_stag_pos(stag_pos),m_h(h),m_condpart(condpart),m_GetCellType(GetCellType)
+UpdateCellFluid<TypeWorld,TypeStagPos,TypeGetCellType,TypeCondPart>::UpdateCellFluid(TypeWorld & world,const Physvector<type_dim,type_data>& _1_h,const Physvector<type_dim,type_data> &h,TypeGetCellType &GetCellType,TypeStagPos & stag_pos,TypeCondPart &condpart):m_world(world),m_to_key(_1_h,h),m_GetCellType(GetCellType),m_stag_pos(stag_pos),m_condpart(condpart),m_h(h)
 {
 	
 }

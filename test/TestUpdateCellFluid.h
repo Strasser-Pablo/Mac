@@ -53,7 +53,7 @@ class Test_UpdateCellFluid : public CxxTest::TestSuite
 		double m_1_rho_inter=0.001;
 		double m_1_rho_inter_bound=0.001;
 		type_getcelltype m_GetCellType(world,m_fluid,m_boundary_fluid,m_air,m_boundary_air,m_rho_fluid,m_rho_air,m_1_rho_fluid,m_1_rho_air,m_rho_inter,m_1_rho_inter,m_rho_inter_bound,m_1_rho_inter_bound);
-		type_part_cond m_part_cond=[](Physvector<3,int> key){return false;};
+		type_part_cond m_part_cond=[](Physvector<3,int> key __attribute__ ((unused))){return false;};
 		UpdateCellFluid<type_world,type_stag ,type_getcelltype,type_part_cond> U(world,v_h,v_h,m_GetCellType,m_stag,m_part_cond);
 		U.Update();
 		MacWorld<KeyTableMap<Physvector<3,int>,MacCell<3,double,int>,PhysvectorKeyOrder<3,int > >, TableContainerList<Particle<Physvector<3,double> > > >::type_keytable::const_iterator it=world.m_mac_grid.begin();
