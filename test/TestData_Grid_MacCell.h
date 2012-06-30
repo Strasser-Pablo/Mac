@@ -5,21 +5,24 @@
 #include "../src/Data_Grid_Speed.h"
 #include "../src/Data_Grid_Pressure.h"
 #include "../src/Datas.h"
+#include "../src/Data_Staggered_Left.h"
 #define eps 1e-10
 class Test_Data_Grid_MacCell : public CxxTest::TestSuite  //LCOV_EXCL_LINE 
 {
 	public:
 		void test_CellType()
 		{
-			typedef Data_Base_Dim_Type<double,3> DataBase;
-			DataBase base;
+			typedef Data_Base_Dim_Type<double,3> DataBase0;
+			DataBase0 base0;
+			typedef Data_Staggered_Left<DataBase0> DataBase;
+			DataBase base(base0);
 			typedef typename DataBase::type_data_value type_data_value;
 			typedef Data_CellType_Fluid_Air<DataBase> type_cell_type;
 			typedef Data_Grid_Speed<DataBase> type_grid_speed;
 			typedef Data_Grid_Pressure<DataBase> type_grid_pressure;
 			type_grid_speed m_grid_speed;
 			type_grid_pressure m_grid_pressure;
-			Data_CellType_Fluid_Air<DataBase> D;
+			Data_CellType_Fluid_Air<DataBase> D(base);
 			Inversible_Value<type_data_value> rho_air(1);
 			Inversible_Value<type_data_value> rho_fluid(1000);
 			D.SetRhoAir(rho_air);
@@ -48,8 +51,10 @@ class Test_Data_Grid_MacCell : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		}
 		void test_Speed()
 		{
-			typedef Data_Base_Dim_Type<double,3> DataBase;
-			DataBase base;
+			typedef Data_Base_Dim_Type<double,3> DataBase0;
+			DataBase0 base0;
+			typedef Data_Staggered_Left<DataBase0> DataBase;
+			DataBase base(base0);
 			typedef typename DataBase::type_data_value type_data_value;
 			typedef Data_CellType_Fluid_Air<DataBase> type_cell_type;
 			typedef Data_Grid_Speed<DataBase> type_grid_speed;
@@ -74,8 +79,10 @@ class Test_Data_Grid_MacCell : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		}
 		void test_Pressure()
 		{
-			typedef Data_Base_Dim_Type<double,3> DataBase;
-			DataBase base;
+			typedef Data_Base_Dim_Type<double,3> DataBase0;
+			DataBase0 base0;
+			typedef Data_Staggered_Left<DataBase0> DataBase;
+			DataBase base(base0);
 			typedef typename DataBase::type_data_value type_data_value;
 			typedef Data_CellType_Fluid_Air<DataBase> type_cell_type;
 			typedef Data_Grid_Speed<DataBase> type_grid_speed;
@@ -101,8 +108,10 @@ class Test_Data_Grid_MacCell : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		}
 		void test_DifferentCreation()
 		{
-			typedef Data_Base_Dim_Type<double,3> DataBase;
-			DataBase base;
+			typedef Data_Base_Dim_Type<double,3> DataBase0;
+			DataBase0 base0;
+			typedef Data_Staggered_Left<DataBase0> DataBase;
+			DataBase base(base0);
 			typedef typename DataBase::type_data_value type_data_value;
 			typedef Data_CellType_Fluid_Air<DataBase> type_cell_type;
 			typedef Data_Grid_Speed<DataBase> type_grid_speed;

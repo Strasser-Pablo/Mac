@@ -37,6 +37,20 @@ class Data_Staggered_Left : public Base
 	Data_Staggered_Left(const Base & base):Base(base)
 	{
 	}
+
+	Data_Staggered_Left()
+	{
+	}
+
+	template <typename InheritedWith>
+	using type_DataBase_SubInherite=Data_Staggered_Left<typename Base::template type_DataBase_SubInherite<InheritedWith> >;
+	
+	typedef Data_Staggered_Left<typename Base::type_SubInherite_Base> type_SubInherite_Base;
+	
+	template<typename InheritedWith> 
+	Data_Staggered_Left(const  type_SubInherite_Base& base, const InheritedWith& in): Base(base,in)
+	{
+	}
 };
 
 #endif 

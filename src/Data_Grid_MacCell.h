@@ -51,8 +51,11 @@ struct Data_Grid_MacCell_cell_speed<Enable,typename Enable::type_cell_speed_exis
 
 
 template <typename Enable,typename Dummy=void>
-class Data_Grid_MacCell_cell_DataBase
+struct Data_Grid_MacCell_cell_DataBase
 {
+	Data_Grid_MacCell_cell_DataBase(const Enable& base)
+	{
+	}
 };
 
 template <typename Enable>
