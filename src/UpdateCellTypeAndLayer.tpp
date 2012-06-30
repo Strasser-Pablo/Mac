@@ -4,7 +4,7 @@
  * Implementation file for class UpdateCellTypeAndLayer.
  **/
 template <class TypeWorld,class TypeGetCellType,class TypeFunctionPressure>
-UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres):m_level(level),m_GetCellType(GetCellType),m_world(world),m_func_pres(func_pres){
+UpdateCellTypeAndLayer<TypeWorld,TypeGetCellType,TypeFunctionPressure>::UpdateCellTypeAndLayer(TypeWorld & world,TypeGetCellType & GetCellType,int level,TypeFunctionPressure & func_pres):m_GetCellType(GetCellType),m_world(world),m_level(level),m_func_pres(func_pres){
 	
 }
 

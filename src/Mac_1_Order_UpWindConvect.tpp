@@ -1,5 +1,5 @@
 template <class TypeWorld,class TypeGetSpeed,class TypeGetStagSpeedPos,class GetTypeCell>
-Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::Mac_1_Order_UpWindConvect(TypeWorld & world,TypeGetSpeed & GetSpeed, TypeGetStagSpeedPos &GetStagPos,type_data & dt,GetTypeCell& getTypeCell,Physvector<type_dim,type_data> & h,Physvector<type_dim,type_data>& _1_h):m_world(world),m_GetSpeed(GetSpeed),m_dt(dt),m_h(h),m_1_h(_1_h),m_stag_pos(GetStagPos),m_GetTypeCell(getTypeCell)
+Mac_1_Order_UpWindConvect<TypeWorld,TypeGetSpeed,TypeGetStagSpeedPos,GetTypeCell>::Mac_1_Order_UpWindConvect(TypeWorld & world,TypeGetSpeed & GetSpeed, TypeGetStagSpeedPos &GetStagPos,type_data & dt,GetTypeCell& getTypeCell,Physvector<type_dim,type_data> & h,Physvector<type_dim,type_data>& _1_h):m_world(world),m_stag_pos(GetStagPos),m_GetSpeed(GetSpeed),m_dt(dt),m_GetTypeCell(getTypeCell),m_h(h),m_1_h(_1_h)
 {
 
 }

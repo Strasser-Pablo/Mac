@@ -1,5 +1,5 @@
 template <class TypeWorld>
-GetCellType_Base<TypeWorld>::GetCellType_Base(type_input_struct in):m_world(in.m_world),m_default(in.m_default)
+GetCellType_Base<TypeWorld>::GetCellType_Base(type_input_struct in):m_default(in.m_default),m_world(in.m_world)
 {
 }
 
