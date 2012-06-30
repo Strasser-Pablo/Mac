@@ -28,7 +28,7 @@ class Data_Base_Dim_Type_Base : public InheritedWith
 		template <typename InheritedWith2>
 		using type_DataBase_SubInherite=Data_Base_Dim_Type_Base<Data_Base_Dim_Type<type_data_value,type_dim>,InheritedWith2>;
 		typedef  Data_Base_Dim_Type<type_data_value,type_dim> type_SubInherite_Base;
-		Data_Base_Dim_Type_Base(const type_SubInherite_Base& base, const InheritedWith& in): InheritedWith(in)
+		Data_Base_Dim_Type_Base(const type_SubInherite_Base& base __attribute__ ((unused)), const InheritedWith& in): InheritedWith(in)
 		{
 		}
 };

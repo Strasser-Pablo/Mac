@@ -65,7 +65,7 @@ class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_A
 		typedef typename Data_CellType_Fluid_Air<DataBase>::Material_Type Material_Type;
 		typedef Inversible_Value<type_data_value> type_data_rho;
 		typedef typename Data_CellType_Fluid_Air<DataBase>::Material_Type_Fluid Material_Type_Fluid;
-		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data):m_mat(Material_Type::Air),m_data_cell_type(data),Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> ,DataBase>(static_cast<const DataBase&>(data))
+		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> ,DataBase>(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),m_data_cell_type(data)
 		{
 		}
 		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data,Material_Type mat):m_mat(mat),m_data_cell_type(data)

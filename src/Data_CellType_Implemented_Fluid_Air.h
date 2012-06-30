@@ -46,7 +46,7 @@ class Data_CellType_Implemented_Fluid_Air__InCell : public Data_CellType_Impleme
 	{
 	}
 	template<typename T,typename Data_CellType_Constructor_Not_Derivate_SFINAE<T,Base>::type =0>
-	Data_CellType_Implemented_Fluid_Air__InCell(const T& base)
+	Data_CellType_Implemented_Fluid_Air__InCell(const T& base __attribute__ ((unused)))
 	{
 	}
 };

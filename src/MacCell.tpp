@@ -16,7 +16,7 @@ void MacCell<DIM,TypeData,TypeCell,ID>::GetCirculation(TypeData & Circulation)
 }
 
 template <int DIM,class TypeData, class TypeCell,int ID>
-MacCell<DIM,TypeData,TypeCell,ID>::MacCell():m_layer(-1),m_div(0),m_viscosity_force(0)
+MacCell<DIM,TypeData,TypeCell,ID>::MacCell():m_div(0),m_viscosity_force(0),m_layer(-1)
 {
 	for(int i=0;i<DIM;++i)
 	{

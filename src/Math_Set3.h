@@ -78,7 +78,6 @@ public:
 	 * Output the content of the key in standard output.
 	 **/
 	void CoutDebInfo();
-	friend Math_Set3;
 };
 
 /**

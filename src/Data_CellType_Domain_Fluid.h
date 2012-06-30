@@ -45,7 +45,7 @@ class Data_CellType_Domain_Fluid__InCell : public Data_CellType_Domain_Implement
 	typedef Data_CellType_Domain_Implement__InCell<Data_CellType_Domain_Fluid__InCell<Base>, Base > RealBase;
 	public:
 	typedef typename Base::Material_Type Material_Type;
-	Data_CellType_Domain_Fluid__InCell(const Data_CellType_Domain_Fluid<Base>& data) : m_data_cell_type(data),Data_CellType_Domain_Implement__InCell<Data_CellType_Domain_Fluid__InCell<Base>, Base >(static_cast<const Base&>(data))
+	Data_CellType_Domain_Fluid__InCell(const Data_CellType_Domain_Fluid<Base>& data) : Data_CellType_Domain_Implement__InCell<Data_CellType_Domain_Fluid__InCell<Base>, Base >(static_cast<const Base&>(data)),m_data_cell_type(data)
 	{
 	}
 	bool GetIsInDomain_Impl() const

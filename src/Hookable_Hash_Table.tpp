@@ -78,7 +78,7 @@ const TypeData& Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash,class TypeComp>
-Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::Hookable_Hash_Table(const TypeData& copy_data,const TypeHash& hash,const TypeComp& comp) : KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>(hash,comp), m_hook(this),TypeData(copy_data)
+Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::Hookable_Hash_Table(const TypeData& copy_data,const TypeHash& hash,const TypeComp& comp) : KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>(hash,comp),TypeData(copy_data),m_hook(this)
 {
 }
 
