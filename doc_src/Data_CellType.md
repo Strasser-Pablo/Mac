@@ -2,6 +2,7 @@ Data CellType
 ============
 
 \defgroup GR_Data_CellType Data CellType
+@ingroup GR_Data
 
 This group consist of class that implement the type of a cell and data related to it (like the density).
 The philosophy is to choose a class that define a type (an enum normaly) that will be stored with each cell.

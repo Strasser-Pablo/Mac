@@ -306,7 +306,6 @@ class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_A
 		 * Storage of the current CellType.
 		 **/
 		Material_Type m_mat;
-		protected:
 		/**
 		 * @brief
 		 * Reference to the linked class.
