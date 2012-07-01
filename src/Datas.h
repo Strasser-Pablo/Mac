@@ -2,6 +2,7 @@
 #define Datas_H
 
 /**
+ * @ingroup GR_Datas
  * @brief
  * Class that derivate from it's template argument.
  *
@@ -22,6 +23,7 @@ class Data_Empty_Inherit : public Base
 };
 
 /**
+ * @ingroup GR_Datas
  * @brief
  * Class that aggregate Data with multiple inheritance.
  *
@@ -42,6 +44,7 @@ class Datas_Without_Base :  public Data...
 };
 
 /**
+ * @ingroup GR_Datas
  * @brief
  * Class that aggregate Data with multiple inheritance.
  *
