@@ -210,6 +210,11 @@ class Data_Grid_MacCell : public Data_Grid_MacCell_InCell<Data>, public Data_Gri
 		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_cell_DataBase<Data>(data)
 		{
 		}
+		/**
+		 * @brief
+		 * Type used for Numerical calculation.
+		 **/
+		typedef typename Data::type_data_value type_data_value;
 };
 
 #endif
