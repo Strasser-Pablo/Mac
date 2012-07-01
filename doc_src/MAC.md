@@ -52,7 +52,7 @@ The Data Structure consist of:
 	A Cell contain the following data.
 		+ Speed.
 		+ Pressure.
-		+ CellType. 
+		+ CellType.
 	- A list of Particle.
 	  A Particle consist of:
 		+ A position.

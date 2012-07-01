@@ -1,7 +1,7 @@
 Module
 ======
 
-Module 
+Module
 
 \dot digraph ModuleDependance
 {
@@ -15,7 +15,7 @@ Module
 	GR_Solve_Pressure [ label="Solve Pressure" URL="\ref GR_Solve_Pressure"];
 	GR_Viscosity [ label="Viscosity" URL="\ref GR_Viscosity"];
 	GR_World [ label="World" URL="\ref GR_World"];
-	
+
 	GR_GetCellType [ label="Get Cell Type" URL="\ref GR_Get_Cell_Type"];
 	GR_GetSpeed [ label="Get Speed" URL="\ref GR_GetSpeed"];
 
@@ -28,7 +28,7 @@ Module
 	GR_Update_Fluid [ label="Update Fluid" URL="\ref GR_Update_Fluid"];
 	GR_Update_Delete [ label="Update Delete" URL="\ref GR_Update_Delete"];
 	GR_Update_Topology [ label="Update Topology" URL="\ref GR_Update_Topology"];
-	
+
 	GR_ODE_Solver [ label="ODE Solver" URL="\ref GR_ODE_Solver"];
 	GR_Linear_Solver [ label="Linear Solver" URL="\ref GR_Linear_Solver"];
 	GR_Interpolation [ label="Interpolation" URL="\ref GR_Interpolation"];
@@ -42,7 +42,7 @@ Module
 	GR_JetDEau -> GR_Solve_Pressure;
 	GR_JetDEau -> GR_Viscosity;
 	GR_JetDEau -> GR_World;
-	
+
 	GR_Convection -> GR_GetCellType;
 	GR_Convection -> GR_GetSpeed;
 	GR_Convection -> GR_World;
