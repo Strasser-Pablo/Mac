@@ -274,4 +274,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Data_CellType_Interface_Constant test/Test_Data_CellType_Interface_Constant.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Data_CellType_Interface_Constant.h)
 	AddTestProperty(test_cov_Data_CellType_Interface_Constant)
+
+	CXXTEST_ADD_TEST(test_cov_Data_Particles_List test/TestData_Particles_List.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Particles_List.h)
+	AddTestProperty(test_cov_Data_Particles_List)
 endif(USE_TESTING)
