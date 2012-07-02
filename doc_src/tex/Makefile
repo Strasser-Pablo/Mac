@@ -1,2 +1,0 @@
-LATEX=pdflatex
-
