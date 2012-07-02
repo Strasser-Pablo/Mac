@@ -161,7 +161,7 @@ class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_
 		 * @brief
 		 * Constructor
 		 * @param rho_fluid Value of density for fluid.
-		 * @param rho_fluid Value of density for air.
+		 * @param rho_air Value of density for air.
 		 **/
 		Data_CellType_Fluid_Air(Inversible_Value<type_data_value>& rho_fluid,Inversible_Value<type_data_value>& rho_air):m_rho_fluid(rho_fluid),m_rho_air(rho_air)
 		{
@@ -179,7 +179,7 @@ class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_
 		 * @brief
 		 * Constructor with DataBase without default constructor.
 		 * @param rho_fluid Value of density for fluid.
-		 * @param rho_fluid Value of density for air.
+		 * @param rho_air Value of density for air.
 		 * @param base DataBase instance that will be copied.
 		 **/
 		Data_CellType_Fluid_Air(Inversible_Value<type_data_value>& rho_fluid,Inversible_Value<type_data_value>& rho_air,const DataBase& base):m_rho_fluid(rho_fluid),m_rho_air(rho_air),DataBase(base)
