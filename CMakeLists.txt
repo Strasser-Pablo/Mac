@@ -15,7 +15,7 @@ option (USE_UMFPACK
 
 option (USE_DOXYGEN 
         "Build the documentation" ON) 
-		
+
 option (USE_INSTALLATION
 		"Build installation" ON)
 
@@ -221,144 +221,11 @@ function(AddTestProperty target)
 	set_target_properties(${target} PROPERTIES COMPILE_FLAGS ${COMPILER_FLAG} LINK_FLAGS ${COMPILER_FLAG})
 	Target_link_libraries(${target}  ${Boost_LIBRARIES})
 endfunction(AddTestProperty)
-CXXTEST_ADD_TEST(test_cov_physvector test/TestPhysvector.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPhysvector.h)
-AddTestProperty(test_cov_physvector) 
+	CXXTEST_ADD_TEST(test_cov_physvector test/TestPhysvector.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPhysvector.h)
+	AddTestProperty(test_cov_physvector)
 
-CXXTEST_ADD_TEST(test_cov_KeyTableMap test/TestKeyTableMap.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestKeyTableMap.h)
-AddTestProperty(test_cov_KeyTableMap) 
-
-CXXTEST_ADD_TEST(test_cov_MacCell test/TestMacCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacCell.h)
-AddTestProperty(test_cov_MacCell) 
-
-CXXTEST_ADD_TEST(test_cov_Particle test/TestParticle.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestParticle.h)
-AddTestProperty(test_cov_Particle) 
-
-CXXTEST_ADD_TEST(test_cov_TableContainerList test/TestTableContainerList.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestTableContainerList.h)
-AddTestProperty(test_cov_TableContainerList) 
-
-CXXTEST_ADD_TEST(test_cov_MaximalSpeed test/TestMaximalSpeed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMaximalSpeed.h)
-AddTestProperty(test_cov_MaximalSpeed) 
-
-CXXTEST_ADD_TEST(test_cov_CalculateTimeStep test/TestCalculateTimeStep.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestCalculateTimeStep.h)
-AddTestProperty(test_cov_CalculateTimeStep) 
-
-CXXTEST_ADD_TEST(test_cov_Rounding test/TestRounding.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestRounding.h)
-AddTestProperty(test_cov_Rounding) 
-
-CXXTEST_ADD_TEST(test_cov_ApplyToVectorElement test/TestApplyToVectorElement.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestApplyToVectorElement.h)
-AddTestProperty(test_cov_ApplyToVectorElement) 
-
-CXXTEST_ADD_TEST(test_cov_ParticleToKey test/TestParticleToKey.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestParticleToKey.h)
-AddTestProperty(test_cov_ParticleToKey) 
-
-CXXTEST_ADD_TEST(test_cov_UpdateCellFluid test/TestUpdateCellFluid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellFluid.h)
-AddTestProperty(test_cov_UpdateCellFluid) 
-
-CXXTEST_ADD_TEST(test_cov_UpdateCellToInitialLayer test/TestUpdateCellToInitialLayer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellToInitialLayer.h)
-AddTestProperty(test_cov_UpdateCellToInitialLayer) 
-
-CXXTEST_ADD_TEST(test_cov_NeighborsPhysvector test/TestNeighborsPhysvector.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsPhysvector.h)
-AddTestProperty(test_cov_NeighborsPhysvector) 
-
-CXXTEST_ADD_TEST(test_cov_UpdateCellTypeAndLayer test/TestUpdateCellTypeAndLayer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellTypeAndLayer.h)
-AddTestProperty(test_cov_UpdateCellTypeAndLayer) 
-
-CXXTEST_ADD_TEST(test_cov_UpdateDeleteCell test/TestUpdateDeleteCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateDeleteCell.h)
-AddTestProperty(test_cov_UpdateDeleteCell) 
-
-CXXTEST_ADD_TEST(test_cov_MacInitializeCell test/TestMacInitializeCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacInitializeCell.h)
-AddTestProperty(test_cov_MacInitializeCell) 
-
-CXXTEST_ADD_TEST(test_cov_NLinearInterpolation test/TestNLinearInterpolation.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNLinearInterpolation.h)
-AddTestProperty(test_cov_NLinearInterpolation) 
-
-CXXTEST_ADD_TEST(test_cov_MacGetVelocity test/TestMacGetVelocity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacGetVelocity.h)
-AddTestProperty(test_cov_MacGetVelocity) 
-
-CXXTEST_ADD_TEST(test_cov_MacConvect test/TestMacConvect.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacConvect.h)
-AddTestProperty(test_cov_MacConvect) 
-
-CXXTEST_ADD_TEST(test_cov_MacGravity test/TestMacGravity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacGravity.h)
-AddTestProperty(test_cov_MacGravity) 
-
-CXXTEST_ADD_TEST(test_cov_ComputeSpeedLaplacien test/TestComputeSpeedLaplacien.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestComputeSpeedLaplacien.h)
-AddTestProperty(test_cov_ComputeSpeedLaplacien) 
-
-CXXTEST_ADD_TEST(test_cov_MacApplyViscosity test/TestMacApplyViscosity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacApplyViscosity.h)
-AddTestProperty(test_cov_MacApplyViscosity) 
-
-CXXTEST_ADD_TEST(test_cov_SolvePressureCG test/TestSolvePressureCG.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSolvePressureCG.h)
-AddTestProperty(test_cov_SolvePressureCG) 
-
-CXXTEST_ADD_TEST(test_cov_NeighborsVelocity test/TestNeighborsVelocity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsVelocity.h)
-AddTestProperty(test_cov_NeighborsVelocity) 
-
-CXXTEST_ADD_TEST(test_cov_SetLayerFluidCell test/TestSetLayerFluidCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSetLayerFluidCell.h)
-AddTestProperty(test_cov_SetLayerFluidCell) 
-
-CXXTEST_ADD_TEST(test_cov_ExtrapolateCellFluid test/TestExtrapolateCellFluid.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestExtrapolateCellFluid.h)
-AddTestProperty(test_cov_ExtrapolateCellFluid) 
-
-CXXTEST_ADD_TEST(test_cov_ExtrapolateCellFluid2 test/TestExtrapolateCellFluid2.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestExtrapolateCellFluid2.h)
-AddTestProperty(test_cov_ExtrapolateCellFluid2) 
-
-CXXTEST_ADD_TEST(test_cov_OutputVectorSpeed test/TestOutputVectorSpeed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestOutputVectorSpeed.h)
-AddTestProperty(test_cov_OutputVectorSpeed)
-
-CXXTEST_ADD_TEST(test_cov_SolvePressureUmfpack test/TestSolvePressureUmfpack.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSolvePressureUmfpack.h)
-AddTestProperty(test_cov_SolvePressureUmfpack)
-
-TARGET_LINK_LIBRARIES(test_cov_SolvePressureUmfpack lib_computation)
-
-CXXTEST_ADD_TEST(test_cov_NeighborsDiagPhysvector test/TestNeighborsDiagPhysvector.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNeighborsDiagPhysvector.h)
-AddTestProperty(test_cov_NeighborsDiagPhysvector)
-CXXTEST_ADD_TEST(test_cov_Math_Set test/TestMath_Set.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMath_Set.h)
-AddTestProperty(test_cov_Math_Set) 
-CXXTEST_ADD_TEST(test_cov_NDFor test/TestNDFor.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestNDFor.h)
-AddTestProperty(test_cov_NDFor)
-
-CXXTEST_ADD_TEST(test_cov_UpdateCellTypeAndLayer3 test/TestUpdateCellTypeAndLayer3.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellTypeAndLayer3.h)
-AddTestProperty(test_cov_UpdateCellTypeAndLayer3)
-
-CXXTEST_ADD_TEST(test_cov_Math_Set2 test/TestMath_Set2.cpp
-                                 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMath_Set2.h)
-AddTestProperty(test_cov_Math_Set2)
-
-CXXTEST_ADD_TEST(test_cov_Mac_1_Order_UpWindConvect test/TestMac_1_OrderUpWindConvect.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMac_1_OrderUpWindConvect.h)
-AddTestProperty(test_cov_Mac_1_Order_UpWindConvect)
-
-# CXXTEST_ADD_TEST(test_cov_Serialization test/TestSerialization.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSerialization.h)
-# AddTestProperty(test_cov_Serialization)
-#	TARGET_LINK_LIBRARIES(test_cov_Serialization lib_computation)
-
-	
-CXXTEST_ADD_TEST(test_cov_KeyTableUnorderedMap test/TestKeyTableUnorderedMap.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestKeyTableUnorderedMap.h)
-AddTestProperty(test_cov_KeyTableUnorderedMap)
-
-# 	No test in it.
-#	CXXTEST_ADD_TEST(test_cov_Symmetry test/TestSymmetry.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestSymmetry.h)
-#	AddTestProperty(test_cov_Symmetry)
-#	TARGET_LINK_LIBRARIES(test_cov_Symmetry lib_computation)
-
-
-# 	Broken because of change in output that use boundary instead of particle.
-#	CXXTEST_ADD_TEST(test_cov_Stationar test/TestStationar.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestStationar.h)
-#	AddTestProperty(test_cov_Stationar)
-#	TARGET_LINK_LIBRARIES(test_cov_Stationar lib_computation)
-
-	CXXTEST_ADD_TEST(test_cov_MacWorld2 test/TestMacWorld2.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacWorld2.h)
-	AddTestProperty(test_cov_MacWorld2)
-
-# 	Remove because broken and will not be needed when we use level set.
-#	CXXTEST_ADD_TEST(test_cov_UpdateCellFluid3 test/TestUpdateCellFluid3.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdateCellFluid3.h)
-#	AddTestProperty(test_cov_UpdateCellFluid3)
-
-	CXXTEST_ADD_TEST(test_cov_MacCirculation test/TestMacCirculation.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestMacCirculation.h)
-	AddTestProperty(test_cov_MacCirculation)
+	CXXTEST_ADD_TEST(test_cov_KeyTableUnorderedMap test/TestKeyTableUnorderedMap.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestKeyTableUnorderedMap.h)
+	AddTestProperty(test_cov_KeyTableUnorderedMap)
 
 	CXXTEST_ADD_TEST(test_cov_Inversible_Value test/TestInversible_Value.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestInversible_Value.h)
 	AddTestProperty(test_cov_Inversible_Value)
@@ -374,7 +241,6 @@ AddTestProperty(test_cov_KeyTableUnorderedMap)
 
 	CXXTEST_ADD_TEST(test_cov_Data_Pressure_Data test/TestData_Pressure_Data.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Pressure_Data.h)
 	AddTestProperty(test_cov_Data_Pressure_Data)
-
 
 	CXXTEST_ADD_TEST(test_cov_Data_Speed_Data test/TestData_Speed_Data.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Speed_Data.h)
 	AddTestProperty(test_cov_Data_Speed_Data)
