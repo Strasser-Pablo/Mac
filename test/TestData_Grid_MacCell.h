@@ -6,6 +6,7 @@
 #include "../src/Data_Grid_Pressure.h"
 #include "../src/Datas.h"
 #include "../src/Data_Staggered_Left.h"
+#include "../src/Data_Grid_Layer.h"
 #define eps 1e-10
 class Test_Data_Grid_MacCell : public CxxTest::TestSuite  //LCOV_EXCL_LINE 
 {
@@ -137,5 +138,31 @@ class Test_Data_Grid_MacCell : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 			type_datas3 m_datas3(base,D,m_grid_speed);
 			typedef Data_Grid_MacCell<type_datas3> type_mac_cell3;
 			type_mac_cell3 mac3(m_datas3);
+		}
+		void test_Layer()
+		{
+			typedef Data_Base_Dim_Type<double,3> DataBase0;
+			DataBase0 base0;
+			typedef Data_Staggered_Left<DataBase0> DataBase;
+			DataBase base(base0);
+			typedef typename DataBase::type_data_value type_data_value;
+			typedef Data_CellType_Fluid_Air<DataBase> type_cell_type;
+			typedef Data_Grid_Speed<DataBase> type_grid_speed;
+			typedef Data_Grid_Pressure<DataBase> type_grid_pressure;
+			type_grid_speed m_grid_speed;
+			type_grid_pressure m_grid_pressure;
+			Data_CellType_Fluid_Air<DataBase> D;
+			Inversible_Value<type_data_value> rho_air(1);
+			Inversible_Value<type_data_value> rho_fluid(1000);
+			D.SetRhoAir(rho_air);
+			D.SetRhoFluid(rho_fluid);
+			typedef Data_Grid_Layer<int> type_layer;
+			type_layer layer;
+			typedef Datas<DataBase,type_cell_type,type_grid_speed,type_grid_pressure,type_layer> type_datas;
+			type_datas m_datas(base,D,m_grid_speed,m_grid_pressure,layer);
+			typedef Data_Grid_MacCell<type_datas> type_mac_cell;
+			type_mac_cell mac(m_datas);
+			mac.SetLayer(3);
+			TS_ASSERT_EQUALS(mac.GetLayer(),3.0);
 		}
 };

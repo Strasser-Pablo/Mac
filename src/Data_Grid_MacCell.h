@@ -173,6 +173,16 @@ struct Data_Grid_MacCell_cell_pressure<Enable,typename Enable::type_cell_pressur
 {
 };
 
+template <typename Enable,typename Dummy=void>
+class Data_Grid_MacCell_cell_layer
+{
+};
+
+template <typename Enable>
+struct Data_Grid_MacCell_cell_layer<Enable,typename Enable::type_cell_layer_exist> : public Enable::type_cell_layer
+{
+};
+
 /**
  * @ingroup GR_Data_Grid_MacCell
  * @brief
@@ -187,7 +197,7 @@ struct Data_Grid_MacCell_cell_pressure<Enable,typename Enable::type_cell_pressur
  * 	@tparam Data Class formed by combination of class (by mean of Datas for example).
  **/
 template<typename Data>
-class Data_Grid_MacCell : public Data_Grid_MacCell_InCell<Data>, public Data_Grid_MacCell_cell_speed<Data> , public Data_Grid_MacCell_cell_pressure<Data>, public Data_Grid_MacCell_cell_DataBase<Data>
+class Data_Grid_MacCell : public Data_Grid_MacCell_InCell<Data>, public Data_Grid_MacCell_cell_speed<Data> , public Data_Grid_MacCell_cell_pressure<Data>, public Data_Grid_MacCell_cell_DataBase<Data>, public Data_Grid_MacCell_cell_layer<Data>
 {
 	public:
 		/**
