@@ -5,6 +5,9 @@
 class Test_Data_CellType_Fluid_Air : public CxxTest::TestSuite  //LCOV_EXCL_LINE 
 {
 	public:
+	/**
+	 * \test That the following function Data...
+	 **/
 	void test_Base()
 	{
 		typedef Data_Base_Dim_Type<double,3> DataBase;
@@ -20,6 +23,9 @@ class Test_Data_CellType_Fluid_Air : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		TS_ASSERT_THROWS_ANYTHING(D.Material_To_Type_Fluid(invalid));
 		TS_ASSERT_THROWS_ANYTHING(D.MaterialToInt(invalid));
 	}
+	/**
+	 * \test Test that dejdeojdeodje
+	 **/
 	void test_Air()
 	{
 		typedef Data_Base_Dim_Type<double,3> DataBase;
@@ -30,6 +36,9 @@ class Test_Data_CellType_Fluid_Air : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		TS_ASSERT(D.GetIsFluid(Material_Type::Fluid));
 		TS_ASSERT(!D.GetIsFluid(Material_Type::Air));
 	}
+	/**
+	 * \test Test that ddedekodoekdek
+	 **/
 	void test_Fluid()
 	{
 		typedef Data_Base_Dim_Type<double,3> DataBase;
