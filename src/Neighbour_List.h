@@ -69,7 +69,7 @@ class Neighbour_List
 	 * @param sign Sign of the neighbour, +-1.
 	 * @return Pointer stored.
 	 **/
-	Neighbour_List<DIM,Data>* GetNeighbour(int dim,int sign);
+	Neighbour_List<DIM,Data>* GetNeighbour(int dim,int sign) const;
 	/**
 	 * @brief
 	 * Get a Reference to the current value.

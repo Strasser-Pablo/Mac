@@ -22,6 +22,7 @@ class Data_Grid_Layer
 	{
 	}
 	typedef Data_Grid_Layer<type_int> type_cell_layer;
+	typedef type_int type_layer_value;
 	typedef void type_cell_layer_exist;
 };
 
