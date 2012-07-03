@@ -295,4 +295,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithm_Speed_Constant_Mirror test/TestAlgorithm_Speed_Constant_Mirror.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithm_Speed_Constant_Mirror.h)
 	AddTestProperty(test_cov_Algorithm_Speed_Constant_Mirror)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithm_Calculate_Time_Step test/TestAlgorithm_Calculate_Time_Step.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithm_Calculate_Time_Step.h)
+	AddTestProperty(test_cov_Algorithm_Calculate_Time_Step)
 endif(USE_TESTING)
