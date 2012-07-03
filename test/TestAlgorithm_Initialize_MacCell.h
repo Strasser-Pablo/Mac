@@ -13,13 +13,13 @@
 #include "../src/Data_Staggered_Left.h"
 #include "../src/Data_Grid_Layer.h"
 #include "../src/DataRef.h"
-#include "../src/Policy_Layer_Initial.h"
 #include "../src/Policies.h"
 #include "../src/Data_Grid_Data.h"
 #include "../src/Algorithms.h"
 #include "../src/Algorithms_Initialize_MacCell.h"
 #include "../src/Data_Grid_Table.h"
 #include "../src/Empty.h"
+#include "../src/Data_Grid_Layer_Empty.h"
 #define eps 1e-10
 class TestAlgorithmes_Initialize_MacCell : public CxxTest::TestSuite  //LCOV_EXCL_LINE 
 {
@@ -43,8 +43,10 @@ class TestAlgorithmes_Initialize_MacCell : public CxxTest::TestSuite  //LCOV_EXC
 		D.SetRhoFluid(rho_fluid);
 		typedef Data_Grid_Layer<int> type_layer;
 		type_layer layer;
-		typedef Datas<DataBase,type_cell_type,type_grid_speed,type_grid_pressure,type_layer> type_datas;
-		type_datas m_datas(base,D,m_grid_speed,m_grid_pressure,layer);
+		typedef Data_Grid_Layer_Empty<type_layer> type_empt_lay;
+		type_empt_lay m_empt_lay(layer);
+		typedef Datas<DataBase,type_cell_type,type_grid_speed,type_grid_pressure,type_empt_lay> type_datas;
+		type_datas m_datas(base,D,m_grid_speed,m_grid_pressure,m_empt_lay);
 		typedef Data_Grid_MacCell<type_datas> type_mac_cell;
 		type_mac_cell mac(m_datas);
 		typedef Physvector<3,int> vect;
@@ -64,10 +66,11 @@ class TestAlgorithmes_Initialize_MacCell : public CxxTest::TestSuite  //LCOV_EXC
 		v.Set(2,2);
 		v.Set(3,3);
 		m_data_ref.m_data.GetGridData()[v];
-		typedef Policy_Layer_Initial<int,-1> pol_layer;
-		pol_layer m_pol_layer;
-		Algorithms_Initialize_MacCell<type_data_ref,pol_layer> m_alg(m_data_ref,m_pol_layer);
+		typedef Policies<> type_pol;
+		type_pol pol;
+		Algorithms_Initialize_MacCell<type_data_ref,type_pol> m_alg(m_data_ref,pol);
 		m_alg.Do();
 		TS_ASSERT_EQUALS(m_data_ref.m_data.GetGridData()[v].GetRef().GetLayer(),-1);
+		TS_ASSERT(m_data_ref.m_data.GetGridData()[v].GetRef().GetIsLayerEmpty());
 	}
 };

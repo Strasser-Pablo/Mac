@@ -31,6 +31,7 @@ class Data_Grid_Table : public Table
 	 * Type of neighbour type
 	 **/
 	typedef typename Table::type_key type_data_key;
+	typedef typename type_data_key::type_data type_data_key_value;
 	/**
 	 * @brief
 	 * Dimension of the problem

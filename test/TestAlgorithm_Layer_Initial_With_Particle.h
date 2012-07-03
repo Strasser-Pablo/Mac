@@ -13,14 +13,12 @@
 #include "../src/Data_Staggered_Left.h"
 #include "../src/Data_Grid_Layer.h"
 #include "../src/DataRef.h"
-#include "../src/Policy_Layer_Initial.h"
 #include "../src/Policies.h"
 #include "../src/Data_Grid_Data.h"
 #include "../src/Algorithms.h"
 #include "../src/Algorithms_Delete_MacCell.h"
 #include "../src/Data_Grid_Table.h"
 #include "../src/Empty.h"
-#include "../src/Policy_Layer_Particle_Initial.h"
 #include "../src/Data_Topology.h"
 #include "../src/Data_Particle.h"
 #include "../src/Data_Particles_List.h"
@@ -87,12 +85,10 @@ class TestAlgorithm_Layer_Initial_With_Particle : public CxxTest::TestSuite  //L
 
 		m_data_ref.m_data.GetTopologyData().GetRefToParticleList().push_back(part);
 
-		typedef Policy_Layer_Particle_Initial<int,0> pol_layer;
 		typedef Policy_Particle_To_Key<DataBase> pol_part_to_key;
 		pol_part_to_key m_pol_part_to_key(base);
-		typedef Policies<pol_layer,pol_part_to_key> type_policies;
-		pol_layer m_pol_layer;
-		type_policies policies(m_pol_layer,m_pol_part_to_key);
+		typedef Policies<pol_part_to_key> type_policies;
+		type_policies policies(m_pol_part_to_key);
 		Algorithms_Layer_Initial_With_Particle<type_data_ref,type_policies> m_alg(m_data_ref,policies);
 		TS_ASSERT_EQUALS(m_data_ref.m_data.GetGridData().size(),0);
 		m_alg.Do();

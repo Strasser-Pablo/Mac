@@ -102,3 +102,9 @@ void Data_Grid_Speed<DataBase>::Speed_Speed_To_Temp()
 {
 	m_temp_speed=m_speed;
 }
+
+template <typename DataBase>
+bool Data_Grid_Speed<DataBase>::Speed_Is_One_Const()
+{
+	return m_has_const;
+}

@@ -176,11 +176,17 @@ struct Data_Grid_MacCell_cell_pressure<Enable,typename Enable::type_cell_pressur
 template <typename Enable,typename Dummy=void>
 class Data_Grid_MacCell_cell_layer
 {
+	Data_Grid_MacCell_cell_layer(const Enable& en)
+	{
+	}
 };
 
 template <typename Enable>
 struct Data_Grid_MacCell_cell_layer<Enable,typename Enable::type_cell_layer_exist> : public Enable::type_cell_layer
 {
+	Data_Grid_MacCell_cell_layer(const Enable& en) : Enable::type_cell_layer(en)
+	{
+	}
 };
 
 /**
@@ -207,7 +213,7 @@ class Data_Grid_MacCell : public Data_Grid_MacCell_InCell<Data>, public Data_Gri
 		 * @param data a Data instance.
 		 **/
 		template<typename T,typename Data_Grid_MacCell_InCell2<T,Data>::type =0>
-		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_InCell<Data>(data),Data_Grid_MacCell_cell_DataBase<Data>(data)
+		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_InCell<Data>(data),Data_Grid_MacCell_cell_DataBase<Data>(data),Data_Grid_MacCell_cell_layer<Data>(data)
 		{
 		}
 		/**
@@ -217,7 +223,7 @@ class Data_Grid_MacCell : public Data_Grid_MacCell_InCell<Data>, public Data_Gri
 		 * @param data a Data instance.
 		 **/
 		template<typename T,typename Data_Grid_MacCell_InCell3<T,Data>::type =0>
-		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_cell_DataBase<Data>(data)
+		Data_Grid_MacCell(const T & data) : Data_Grid_MacCell_cell_DataBase<Data>(data),Data_Grid_MacCell_cell_layer<Data>(data)
 		{
 		}
 		/**

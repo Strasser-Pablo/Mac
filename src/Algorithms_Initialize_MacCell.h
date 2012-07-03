@@ -4,7 +4,6 @@
 template <typename DataType,typename Policy>
 class Algorithms_Initialize_MacCell : public Policy
 {
-	using Policy::GetLayerInitial;
 	typedef typename DataType::type_data_struct type_data;
 	typedef typename type_data::type_Data_Grid type_grid;
 	typedef typename type_grid::iterator iterator;
@@ -18,7 +17,7 @@ class Algorithms_Initialize_MacCell : public Policy
 	{
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-			it.data().GetRef().SetLayer(GetLayerInitial());
+			it.data().GetRef().SetLayerEmpty();
 		}
 	}
 };

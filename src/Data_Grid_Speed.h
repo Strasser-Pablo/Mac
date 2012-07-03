@@ -168,6 +168,11 @@ class Data_Grid_Speed
 	 * Constantness is ignored in this operation.
 	 **/
 	void Speed_Speed_To_Temp();
+	/**
+	 * @brief
+	 * Get if one const
+	 **/
+	bool Speed_Is_One_Const();
 };
 #include "Data_Grid_Speed.tpp"
 #endif
