@@ -104,7 +104,7 @@ void Data_Grid_Speed<DataBase>::Speed_Speed_To_Temp()
 }
 
 template <typename DataBase>
-bool Data_Grid_Speed<DataBase>::Speed_Is_One_Const()
+bool Data_Grid_Speed<DataBase>::Speed_Is_One_Const() const
 {
 	return m_has_const;
 }

@@ -10,7 +10,7 @@ class Data_Grid_Layer
 	{
 		m_layer=lay;
 	}
-	type_int GetLayer()
+	type_int GetLayer() const
 	{
 		return m_layer;
 	}

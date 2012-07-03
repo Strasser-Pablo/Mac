@@ -172,7 +172,7 @@ class Data_Grid_Speed
 	 * @brief
 	 * Get if one const
 	 **/
-	bool Speed_Is_One_Const();
+	bool Speed_Is_One_Const() const;
 };
 #include "Data_Grid_Speed.tpp"
 #endif

@@ -28,6 +28,12 @@ Data& Neighbour_List<DIM,Data>::GetRef()
 }
 
 template<int DIM,typename Data>
+const Data& Neighbour_List<DIM,Data>::GetRef() const
+{
+	return m_data;
+}
+
+template<int DIM,typename Data>
 void Neighbour_List<DIM,Data>::Set(const Data& data)
 {
 	m_data=data;

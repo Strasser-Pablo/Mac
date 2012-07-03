@@ -286,4 +286,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithm_Layer_Initial_With_Particle test/TestAlgorithm_Layer_Initial_With_Particle.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithm_Layer_Initial_With_Particle.h)
 	AddTestProperty(test_cov_Algorithm_Layer_Initial_With_Particle)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithms_Create_Fluid_Particle test/TestAlgorithms_Create_Fluid_Particle.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Create_Fluid_Particle.h)
+	AddTestProperty(test_cov_Algorithms_Create_Fluid_Particle)
 endif(USE_TESTING)

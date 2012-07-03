@@ -9,7 +9,7 @@ class Data_Grid_Layer_Empty : public Base
 	{
 		this->SetLayer(-1);
 	}
-	bool GetIsLayerEmpty()
+	bool GetIsLayerEmpty() const
 	{
 		return this->GetLayer()==-1;
 	}

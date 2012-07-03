@@ -76,6 +76,7 @@ class Neighbour_List
 	 * @return Reference to Data.
 	 **/
 	Data& GetRef();
+	const Data& GetRef() const;
 	/**
 	 * @brief
 	 * Get the value.
