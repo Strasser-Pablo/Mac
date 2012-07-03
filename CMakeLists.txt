@@ -212,6 +212,11 @@ endif(USE_GOOGLE_PERF)
 #set_target_properties(Container_Filling PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 #TARGET_LINK_LIBRARIES(Container_Filling lib_computation)
 
+
+add_executable(Performance ${CMAKE_CURRENT_SOURCE_DIR}/src/Performance.cpp)
+set_target_properties(Performance PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Performance lib_computation)
+
 if (USE_TESTING)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 

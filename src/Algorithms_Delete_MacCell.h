@@ -11,7 +11,7 @@ class Algorithms_Delete_MacCell : public Policy
 	type_data& m_data;
 	type_grid& m_grid;
 	public:
-	Algorithms_Delete_MacCell(DataType data) :m_data(data.m_data), m_grid(m_data.GetGridData())
+	Algorithms_Delete_MacCell(DataType data,const Policy& pol) :m_data(data.m_data), m_grid(m_data.GetGridData()),Policy(pol)
 	{
 	}
 	void Do()

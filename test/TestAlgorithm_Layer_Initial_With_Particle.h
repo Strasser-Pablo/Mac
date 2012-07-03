@@ -24,7 +24,7 @@
 #include "../src/Data_Topology.h"
 #include "../src/Data_Particle.h"
 #include "../src/Data_Particles_List.h"
-#include "../src/Data_Particle_To_Key.h"
+#include "../src/Policy_Particle_To_Key.h"
 #include "../src/Data_Grid_Base_Spacing.h"
 #include "../src/Algorithms_Layer_Initial_With_Particle.h"
 #define eps 1e-10
@@ -77,10 +77,8 @@ class TestAlgorithm_Layer_Initial_With_Particle : public CxxTest::TestSuite  //L
 		type_particles particles(base);
 		typedef Data_Topology<type_particles,type_grid_data> type_topology;
 		type_topology topo(particles,m_grid_data);
-		typedef Data_Particle_To_Key<type_topology> type_particle_to_key;
-		type_particle_to_key part_to_key(topo);
-		typedef DataRef<type_particle_to_key> type_data_ref;
-		type_data_ref m_data_ref(part_to_key);
+		typedef DataRef<type_topology> type_data_ref;
+		type_data_ref m_data_ref(topo);
 		
 		type_particle part;
 		part.GetParticlePosRef().Set(1,2.2);
@@ -90,7 +88,12 @@ class TestAlgorithm_Layer_Initial_With_Particle : public CxxTest::TestSuite  //L
 		m_data_ref.m_data.GetTopologyData().GetRefToParticleList().push_back(part);
 
 		typedef Policy_Layer_Particle_Initial<int,0> pol_layer;
-		Algorithms_Layer_Initial_With_Particle<type_data_ref,pol_layer> m_alg(m_data_ref);
+		typedef Policy_Particle_To_Key<DataBase> pol_part_to_key;
+		pol_part_to_key m_pol_part_to_key(base);
+		typedef Policies<pol_layer,pol_part_to_key> type_policies;
+		pol_layer m_pol_layer;
+		type_policies policies(m_pol_layer,m_pol_part_to_key);
+		Algorithms_Layer_Initial_With_Particle<type_data_ref,type_policies> m_alg(m_data_ref,policies);
 		TS_ASSERT_EQUALS(m_data_ref.m_data.GetGridData().size(),0);
 		m_alg.Do();
 		TS_ASSERT_EQUALS(m_data_ref.m_data.GetGridData().size(),1);

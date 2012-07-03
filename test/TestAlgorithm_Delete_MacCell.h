@@ -65,7 +65,8 @@ class TestAlgorithmes_Delete_MacCell : public CxxTest::TestSuite  //LCOV_EXCL_LI
 		v.Set(3,3);
 		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(-1);
 		typedef Policy_Layer_Initial<int,-1> pol_layer;
-		Algorithms_Delete_MacCell<type_data_ref,pol_layer> m_alg(m_data_ref);
+		pol_layer m_pol_layer;
+		Algorithms_Delete_MacCell<type_data_ref,pol_layer> m_alg(m_data_ref,m_pol_layer);
 		TS_ASSERT_EQUALS(m_data_ref.m_data.GetGridData().size(),1);
 		m_alg.Do();
 		TS_ASSERT_EQUALS(m_data_ref.m_data.GetGridData().size(),0);

@@ -3,14 +3,15 @@
 #include "RundingFunction.h"
 
 template <typename DataBase>
-class Data_Particle_To_Key: public DataBase
+class Policy_Particle_To_Key
 {
 	typedef typename DataBase::type_data_vector type_data_vector;
 	typedef typename type_data_vector::type_data type_data;
 	static const int type_dim=DataBase::type_dim;
 	Round<type_data,int> m_round;
+	const DataBase &m_data;
 	public:
-	Data_Particle_To_Key(DataBase& base) : DataBase(base)
+	Policy_Particle_To_Key(DataBase& base) : m_data(base)
 	{
 	}
 	template <typename Particle>
@@ -20,7 +21,7 @@ class Data_Particle_To_Key: public DataBase
 		Physvector<type_dim,int> ret;
 		for(int i=1;i<=type_dim;++i)
 		{
-			vect.GetRef(i)*=this->m_h.Get_Inv().Get(i);
+			vect.GetRef(i)*=m_data.m_h.Get_Inv().Get(i);
 			ret.GetRef(i)=m_round(vect.GetRef(i));
 		}
 		return ret;

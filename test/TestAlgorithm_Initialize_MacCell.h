@@ -65,7 +65,8 @@ class TestAlgorithmes_Initialize_MacCell : public CxxTest::TestSuite  //LCOV_EXC
 		v.Set(3,3);
 		m_data_ref.m_data.GetGridData()[v];
 		typedef Policy_Layer_Initial<int,-1> pol_layer;
-		Algorithms_Initialize_MacCell<type_data_ref,pol_layer> m_alg(m_data_ref);
+		pol_layer m_pol_layer;
+		Algorithms_Initialize_MacCell<type_data_ref,pol_layer> m_alg(m_data_ref,m_pol_layer);
 		m_alg.Do();
 		TS_ASSERT_EQUALS(m_data_ref.m_data.GetGridData()[v].GetRef().GetLayer(),-1);
 	}
