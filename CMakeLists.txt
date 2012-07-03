@@ -277,4 +277,13 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Data_Particles_List test/TestData_Particles_List.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Particles_List.h)
 	AddTestProperty(test_cov_Data_Particles_List)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithm_Initialize_MacCell test/TestAlgorithm_Initialize_MacCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithm_Initialize_MacCell.h)
+	AddTestProperty(test_cov_Algorithm_Initialize_MacCell)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithm_Delete_MacCell test/TestAlgorithm_Delete_MacCell.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithm_Delete_MacCell.h)
+	AddTestProperty(test_cov_Algorithm_Delete_MacCell)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithm_Layer_Initial_With_Particle test/TestAlgorithm_Layer_Initial_With_Particle.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithm_Layer_Initial_With_Particle.h)
+	AddTestProperty(test_cov_Algorithm_Layer_Initial_With_Particle)
 endif(USE_TESTING)

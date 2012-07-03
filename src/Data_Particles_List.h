@@ -16,6 +16,12 @@ class Data_Particles_List : public DataBase
 	{
 		return m_table;
 	}
+	const TableContainerList<Particle>& GetRefToParticleList() const
+	{
+		return m_table;
+	}
+	typedef Particle type_particle;
+	typedef TableContainerList<Particle> type_particle_list;
 };
 
 #endif

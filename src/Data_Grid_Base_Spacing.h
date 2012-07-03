@@ -52,5 +52,8 @@ class Data_Grid_Base_Spacing : public DataBase
 	Data_Grid_Base_Spacing()
 	{
 	}
+	Data_Grid_Base_Spacing(const DataBase &base):DataBase(base)
+	{
+	}
 };
 #endif
