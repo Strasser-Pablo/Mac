@@ -292,4 +292,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Update_CellType_Layer test/TestAlgorithms_Update_CellType_Layer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Update_CellType_Layer.h)
 	AddTestProperty(test_cov_Algorithms_Update_CellType_Layer)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithm_Speed_Constant_Mirror test/TestAlgorithm_Speed_Constant_Mirror.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithm_Speed_Constant_Mirror.h)
+	AddTestProperty(test_cov_Algorithm_Speed_Constant_Mirror)
 endif(USE_TESTING)

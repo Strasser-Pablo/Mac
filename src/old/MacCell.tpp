@@ -50,7 +50,8 @@ MacCell<DIM,TypeData,TypeCell,ID>::MacCell(Physvector<DIM,TypeData> &speed,const
 }
 
 template <int DIM,class TypeData, class TypeCell,int ID>
-MacCell<DIM,TypeData,TypeCell,ID>::~MacCell(){
+MacCell<DIM,TypeData,TypeCell,ID>::~MacCell()
+{
 }
 
 
@@ -59,7 +60,7 @@ void MacCell<DIM,TypeData,TypeCell,ID>::SetSpeed(Physvector<DIM,TypeData> &speed
 {
 	if(!m_one_const)
 	{
-	m_speed=speed;
+		m_speed=speed;
 	}
 	else
 	{
