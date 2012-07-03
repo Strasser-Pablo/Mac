@@ -85,8 +85,8 @@ class TestAlgorithm_Layer_Initial_With_Particle : public CxxTest::TestSuite  //L
 
 		m_data_ref.m_data.GetTopologyData().GetRefToParticleList().push_back(part);
 
-		typedef Policy_Particle_To_Key<DataBase> pol_part_to_key;
-		pol_part_to_key m_pol_part_to_key(base);
+		typedef Policy_Particle_To_Key<type_data_ref> pol_part_to_key;
+		pol_part_to_key m_pol_part_to_key(m_data_ref);
 		typedef Policies<pol_part_to_key> type_policies;
 		type_policies policies(m_pol_part_to_key);
 		Algorithms_Layer_Initial_With_Particle<type_data_ref,type_policies> m_alg(m_data_ref,policies);

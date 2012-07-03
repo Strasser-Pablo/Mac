@@ -68,12 +68,28 @@ class Inversible_Value_Base
 	{
 		return m_data;
 	}
+	const Data& GetRef() const
+	{
+		return m_data;
+	}
+	Data& GetRef()
+	{
+		return m_data;
+	}
 	/**
 	 * @brief
 	 * Return the inverse of Value.
 	 * @return Return the inverse of value.
 	 **/
 	Data Get_Inv() const
+	{
+		return m_1_data;
+	}
+	const Data& GetRef_Inv() const
+	{
+		return m_1_data;
+	}
+	Data& GetRef_Inv()
 	{
 		return m_1_data;
 	}
