@@ -174,7 +174,7 @@ struct Data_Grid_MacCell_cell_pressure<Enable,typename Enable::type_cell_pressur
 };
 
 template <typename Enable,typename Dummy=void>
-class Data_Grid_MacCell_cell_layer
+struct Data_Grid_MacCell_cell_layer
 {
 	Data_Grid_MacCell_cell_layer(const Enable& en)
 	{
