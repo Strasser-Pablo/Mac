@@ -19,7 +19,7 @@ class Algorithms_Calculate_Time_Step : public Policy
 	type_Time_Type& m_factor;
 	const type_data_vector& m_1_h;
 	public:
-	Algorithms_Calculate_Time_Step(DataType data,const Policy& pol) : m_grid(data.m_data.GetGridData()),Policy(pol),m_dt(data.m_data.GetTimingData().m_dt),m_factor(data.m_data.GetTimingData().m_factor),m_1_h(data.m_data.m_h.GetRef_Inv())
+	Algorithms_Calculate_Time_Step(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt),m_factor(data.m_data.GetTimingData().m_factor),m_1_h(data.m_data.m_h.GetRef_Inv())
 	{
 	}
 	void Do()

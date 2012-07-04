@@ -15,7 +15,7 @@ class Algorithms_Layer_Initial_With_Particle : public Policy
 	type_grid& m_grid;
 	const type_particle_list& m_list;
 	public:
-	Algorithms_Layer_Initial_With_Particle(DataType data,const Policy& pol) :m_data(data.m_data), m_grid(m_data.GetGridData()), m_list(m_data.GetTopologyData().GetRefToParticleList()),Policy(pol)
+	Algorithms_Layer_Initial_With_Particle(DataType data,const Policy& pol) :Policy(pol),m_data(data.m_data), m_grid(m_data.GetGridData()), m_list(m_data.GetTopologyData().GetRefToParticleList())
 	{
 	}
 	void Do()

@@ -13,7 +13,7 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 	static const int type_dim=type_data_key::type_dim;
 	type_grid& m_grid;
 	public:
-	Algorithms_Speed_Constant_Mirror(DataType data,const Policy& pol) :m_grid(data.m_data.GetGridData()),Policy(pol)
+	Algorithms_Speed_Constant_Mirror(DataType data,const Policy& pol) :Policy(pol),m_grid(data.m_data.GetGridData())
 	{
 	}
 	void Do()

@@ -15,7 +15,7 @@ class Algorithms_Create_Fluid_Particle : public Policy
 	type_data& m_data;
 	type_grid& m_grid;
 	public:
-	Algorithms_Create_Fluid_Particle(DataType data,const Policy& pol) :m_data(data.m_data), m_grid(m_data.GetGridData()),Policy(pol)
+	Algorithms_Create_Fluid_Particle(DataType data,const Policy& pol) :Policy(pol),m_data(data.m_data), m_grid(m_data.GetGridData())
 	{
 	}
 	void Do()

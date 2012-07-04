@@ -10,7 +10,7 @@ class Policy_CheckDT
 	type_Time_Type m_dt_min;
 	type_Time_Type m_dt_max;
 	public:
-	Policy_CheckDT(type_Time_Type min,type_Time_Type max) : m_dt_max(max), m_dt_min(min)
+	Policy_CheckDT(type_Time_Type min,type_Time_Type max) :  m_dt_min(min),m_dt_max(max)
 	{
 	}
 	type_Time_Type CheckDT(type_Time_Type dt)
