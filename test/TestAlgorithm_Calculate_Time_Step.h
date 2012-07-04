@@ -37,15 +37,8 @@ class TestAlgorithm_Calculate_Time_Step : public CxxTest::TestSuite  //LCOV_EXCL
 	{
 		typedef Data_Base_Dim_Type<double,3> DataBase0;
 		DataBase0 base0;
-		typedef Data_Grid_Base_Spacing<DataBase0> DataBase00;
-		DataBase00 base00(base0);
-		Physvector<3,double> h;
-		h.Set(1,1.0);
-		h.Set(2,1.0);
-		h.Set(3,1.0);
-		base00.m_h.Set(h);
-		typedef Data_Staggered_Left<DataBase00> DataBase;
-		DataBase base(base00);
+		typedef Data_Staggered_Left<DataBase0> DataBase;
+		DataBase base(base0);
 		typedef typename DataBase::type_data_value type_data_value;
 		typedef Data_CellType_Fluid_Air<DataBase> type_cell_type;
 		typedef Data_Grid_Speed<DataBase> type_grid_speed;
@@ -75,8 +68,15 @@ class TestAlgorithm_Calculate_Time_Step : public CxxTest::TestSuite  //LCOV_EXCL
 		hook_table m_hook_table(m_neigh,hash);
 		typedef Data_Grid_Table<hook_table> type_data_grid;
 		type_data_grid table(m_hook_table);
-		typedef Data_Grid_Data<type_data_grid,DataBase> type_grid_data;
-		type_grid_data m_grid_data(table,base);
+		typedef Data_Grid_Base_Spacing<type_data_grid> DataBase_;
+		DataBase_ base_(table);
+		Physvector<3,double> h;
+		h.Set(1,1.0);
+		h.Set(2,1.0);
+		h.Set(3,1.0);
+		base_.m_h.Set(h);
+		typedef Data_Grid_Data<DataBase_,DataBase> type_grid_data;
+		type_grid_data m_grid_data(base_,base);
 
 		typedef Data_Particle<DataBase> type_particle;
 		typedef Data_Particles_List<type_particle,DataBase> type_particles;

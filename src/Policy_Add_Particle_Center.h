@@ -19,7 +19,7 @@ class Policy_Add_Particle_Center
 	type_particle_list &m_list;
 	const type_data_vector &m_h;
 	public:
-	Policy_Add_Particle_Center(const Data& data) : m_list(data.m_data.GetTopologyData().GetRefToParticleList()),m_h(data.m_data.m_h.GetRef())
+	Policy_Add_Particle_Center(const Data& data) : m_list(data.m_data.GetTopologyData().GetRefToParticleList()),m_h(data.m_data.GetGridData().m_h.GetRef())
 	{
 	}
 	void AddParticle(const type_data_key& vect)

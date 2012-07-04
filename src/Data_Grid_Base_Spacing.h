@@ -26,12 +26,6 @@ class Data_Grid_Base_Spacing : public DataBase
 	Inversible_Value<type_data_vector> m_h;
 	/**
 	 * @brief
-	 * Type pointing to the base type without additional inheritance.
-	 * Because after addition of additional base class we are of this class but with another template value, we need this type to know the type.
-	 **/
-	typedef Data_Grid_Base_Spacing<typename DataBase::type_SubInherite_Base> type_SubInherite_Base;
-	/**
-	 * @brief
 	 * Defualt Constructor
 	 **/
 	Data_Grid_Base_Spacing()

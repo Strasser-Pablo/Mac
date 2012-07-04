@@ -13,7 +13,7 @@ class Policy_Is_Inbound_Filling_Layer
 	Policy_Is_Inbound_Filling_Layer()
 	{
 	}
-	Policy_Is_Inbound_Filling_Layer(const Data& data)
+	Policy_Is_Inbound_Filling_Layer(const Data& data __attribute__ ((unused)))
 	{
 	}
 	static bool GetIsInboundNeedFilling(const type_data& data)

@@ -17,7 +17,7 @@ class Policy_Particle_To_Key
 	Round<type_data_value,type_data_key_value> m_round;
 	const type_data_vector &m_1_h;
 	public:
-	Policy_Particle_To_Key(Data& base) : m_1_h(base.m_data.m_h.GetRef_Inv())
+	Policy_Particle_To_Key(Data& base) : m_1_h(base.m_data.GetGridData().m_h.GetRef_Inv())
 	{
 	}
 	template <typename Particle>

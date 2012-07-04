@@ -47,6 +47,7 @@ class Data_Grid_Table : public Table
 	 * Type of numerical type.
 	 **/
 	typedef typename type_data_mac_cell::type_data_value type_data_value;
+	typedef typename type_data_mac_cell::type_data_vector type_data_vector;
 	/**
 	 * @brief
 	 * Constructor.
