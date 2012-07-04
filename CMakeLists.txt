@@ -298,4 +298,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithm_Calculate_Time_Step test/TestAlgorithm_Calculate_Time_Step.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithm_Calculate_Time_Step.h)
 	AddTestProperty(test_cov_Algorithm_Calculate_Time_Step)
+
+	CXXTEST_ADD_TEST(test_cov_Policy_Speed_Interpolation_Linear test/TestPolicy_Speed_Interpolation_Linear.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Speed_Interpolation_Linear.h)
+	AddTestProperty(test_cov_Policy_Speed_Interpolation_Linear)
 endif(USE_TESTING)
