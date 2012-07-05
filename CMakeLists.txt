@@ -307,4 +307,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Policy_Laplacian_Speed test/TestPolicy_Laplacian_Speed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Laplacian_Speed.h)
 	AddTestProperty(test_cov_Policy_Laplacian_Speed)
+
+	CXXTEST_ADD_TEST(test_cov_Policy_Divergence test/TestPolicy_Divergence.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Divergence.h)
+	AddTestProperty(test_cov_Policy_Divergence)
 endif(USE_TESTING)
