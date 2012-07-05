@@ -301,4 +301,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Policy_Speed_Interpolation_Linear test/TestPolicy_Speed_Interpolation_Linear.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Speed_Interpolation_Linear.h)
 	AddTestProperty(test_cov_Policy_Speed_Interpolation_Linear)
+
+	CXXTEST_ADD_TEST(test_cov_Policy_Upwind_1_Order test/TestPolicy_Upwind_1_Order.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Upwind_1_Order.h)
+	AddTestProperty(test_cov_Policy_Upwind_1_Order)
 endif(USE_TESTING)

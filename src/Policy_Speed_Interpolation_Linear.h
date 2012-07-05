@@ -55,5 +55,13 @@ class Policy_Speed_Interpolation_Linear
 		}
 		return ret;
 	}
+	type_data_value Get_Speed_At_Bound(type_data_neigh* neigh,int i,int j)
+	{
+		if(i==j)
+		{
+			return neigh->GetRef().Speed_Get(j);
+		}
+		return 0.25*(neigh->GetRef().Speed_Get(j)+neigh->GetNeighbour(j,1)->GetRef().Speed_Get(j)+neigh->GetNeighbour(i,-1)->GetRef().Speed_Get(j)+neigh->GetNeighbour(i,-1)->GetNeighbour(j,1)->GetRef().Speed_Get(j));
+	}
 };
 #endif
