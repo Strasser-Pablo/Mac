@@ -313,4 +313,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Policy_Gradiant test/TestPolicy_Gradiant.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Gradiant.h)
 	AddTestProperty(test_cov_Policy_Gradiant)
+
+	CXXTEST_ADD_TEST(test_cov_Policy_Laplacian test/TestPolicy_Laplacian.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Laplacian.h)
+	AddTestProperty(test_cov_Policy_Laplacian)
 endif(USE_TESTING)
