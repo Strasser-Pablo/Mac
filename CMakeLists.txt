@@ -304,4 +304,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Policy_Upwind_1_Order test/TestPolicy_Upwind_1_Order.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Upwind_1_Order.h)
 	AddTestProperty(test_cov_Policy_Upwind_1_Order)
+
+	CXXTEST_ADD_TEST(test_cov_Policy_Laplacian_Speed test/TestPolicy_Laplacian_Speed.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Laplacian_Speed.h)
+	AddTestProperty(test_cov_Policy_Laplacian_Speed)
 endif(USE_TESTING)
