@@ -310,4 +310,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Policy_Divergence test/TestPolicy_Divergence.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Divergence.h)
 	AddTestProperty(test_cov_Policy_Divergence)
+
+	CXXTEST_ADD_TEST(test_cov_Policy_Gradiant test/TestPolicy_Gradiant.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Gradiant.h)
+	AddTestProperty(test_cov_Policy_Gradiant)
 endif(USE_TESTING)
