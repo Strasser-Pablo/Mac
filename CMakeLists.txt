@@ -316,4 +316,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Gravity test/TestAlgorithms_Gravity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Gravity.h)
 	AddTestProperty(test_cov_Algorithms_Gravity)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithms_Viscosity test/TestAlgorithms_Viscosity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Viscosity.h)
+	AddTestProperty(test_cov_Algorithms_Viscosity)
 endif(USE_TESTING)
