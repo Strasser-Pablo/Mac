@@ -327,4 +327,7 @@ endfunction(AddTestProperty)
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Solve_Pressure test/TestAlgorithms_Solve_Pressure.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Solve_Pressure.h)
 	AddTestProperty(test_cov_Algorithms_Solve_Pressure)
 	TARGET_LINK_LIBRARIES(test_cov_Algorithms_Solve_Pressure lib_computation)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithms_Move_Particles test/TestAlgorithms_Move_Particles.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Move_Particles.h)
+	AddTestProperty(test_cov_Algorithms_Move_Particles)
 endif(USE_TESTING)
