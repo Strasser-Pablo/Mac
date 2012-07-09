@@ -27,9 +27,26 @@ class Data_CellType_Interface_Constant : public Data_CellType_Interface_Implemen
 	}
 
 	template <class T_INT, typename Is_Staggered_Left_SFINAE<T_INT,Base,int>::type =0>
-	bool GeIsConstantInterface_Impl(const type_data_key &k1,T_INT dim,T_INT sign) const
+	bool GetIsConstantInterface_Impl(const type_data_key &k1,T_INT dim,T_INT sign) const
 	{
 		type_data_neigh neigh=this->at(k1);
+		type_data_neigh* neigh2=neigh.GetNeighbour(dim,sign);
+		if(neigh2==nullptr)
+		{
+			return false;
+		}
+		if(sign==1)
+		{
+			return neigh2->Get().Speed_Get_Const(dim);
+		}
+		else
+		{
+			return neigh.Get().Speed_Get_Const(dim);
+		}
+	}
+	template <class T_INT, typename Is_Staggered_Left_SFINAE<T_INT,Base,int>::type =0>
+	bool GetIsConstantInterface_Impl(const type_data_neigh &neigh,T_INT dim,T_INT sign) const
+	{
 		type_data_neigh* neigh2=neigh.GetNeighbour(dim,sign);
 		if(neigh2==nullptr)
 		{

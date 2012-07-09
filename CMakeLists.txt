@@ -319,4 +319,12 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Viscosity test/TestAlgorithms_Viscosity.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Viscosity.h)
 	AddTestProperty(test_cov_Algorithms_Viscosity)
+
+	CXXTEST_ADD_TEST(test_cov_Policy_Solve_Linear_Umfpack test/TestPolicy_Solve_Linear_Umfpack.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Solve_Linear_Umfpack.h)
+	AddTestProperty(test_cov_Policy_Solve_Linear_Umfpack)
+	TARGET_LINK_LIBRARIES(test_cov_Policy_Solve_Linear_Umfpack lib_computation)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithms_Solve_Pressure test/TestAlgorithms_Solve_Pressure.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Solve_Pressure.h)
+	AddTestProperty(test_cov_Algorithms_Solve_Pressure)
+	TARGET_LINK_LIBRARIES(test_cov_Algorithms_Solve_Pressure lib_computation)
 endif(USE_TESTING)
