@@ -37,12 +37,12 @@ class Policy_Output_Grid_Speed
 	Policy_Output_Grid_Speed(Data & data,const char* pref): m_grid(data.m_data.GetGridData()),m_h(data.m_data.GetGridData().m_h.GetRef()),m_pref(pref)
 	{
 	}
-	void OutputGridSpeed(int i)
+	void OutputGridSpeed(int i,list<string>& m_list)
 	{
-	 	vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
-		vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
 		for(int ispeed=1;ispeed<=type_dim;++ispeed)
 		{
+	 		vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
+			vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
 			int num=0;
 			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
@@ -175,6 +175,8 @@ class Policy_Output_Grid_Speed
 			stream2<<ispeed;
 			string str=string(m_pref)+string("_")+stream2.str()+string("_")+stream.str()+string(".vtu");
 			writer->SetFileName(str.c_str());
+			m_list.push_back(str.c_str());
+  			writer->SetDataModeToAscii();
 			writer->Write();
 		}
 	}

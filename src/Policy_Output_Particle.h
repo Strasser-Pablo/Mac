@@ -33,7 +33,7 @@ class Policy_Output_Particle
 	Policy_Output_Particle(const Data & data,const char* pref): m_part(data.m_data.GetTopologyData().GetRefToParticleList()),m_pref(pref)
 	{
 	}
-	void OutputTopology(int i)
+	void OutputTopology(int i,list<string>& m_list)
 	{
 		vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 		vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
@@ -66,7 +66,9 @@ class Policy_Output_Particle
 		stream<<i;
 		string str=string(m_pref)+stream.str()+string(".vtu");
 		writer->SetFileName(str.c_str());
+  		writer->SetDataModeToAscii();
 		writer->Write();
+		m_list.push_back(str.c_str());
 	}
 
 };

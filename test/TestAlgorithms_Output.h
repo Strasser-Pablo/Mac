@@ -31,6 +31,7 @@
 #include "../src/Policy_Output_Grid_Speed.h"
 #include "../src/Policy_Output_Grid_Pressure.h"
 #include "../src/Algorithms_Output.h"
+#include "../src/Policy_Output_Animation.h"
 #define eps 1e-10
 class TestAlgorithms_Output : public CxxTest::TestSuite  //LCOV_EXCL_LINE 
 {
@@ -111,15 +112,19 @@ class TestAlgorithms_Output : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		part.GetParticlePosRef().Set(1,2.2);
 		m_data_ref.m_data.GetTopologyData().GetRefToParticleList().push_back(part);
 		
+		m_data_ref.m_data.GetTimingData().m_t=1;
+		
 		typedef Policy_Output_Grid_Speed<type_data_ref> type_pol_speed;
 		type_pol_speed m_pol_speed(m_data_ref,"Out_Speed_");
 		typedef Policy_Output_Grid_Pressure<type_data_ref> type_pol_pressure;
 		type_pol_pressure m_pol_pressure(m_data_ref,"Out_Pressure_");
 		typedef Policy_Output_Particle<type_data_ref> type_pol_particle;
 		type_pol_particle m_pol_particle(m_data_ref,"Out_Particle_");
+		typedef Policy_Output_Animation<type_data_ref> type_pol_animation;
+		type_pol_animation m_pol_animation(m_data_ref,"Out_Animation.pvd");
 
-		typedef Policies<type_pol_speed,type_pol_pressure,type_pol_particle> type_pol;
-		type_pol pol(m_pol_speed,m_pol_pressure,m_pol_particle);
+		typedef Policies<type_pol_speed,type_pol_pressure,type_pol_particle,type_pol_animation> type_pol;
+		type_pol pol(m_pol_speed,m_pol_pressure,m_pol_particle,m_pol_animation);
 		typedef Algorithms_Output<type_data_ref,type_pol> type_alg;
 		type_alg alg(m_data_ref,pol);
 		alg.Do();
@@ -215,6 +220,7 @@ class TestAlgorithms_Output : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		part.GetParticlePosRef().Set(1,0.5);
 		part.GetParticlePosRef().Set(2,0.5);
 		m_data_ref.m_data.GetTopologyData().GetRefToParticleList().push_back(part);
+		m_data_ref.m_data.GetTimingData().m_t=1;
 		
 		typedef Policy_Output_Grid_Speed<type_data_ref> type_pol_speed;
 		type_pol_speed m_pol_speed(m_data_ref,"Out_Speed_");
@@ -222,9 +228,11 @@ class TestAlgorithms_Output : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		type_pol_pressure m_pol_pressure(m_data_ref,"Out_Pressure_");
 		typedef Policy_Output_Particle<type_data_ref> type_pol_particle;
 		type_pol_particle m_pol_particle(m_data_ref,"Out_Particle_");
+		typedef Policy_Output_Animation<type_data_ref> type_pol_animation;
+		type_pol_animation m_pol_animation(m_data_ref,"Out_Animation.pvd");
 
-		typedef Policies<type_pol_speed,type_pol_pressure,type_pol_particle> type_pol;
-		type_pol pol(m_pol_speed,m_pol_pressure,m_pol_particle);
+		typedef Policies<type_pol_speed,type_pol_pressure,type_pol_particle,type_pol_animation> type_pol;
+		type_pol pol(m_pol_speed,m_pol_pressure,m_pol_particle,m_pol_animation);
 		typedef Algorithms_Output<type_data_ref,type_pol> type_alg;
 		type_alg alg(m_data_ref,pol);
 		alg.Do();

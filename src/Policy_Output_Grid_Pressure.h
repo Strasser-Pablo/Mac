@@ -37,7 +37,7 @@ class Policy_Output_Grid_Pressure
 	Policy_Output_Grid_Pressure(Data & data,const char* pref): m_grid(data.m_data.GetGridData()),m_h(data.m_data.GetGridData().m_h.GetRef()),m_pref(pref)
 	{
 	}
-	void OutputGridPressure(int i)
+	void OutputGridPressure(int i,list<string>& m_list)
 	{
 	 	vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 		vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
@@ -154,7 +154,9 @@ class Policy_Output_Grid_Pressure
 		stream<<i;
 		string str=string(m_pref)+stream.str()+string(".vtu");
 		writer->SetFileName(str.c_str());
+  		writer->SetDataModeToAscii();
   		writer->Write();
+		m_list.push_back(str);
 	}
 };
 #endif
