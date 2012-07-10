@@ -23,7 +23,7 @@ class Algorithms_Viscosity : public Policy
 	const type_Time_Type& m_dt;
 	const type_data_value& m_viscosity;
 	public:
-	Algorithms_Viscosity(Data data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_viscosity(data.m_data.GetGridData().m_viscosity),m_dt(data.m_data.GetTimingData().m_dt)
+	Algorithms_Viscosity(Data data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt),m_viscosity(data.m_data.GetGridData().m_viscosity)
 	{
 	}
 	void Do()

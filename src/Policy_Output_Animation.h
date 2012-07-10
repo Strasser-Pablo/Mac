@@ -21,9 +21,9 @@ class Policy_Output_Animation
 	typedef typename type_particle_list::const_iterator iterator;
 	typedef typename Data::type_data_struct::type_Data_Timing type_Data_Timing;
 	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
+	const char* m_filename;
 	fstream m_out; 
 	streampos m_spos;
-	const char* m_filename;
 	public:
 	Policy_Output_Animation(const Data & data,const char* filename):m_filename(filename), m_out(filename,fstream::out)
 	{
