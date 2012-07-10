@@ -25,7 +25,7 @@ class Policy_Output_Animation
 	fstream m_out; 
 	streampos m_spos;
 	public:
-	Policy_Output_Animation(const Data & data,const char* filename):m_filename(filename), m_out(filename,fstream::out)
+	Policy_Output_Animation(const Data & data __attribute__ ((unused)),const char* filename):m_filename(filename), m_out(filename,fstream::out)
 	{
 		m_out<<"<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\">"<<endl;
 		m_out<<"<Collection>"<<endl;
