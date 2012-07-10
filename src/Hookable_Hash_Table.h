@@ -78,7 +78,7 @@ public:
 	 * Erase the iterator at a given position.
 	 * @param pos Position of the iterator to erase.
 	 **/
-	void erase(typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator pos);
+	typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator erase(typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator pos);
 	/**
 	 * @brief
 	 * Erase the iterator at a given position.
@@ -182,7 +182,7 @@ public:
 	 * Erase the iterator at a given position.
 	 * @param pos Position of the iterator to erase.
 	 **/
-	void erase(typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator pos);
+	typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator erase(typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator pos);
 	/**
 	 * @brief
 	 * Erase the iterator at a given position.

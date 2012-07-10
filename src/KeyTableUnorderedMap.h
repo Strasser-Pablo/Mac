@@ -120,7 +120,7 @@ public:
 	 * Erase the iterator at a given position.
 	 * @param pos Position of the iterator to erase.
 	 **/
-	void erase(iterator pos);
+	iterator erase(iterator pos);
 	/**
 	 * @brief
 	 * Erase the iterator at a given position.

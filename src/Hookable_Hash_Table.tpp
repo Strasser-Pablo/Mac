@@ -33,10 +33,10 @@ void Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp>::insert(c
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,bool copy,class TypeHash,class TypeComp >
-void Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp>::erase(typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator pos)
+typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp>::erase(typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator pos)
 {
 		m_hook.erase(pos.GetMapIterator());
-		this->m_map.erase(pos.GetMapIterator());
+		return KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>(this->m_map.erase(pos.GetMapIterator()));
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,bool copy,class TypeHash,class TypeComp >
@@ -107,10 +107,10 @@ void Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::insert(c
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash,class TypeComp >
-void Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::erase(typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator pos)
+typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp>::erase(typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator pos)
 {
 		m_hook.erase(pos.GetMapIterator());
-		this->m_map.erase(pos.GetMapIterator());
+		return KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>(this->m_map.erase(pos.GetMapIterator()));
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class TypeHash,class TypeComp >

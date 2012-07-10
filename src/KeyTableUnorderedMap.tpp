@@ -70,9 +70,9 @@ typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::const_iterato
 }
 
 template<class TypeKey,class TypeData,class TypeHash,class TypeComp>
-void KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::erase(iterator pos)
+typename KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::iterator  KeyTableUnorderedMap<TypeKey,TypeData,TypeHash,TypeComp>::erase(iterator pos)
 {
-		m_map.erase(pos.GetMapIterator());
+		return KeyTableUnorderedMapIterator<TypeKey,TypeData,TypeHash,TypeComp>(m_map.erase(pos.GetMapIterator()));
 }
 
 template<class TypeKey,class TypeData,class TypeHash,class TypeComp>

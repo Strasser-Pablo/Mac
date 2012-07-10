@@ -1,6 +1,9 @@
 #ifndef Algorithms_Delete_MacCell_H
 #define Algorithms_Delete_MacCell_H
 
+#include <unordered_map>
+using namespace std;
+
 template <typename DataType,typename Policy>
 class Algorithms_Delete_MacCell : public Policy
 {
@@ -19,9 +22,14 @@ class Algorithms_Delete_MacCell : public Policy
 		{
 			if(it.data().GetRef().GetIsLayerEmpty())
 			{
-				m_grid.erase(it);
+				it=m_grid.erase(it);
+				if(it==m_grid.end())
+				{
+					break;
+				}
 			}
 		}
+	
 	}
 };
 #endif
