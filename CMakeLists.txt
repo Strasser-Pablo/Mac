@@ -330,4 +330,8 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Move_Particles test/TestAlgorithms_Move_Particles.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Move_Particles.h)
 	AddTestProperty(test_cov_Algorithms_Move_Particles)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithms_Output test/TestAlgorithms_Output.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Output.h)
+	AddTestProperty(test_cov_Algorithms_Output)
+	TARGET_LINK_LIBRARIES(test_cov_Algorithms_Output lib_computation)
 endif(USE_TESTING)
