@@ -66,7 +66,7 @@ class Algorithms_Update_CellType_Layer : public Policy
 								{
 									key.GetRef(i)+=si;
 									m_grid[key].GetRef().SetLayer(lay);
-									m_grid[key].GetRef().SetFluid();
+									m_grid[key].GetRef().SetAir();
 									s2.push(type_pair(&m_grid[key],key));
 									key.GetRef(i)-=si;
 								}
@@ -74,6 +74,22 @@ class Algorithms_Update_CellType_Layer : public Policy
 						}
 					}
 					s2.swap(s);
+				}
+				while(!s.empty())
+				{
+					type_data_neigh* neigh=s.top().first;
+					type_data_key key=s.top().second;
+					s.pop();
+					for(int i=1;i<=type_dim;++i)
+					{
+						if(neigh->GetNeighbour(i,1)==nullptr)
+						{
+							key.GetRef(i)+=1;
+							m_grid[key].GetRef().SetLayer(GetLayerMax()+1);
+							m_grid[key].GetRef().SetAir();
+							key.GetRef(i)-=1;
+						}
+					}
 				}
 			}
 		}
