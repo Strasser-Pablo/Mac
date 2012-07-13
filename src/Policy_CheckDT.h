@@ -17,10 +17,12 @@ class Policy_CheckDT
 	{
 		if(dt<m_dt_min)
 		{
+			cout<<"min "<<endl;
 			return m_dt_min;
 		}
 		if(dt>m_dt_max)
 		{
+			cout<<"max "<<endl;
 			return m_dt_max;
 		}
 		return dt;

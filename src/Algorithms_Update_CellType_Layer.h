@@ -39,7 +39,7 @@ class Algorithms_Update_CellType_Layer : public Policy
 					{
 						for(int si=-1;si<=1;si+=2)
 						{
-							if(it.data().GetNeighbour(i,si)==nullptr)
+							if(it.data().GetNeighbour(i,si)==nullptr|| it.data().GetNeighbour(i,si)->GetRef().GetIsLayerEmpty())
 							{
 								s.push(type_pair(&it.data(),it.key()));
 								b=true;
@@ -49,47 +49,44 @@ class Algorithms_Update_CellType_Layer : public Policy
 					}
 				}
 			}
-			if(b)
+		}
+		for(int lay=1;lay<=GetLayerMax();++lay)
+		{
+			while(!s.empty())
 			{
-				for(int lay=1;lay<=GetLayerMax();++lay)
+				type_data_neigh* neigh=s.top().first;
+				type_data_key key=s.top().second;
+				s.pop();
+				for(int i=1;i<=type_dim;++i)
 				{
-					while(!s.empty())
+					for(int si=-1;si<=1;si+=2)
 					{
-						type_data_neigh* neigh=s.top().first;
-						type_data_key key=s.top().second;
-						s.pop();
-						for(int i=1;i<=type_dim;++i)
+						if(neigh->GetNeighbour(i,si)==nullptr||neigh->GetNeighbour(i,si)->GetRef().GetIsLayerEmpty())
 						{
-							for(int si=-1;si<=1;si+=2)
-							{
-								if(neigh->GetNeighbour(i,si)==nullptr)
-								{
-									key.GetRef(i)+=si;
-									m_grid[key].GetRef().SetLayer(lay);
-									m_grid[key].GetRef().SetAir();
-									s2.push(type_pair(&m_grid[key],key));
-									key.GetRef(i)-=si;
-								}
-							}
-						}
-					}
-					s2.swap(s);
-				}
-				while(!s.empty())
-				{
-					type_data_neigh* neigh=s.top().first;
-					type_data_key key=s.top().second;
-					s.pop();
-					for(int i=1;i<=type_dim;++i)
-					{
-						if(neigh->GetNeighbour(i,1)==nullptr)
-						{
-							key.GetRef(i)+=1;
-							m_grid[key].GetRef().SetLayer(GetLayerMax()+1);
+							key.GetRef(i)+=si;
+							m_grid[key].GetRef().SetLayer(lay);
 							m_grid[key].GetRef().SetAir();
-							key.GetRef(i)-=1;
+							s2.push(type_pair(&m_grid[key],key));
+							key.GetRef(i)-=si;
 						}
 					}
+				}
+			}
+			s2.swap(s);
+		}
+		while(!s.empty())
+		{
+			type_data_neigh* neigh=s.top().first;
+			type_data_key key=s.top().second;
+			s.pop();
+			for(int i=1;i<=type_dim;++i)
+			{
+				if(neigh->GetNeighbour(i,1)==nullptr||neigh->GetNeighbour(i,1)->GetRef().GetIsLayerEmpty())
+				{
+					key.GetRef(i)+=1;
+					m_grid[key].GetRef().SetLayer(GetLayerMax()+1);
+					m_grid[key].GetRef().SetAir();
+					key.GetRef(i)-=1;
 				}
 			}
 		}

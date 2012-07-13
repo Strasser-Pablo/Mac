@@ -27,14 +27,17 @@ class Algorithms_Calculate_Time_Step : public Policy
 		type_data_value max=0;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-			type_data_value temp=0;
-			for(int i=1;i<=type_dim;++i)
+			if(it.data().GetRef().GetIsFluid())
 			{
-				temp=pow(it.data().GetRef().Speed_Get(i)*m_1_h.Get(i),2);
-			}
-			if(temp>max)
-			{
-				max=temp;
+				type_data_value temp=0;
+				for(int i=1;i<=type_dim;++i)
+				{
+					temp=pow(it.data().GetRef().Speed_Get(i)*m_1_h.Get(i),2);
+				}
+				if(temp>max)
+				{
+					max=temp;
+				}
 			}
 		}
 		m_dt=sqrt(max)*m_factor;

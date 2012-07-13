@@ -337,4 +337,10 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Extrapolate test/TestAlgorithms_Extrapolate.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Extrapolate.h)
 	AddTestProperty(test_cov_Algorithms_Extrapolate)
+
+	add_executable(test_cov_JetDEau_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic.cpp)
+	AddTestProperty(test_cov_JetDEau_Basic)
+	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic lib_computation)
+	add_test(NAME test_JetDEau_Basic COMMAND test_cov_JetDEau_Basic)
+
 endif(USE_TESTING)

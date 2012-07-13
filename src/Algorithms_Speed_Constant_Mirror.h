@@ -1,6 +1,9 @@
 #ifndef Algorithms_Speed_Constant_Mirror_H
 #define Algorithms_Speed_Constant_Mirror_H
 
+#include <unordered_set>
+using namespace std;
+
 template <typename DataType,typename Policy>
 class Algorithms_Speed_Constant_Mirror : public Policy
 {
@@ -8,6 +11,7 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 	typedef typename type_data::type_Data_Grid type_grid;
 	typedef typename type_grid::type_data_neigh type_data_neigh;
 	typedef typename type_grid::type_data_key type_data_key;
+	typedef typename type_grid::type_hash type_hash;
 	typedef typename type_grid::type_data_mac_cell type_data_grid;
 	typedef typename type_grid::iterator iterator;
 	static const int type_dim=type_data_key::type_dim;
@@ -18,24 +22,37 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 	}
 	void Do()
 	{
+		typedef unordered_set<type_data_key,type_hash> type_unordered_set;
+		type_unordered_set m_set(10,m_grid.GetHash());
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
+			type_data_key k=it.key();
 			if(it.data().GetRef().Speed_Is_One_Const())
 			{
-				type_data_key k=it.key();
+				m_set.insert(it.key());
 				for(int i=1;i<=type_dim;++i)
 				{
 					k.GetRef(i)+=1;
-					if(it.data().GetRef().Speed_Get_Const(i))
+					for(int j=1;j<=type_dim;++j)
 					{
-						m_grid[k].GetRef().Speed_Set(i,it.data().GetRef().Speed_Get(i));
-					}
-					else
-					{
-						m_grid[k].GetRef().Speed_Set(i,0);
+						m_grid[k].GetRef().Speed_Set(j,0);
 					}
 					k.GetRef(i)-=1;
 				}
+			}
+		}
+		for(typename type_unordered_set::iterator it=m_set.begin();it!=m_set.end();++it)
+		{
+			type_data_key k0=*it;
+			type_data_key k=*it;
+			for(int i=1;i<=type_dim;++i)
+			{
+				k.GetRef(i)+=1;
+				if(m_grid[k0].GetRef().Speed_Get_Const(i))
+				{
+					m_grid[k].GetRef().Speed_Set(i,m_grid[k0].GetRef().Speed_Get(i));
+				}
+				k.GetRef(i)-=1;
 			}
 		}
 	}

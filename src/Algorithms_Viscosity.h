@@ -32,7 +32,8 @@ class Algorithms_Viscosity : public Policy
 		{
 			if(Get_If_Apply_Viscosity(&it.data()))
 			{
-				it.data().GetRef().Speed_Temp_Set(it.data().GetRef().Speed_Get()+Get_Laplacian_Speed(&it.data())*m_viscosity*m_dt);
+				it.data().GetRef().Speed_Speed_To_Temp();
+				it.data().GetRef().Speed_Temp_Set(it.data().GetRef().Speed_Temp_Get()+Get_Laplacian_Speed(&it.data())*m_viscosity*m_dt);
 			}
 			else
 			{

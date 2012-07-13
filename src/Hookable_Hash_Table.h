@@ -33,7 +33,13 @@ public:
 	 * Type Key.
 	 **/
 	typedef TypeKey type_key;
+	typedef TypeHash type_hash;
+	const TypeHash& GetHash()
+	{
+		return m_hash;
+	}
 private:
+	const TypeHash& m_hash;
 	/**
 	 * @brief
 	 * Hook.
@@ -137,7 +143,13 @@ public:
 	 * Type Key.
 	 **/
 	typedef TypeKey type_key;
+	typedef TypeHash type_hash;
+	const TypeHash& GetHash()
+	{
+		return m_hash;
+	}
 private:
+	const TypeHash& m_hash;
 	/**
 	 * @brief
 	 * Hook.
