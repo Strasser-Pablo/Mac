@@ -40,7 +40,7 @@ class Algorithms_Calculate_Time_Step : public Policy
 				}
 			}
 		}
-		m_dt=sqrt(max)*m_factor;
+		m_dt=1/sqrt(max)*m_factor;
 		m_dt=CheckDT(m_dt);
 	}
 };

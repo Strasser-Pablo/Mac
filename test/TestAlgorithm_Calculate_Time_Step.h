@@ -109,6 +109,6 @@ class TestAlgorithm_Calculate_Time_Step : public CxxTest::TestSuite  //LCOV_EXCL
 		type_policies policies(m_check);
 		Algorithms_Calculate_Time_Step<type_data_ref,type_policies> m_alg(m_data_ref,policies);
 		m_alg.Do();
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetTimingData().m_dt,sqrt(3),eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetTimingData().m_dt,1/sqrt(3),eps);
 	}
 };
