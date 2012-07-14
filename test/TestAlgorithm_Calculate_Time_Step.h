@@ -101,6 +101,7 @@ class TestAlgorithm_Calculate_Time_Step : public CxxTest::TestSuite  //LCOV_EXCL
 		speed.Set(2,1.0);
 		speed.Set(3,1.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<3,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetFluid();
 		
 		typedef Policy_CheckDT<type_data_ref> type_check;
 		type_check m_check(0,10.0);
