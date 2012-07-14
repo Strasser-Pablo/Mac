@@ -11,7 +11,7 @@ class Algorithms_Create_Fluid_Particle : public Policy
 	typedef typename type_grid::type_data_mac_cell type_data_grid;
 	typedef typename type_data::type_Data_Topology type_topology;
 	typedef typename type_topology::type_particle_list type_particle_list;
-	typedef typename type_grid::const_iterator iterator;
+	typedef typename type_grid::iterator iterator;
 	type_data& m_data;
 	type_grid& m_grid;
 	public:
@@ -24,7 +24,10 @@ class Algorithms_Create_Fluid_Particle : public Policy
 		{
 			if(GetIsInboundNeedFilling(it.data()))
 			{
+				cout<<"part added "<<endl;
 				AddParticle(it.key());
+				it.data().GetRef().SetLayer(0);
+				it.data().GetRef().SetFluid();
 			}
 		}
 	}

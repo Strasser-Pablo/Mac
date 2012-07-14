@@ -82,6 +82,10 @@
 #include "../src/Policy_Is_Inbound_Filling_Layer.h"
 #include "../src/Policy_Advance_ODE_RungeKutta.h"
 #include "../src/Policy_Speed_Interpolation_Linear.h"
+#include "../src/Policy_Output_Grid_Speed.h"
+#include "../src/Policy_Output_Grid_Pressure.h"
+#include "../src/Policy_Output_Particle.h"
+#include "../src/Policy_Output_Animation.h"
 
 /// To add Convection
 
@@ -97,6 +101,7 @@
 #include "../src/Algorithms_Calculate_Time_Step.h"
 #include "../src/Algorithms_Delete_MacCell.h"
 #include "../src/Algorithms_Update_CellType_Layer.h"
+#include "../src/Algorithms_Fluid_To_Layer.h"
 
 // Solve Grid
 #include "../src/Algorithms_Gravity.h"
@@ -106,6 +111,8 @@
 //Move Particle
 #include "../src/Algorithms_Move_Particles.h"
 
+// Output
+#include "../src/Algorithms_Output.h"
 
 
 
@@ -179,9 +186,9 @@ int main()
 	typedef Data_Grid_Base_Spacing<type_data_viscosity> type_data_grid;
 	type_data_grid m_data_grid(m_data_viscosity);
 	Physvector<dim,type_data_value> h;
-	h.Set(1,1.0);
-	h.Set(2,1.0);
-	h.Set(3,1.0);
+	h.Set(1,0.01);
+	h.Set(2,0.01);
+	h.Set(3,0.01);
 	m_data_grid.m_h.Set(h);
 	typedef Data_CellType_Interface_Constant<type_data_grid> type_interface_constant;
 	type_interface_constant m_type_interface_constant(m_data_grid);
@@ -199,7 +206,7 @@ int main()
 	typedef Data_Timing_Time<type_data_value> type_time;
 	type_time m_time;
 	m_time.m_t=0;
-	m_time.m_factor=0.01;
+	m_time.m_factor=0.1;
 	typedef Data_Timing<type_time,type_topology> type_timing;
 	type_timing m_timing(m_time,m_topology);
 
@@ -213,11 +220,11 @@ int main()
 	v.Set(1,0);
 	v.Set(2,0);
 	v.Set(3,0);
-	
+
 	Physvector<dim,type_data_value> speed;
-	speed.Set(1,1.0);
+	speed.Set(1,0.0);
 	speed.Set(2,5.0);
-	speed.Set(3,6.0);
+	speed.Set(3,0.0);
 	m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
 	m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set_Const(2);
 
@@ -234,18 +241,18 @@ int main()
 
 	//Policy Init
 	typedef Policy_Layer_Max<type_data_ref> type_pol_layer;
-	type_pol_layer m_pol_layer(5);
+	type_pol_layer m_pol_layer(4);
 	typedef Policy_Particle_To_Key<type_data_ref> type_pol_part_to_key;
 	type_pol_part_to_key m_pol_part_to_key(m_data_ref);
 	typedef Policy_CheckDT<type_data_ref> type_pol_check_dt;
-	type_pol_check_dt m_pol_check_dt(0.00,10);
+	type_pol_check_dt m_pol_check_dt(0.00,100000);
 	typedef Policy_Add_Particle_Center<type_data_ref> type_pol_add_particle;
 	type_pol_add_particle m_add_particle(m_data_ref);
 	typedef Policy_Is_Inbound_Filling_Layer<type_data_ref> type_pol_is_inbound_filling_layer;
 	type_pol_is_inbound_filling_layer m_pol_is_inbound_filling_layer;
 	typedef Policies<type_pol_layer,type_pol_part_to_key,type_pol_check_dt,type_pol_add_particle,type_pol_is_inbound_filling_layer> type_pol_init;
 	type_pol_init m_pol_init(m_pol_layer,m_pol_part_to_key,m_pol_check_dt,m_add_particle,m_pol_is_inbound_filling_layer);
-	
+
 	//Algorithm Init
 	typedef Algorithms_Initialize_MacCell<type_data_ref,type_pol_init> type_alg_initialize_mac;
 	type_alg_initialize_mac m_alg_initialize_mac(m_data_ref,m_pol_init);
@@ -260,8 +267,8 @@ int main()
 	typedef Algorithms_Calculate_Time_Step<type_data_ref,type_pol_init> type_alg_calculate_time_step;
 	type_alg_calculate_time_step m_alg_calculate_time_step(m_data_ref,m_pol_init);
 
-	typedef Algorithms<type_alg_initialize_mac,type_alg_create_fluid_particle,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_calculate_time_step> type_alg_init;
-	type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_create_fluid_particle,m_alg_layer_initial,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step);
+	typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_create_fluid_particle,type_alg_update_celltype,type_alg_delete_maccell,type_alg_calculate_time_step> type_alg_init;
+	type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_layer_initial,m_alg_create_fluid_particle,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step);
 
 
 	typedef Algorithms<type_alg_speed_constant_mirror,type_alg_initialize_mac,type_alg_create_fluid_particle,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_extrapolate_init> type_alg_first_init;
@@ -277,7 +284,7 @@ int main()
 	typedef Policy_Viscosity_Apply_If<type_data_ref> type_pol_viscosity_apply_if;
 	type_pol_viscosity_apply_if m_pol_viscosity_apply_if;
 	typedef Policy_Solve_Linear_Umfpack<type_data_ref> type_pol_solve_linear;
-	type_pol_solve_linear m_pol_solve_linear(m_data_ref); 
+	type_pol_solve_linear m_pol_solve_linear(m_data_ref);
 	typedef Policy_Divergence<type_data_ref> type_pol_divergence;
 	type_pol_divergence m_pol_divergence(m_data_ref);
 	typedef Policy_Gradiant<type_data_ref> type_pol_gradiant;
@@ -314,9 +321,42 @@ int main()
 	typedef Algorithms_Move_Particles<type_data_ref,type_pol_move> type_alg_move;
 	type_alg_move m_alg_move(m_data_ref,m_pol_move);
 
+	//Policy Output
+	typedef Policy_Output_Grid_Speed<type_data_ref> type_pol_output_speed;
+	type_pol_output_speed m_pol_output_speed(m_data_ref,"out_speed_");
+	typedef Policy_Output_Grid_Pressure<type_data_ref> type_pol_output_pressure;
+	type_pol_output_pressure m_pol_output_pressure(m_data_ref,"out_press_");
+	typedef Policy_Output_Particle<type_data_ref> type_pol_output_particle;
+	type_pol_output_particle m_pol_output_particle(m_data_ref,"out_part_");
+	typedef Policy_Output_Animation<type_data_ref> type_pol_output_animation;
+	type_pol_output_animation m_pol_output_animation(m_data_ref,"Out_Animation.pvd");
+	typedef Policies<type_pol_output_speed,type_pol_output_pressure,type_pol_output_particle,type_pol_output_animation> type_pol_output;
+	type_pol_output m_pol_output(m_pol_output_speed,m_pol_output_pressure,m_pol_output_particle,m_pol_output_animation);
+
+	//Algorithms Output
+	typedef Algorithms_Output<type_data_ref,type_pol_output> type_alg_output;
+	type_alg_output m_alg_output(m_data_ref,m_pol_output);
+
+	//Policy Fluid To Layer
+	typedef Policies<> type_pol_fluid_to_layer;
+	type_pol_fluid_to_layer m_pol_fluid_to_layer;
+
+	//Algorithms Fluid to Layer
+	typedef Algorithms_Fluid_To_Layer<type_data_ref,type_pol_fluid_to_layer> type_alg_fluid_to_layer;
+	type_alg_fluid_to_layer m_alg_fluid_to_layer(m_data_ref,m_pol_fluid_to_layer);
 	m_alg_first_init.Do();
-	m_alg.Do();
-	m_alg_extrapolate_init.Do();
-	m_alg_move.Do();
+	for(int i=1;i<=100;++i)
+	{
+		cout<<"i "<<i<<endl;
+		m_alg.Do();
+		m_alg_fluid_to_layer.Do();
+		m_alg_update_celltype.Do();
+		m_alg_extrapolate_init.Do();
+		m_alg_move.Do();
+		m_data_ref.m_data.GetTimingData().m_t+=m_data_ref.m_data.GetTimingData().m_dt;
+		cout<<"dt "<<m_data_ref.m_data.GetTimingData().m_dt<<endl;
+		cout<<"t "<<m_data_ref.m_data.GetTimingData().m_t<<endl;
+		m_alg_output.Do();
+	}
 
 }
