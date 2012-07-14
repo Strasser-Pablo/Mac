@@ -14,7 +14,7 @@ class Algorithms<Algorithm1,Algorithm...> : public  Algorithms<Algorithm...>
 {
 	Algorithm1& A;
 	public:
-	Algorithms(Algorithm1& in1,Algorithm& ... in2):A(in1),Algorithms<Algorithm...>(in2...)
+	Algorithms(Algorithm1& in1,Algorithm& ... in2):Algorithms<Algorithm...>(in2...),A(in1)
 	{}
 	void Do()
 	{

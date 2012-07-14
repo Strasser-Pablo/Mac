@@ -14,7 +14,7 @@ class Policy_Solve_Linear_Umfpack
 	typedef typename type_Data_Grid::type_data_neigh type_data_neigh;
 	typedef typename type_data_mac_cell::type_speed type_speed;
 	public:
-	Policy_Solve_Linear_Umfpack(Data& data)
+	Policy_Solve_Linear_Umfpack(Data& data __attribute__ ((unused)))
 	{
 	}
 	Policy_Solve_Linear_Umfpack()
