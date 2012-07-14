@@ -32,7 +32,7 @@ class Algorithms_Calculate_Time_Step : public Policy
 				type_data_value temp=0;
 				for(int i=1;i<=type_dim;++i)
 				{
-					temp=pow(it.data().GetRef().Speed_Get(i)*m_1_h.Get(i),2);
+					temp+=pow(it.data().GetRef().Speed_Get(i)*m_1_h.Get(i),2);
 				}
 				if(temp>max)
 				{

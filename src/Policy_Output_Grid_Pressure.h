@@ -15,6 +15,9 @@
 #include <string>
 #include <sstream>
 #include <vtkXMLUnstructuredGridWriter.h>
+#include <unordered_map>
+
+using namespace std;
 
 template <typename Data>
 class Policy_Output_Grid_Pressure
@@ -23,6 +26,7 @@ class Policy_Output_Grid_Pressure
 	typedef typename type_Data_Grid::type_data_mac_cell type_data_mac_cell;
 	typedef typename type_data_mac_cell::type_pressure type_pressure;
 	typedef typename type_Data_Grid::type_data_key type_data_key;
+	typedef typename type_Data_Grid::type_hash type_hash;
 	typedef typename type_Data_Grid::type_data_key_value type_data_key_value;
 	typedef typename type_Data_Grid::type_data_vector type_data_vector;
 	typedef typename type_Data_Grid::type_data_value type_data_value;
@@ -48,7 +52,7 @@ class Policy_Output_Grid_Pressure
 			type_data_value vtemp[3];
 			for(int ipos=1;ipos<=type_dim;++ipos)
 			{
-				vtemp[ipos-1]=it.key().Get(ipos)*m_h.Get(ipos);
+				vtemp[ipos-1]=(it.key().Get(ipos)-0.5)*m_h.Get(ipos);
 			}
 			for(int ipos=type_dim+1;ipos<=3;++ipos)
 			{
@@ -57,6 +61,8 @@ class Policy_Output_Grid_Pressure
 			vtkpoints->InsertPoint(num,vtemp);
 			++num;
 		}
+		typedef unordered_map<type_data_key,int,type_hash> type_map;
+		type_map m_map(10,m_grid.GetHash());
 		vtkunstruct->SetPoints(vtkpoints);
 		int ntype;
 		if(type_dim==1)
@@ -73,6 +79,7 @@ class Policy_Output_Grid_Pressure
 		}
 		int nbcont=pow(2,type_dim);
 		vtkIdType con[nbcont];
+		int icell=0;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			con[0]=it.data().GetRef().GetLayer();
@@ -124,17 +131,24 @@ class Policy_Output_Grid_Pressure
 					con[7]=neigh->GetRef().GetLayer();
 				}
 			}
+			m_map[it.key()]=icell;
+			++icell;
 			vtkunstruct->InsertNextCell(ntype,nbcont,con);
 		}
   		vtkSmartPointer<vtkDoubleArray> vtkPressurearray=vtkSmartPointer<vtkDoubleArray>::New();
-		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+  		vtkSmartPointer<vtkIntArray> vtkType_Cell=vtkSmartPointer<vtkIntArray>::New();
+		for(typename type_map::iterator it=m_map.begin();it!=m_map.end();++it)
 		{
-			vtkPressurearray->InsertValue(it.data().GetRef().GetLayer(),it.data().GetRef().Pressure_Get().Get());
+			vtkPressurearray->InsertValue(it->second,m_grid[it->first].GetRef().Pressure_Get().Get());
+			vtkType_Cell->InsertValue(it->second,m_grid[it->first].GetRef().GetIsFluid());
+			vtkPressurearray->InsertValue(it->second,it->second);
 		}
 		vtkPressurearray->SetName("Pressure");
+		vtkType_Cell->SetName("Type");
 		vtkunstruct->GetCellData()->AddArray(vtkPressurearray);
-  		vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+		vtkunstruct->GetCellData()->AddArray(vtkType_Cell);
 
+  		vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   		writer->SetInput(vtkunstruct);
 		stringstream stream;
 		stream<<i;
