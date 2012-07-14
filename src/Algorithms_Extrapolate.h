@@ -16,7 +16,7 @@ class Algorithms_Extrapolate : public Policy
 	static const int type_dim=type_grid::type_dim;
 	type_grid& m_grid;
 	public:
-	Algorithms_Extrapolate(Data data, const Policy& pol): m_grid(data.m_data.GetGridData()), Policy(pol)
+	Algorithms_Extrapolate(Data data, const Policy& pol): Policy(pol),m_grid(data.m_data.GetGridData())
 	{
 	}
 	void Do()

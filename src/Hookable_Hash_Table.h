@@ -39,12 +39,12 @@ public:
 		return m_hash;
 	}
 private:
-	const TypeHash& m_hash;
 	/**
 	 * @brief
 	 * Hook.
 	 **/
 	Hook<Hookable_Hash_Table<Hook,TypeKey,TypeData,copy,TypeHash,TypeComp> > m_hook;
+	const TypeHash& m_hash;
 public:
 
 	/**
@@ -149,12 +149,12 @@ public:
 		return m_hash;
 	}
 private:
-	const TypeHash& m_hash;
 	/**
 	 * @brief
 	 * Hook.
 	 **/
 	Hook<Hookable_Hash_Table<Hook,TypeKey,TypeData,true,TypeHash,TypeComp> > m_hook;
+	const TypeHash& m_hash;
 public:
 	/**
 	 * @brief
