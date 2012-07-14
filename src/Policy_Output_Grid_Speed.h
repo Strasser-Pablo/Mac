@@ -90,61 +90,47 @@ class Policy_Output_Grid_Speed
 				{
 					continue;
 				}
-				else
+				con[1]=neigh->GetRef().GetLayer();
+				if(type_dim>=2)
 				{
-					con[1]=neigh->GetRef().GetLayer();
-					if(type_dim>=2)
+					neigh=it.data().GetNeighbour(2,1);
+					if(neigh==nullptr)
 					{
-						neigh=it.data().GetNeighbour(2,1);
+						continue;
+					}
+					con[2]=neigh->GetRef().GetLayer();
+					neigh=neigh->GetNeighbour(1,1);
+					if(neigh==nullptr)
+					{
+						continue;
+					}
+					con[3]=neigh->GetRef().GetLayer();
+					if(type_dim>=3)
+					{
+						neigh=it.data().GetNeighbour(3,1);
 						if(neigh==nullptr)
 						{
 							continue;
 						}
-						else
+						con[4]=neigh->GetRef().GetLayer();
+						type_data_neigh* neigh2=neigh->GetNeighbour(1,1);
+						if(neigh2==nullptr)
 						{
-							con[2]=neigh->GetRef().GetLayer();
-							neigh=neigh->GetNeighbour(1,1);
-							con[3]=neigh->GetRef().GetLayer();
-							if(type_dim>=3)
-							{
-								neigh=it.data().GetNeighbour(3,1);
-								if(neigh==nullptr)
-								{
-									continue;
-								}
-								else
-								{
-									con[4]=neigh->GetRef().GetLayer();
-									type_data_neigh* neigh2=neigh->GetNeighbour(1,1);
-									if(neigh2==nullptr)
-									{
-										continue;
-									}
-									else
-									{
-										con[5]=neigh2->GetRef().GetLayer();
-										neigh=neigh->GetNeighbour(2,1);
-										if(neigh==nullptr)
-										{
-											continue;
-										}
-										else
-										{
-											con[6]=neigh->GetRef().GetLayer();
-											neigh=neigh->GetNeighbour(1,1);
-											if(neigh==nullptr)
-											{
-												continue;
-											}
-											else
-											{
-												con[7]=neigh->GetRef().GetLayer();
-											}
-										}
-									}
-								}
-							}
+							continue;
 						}
+						con[5]=neigh2->GetRef().GetLayer();
+						neigh=neigh->GetNeighbour(2,1);
+						if(neigh==nullptr)
+						{
+							continue;
+						}
+						con[6]=neigh->GetRef().GetLayer();
+						neigh=neigh->GetNeighbour(1,1);
+						if(neigh==nullptr)
+						{
+							continue;
+						}
+						con[7]=neigh->GetRef().GetLayer();
 					}
 				}
 				vtkunstruct->InsertNextCell(ntype,nbcont,con);
