@@ -24,7 +24,6 @@ class Algorithms_Create_Fluid_Particle : public Policy
 		{
 			if(GetIsInboundNeedFilling(it.data()))
 			{
-				cout<<"part added "<<endl;
 				AddParticle(it.key());
 				it.data().GetRef().SetLayer(0);
 				it.data().GetRef().SetFluid();
