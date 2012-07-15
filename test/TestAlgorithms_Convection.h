@@ -27,7 +27,6 @@
 #include "../src/Data_Grid_Layer_Empty.h"
 #include "../src/Data_CellType_Const_Inbound.h"
 #include "../src/Policy_Speed_Interpolation_Linear.h"
-#include "../src/Policy_Upwind_1_Order.h"
 #include "../src/Policy_Convection_Apply_If.h"
 #include "../src/Policy_Upwind_1_Order.h"
 #include "../src/Algorithms_Convection.h"
