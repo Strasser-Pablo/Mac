@@ -18,7 +18,7 @@ class Policy_Is_Inbound_Filling_Layer
 	}
 	static bool GetIsInboundNeedFilling(const type_data& data)
 	{
-		return data.GetRef().GetIsInbound()&&data.GetRef().GetIsLayerEmpty();
+		return data.GetRef().GetIsInflow()&&data.GetRef().GetIsLayerEmpty();
 	}
 };
 

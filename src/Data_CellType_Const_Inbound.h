@@ -7,7 +7,7 @@ class Data_CellType_Const_Inbound : public Base
 	public:
 	typedef Data_CellType_Const_Inbound<Base> type_cell_speed;
 	typedef void type_cell_speed_exist;
-	bool GetIsInbound() const
+	bool GetIsInflow() const
 	{
 		return this->Speed_Is_One_Const();
 	}
