@@ -284,7 +284,7 @@ class Data_CellType_Fluid_Air_Solid_Inflow__InCell : public Data_CellType_Implem
 		 * Constructor from a Data_CellType_Fluid_Air class. With default cell_type Air.
 		 * @param data Instance of Data_CellType_Fluid_Air that will store the density.
 		 **/
-		Data_CellType_Fluid_Air_Solid_Inflow__InCell(const Data_CellType_Fluid_Air_Solid_Inflow<DataBase> & data):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),Data_CellType_Implemented_Solid__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),Data_CellType_Implemented_Inflow__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),m_data_cell_type(data)
+		Data_CellType_Fluid_Air_Solid_Inflow__InCell(const Data_CellType_Fluid_Air_Solid_Inflow<DataBase> & data):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),Data_CellType_Implemented_Solid__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),Data_CellType_Implemented_Inflow__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),m_data_cell_type(data)
 		{
 		}
 		/**

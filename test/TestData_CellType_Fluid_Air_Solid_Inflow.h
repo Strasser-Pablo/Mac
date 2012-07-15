@@ -35,6 +35,8 @@ class Test_Data_CellType_Fluid_Air_Solid_Inflow : public CxxTest::TestSuite  //L
 		Data_CellType_Fluid_Air_Solid_Inflow<DataBase> D;
 		TS_ASSERT(D.GetIsFluid(Material_Type::Fluid));
 		TS_ASSERT(!D.GetIsFluid(Material_Type::Air));
+		TS_ASSERT(D.GetIsFluid(Material_Type::Inflow));
+		TS_ASSERT(!D.GetIsFluid(Material_Type::Solid));
 	}
 	/**
 	 * \test Test that ddedekodoekdek
@@ -48,6 +50,8 @@ class Test_Data_CellType_Fluid_Air_Solid_Inflow : public CxxTest::TestSuite  //L
 		Data_CellType_Fluid_Air_Solid_Inflow<DataBase> D;
 		TS_ASSERT(!D.GetIsAir(Material_Type::Fluid));
 		TS_ASSERT(D.GetIsAir(Material_Type::Air));
+		TS_ASSERT(!D.GetIsAir(Material_Type::Inflow));
+		TS_ASSERT(D.GetIsAir(Material_Type::Solid));
 	}
 	void test_GetFluid_Air()
 	{

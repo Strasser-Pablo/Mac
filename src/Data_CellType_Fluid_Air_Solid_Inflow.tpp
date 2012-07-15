@@ -141,13 +141,19 @@ void Data_CellType_Fluid_Air_Solid_Inflow<DataBase>::SetRhoAir(Inversible_Value<
 template <typename DataBase>
 void Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>::SetAir()
 {
-	m_mat=Material_Type::Air;
+	if(m_mat==Material_Type::Fluid)
+	{
+		m_mat=Material_Type::Air;
+	}
 }
 
 template <typename DataBase>
 void Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>::SetFluid()
 {
-	m_mat=Material_Type::Fluid;
+	if(m_mat==Material_Type::Air)
+	{
+		m_mat=Material_Type::Fluid;
+	}
 }
 
 

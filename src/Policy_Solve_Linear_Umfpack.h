@@ -22,12 +22,16 @@ class Policy_Solve_Linear_Umfpack
 	}
 	void Solve_Linear(int n,int* offset,int* indice,type_data_value* value,type_data_value* b,type_data_value* res)
 	{
-		void *Symbolic, *Numeric ;
-		(void) umfpack_di_symbolic (n, n,offset,indice,value,&Symbolic, nullptr, nullptr) ;
-		(void) umfpack_di_numeric (offset,indice,value,Symbolic,&Numeric,nullptr, nullptr) ;
-		umfpack_di_free_symbolic (&Symbolic) ;
-		(void) umfpack_di_solve (UMFPACK_A,offset,indice,value,res,b, Numeric, nullptr, nullptr) ;
-		umfpack_di_free_numeric (&Numeric) ;
+		cout<<"n "<<n<<endl;
+		if(n!=0)
+		{
+			void *Symbolic, *Numeric ;
+			(void) umfpack_di_symbolic (n, n,offset,indice,value,&Symbolic, nullptr, nullptr) ;
+			(void) umfpack_di_numeric (offset,indice,value,Symbolic,&Numeric,nullptr, nullptr) ;
+			umfpack_di_free_symbolic (&Symbolic) ;
+			(void) umfpack_di_solve (UMFPACK_A,offset,indice,value,res,b, Numeric, nullptr, nullptr) ;
+			umfpack_di_free_numeric (&Numeric) ;
+		}
 	}
 };
 
