@@ -348,4 +348,9 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Data_CellType_Fluid_Air_Solid_Inflow test/TestData_CellType_Fluid_Air_Solid_Inflow.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_CellType_Fluid_Air_Solid_Inflow.h)
 	AddTestProperty(test_cov_Data_CellType_Fluid_Air_Solid_Inflow)
+
+	add_executable(test_cov_FillingContainer_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer_Basic.cpp)
+	AddTestProperty(test_cov_FillingContainer_Basic)
+	TARGET_LINK_LIBRARIES(test_cov_FillingContainer_Basic lib_computation)
+	add_test(NAME test_cov_FillingContainer_Basic COMMAND TestFillingContainer_Basic)
 endif(USE_TESTING)
