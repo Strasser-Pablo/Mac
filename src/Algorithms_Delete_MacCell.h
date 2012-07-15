@@ -20,7 +20,7 @@ class Algorithms_Delete_MacCell : public Policy
 	{
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-			if(it.data().GetRef().GetIsLayerEmpty())
+			if(it.data().GetRef().GetIsLayerEmpty()&&!it.data().GetRef().Speed_Is_One_Const())
 			{
 				it=m_grid.erase(it);
 				if(it==m_grid.end())
