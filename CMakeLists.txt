@@ -345,4 +345,7 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Convection test/TestAlgorithms_Convection.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Convection.h)
 	AddTestProperty(test_cov_Algorithms_Convection)
+
+	CXXTEST_ADD_TEST(test_cov_Data_CellType_Fluid_Air_Solid_Inflow test/TestData_CellType_Fluid_Air_Solid_Inflow.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_CellType_Fluid_Air_Solid_Inflow.h)
+	AddTestProperty(test_cov_Data_CellType_Fluid_Air_Solid_Inflow)
 endif(USE_TESTING)
