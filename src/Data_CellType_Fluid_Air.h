@@ -207,8 +207,6 @@ class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_
 		 * and that type type_Cell_type__InCell can be constructed.
 		 **/
 		typedef void type_Cell_type__InCell_exist;
-
-		bool GetIsNonLay
 };
 
 template<typename DataBase>
