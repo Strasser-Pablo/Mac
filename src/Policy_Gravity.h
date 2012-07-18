@@ -20,13 +20,40 @@ class Policy_Gravity
 	type_Data_Grid& m_grid;
 	const type_data_value m_g;
 	const int m_i;
+	bool NeedToApply(type_data_neigh* neigh)
+	{
+		if(neigh->GetRef().GetIsFluid())
+		{
+			return true;
+		}
+		if(neigh->GetRef().GetIsLayerEmpty())
+		{
+			return false;
+		}
+		for(int i=1;i<=type_dim;++i)
+		{
+			type_data_neigh* neigh2=neigh->GetNeighbour(i,-1);
+			if(neigh2==nullptr)
+			{
+				return false;
+			}
+			if(neigh2->GetRef().GetIsFluid())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	public:
 	Policy_Gravity(Data& data,type_data_value g,int i):m_dt(data.m_data.GetTimingData().m_dt),m_grid(data.m_data.GetGridData()),m_g(g),m_i(i)
 	{
 	}
 	void ApplyGravity(type_data_neigh* neigh)
 	{
-		neigh->GetRef().Speed_Set(m_i,neigh->GetRef().Speed_Get(m_i)+m_g*m_dt);
+		if(NeedToApply(neigh))
+		{
+			neigh->GetRef().Speed_Set(m_i,neigh->GetRef().Speed_Get(m_i)+m_g*m_dt);
+		}
 	}
 };
 

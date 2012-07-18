@@ -26,6 +26,10 @@ class Policy_Viscosity_Apply_If
 		{
 			return true;
 		}
+		if(neigh->GetRef().GetIsLayerEmpty())
+		{
+			return false;
+		}
 		for(int i=1;i<=type_dim;++i)
 		{
 			type_data_neigh* neigh2=neigh->GetNeighbour(i,-1);
