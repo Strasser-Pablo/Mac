@@ -4,6 +4,7 @@
 #include "Data_CellType_Implemented_Inflow.h"
 #include "Data_CellType_Implemented_Solid.h"
 #include "Inversible_Value.h"
+#include "Data_CellType_Solid_SFINAE.h"
 template <typename DataBase>
 class Data_CellType_Fluid_Air_Solid_Inflow;
 
@@ -229,6 +230,7 @@ class Data_CellType_Fluid_Air_Solid_Inflow : public Data_CellType_Implemented_Fl
 		 * and that type type_Cell_type__InCell can be constructed.
 		 **/
 		typedef void type_Cell_type__InCell_exist;
+		typedef void type_method_solid_exist;
 };
 
 template<typename DataBase>
@@ -345,6 +347,7 @@ class Data_CellType_Fluid_Air_Solid_Inflow__InCell : public Data_CellType_Implem
 		 **/
 		const Data_CellType_Fluid_Air_Solid_Inflow<DataBase> & m_data_cell_type;
 		bool m_no_delete=false;
+		typedef void type_method_solid_exist;
 };
 
 

@@ -16,7 +16,7 @@
 #include <sstream>
 #include <vtkXMLUnstructuredGridWriter.h>
 #include <unordered_map>
-
+#include "Data_CellType_Solid_SFINAE.h"
 using namespace std;
 
 template <typename Data>
@@ -34,16 +34,31 @@ class Policy_Output_Grid_Pressure
 	typedef typename type_data_mac_cell::type_speed type_speed;
 	typedef typename type_Data_Grid::iterator iterator;
 	static const int type_dim=type_Data_Grid::type_dim;
+	typedef unordered_map<type_data_key,int,type_hash> type_map;
 	type_Data_Grid& m_grid;
 	const type_data_vector &m_h;
 	const char * m_pref;
+	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data_mac_cell,type_data_mac_cell>::type=0>
+	void AddSolid(T& grid,type_map &m_map,vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct)
+	{
+  		vtkSmartPointer<vtkIntArray> vtkSolid_Cell=vtkSmartPointer<vtkIntArray>::New();
+		for(typename type_map::iterator it=m_map.begin();it!=m_map.end();++it)
+		{
+			vtkSolid_Cell->InsertValue(it->second,m_grid[it->first].GetRef().GetIsSolid());
+		}
+		vtkSolid_Cell->SetName("Solid");
+		vtkunstruct->GetCellData()->AddArray(vtkSolid_Cell);
+	}
+	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data_mac_cell,type_data_mac_cell>::type2=0>
+	void AddSolid(T& grid,type_map &m_map,vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct)
+	{
+	}
 	public:
 	Policy_Output_Grid_Pressure(Data & data,const char* pref): m_grid(data.m_data.GetGridData()),m_h(data.m_data.GetGridData().m_h.GetRef()),m_pref(pref)
 	{
 	}
 	void OutputGridPressure(int i,list<string>& m_list)
 	{
-		typedef unordered_map<type_data_key,int,type_hash> type_map;
 		type_map m_map(10,m_grid.GetHash());
 	 	vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 		vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
@@ -165,19 +180,16 @@ class Policy_Output_Grid_Pressure
 		}
   		vtkSmartPointer<vtkDoubleArray> vtkPressurearray=vtkSmartPointer<vtkDoubleArray>::New();
   		vtkSmartPointer<vtkIntArray> vtkType_Cell=vtkSmartPointer<vtkIntArray>::New();
-  		vtkSmartPointer<vtkIntArray> vtkSolid_Cell=vtkSmartPointer<vtkIntArray>::New();
 		for(typename type_map::iterator it=m_map2.begin();it!=m_map2.end();++it)
 		{
 			vtkPressurearray->InsertValue(it->second,m_grid[it->first].GetRef().Pressure_Get().Get());
 			vtkType_Cell->InsertValue(it->second,m_grid[it->first].GetRef().GetIsFluid());
-			vtkSolid_Cell->InsertValue(it->second,m_grid[it->first].GetRef().GetIsSolid());
 		}
 		vtkPressurearray->SetName("Pressure");
 		vtkType_Cell->SetName("Fluid");
-		vtkSolid_Cell->SetName("Solid");
+		AddSolid(m_grid,m_map2,vtkunstruct);
 		vtkunstruct->GetCellData()->AddArray(vtkPressurearray);
 		vtkunstruct->GetCellData()->AddArray(vtkType_Cell);
-		vtkunstruct->GetCellData()->AddArray(vtkSolid_Cell);
 
   		vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   		writer->SetInput(vtkunstruct);

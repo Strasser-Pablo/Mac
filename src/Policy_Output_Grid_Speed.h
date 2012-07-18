@@ -39,6 +39,7 @@ class Policy_Output_Grid_Speed
 	}
 	void OutputGridSpeed(int i,list<string>& m_list)
 	{
+		cout<<"out speed "<<endl;
 		for(int ispeed=1;ispeed<=type_dim;++ispeed)
 		{
 	 		vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
@@ -165,6 +166,7 @@ class Policy_Output_Grid_Speed
   			writer->SetDataModeToAscii();
 			writer->Write();
 		}
+		cout<<"out speed end"<<endl;
 	}
 };
 #endif
