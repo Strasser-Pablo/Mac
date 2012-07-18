@@ -1,6 +1,10 @@
 #ifndef Algorithms_Solid_To_Const_H
 #define Algorithms_Solid_To_Const_H
 
+#include <stack>
+
+using namespace std;
+
 template <typename DataType,typename Policy>
 class Algorithms_Solid_To_Const : public Policy
 {
@@ -21,27 +25,34 @@ class Algorithms_Solid_To_Const : public Policy
 	}
 	void Do()
 	{
+		stack<type_data_key> s;
+
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			if(it.data().GetRef().GetIsSolid())
 			{
-				type_data_key k=it.key();
-				it.data().GetRef().SetIsNoDelete();
-				it.data().GetRef().Pressure_Set(0);
-				for(int i=1;i<=type_dim;++i)
+				s.push(it.key());
+			}
+		}
+		while(!s.empty())
+		{
+			type_data_key k=s.top();
+			s.pop();
+			m_grid[k].GetRef().SetIsNoDelete();
+			m_grid[k].GetRef().Pressure_Set(0);
+			for(int i=1;i<=type_dim;++i)
+			{
+				m_grid[k].GetRef().Speed_Set(i,0);
+				m_grid[k].GetRef().Speed_Set_Const(i);
+				k.GetRef(i)-=1;
+				m_grid[k].GetRef().SetIsNoDelete();
+				for(int j=1;j<=type_dim;++j)
 				{
-					it.data().GetRef().Speed_Set(i,0);
-					it.data().GetRef().Speed_Set_Const(i);
-					k.GetRef(i)-=1;
-					m_grid[k].GetRef().SetIsNoDelete();
-					for(int j=1;j<=type_dim;++j)
-					{
-						m_grid[k].GetRef().Speed_Set(j,0);
-					}
-					m_grid[k].GetRef().Pressure_Set(0);
-					m_grid[k].GetRef().Speed_Set_Const(i);
-					k.GetRef(i)+=1;
+					m_grid[k].GetRef().Speed_Set(j,0);
 				}
+				m_grid[k].GetRef().Pressure_Set(0);
+				m_grid[k].GetRef().Speed_Set_Const(i);
+				k.GetRef(i)+=1;
 			}
 		}
 	}
