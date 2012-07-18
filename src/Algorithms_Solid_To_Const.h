@@ -9,6 +9,7 @@ class Algorithms_Solid_To_Const : public Policy
 	typedef typename type_grid::type_data_mac_cell type_data_grid;
 	typedef typename type_data_grid::type_data_value type_data_value;
 	typedef typename type_data_grid::type_data_vector type_data_vector;
+	typedef typename type_grid::type_data_key type_data_key;
 	typedef typename type_grid::iterator iterator;
 	typedef typename type_data::type_Data_Timing type_Data_Timing;
 	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
@@ -24,10 +25,22 @@ class Algorithms_Solid_To_Const : public Policy
 		{
 			if(it.data().GetRef().GetIsSolid())
 			{
+				type_data_key k=it.key();
+				it.data().GetRef().SetIsNoDelete();
+				it.data().GetRef().Pressure_Set(0);
 				for(int i=1;i<=type_dim;++i)
 				{
+					it.data().GetRef().Speed_Set(i,0);
 					it.data().GetRef().Speed_Set_Const(i);
-					it.data().GetNeighbour(i,-1)->GetRef().Speed_Set_Const(i);
+					k.GetRef(i)-=1;
+					m_grid[k].GetRef().SetIsNoDelete();
+					for(int j=1;j<=type_dim;++j)
+					{
+						m_grid[k].GetRef().Speed_Set(j,0);
+					}
+					m_grid[k].GetRef().Pressure_Set(0);
+					m_grid[k].GetRef().Speed_Set_Const(i);
+					k.GetRef(i)+=1;
 				}
 			}
 		}

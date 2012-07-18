@@ -207,6 +207,8 @@ class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_
 		 * and that type type_Cell_type__InCell can be constructed.
 		 **/
 		typedef void type_Cell_type__InCell_exist;
+
+		bool GetIsNonLay
 };
 
 template<typename DataBase>
@@ -261,7 +263,7 @@ class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_A
 		 * Constructor from a Data_CellType_Fluid_Air class. With default cell_type Air.
 		 * @param data Instance of Data_CellType_Fluid_Air that will store the density.
 		 **/
-		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> ,DataBase>(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),m_data_cell_type(data)
+		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> ,DataBase>(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),m_data_cell_type(data),m_no_delete(false)
 		{
 		}
 		/**
@@ -270,7 +272,7 @@ class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_A
 		 * @param data Instance of Data_CellType_Fluid_Air that will store the density.
 		 * @param mat Value of the type of cell.
 		 **/
-		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data,Material_Type mat):m_mat(mat),m_data_cell_type(data)
+		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data,Material_Type mat):m_mat(mat),m_data_cell_type(data),m_no_delete(false)
 		{
 		}
 		/**
@@ -301,6 +303,14 @@ class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_A
 		 * @return Density of Fluid.
 		 **/
 		auto GetRhoFluid() const ->Inversible_Value<type_data_value>;
+		bool GetIsNoDelete()
+		{
+			return m_no_delete;
+		}
+		void SetIsNoDelete(bool nodelete=true)
+		{
+			m_no_delete=nodelete;
+		}
 		/**
 		 * @brief
 		 * Storage of the current CellType.
@@ -311,6 +321,7 @@ class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_A
 		 * Reference to the linked class.
 		 **/
 		const Data_CellType_Fluid_Air<DataBase> & m_data_cell_type;
+		bool m_no_delete;
 };
 
 

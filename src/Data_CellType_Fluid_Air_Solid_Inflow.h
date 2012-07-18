@@ -284,7 +284,7 @@ class Data_CellType_Fluid_Air_Solid_Inflow__InCell : public Data_CellType_Implem
 		 * Constructor from a Data_CellType_Fluid_Air class. With default cell_type Air.
 		 * @param data Instance of Data_CellType_Fluid_Air that will store the density.
 		 **/
-		Data_CellType_Fluid_Air_Solid_Inflow__InCell(const Data_CellType_Fluid_Air_Solid_Inflow<DataBase> & data):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),Data_CellType_Implemented_Solid__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),Data_CellType_Implemented_Inflow__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),m_data_cell_type(data)
+		Data_CellType_Fluid_Air_Solid_Inflow__InCell(const Data_CellType_Fluid_Air_Solid_Inflow<DataBase> & data):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),Data_CellType_Implemented_Solid__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),Data_CellType_Implemented_Inflow__InCell<Data_CellType_Fluid_Air_Solid_Inflow__InCell<DataBase>,DataBase >(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),m_data_cell_type(data),m_no_delete(false)
 		{
 		}
 		/**
@@ -293,7 +293,7 @@ class Data_CellType_Fluid_Air_Solid_Inflow__InCell : public Data_CellType_Implem
 		 * @param data Instance of Data_CellType_Fluid_Air that will store the density.
 		 * @param mat Value of the type of cell.
 		 **/
-		Data_CellType_Fluid_Air_Solid_Inflow__InCell(const Data_CellType_Fluid_Air_Solid_Inflow<DataBase> & data,Material_Type mat):m_mat(mat),m_data_cell_type(data)
+		Data_CellType_Fluid_Air_Solid_Inflow__InCell(const Data_CellType_Fluid_Air_Solid_Inflow<DataBase> & data,Material_Type mat):m_mat(mat),m_data_cell_type(data),m_no_delete(false)
 		{
 		}
 		/**
@@ -326,6 +326,14 @@ class Data_CellType_Fluid_Air_Solid_Inflow__InCell : public Data_CellType_Implem
 		 * @return Density of Fluid.
 		 **/
 		auto GetRhoFluid() const ->Inversible_Value<type_data_value>;
+		bool GetIsNoDelete()
+		{
+			return m_no_delete;
+		}
+		void SetIsNoDelete(bool nodelete=true)
+		{
+			m_no_delete=nodelete;
+		}
 		/**
 		 * @brief
 		 * Storage of the current CellType.
@@ -336,6 +344,7 @@ class Data_CellType_Fluid_Air_Solid_Inflow__InCell : public Data_CellType_Implem
 		 * Reference to the linked class.
 		 **/
 		const Data_CellType_Fluid_Air_Solid_Inflow<DataBase> & m_data_cell_type;
+		bool m_no_delete=false;
 };
 
 

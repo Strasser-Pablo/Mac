@@ -43,12 +43,14 @@ class Policy_Output_Grid_Pressure
 	}
 	void OutputGridPressure(int i,list<string>& m_list)
 	{
+		typedef unordered_map<type_data_key,int,type_hash> type_map;
+		type_map m_map(10,m_grid.GetHash());
 	 	vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 		vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
 		int num=0;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-			it.data().GetRef().SetLayer(num);
+			m_map[it.key()]=num;
 			type_data_value vtemp[3];
 			for(int ipos=1;ipos<=type_dim;++ipos)
 			{
@@ -60,9 +62,30 @@ class Policy_Output_Grid_Pressure
 			}
 			vtkpoints->InsertPoint(num,vtemp);
 			++num;
+			type_data_key k=it.key();
+			for(int i=1;i<=type_dim;++i)
+			{
+				type_data_neigh * neigh=it.data().GetNeighbour(i,1);
+				k.GetRef(i)+=1;
+				if(neigh==nullptr&&m_map.count(k)==0)
+				{
+					for(int ipos=1;ipos<=type_dim;++ipos)
+					{
+						vtemp[ipos-1]=(k.Get(ipos)-0.5)*m_h.Get(ipos);
+					}
+					for(int ipos=type_dim+1;ipos<=3;++ipos)
+					{
+						vtemp[ipos-1]=0;
+					}
+					m_map[k]=num;
+					vtkpoints->InsertPoint(num,vtemp);
+					++num;
+				}
+				k.GetRef(i)-=1;
+			}
 		}
 		typedef unordered_map<type_data_key,int,type_hash> type_map;
-		type_map m_map(10,m_grid.GetHash());
+		type_map m_map2(10,m_grid.GetHash());
 		vtkunstruct->SetPoints(vtkpoints);
 		int ntype;
 		if(type_dim==1)
@@ -80,73 +103,81 @@ class Policy_Output_Grid_Pressure
 		int nbcont=pow(2,type_dim);
 		vtkIdType con[nbcont];
 		int icell=0;
-		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+		for(typename type_map::iterator it=m_map.begin();it!=m_map.end();++it)
 		{
-			con[0]=it.data().GetRef().GetLayer();
-			type_data_neigh* neigh=it.data().GetNeighbour(1,1);
-			if(neigh==nullptr)
+			con[0]=it->second;
+			type_data_key k=it->first;
+			k.GetRef(1)+=1;
+			if(m_map.count(k)==0)
 			{
 				continue;
 			}
-			con[1]=neigh->GetRef().GetLayer();
+			con[1]=m_map[k];
+			k.GetRef(1)-=1;
 			if(type_dim>=2)
 			{
-				neigh=it.data().GetNeighbour(2,1);
-				if(neigh==nullptr)
+				k.GetRef(2)+=1;
+				if(m_map.count(k)==0)
 				{
 					continue;
 				}
-				con[2]=neigh->GetRef().GetLayer();
-				neigh=neigh->GetNeighbour(1,1);
-				if(neigh==nullptr)
+				con[2]=m_map[k];
+				k.GetRef(1)+=1;
+				if(m_map.count(k)==0)
 				{
 					continue;
 				}
-				con[3]=neigh->GetRef().GetLayer();
+				con[3]=m_map[k];
+				k.GetRef(1)-=1;
+				k.GetRef(2)-=1;
 				if(type_dim>=3)
 				{
-					neigh=it.data().GetNeighbour(3,1);
-					if(neigh==nullptr)
+					k.GetRef(3)+=1;
+					if(m_map.count(k)==0)
 					{
 						continue;
 					}
-					con[4]=neigh->GetRef().GetLayer();
-					type_data_neigh* neigh2=neigh->GetNeighbour(1,1);
-					if(neigh2==nullptr)
+					con[4]=m_map[k];
+					k.GetRef(1)+=1;
+					if(m_map.count(k)==0)
 					{
 						continue;
 					}
-					con[5]=neigh2->GetRef().GetLayer();
-					neigh=neigh->GetNeighbour(2,1);
-					if(neigh==nullptr)
+					con[5]=m_map[k];
+					k.GetRef(1)-=1;
+					k.GetRef(2)+=1;
+					if(m_map.count(k)==0)
 					{
 						continue;
 					}
-					con[6]=neigh->GetRef().GetLayer();
-					neigh=neigh->GetNeighbour(1,1);
-					if(neigh==nullptr)
+					con[6]=m_map[k];
+					k.GetRef(1)+=1;
+					if(m_map.count(k)==0)
 					{
 						continue;
 					}
-					con[7]=neigh->GetRef().GetLayer();
+					con[7]=m_map[k];
 				}
 			}
-			m_map[it.key()]=icell;
+			m_map2[it->first]=icell;
 			++icell;
 			vtkunstruct->InsertNextCell(ntype,nbcont,con);
 		}
   		vtkSmartPointer<vtkDoubleArray> vtkPressurearray=vtkSmartPointer<vtkDoubleArray>::New();
   		vtkSmartPointer<vtkIntArray> vtkType_Cell=vtkSmartPointer<vtkIntArray>::New();
-		for(typename type_map::iterator it=m_map.begin();it!=m_map.end();++it)
+  		vtkSmartPointer<vtkIntArray> vtkSolid_Cell=vtkSmartPointer<vtkIntArray>::New();
+		for(typename type_map::iterator it=m_map2.begin();it!=m_map2.end();++it)
 		{
 			vtkPressurearray->InsertValue(it->second,m_grid[it->first].GetRef().Pressure_Get().Get());
 			vtkType_Cell->InsertValue(it->second,m_grid[it->first].GetRef().GetIsFluid());
-			vtkPressurearray->InsertValue(it->second,it->second);
+			vtkSolid_Cell->InsertValue(it->second,m_grid[it->first].GetRef().GetIsSolid());
 		}
 		vtkPressurearray->SetName("Pressure");
-		vtkType_Cell->SetName("Type");
+		vtkType_Cell->SetName("Fluid");
+		vtkSolid_Cell->SetName("Solid");
 		vtkunstruct->GetCellData()->AddArray(vtkPressurearray);
 		vtkunstruct->GetCellData()->AddArray(vtkType_Cell);
+		vtkunstruct->GetCellData()->AddArray(vtkSolid_Cell);
 
   		vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   		writer->SetInput(vtkunstruct);
