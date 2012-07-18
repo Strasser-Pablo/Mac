@@ -103,6 +103,9 @@
 #include "../src/Algorithms_Delete_MacCell.h"
 #include "../src/Algorithms_Update_CellType_Layer.h"
 #include "../src/Algorithms_Fluid_To_Layer.h"
+#include "../src/Algorithms_Inflow_To_Const.h"
+#include "../src/Algorithms_Solid_To_Const.h"
+#include "../src/Algorithms_Layer_Initial_Solid.h"
 
 // Solve Grid
 #include "../src/Algorithms_Gravity.h"
@@ -209,21 +212,32 @@ int main()
 	typedef DataRef<type_timing> type_data_ref;
 	type_data_ref m_data_ref(m_timing);
 
+	vect v2;
+	for(int i=198;i<=200;++i)
+	{
+		for(int j=195;j<=200;++j)
+		{
+			v2.Set(1,i);
+			int z=150;
+			v2.Set(2,z);
+			v2.Set(3,j);
+			m_data_ref.m_data.GetGridData()[v2].GetRef().SetSolid();
+		}
+	}
 
 	//Initial Data
 	vect v;
 	v.Set(1,0);
-	v.Set(2,0);
+	v.Set(2,10);
 	v.Set(3,0);
 
 	Physvector<dim,type_data_value> speed;
 	speed.Set(1,0.0);
-	speed.Set(2,5.0);
+	speed.Set(2,10);
 	speed.Set(3,0.0);
 	m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
 	m_data_ref.m_data.GetGridData()[v].GetRef().SetInflow();
-	m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set_Const(2);
-
+	
 
 	//Policy First Init
 	typedef Policies<> type_pol_init_first;
@@ -234,6 +248,10 @@ int main()
 	type_alg_speed_constant_mirror m_alg_speed_constant_mirror(m_data_ref,m_pol_init_first);
 	typedef Algorithms_Extrapolate<type_data_ref,type_pol_init_first> type_alg_extrapolate_init;
 	type_alg_extrapolate_init m_alg_extrapolate_init(m_data_ref,m_pol_init_first);
+	typedef Algorithms_Inflow_To_Const<type_data_ref,type_pol_init_first> type_alg_inflow_to_const;
+	type_alg_inflow_to_const m_alg_inflow_to_const(m_data_ref,m_pol_init_first);
+	typedef Algorithms_Solid_To_Const<type_data_ref,type_pol_init_first> type_alg_solid_to_const;
+	type_alg_solid_to_const m_alg_solid_to_const(m_data_ref,m_pol_init_first);
 
 	//Policy Init
 	typedef Policy_Layer_Max<type_data_ref> type_pol_layer;
@@ -267,8 +285,8 @@ int main()
 	type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_layer_initial,m_alg_create_fluid_particle,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step);
 
 
-	typedef Algorithms<type_alg_speed_constant_mirror,type_alg_initialize_mac,type_alg_create_fluid_particle,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_extrapolate_init> type_alg_first_init;
-	type_alg_first_init m_alg_first_init(m_alg_speed_constant_mirror,m_alg_initialize_mac,m_alg_create_fluid_particle,m_alg_layer_initial,m_alg_update_celltype,m_alg_delete_maccell,m_alg_extrapolate_init);
+	typedef Algorithms<type_alg_inflow_to_const,type_alg_solid_to_const,type_alg_speed_constant_mirror,type_alg_initialize_mac,type_alg_create_fluid_particle,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_extrapolate_init> type_alg_first_init;
+	type_alg_first_init m_alg_first_init(m_alg_inflow_to_const,m_alg_solid_to_const,m_alg_speed_constant_mirror,m_alg_initialize_mac,m_alg_create_fluid_particle,m_alg_layer_initial,m_alg_update_celltype,m_alg_delete_maccell,m_alg_extrapolate_init);
 
 	// Policy Solve Grid
 	typedef Policy_Gravity<type_data_ref> type_pol_gravity;
@@ -360,7 +378,7 @@ int main()
 		m_data_ref.m_data.GetTimingData().m_t+=m_data_ref.m_data.GetTimingData().m_dt;
 		cout<<"dt "<<m_data_ref.m_data.GetTimingData().m_dt<<endl;
 		cout<<"t "<<m_data_ref.m_data.GetTimingData().m_t<<endl;
-		m_alg_output.Do();
+	//	m_alg_output.Do();
 	}
 
 }
