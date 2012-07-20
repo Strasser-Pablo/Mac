@@ -96,6 +96,7 @@ class TestAlgorithms_Gravity : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		Physvector<1,double> speed;
 		speed.Set(1,1.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetFluid();
 
 		v.Set(1,0);
 		typedef Policy_Gravity<type_data_ref> type_pol;
@@ -170,6 +171,7 @@ class TestAlgorithms_Gravity : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(1,1.0);
 		speed.Set(2,1.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetFluid();
 		
 		typedef Policy_Gravity<type_data_ref> type_pol;
 		type_pol m_pol(m_data_ref,-9.81,2);
