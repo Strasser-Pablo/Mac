@@ -353,4 +353,5 @@ endfunction(AddTestProperty)
 	AddTestProperty(test_cov_FillingContainer_Basic)
 	TARGET_LINK_LIBRARIES(test_cov_FillingContainer_Basic lib_computation)
 	add_test(NAME test_cov_FillingContainer_Basic COMMAND TestFillingContainer_Basic)
+
 endif(USE_TESTING)
