@@ -219,14 +219,13 @@ int main()
 
 	Physvector<dim,type_data_value> speed;
 	speed.Set(1,0.0);
-	speed.Set(2,10);
+	speed.Set(2,-1);
 	speed.Set(3,0.0);
 	m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
 	m_data_ref.m_data.GetGridData()[v].GetRef().SetInflow();
 
-	vect v2;
 	int y=0;
-	
+	vect v2;
 	for(int i=-10;i<=10;++i)
 	{
 		for(int j=-10;j<=10;++j)
@@ -237,6 +236,7 @@ int main()
 			m_data_ref.m_data.GetGridData()[v2].GetRef().SetSolid();
 		}
 	}
+
 
 	//Policy First Init
 	typedef Policies<> type_pol_init_first;
@@ -366,7 +366,7 @@ int main()
 	typedef Algorithms_Fluid_To_Layer<type_data_ref,type_pol_fluid_to_layer> type_alg_fluid_to_layer;
 	type_alg_fluid_to_layer m_alg_fluid_to_layer(m_data_ref,m_pol_fluid_to_layer);
 	m_alg_first_init.Do();
-	for(int i=1;i<=2;++i)
+	for(int i=1;i<=100;++i)
 	{
 		cout<<"i "<<i<<endl;
 		m_alg.Do();
