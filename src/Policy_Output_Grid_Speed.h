@@ -87,10 +87,14 @@ class Policy_Output_Grid_Speed
 			int nbcont=pow(2,type_dim);
 			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
+				if(it.data().GetRef().GetIsLayerEmpty())
+				{
+					continue;
+				}
 				vtkIdType con[nbcont];
 				con[0]=it.data().GetRef().GetLayer();
 				type_data_neigh* neigh=it.data().GetNeighbour(1,1);
-				if(neigh==nullptr)
+				if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
 				{
 					continue;
 				}
@@ -98,13 +102,13 @@ class Policy_Output_Grid_Speed
 				if(type_dim>=2)
 				{
 					neigh=it.data().GetNeighbour(2,1);
-					if(neigh==nullptr)
+					if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
 					{
 						continue;
 					}
 					con[2]=neigh->GetRef().GetLayer();
 					neigh=neigh->GetNeighbour(1,1);
-					if(neigh==nullptr)
+					if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
 					{
 						continue;
 					}
@@ -112,25 +116,25 @@ class Policy_Output_Grid_Speed
 					if(type_dim>=3)
 					{
 						neigh=it.data().GetNeighbour(3,1);
-						if(neigh==nullptr)
+						if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
 						{
 							continue;
 						}
 						con[4]=neigh->GetRef().GetLayer();
 						type_data_neigh* neigh2=neigh->GetNeighbour(1,1);
-						if(neigh2==nullptr)
+						if(neigh2==nullptr||neigh2->GetRef().GetIsLayerEmpty())
 						{
 							continue;
 						}
 						con[5]=neigh2->GetRef().GetLayer();
 						neigh=neigh->GetNeighbour(2,1);
-						if(neigh==nullptr)
+						if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
 						{
 							continue;
 						}
 						con[6]=neigh->GetRef().GetLayer();
 						neigh=neigh->GetNeighbour(1,1);
-						if(neigh==nullptr)
+						if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
 						{
 							continue;
 						}

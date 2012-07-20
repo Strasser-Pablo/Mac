@@ -65,10 +65,6 @@ class Policy_Output_Grid_Pressure
 		int num=0;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-			if(it.data().GetRef().GetIsLayerEmpty())
-			{
-				continue;
-			}
 			m_map[it.key()]=num;
 			type_data_value vtemp[3];
 			for(int ipos=1;ipos<=type_dim;++ipos)
@@ -124,6 +120,10 @@ class Policy_Output_Grid_Pressure
 		int icell=0;
 		for(typename type_map::iterator it=m_map.begin();it!=m_map.end();++it)
 		{
+			if(!m_grid.Exist(it->first))
+			{
+				continue;
+			}
 			con[0]=it->second;
 			type_data_key k=it->first;
 			k.GetRef(1)+=1;
@@ -194,7 +194,7 @@ class Policy_Output_Grid_Pressure
 		AddSolid(m_grid,m_map2,vtkunstruct);
 		vtkunstruct->GetCellData()->AddArray(vtkPressurearray);
 		vtkunstruct->GetCellData()->AddArray(vtkType_Cell);
-
+		
   		vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer=vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
   		writer->SetInput(vtkunstruct);
 		stringstream stream;
