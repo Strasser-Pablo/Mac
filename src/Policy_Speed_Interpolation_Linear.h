@@ -72,6 +72,7 @@ class Policy_Speed_Interpolation_Linear
 		{
 			pos_delta.GetRef(i)=pos.Get(i)*m_1_h.Get(i);
 			key0.GetRef(i)=m_round(pos_delta.GetRef(i));
+			pos_delta.GetRef(i)-=key0.GetRef(i);
 		}
 		type_data_neigh* neigh=&m_grid[key0];
 		for(int k=1;k<=type_dim;++k)
