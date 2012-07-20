@@ -105,7 +105,6 @@
 #include "../src/Algorithms_Fluid_To_Layer.h"
 #include "../src/Algorithms_Inflow_To_Const.h"
 #include "../src/Algorithms_Solid_To_Const.h"
-#include "../src/Algorithms_Layer_Initial_Solid.h"
 
 // Solve Grid
 #include "../src/Algorithms_Gravity.h"
