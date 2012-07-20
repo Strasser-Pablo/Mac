@@ -41,7 +41,7 @@ class Algorithms_Extrapolate : public Policy
 				for(int i=1;i<=type_dim;++i)
 				{
 					type_data_neigh* neigh2=neigh->GetNeighbour(i,1);
-					if(neigh2!=nullptr)
+					if(neigh2!=nullptr&&!(neigh2->GetRef().GetIsLayerEmpty()))
 					{
 						if(neigh2->GetRef().GetLayer()>=lay)
 						{
@@ -98,7 +98,7 @@ class Algorithms_Extrapolate : public Policy
 						}
 					}
 					neigh2=neigh->GetNeighbour(i,-1);
-					if(neigh2!=nullptr)
+					if(neigh2!=nullptr&&!(neigh2->GetRef().GetIsLayerEmpty()))
 					{
 						if(neigh2->GetRef().GetLayer()>=lay)
 						{
@@ -115,7 +115,7 @@ class Algorithms_Extrapolate : public Policy
 									if(s2==1&&j==i)
 									{
 										type_data_neigh* neigh3=neigh->GetNeighbour(j,1);
-										if(neigh3!=nullptr)
+										if(neigh3!=nullptr&&(!neigh3->GetRef().GetIsLayerEmpty()))
 										{
 											if(neigh3->GetRef().GetLayer()<lay)
 											{
@@ -127,7 +127,7 @@ class Algorithms_Extrapolate : public Policy
 									else if(s2==-1&&j==i)
 									{
 										type_data_neigh* neigh3=neigh2->GetNeighbour(j,-1);
-										if(neigh3!=nullptr)
+										if(neigh3!=nullptr&&(!neigh3->GetRef().GetIsLayerEmpty()))
 										{
 											if(neigh3->GetRef().GetLayer()<lay)
 											{
@@ -140,7 +140,7 @@ class Algorithms_Extrapolate : public Policy
 									{
 										type_data_neigh* neigh3=neigh2->GetNeighbour(j,s2);
 										type_data_neigh* neigh4=neigh->GetNeighbour(j,s2);
-										if(neigh3!=nullptr&&neigh4!=nullptr)
+										if(neigh3!=nullptr&&neigh4!=nullptr&&(!neigh3->GetRef().GetIsLayerEmpty())&&(!neigh4->GetRef().GetIsLayerEmpty()))
 										{
 											if(neigh3->GetRef().GetLayer()<lay||neigh4->GetRef().GetLayer()<lay)
 											{
@@ -165,7 +165,7 @@ class Algorithms_Extrapolate : public Policy
 								if(s2==1&&j==i)
 								{
 									type_data_neigh* neigh3=neigh->GetNeighbour(j,1);
-									if(neigh3!=nullptr)
+									if(neigh3!=nullptr&&(!neigh3->GetRef().GetIsLayerEmpty()))
 									{
 										if(neigh3->GetRef().GetLayer()<lay)
 										{
@@ -180,10 +180,10 @@ class Algorithms_Extrapolate : public Policy
 								else
 								{
 									type_data_neigh* neigh4=neigh->GetNeighbour(j,s2);
-									if(neigh4!=nullptr)
+									if(neigh4!=nullptr&&(!neigh4->GetRef().GetIsLayerEmpty()))
 									{
 										type_data_neigh* neigh3=neigh4->GetNeighbour(i,-1);
-										if(neigh3!=nullptr)
+										if(neigh3!=nullptr&&(!neigh3->GetRef().GetIsLayerEmpty()))
 										{
 											if(neigh3->GetRef().GetLayer()<lay||neigh4->GetRef().GetLayer()<lay)
 											{
