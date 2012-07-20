@@ -227,9 +227,9 @@ int main()
 	vect v2;
 	int y=0;
 	
-	for(int i=-50;i<=50;++i)
+	for(int i=-10;i<=10;++i)
 	{
-		for(int j=-50;j<=50;++j)
+		for(int j=-10;j<=10;++j)
 		{
 			v2.Set(1,i);
 			v2.Set(2,y);
@@ -366,7 +366,7 @@ int main()
 	typedef Algorithms_Fluid_To_Layer<type_data_ref,type_pol_fluid_to_layer> type_alg_fluid_to_layer;
 	type_alg_fluid_to_layer m_alg_fluid_to_layer(m_data_ref,m_pol_fluid_to_layer);
 	m_alg_first_init.Do();
-	for(int i=1;i<=100;++i)
+	for(int i=1;i<=2;++i)
 	{
 		cout<<"i "<<i<<endl;
 		m_alg.Do();
