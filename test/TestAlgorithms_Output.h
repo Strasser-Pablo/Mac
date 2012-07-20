@@ -97,16 +97,19 @@ class TestAlgorithms_Output : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(1,1.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
 		
 		v.Set(1,1);
 		speed.Set(1,1.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
 
 		v.Set(1,-1);
 		speed.Set(1,1.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
 		
 		type_particle part;
 		part.GetParticlePosRef().Set(1,2.2);
@@ -194,6 +197,7 @@ class TestAlgorithms_Output : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(2,1.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(1);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
 		
 		v.Set(1,1);
 		v.Set(2,0);
@@ -201,6 +205,7 @@ class TestAlgorithms_Output : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(2,2.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(3);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
 
 		v.Set(1,0);
 		v.Set(2,1);
@@ -208,6 +213,7 @@ class TestAlgorithms_Output : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(2,3.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(4);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
 		
 		v.Set(1,1);
 		v.Set(2,1);
@@ -215,6 +221,7 @@ class TestAlgorithms_Output : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(2,3.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(5);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
 
 		type_particle part;
 		part.GetParticlePosRef().Set(1,0.5);

@@ -102,22 +102,27 @@ class TestAlgorithms_Viscosity : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(1,1.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().SetFluid();
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
 
 		v.Set(1,1);
 		speed.Set(1,0.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,-1);
 		speed.Set(1,0.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 		
 		v.Set(1,-2);
 		speed.Set(1,0.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,2);
 		speed.Set(1,0.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,0);
 		typedef Policy_Laplacian_Speed<type_data_ref> type_pol;
@@ -200,60 +205,70 @@ class TestAlgorithms_Viscosity : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(2,1.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().SetFluid();
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
 		
 		v.Set(1,1);
 		v.Set(2,0);
 		speed.Set(1,0);
 		speed.Set(2,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,2);
 		v.Set(2,0);
 		speed.Set(1,0);
 		speed.Set(2,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,-1);
 		v.Set(2,0);
 		speed.Set(1,0);
 		speed.Set(2,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,0);
 		v.Set(2,-1);
 		speed.Set(1,0);
 		speed.Set(2,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,1);
 		v.Set(2,-1);
 		speed.Set(1,0);
 		speed.Set(2,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,-1);
 		v.Set(2,1);
 		speed.Set(1,0);
 		speed.Set(2,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,0);
 		v.Set(2,1);
 		speed.Set(1,0);
 		speed.Set(2,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,1);
 		v.Set(2,1);
 		speed.Set(1,0);
 		speed.Set(2,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,0);
 		v.Set(2,2);
 		speed.Set(1,0);
 		speed.Set(2,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayerEmpty();
 
 		v.Set(1,0);
 		v.Set(2,0);

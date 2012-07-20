@@ -106,13 +106,5 @@ class TestAlgorithms_Create_Fluid_Particle : public CxxTest::TestSuite  //LCOV_E
 		v.Set(1,2);
 		Data_Speed_Data<3,double> speed_ret=m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get();
 		TS_ASSERT_DELTA(speed_ret.Get(1),1.0,eps)
-		v.Set(1,1);
-		v.Set(2,2);
-		speed_ret=m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get();
-		TS_ASSERT_DELTA(speed_ret.Get(2),0.0,eps)
-		v.Set(2,1);
-		v.Set(3,2);
-		speed_ret=m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get();
-		TS_ASSERT_DELTA(speed_ret.Get(3),0.0,eps)
 	}
 };
