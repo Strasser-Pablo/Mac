@@ -39,7 +39,7 @@ class Policy_Output_Grid_Pressure
 	const type_data_vector &m_h;
 	const char * m_pref;
 	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data_mac_cell,type_data_mac_cell>::type=0>
-	void AddSolid(T& grid,type_map &m_map,vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct)
+	void AddSolid(T& grid __attribute__ ((unused)),type_map &m_map __attribute__ ((unused)),vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct __attribute__ ((unused)))
 	{
   		vtkSmartPointer<vtkIntArray> vtkSolid_Cell=vtkSmartPointer<vtkIntArray>::New();
 		for(typename type_map::iterator it=m_map.begin();it!=m_map.end();++it)
