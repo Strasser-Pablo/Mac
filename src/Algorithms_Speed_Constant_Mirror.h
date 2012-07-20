@@ -39,12 +39,9 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 			for(int i=1;i<=type_dim;++i)
 			{
 				k.GetRef(i)+=1;
-				if(m_grid[k0].GetRef().Speed_Get_Const(i))
+				for(int j=1;j<=type_dim;++j)
 				{
-					for(int j=1;j<=type_dim;++j)
-					{
-						m_grid[k].GetRef().Speed_Set(j,0);
-					}
+					m_grid[k].GetRef().Speed_Set(j,0);
 				}
 				k.GetRef(i)-=1;
 			}
