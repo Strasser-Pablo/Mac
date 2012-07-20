@@ -58,7 +58,7 @@ class Algorithms_Extrapolate : public Policy
 									if(s2==-1&&j==i)
 									{
 										type_data_neigh* neigh3=neigh->GetNeighbour(i,-1);
-										if(neigh3!=nullptr)
+										if(neigh3!=nullptr&&(!neigh3->GetRef().GetIsLayerEmpty()))
 										{
 											if(neigh3->GetRef().GetLayer()<lay)
 											{
@@ -70,7 +70,7 @@ class Algorithms_Extrapolate : public Policy
 									else if(s2==1&&j==i)
 									{
 										type_data_neigh* neigh3=neigh2->GetNeighbour(i,1);
-										if(neigh3!=nullptr)
+										if(neigh3!=nullptr&&(!neigh3->GetRef().GetIsLayerEmpty()))
 										{
 											if(neigh3->GetRef().GetLayer()<lay)
 											{
@@ -83,7 +83,7 @@ class Algorithms_Extrapolate : public Policy
 									{
 										type_data_neigh* neigh3=neigh2->GetNeighbour(j,s2);
 										type_data_neigh* neigh4=neigh->GetNeighbour(j,s2);
-										if(neigh3!=nullptr&&neigh4!=nullptr)
+										if(neigh3!=nullptr&&neigh4!=nullptr&&(!neigh3->GetRef().GetIsLayerEmpty())&&(!neigh4->GetRef().GetIsLayerEmpty()))
 										{
 											if(neigh3->GetRef().GetLayer()<lay||neigh4->GetRef().GetLayer()<lay)
 											{
