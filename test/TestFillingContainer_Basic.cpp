@@ -212,19 +212,6 @@ int main()
 	typedef DataRef<type_timing> type_data_ref;
 	type_data_ref m_data_ref(m_timing);
 
-	vect v2;
-	for(int i=198;i<=200;++i)
-	{
-		for(int j=195;j<=200;++j)
-		{
-			v2.Set(1,i);
-			int z=150;
-			v2.Set(2,z);
-			v2.Set(3,j);
-			m_data_ref.m_data.GetGridData()[v2].GetRef().SetSolid();
-		}
-	}
-
 	//Initial Data
 	vect v;
 	v.Set(1,0);
@@ -237,7 +224,20 @@ int main()
 	speed.Set(3,0.0);
 	m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
 	m_data_ref.m_data.GetGridData()[v].GetRef().SetInflow();
+
+	vect v2;
+	int y=0;
 	
+	for(int i=-50;i<=50;++i)
+	{
+		for(int j=-50;j<=50;++j)
+		{
+			v2.Set(1,i);
+			v2.Set(2,y);
+			v2.Set(3,j);
+			m_data_ref.m_data.GetGridData()[v2].GetRef().SetSolid();
+		}
+	}
 
 	//Policy First Init
 	typedef Policies<> type_pol_init_first;
@@ -255,7 +255,7 @@ int main()
 
 	//Policy Init
 	typedef Policy_Layer_Max<type_data_ref> type_pol_layer;
-	type_pol_layer m_pol_layer(4);
+	type_pol_layer m_pol_layer(10);
 	typedef Policy_Particle_To_Key<type_data_ref> type_pol_part_to_key;
 	type_pol_part_to_key m_pol_part_to_key(m_data_ref);
 	typedef Policy_CheckDT<type_data_ref> type_pol_check_dt;
@@ -378,7 +378,7 @@ int main()
 		m_data_ref.m_data.GetTimingData().m_t+=m_data_ref.m_data.GetTimingData().m_dt;
 		cout<<"dt "<<m_data_ref.m_data.GetTimingData().m_dt<<endl;
 		cout<<"t "<<m_data_ref.m_data.GetTimingData().m_t<<endl;
-	//	m_alg_output.Do();
+		m_alg_output.Do();
 	}
 
 }
