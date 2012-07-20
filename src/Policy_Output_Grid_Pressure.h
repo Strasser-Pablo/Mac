@@ -65,6 +65,10 @@ class Policy_Output_Grid_Pressure
 		int num=0;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
+			if(it.data().GetRef().GetIsLayerEmpty())
+			{
+				continue;
+			}
 			m_map[it.key()]=num;
 			type_data_value vtemp[3];
 			for(int ipos=1;ipos<=type_dim;++ipos)

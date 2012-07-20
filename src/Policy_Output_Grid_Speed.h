@@ -39,7 +39,6 @@ class Policy_Output_Grid_Speed
 	}
 	void OutputGridSpeed(int i,list<string>& m_list)
 	{
-		cout<<"out speed "<<endl;
 		for(int ispeed=1;ispeed<=type_dim;++ispeed)
 		{
 	 		vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
@@ -47,6 +46,10 @@ class Policy_Output_Grid_Speed
 			int num=0;
 			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
+				if(it.data().GetRef().GetIsLayerEmpty())
+				{
+					continue;
+				}
 				it.data().GetRef().SetLayer(num);
 				type_data_value vtemp[3];
 				for(int ipos=1;ipos<=type_dim;++ipos)
@@ -139,6 +142,10 @@ class Policy_Output_Grid_Speed
 			vtkSmartPointer<vtkDoubleArray> vtkspeedarray=vtkSmartPointer<vtkDoubleArray>::New();
 			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
+				if(it.data().GetRef().GetIsLayerEmpty())
+				{
+					continue;
+				}
 				vtkspeedarray->InsertComponent(it.data().GetRef().GetLayer(),0,it.data().GetRef().Speed_Get(ispeed));
 			}
 			if(ispeed==1)
@@ -166,7 +173,6 @@ class Policy_Output_Grid_Speed
   			writer->SetDataModeToAscii();
 			writer->Write();
 		}
-		cout<<"out speed end"<<endl;
 	}
 };
 #endif
