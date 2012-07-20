@@ -30,15 +30,23 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 			if(it.data().GetRef().Speed_Is_One_Const())
 			{
 				m_set.insert(it.key());
-				for(int i=1;i<=type_dim;++i)
+			}
+		}
+		for(typename type_unordered_set::iterator it=m_set.begin();it!=m_set.end();++it)
+		{
+			type_data_key k0=*it;
+			type_data_key k=*it;
+			for(int i=1;i<=type_dim;++i)
+			{
+				k.GetRef(i)+=1;
+				if(m_grid[k0].GetRef().Speed_Get_Const(i))
 				{
-					k.GetRef(i)+=1;
 					for(int j=1;j<=type_dim;++j)
 					{
 						m_grid[k].GetRef().Speed_Set(j,0);
 					}
-					k.GetRef(i)-=1;
 				}
+				k.GetRef(i)-=1;
 			}
 		}
 		for(typename type_unordered_set::iterator it=m_set.begin();it!=m_set.end();++it)
