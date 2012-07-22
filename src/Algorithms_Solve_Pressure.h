@@ -58,7 +58,7 @@ class Algorithms_Solve_Pressure: public Policy
 			type_data_neigh * neigh;
 			if(!it.data().GetRef().GetIsLayerEmpty())
 			{
-				break;
+				continue;
 			}
 			next.push_back(&it.data());
 			while(!next.empty())
