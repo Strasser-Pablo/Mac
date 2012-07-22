@@ -169,6 +169,19 @@ class Algorithms_Solve_Pressure: public Policy
 				it.data().GetRef().Speed_Set(it.data().GetRef().Speed_Get()-Get_Gradiant(&it.data()));
 			}
 		}
+		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+		{
+			if(it.data().GetRef().GetIsInDomain())
+			{
+				type_data_value div=Get_Divergence(&it.data()).Get();
+				if(abs(div)>0.0000000001)
+				{
+					cout<<"key "<<it.key()<<endl;
+					cout<<"div "<<Get_Divergence(&it.data()).Get()<<endl;
+				}
+			}
+		}
+
 	}
 };
 #endif
