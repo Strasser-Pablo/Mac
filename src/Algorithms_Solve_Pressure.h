@@ -14,6 +14,7 @@ class Algorithms_Solve_Pressure: public Policy
 	using Policy::Get_Divergence;
 	using Policy::Get_Gradiant;
 	using Policy::Get_Is_Von_Neumann_Boundary;
+	using Policy::Get_Pressure_If_Correction;
 	typedef typename DataType::type_data_struct type_data;
 	typedef typename type_data::type_Data_Grid type_grid;
 	typedef typename type_grid::type_data_mac_cell type_data_grid;
@@ -42,7 +43,7 @@ class Algorithms_Solve_Pressure: public Policy
 		type_data_value b[n];
 		type_data_value res[n];
 
-		//Set every layer to tempy.
+		//Set every layer to empty.
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 				it.data().GetRef().SetLayerEmpty();
@@ -91,6 +92,7 @@ class Algorithms_Solve_Pressure: public Policy
 					{
 						for(int s=-1;s<=1;s+=2)
 						{
+							temp_diag_value-=pow(m_1_h.Get(i),2);
 							int lay_cur2;
 							neigh=next_neigh->GetNeighbour(i,s);
 							//Test if we have a neighbour.
@@ -111,13 +113,12 @@ class Algorithms_Solve_Pressure: public Policy
 										lay_cur2=neigh->GetRef().GetLayer();
 									}
 									m_map.insert(type_pair(lay_cur2,pow(m_1_h.Get(i),2)));
-									temp_diag_value-=2*pow(m_1_h.Get(i),2);
 									neigh->GetRef().Pressure_Get();
 								}
 								// We are a von_Neumann boundary only add diagonal value.
 								else if(Get_Is_Von_Neumann_Boundary(next_neigh,i,s))
 								{
-									temp_diag_value-=pow(m_1_h.Get(i),2);
+									temp_diag_value+=pow(m_1_h.Get(i),2);
 								}
 							}
 						}
@@ -163,12 +164,11 @@ class Algorithms_Solve_Pressure: public Policy
 		}
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-			if(it.data().GetRef().GetIsInDomain())
+			if(Get_Pressure_If_Correction(&it.data()))
 			{
 				it.data().GetRef().Speed_Set(it.data().GetRef().Speed_Get()-Get_Gradiant(&it.data()));
 			}
 		}
-
 	}
 };
 #endif

@@ -35,6 +35,7 @@
 #include "../src/Data_CellType_Interface_Constant.h"
 #include "../src/Data_CellType_Domain_Fluid.h"
 #include "../src/Policy_Von_Neumann_Boundary.h"
+#include "../src/Policy_Pressure_If_Correction.h"
 #define eps 1e-10
 class TestAlgorithms_Solve_Pressure : public CxxTest::TestSuite  //LCOV_EXCL_LINE 
 {
@@ -109,31 +110,41 @@ class TestAlgorithms_Solve_Pressure : public CxxTest::TestSuite  //LCOV_EXCL_LIN
 		type_div p_div(m_data_ref);
 		typedef Policy_Von_Neumann_Boundary<type_data_ref> type_neu;
 		type_neu p_neu(m_data_ref);
+		typedef Policy_Pressure_If_Correction<type_data_ref> type_pres_cor;
+		type_pres_cor p_pres_cor;
 
-		typedef Policies<type_solve,type_grad,type_div,type_neu> type_pol;
-		type_pol pol(p_solve,p_grad,p_div,p_neu);
+		typedef Policies<type_solve,type_grad,type_div,type_neu,type_pres_cor> type_pol;
+		type_pol pol(p_solve,p_grad,p_div,p_neu,p_pres_cor);
 		Algorithms_Solve_Pressure<type_data_ref,type_pol> alg_solve(m_data_ref,pol);
 
 		vect v;
+
 		v.Set(1,0);
 		Physvector<1,double> speed;
 		speed.Set(1,2.0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().SetFluid();
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
+
 		v.Set(1,1);
 		speed.Set(1,1);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().SetFluid();
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
+		
 		v.Set(1,-1);
 		speed.Set(1,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(1);
+		
 		v.Set(1,2);
 		speed.Set(1,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(1);
 
 		alg_solve.Do();
 		
@@ -214,9 +225,11 @@ class TestAlgorithms_Solve_Pressure : public CxxTest::TestSuite  //LCOV_EXCL_LIN
 		type_div p_div(m_data_ref);
 		typedef Policy_Von_Neumann_Boundary<type_data_ref> type_neu;
 		type_neu p_neu(m_data_ref);
+		typedef Policy_Pressure_If_Correction<type_data_ref> type_pres_cor;
+		type_pres_cor p_pres_cor;
 
-		typedef Policies<type_solve,type_grad,type_div,type_neu> type_pol;
-		type_pol pol(p_solve,p_grad,p_div,p_neu);
+		typedef Policies<type_solve,type_grad,type_div,type_neu,type_pres_cor> type_pol;
+		type_pol pol(p_solve,p_grad,p_div,p_neu,p_pres_cor);
 		Algorithms_Solve_Pressure<type_data_ref,type_pol> alg_solve(m_data_ref,pol);
 
 		vect v;
@@ -356,28 +369,28 @@ class TestAlgorithms_Solve_Pressure : public CxxTest::TestSuite  //LCOV_EXCL_LIN
 		
 		v.Set(1,0);
 		v.Set(2,0);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),1.6666666666666666,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),1.66666666666666666,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),1.25,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),1.25,eps);
 
 		v.Set(1,1);
 		v.Set(2,0);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.33333333333333333333333,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),-0.333333333333333333333333333,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),1.25,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.24999999999999988898,eps);
 
 		v.Set(1,0);
 		v.Set(2,1);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),-0.333333333333333333333333333,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.3333333333333333333333333,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.24999999999999988898,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),1.25,eps);
 
 		v.Set(1,-1);
 		v.Set(2,0);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.666666666666,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.6666666666666,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.75,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.75,eps);
 
 		v.Set(1,0);
 		v.Set(2,-1);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.66666666666,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.6666666666666,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.75,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.75,eps);
 	}
 
 	void test1h()
@@ -450,9 +463,11 @@ class TestAlgorithms_Solve_Pressure : public CxxTest::TestSuite  //LCOV_EXCL_LIN
 		type_div p_div(m_data_ref);
 		typedef Policy_Von_Neumann_Boundary<type_data_ref> type_neu;
 		type_neu p_neu(m_data_ref);
+		typedef Policy_Pressure_If_Correction<type_data_ref> type_pres_cor;
+		type_pres_cor p_pres_cor;
 
-		typedef Policies<type_solve,type_grad,type_div,type_neu> type_pol;
-		type_pol pol(p_solve,p_grad,p_div,p_neu);
+		typedef Policies<type_solve,type_grad,type_div,type_neu,type_pres_cor> type_pol;
+		type_pol pol(p_solve,p_grad,p_div,p_neu,p_pres_cor);
 		Algorithms_Solve_Pressure<type_data_ref,type_pol> alg_solve(m_data_ref,pol);
 
 		vect v;
@@ -462,19 +477,26 @@ class TestAlgorithms_Solve_Pressure : public CxxTest::TestSuite  //LCOV_EXCL_LIN
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().SetFluid();
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
+
 		v.Set(1,1);
 		speed.Set(1,1);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().SetFluid();
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(0);
+
 		v.Set(1,-1);
 		speed.Set(1,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(1);
+
 		v.Set(1,2);
 		speed.Set(1,0);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Pressure_Set(0);
+		m_data_ref.m_data.GetGridData()[v].GetRef().SetLayer(1);
 
 		alg_solve.Do();
 		
@@ -555,9 +577,11 @@ class TestAlgorithms_Solve_Pressure : public CxxTest::TestSuite  //LCOV_EXCL_LIN
 		type_div p_div(m_data_ref);
 		typedef Policy_Von_Neumann_Boundary<type_data_ref> type_neu;
 		type_neu p_neu(m_data_ref);
+		typedef Policy_Pressure_If_Correction<type_data_ref> type_pres_cor;
+		type_pres_cor p_pres_cor;
 
-		typedef Policies<type_solve,type_grad,type_div,type_neu> type_pol;
-		type_pol pol(p_solve,p_grad,p_div,p_neu);
+		typedef Policies<type_solve,type_grad,type_div,type_neu,type_pres_cor> type_pol;
+		type_pol pol(p_solve,p_grad,p_div,p_neu,p_pres_cor);
 		Algorithms_Solve_Pressure<type_data_ref,type_pol> alg_solve(m_data_ref,pol);
 
 		vect v;
@@ -697,27 +721,27 @@ class TestAlgorithms_Solve_Pressure : public CxxTest::TestSuite  //LCOV_EXCL_LIN
 		
 		v.Set(1,0);
 		v.Set(2,0);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),1.6666666666666666,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),1.66666666666666666,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),1.25,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),1.25,eps);
 
 		v.Set(1,1);
 		v.Set(2,0);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.33333333333333333333333,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),-0.333333333333333333333333333,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),1.25,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.25,eps);
 
 		v.Set(1,0);
 		v.Set(2,1);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),-0.333333333333333333333333333,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.3333333333333333333333333,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.25,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),1.25,eps);
 
 		v.Set(1,-1);
 		v.Set(2,0);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.666666666666,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.6666666666666,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.75,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.75,eps);
 
 		v.Set(1,0);
 		v.Set(2,-1);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.66666666666,eps);
-		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.6666666666666,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(1),0.75,eps);
+		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Get(2),0.75,eps);
 	}
 };

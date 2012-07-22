@@ -35,7 +35,7 @@ class Policy_Convection_Apply_If
 			type_data_neigh* neigh2=neigh->GetNeighbour(i,-1);
 			if(neigh2==nullptr)
 			{
-				return false;
+				continue;
 			}
 			if(neigh2->GetRef().GetIsFluid())
 			{
