@@ -37,16 +37,16 @@ class Algorithms_Solve_Pressure: public Policy
 		// Upper bound of memory usage.
 		int n=m_grid.size();
 		int nEntry=2*type_dim*m_grid.size();
-		int offset[n+1];
-		int indice[nEntry];
-		type_data_value value[nEntry];
-		type_data_value b[n];
-		type_data_value res[n];
+		int* offset=new int[n+1];
+		int* indice=new int[nEntry];
+		type_data_value* value=new type_data_value[nEntry];
+		type_data_value* b=new type_data_value[n];
+		type_data_value* res=new type_data_value[n];
 
 		//Set every layer to empty.
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-				it.data().GetRef().SetLayerEmpty();
+			it.data().GetRef().SetLayerEmpty();
 		}
 		offset[0]=0;
 		int lay=0;
@@ -181,6 +181,11 @@ class Algorithms_Solve_Pressure: public Policy
 				}
 			}
 		}
+		delete[] offset;
+		delete[] indice;
+		delete[] value;
+		delete[] b;
+		delete[] res;
 
 	}
 };

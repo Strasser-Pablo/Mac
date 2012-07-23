@@ -183,9 +183,9 @@ int main()
 	typedef Data_Grid_Base_Spacing<type_data_viscosity> type_data_grid;
 	type_data_grid m_data_grid(m_data_viscosity);
 	Physvector<dim,type_data_value> h;
-	h.Set(1,0.1);
-	h.Set(2,0.1);
-	h.Set(3,0.1);
+	h.Set(1,0.01);
+	h.Set(2,0.01);
+	h.Set(3,0.01);
 	m_data_grid.m_h.Set(h);
 	typedef Data_CellType_Interface_Constant<type_data_grid> type_interface_constant;
 	type_interface_constant m_type_interface_constant(m_data_grid);
@@ -214,9 +214,11 @@ int main()
 	//Initial Data
 	vect v;
 	int y0=10;
-	for(int i=-3;i<=3;++i)
+	int imax=3;
+	int jmax=3;
+	for(int i=-3;i<=imax;++i)
 	{
-		for(int j=-3;j<=3;++j)
+		for(int j=-3;j<=jmax;++j)
 		{
 			v.Set(1,i);
 			v.Set(2,y0);
@@ -236,7 +238,29 @@ int main()
 			m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
 			m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set_Const(2);
 		}
+
+		Physvector<dim,type_data_value> speed;
+		v.Set(2,y0);
+		v.Set(1,i);
+		v.Set(3,jmax+1);
+		speed.Set(1,0.0);
+		speed.Set(2,0.0);
+		speed.Set(3,0.0);
+		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
 	}
+
+	for(int j=-3;j<=jmax;++j)
+	{
+		Physvector<dim,type_data_value> speed;
+		v.Set(2,y0);
+		v.Set(1,imax+1);
+		v.Set(3,j);
+		speed.Set(1,0.0);
+		speed.Set(2,0.0);
+		speed.Set(3,0.0);
+		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
+	}
+
 
 	int y=0;
 	vect v2;
@@ -380,7 +404,7 @@ int main()
 	typedef Algorithms_Fluid_To_Layer<type_data_ref,type_pol_fluid_to_layer> type_alg_fluid_to_layer;
 	type_alg_fluid_to_layer m_alg_fluid_to_layer(m_data_ref,m_pol_fluid_to_layer);
 	m_alg_first_init.Do();
-	for(int i=1;i<=300;++i)
+	for(int i=1;i<=100;++i)
 	{
 		cout<<"i "<<i<<endl;
 		m_alg.Do();
