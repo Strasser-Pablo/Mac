@@ -44,7 +44,7 @@ class Algorithms_Solid_To_Const : public Policy
 			{
 				m_grid[k].GetRef().Speed_Set(i,0);
 				m_grid[k].GetRef().Speed_Set_Const(i);
-				k.GetRef(i)-=1;
+				k.GetRef(i)+=1;
 				m_grid[k].GetRef().SetIsNoDelete();
 				for(int j=1;j<=type_dim;++j)
 				{
@@ -52,7 +52,7 @@ class Algorithms_Solid_To_Const : public Policy
 				}
 				m_grid[k].GetRef().Pressure_Set(0);
 				m_grid[k].GetRef().Speed_Set_Const(i);
-				k.GetRef(i)+=1;
+				k.GetRef(i)-=1;
 			}
 		}
 	}
