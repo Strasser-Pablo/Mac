@@ -201,7 +201,7 @@ class Policy_Output_Grid_Pressure
 		stream<<i;
 		string str=string(m_pref)+stream.str()+string(".vtu");
 		writer->SetFileName(str.c_str());
-  		writer->SetDataModeToAscii();
+  		//writer->SetDataModeToAscii();
   		writer->Write();
 		m_list.push_back(str);
 	}

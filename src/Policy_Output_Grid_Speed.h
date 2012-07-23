@@ -174,7 +174,7 @@ class Policy_Output_Grid_Speed
 			string str=string(m_pref)+string("_")+stream2.str()+string("_")+stream.str()+string(".vtu");
 			writer->SetFileName(str.c_str());
 			m_list.push_back(str.c_str());
-  			writer->SetDataModeToAscii();
+  			//writer->SetDataModeToAscii();
 			writer->Write();
 		}
 	}
