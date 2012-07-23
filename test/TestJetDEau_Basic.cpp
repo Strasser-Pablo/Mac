@@ -88,6 +88,7 @@
 #include "../src/Policy_Output_Animation.h"
 #include "../src/Policy_Upwind_1_Order.h"
 #include "../src/Policy_Convection_Apply_If.h"
+#include "../src/Policy_Pressure_If_Correction.h"
 
 /// To add Convection
 
@@ -296,9 +297,11 @@ int main()
 	type_pol_convection_apply_if m_pol_convection_apply_if;
 	typedef Policy_Upwind_1_Order<type_data_ref,type_pol_speed_interpolation> type_pol_convection;
 	type_pol_convection m_pol_convection(m_data_ref,m_pol_speed_interpolation);
+	typedef Policy_Pressure_If_Correction<type_data_ref> type_pol_pres_if_cor;
+	type_pol_pres_if_cor m_pol_pres_if_cor;
 
-	typedef Policies<type_pol_gravity,type_pol_laplacian,type_pol_laplacian_speed,type_pol_viscosity_apply_if,type_pol_solve_linear,type_pol_divergence,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_convection_apply_if,type_pol_convection> type_pol_solve_grid;
-	type_pol_solve_grid m_pol_solve_grid(m_pol_gravity,m_pol_laplacian,m_pol_laplacian_speed,m_pol_viscosity_apply_if,m_pol_solve_linear,m_pol_divergence,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_convection_apply_if,m_pol_convection);
+	typedef Policies<type_pol_gravity,type_pol_laplacian,type_pol_laplacian_speed,type_pol_viscosity_apply_if,type_pol_solve_linear,type_pol_divergence,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_convection_apply_if,type_pol_convection,type_pol_pres_if_cor> type_pol_solve_grid;
+	type_pol_solve_grid m_pol_solve_grid(m_pol_gravity,m_pol_laplacian,m_pol_laplacian_speed,m_pol_viscosity_apply_if,m_pol_solve_linear,m_pol_divergence,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_convection_apply_if,m_pol_convection,m_pol_pres_if_cor);
 
 	//Algorithms Solve Grid
 	typedef Algorithms_Gravity<type_data_ref,type_pol_solve_grid> type_alg_gravity;
