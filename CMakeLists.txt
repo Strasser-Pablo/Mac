@@ -358,4 +358,18 @@ endfunction(AddTestProperty)
 	TARGET_LINK_LIBRARIES(test_cov_FillingContainer_Basic lib_computation)
 	add_test(NAME test_cov_FillingContainer_Basic COMMAND test_cov_FillingContainer_Basic)
 
+	add_executable(test_cov_Convection ${CMAKE_CURRENT_SOURCE_DIR}/test/TestConvection.cpp)
+	AddTestProperty(test_cov_Convection)
+	TARGET_LINK_LIBRARIES(test_cov_Convection lib_computation)
+	add_test(NAME test_cov_Convection COMMAND test_cov_Convection)
+
+	add_executable(test_cov_ConvectionDiag ${CMAKE_CURRENT_SOURCE_DIR}/test/TestConvectionDiag.cpp)
+	AddTestProperty(test_cov_ConvectionDiag)
+	TARGET_LINK_LIBRARIES(test_cov_ConvectionDiag lib_computation)
+	add_test(NAME test_cov_ConvectionDiag COMMAND test_cov_ConvectionDiag)
+
+	add_executable(test_cov_ConvectionDiagCenter ${CMAKE_CURRENT_SOURCE_DIR}/test/TestConvectionDiagCenter.cpp)
+	AddTestProperty(test_cov_ConvectionDiagCenter)
+	TARGET_LINK_LIBRARIES(test_cov_ConvectionDiagCenter lib_computation)
+	add_test(NAME test_cov_ConvectionDiagCenter COMMAND test_cov_ConvectionDiagCenter)
 endif(USE_TESTING)

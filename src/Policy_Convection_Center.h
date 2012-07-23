@@ -1,8 +1,8 @@
-#ifndef Policy_Upwind_1_Order_H
-#define Policy_Upwind_1_Order_H
+#ifndef Policy_Convection_Center_H
+#define Policy_Convection_Center_H
 
 template <typename Data,typename Policy>
-class Policy_Upwind_1_Order : public Policy
+class Policy_Convection_Center : public Policy
 {
 	using Policy::Get_Speed_At_Bound;
 	typedef typename Data::type_data_struct::type_Data_Grid type_Data_Grid;
@@ -24,20 +24,9 @@ class Policy_Upwind_1_Order : public Policy
 			type_data_value U1;
 			type_data_value U2;
 			type_data_value U=Get_Speed_At_Bound(m_neigh,i,j);
-			if(U>0)
-			{
-				U1=m_neigh->GetRef().Speed_Get(i);
-				m_neigh=m_neigh->GetNeighbour(j,-1);
-				U2=m_neigh->GetRef().Speed_Get(i);
-				U*=(U1-U2)*m_1_h.Get(j);
-			}
-			else
-			{
-				U1=m_neigh->GetRef().Speed_Get(i);
-				m_neigh=m_neigh->GetNeighbour(j,1);
-				U2=m_neigh->GetRef().Speed_Get(i);
-				U*=(U2-U1)*m_1_h.Get(j);
-			}
+			U1=m_neigh->GetNeighbour(j,-1)->GetRef().Speed_Get(i);
+			U2=m_neigh->GetNeighbour(j,1)->GetRef().Speed_Get(i);
+			U*=0.5*(U2-U1)*m_1_h.Get(j);
 			return U;
 		}
 		else
@@ -46,19 +35,12 @@ class Policy_Upwind_1_Order : public Policy
 			type_data_value U1=m_neigh->GetNeighbour(i,1)->GetRef().Speed_Get(i);
 			type_data_value U2=m_neigh->GetNeighbour(i,-1)->GetRef().Speed_Get(i);
 			type_data_value U=0.25*U1+0.25*U2+0.5*U0;
-			if(U>0)
-			{
-				U*=(U0-U2)*m_1_h.Get(j);
-			}
-			else
-			{
-				U*=(U1-U0)*m_1_h.Get(j);
-			}
+			U*=0.5*(U1-U2)*m_1_h.Get(j);
 			return U;
 		}
 	}
 	public:
-	Policy_Upwind_1_Order(Data& data,const Policy & pol) :Policy(pol), m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_grid(data.m_data.GetGridData())
+	Policy_Convection_Center(Data& data,const Policy & pol) :Policy(pol), m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_grid(data.m_data.GetGridData())
 	{
 	}
 	type_speed Get_Convection_Speed(type_data_neigh* m_neigh)
