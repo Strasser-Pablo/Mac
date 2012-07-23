@@ -11,14 +11,6 @@ using namespace std;
 template <typename Data>
 class Policy_Output_Animation
 {
-	typedef typename Data::type_data_struct::type_Data_Grid type_Data_Grid;
-	typedef typename Data::type_data_struct::type_Data_Topology type_Data_Topology;
-	typedef typename type_Data_Topology::type_particle_list type_particle_list;
-	typedef typename type_Data_Topology::type_particle type_particle;
-	typedef typename type_particle::type_data_value type_data_value;
-	typedef typename type_particle::type_data_vector type_data_vector;
-	static const int type_dim=type_Data_Grid::type_dim;
-	typedef typename type_particle_list::const_iterator iterator;
 	typedef typename Data::type_data_struct::type_Data_Timing type_Data_Timing;
 	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
 	const char* m_filename;
