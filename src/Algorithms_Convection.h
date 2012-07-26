@@ -29,14 +29,13 @@ class Algorithms_Convection : public Policy
 	{
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-			if(Get_If_Apply_Convection(&it.data()))
+			it.data().GetRef().Speed_Speed_To_Temp();
+			for(int i=1;i<=type_dim;++i)
 			{
-				it.data().GetRef().Speed_Speed_To_Temp();
-				it.data().GetRef().Speed_Temp_Set(it.data().GetRef().Speed_Temp_Get()+Get_Convection_Speed(&it.data())*m_dt);
-			}
-			else
-			{
-				it.data().GetRef().Speed_Speed_To_Temp();
+				if(Get_If_Apply_Convection(&it.data(),i))
+				{
+					it.data().GetRef().Speed_Temp_Set(i,it.data().GetRef().Speed_Temp_Get(i)+Get_Convection_Speed(&it.data(),i)*m_dt);
+				}
 			}
 		}
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
