@@ -31,6 +31,13 @@ class Policy_Gradiant
 		}
 		return ret;
 	}
+
+	type_data_value Get_Gradiant(type_data_neigh* m_neigh,int i)
+	{
+		type_data_value ret=m_neigh->GetRef().Pressure_Get().Get()*m_1_h.Get(i);
+		ret-=m_neigh->GetNeighbour(i,-1)->GetRef().Pressure_Get().Get()*m_1_h.Get(i);
+		return ret;
+	}
 };
 
 #endif
