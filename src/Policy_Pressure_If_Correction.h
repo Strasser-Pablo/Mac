@@ -37,5 +37,22 @@ class Policy_Pressure_If_Correction
 		}
 		return false;
 	}
+	bool Get_Pressure_If_Correction(type_data_neigh* neigh,int i)
+	{
+		if(neigh->GetRef().GetIsInDomain())
+		{
+			return true;
+		}
+		type_data_neigh* neigh2=neigh->GetNeighbour(i,-1);
+		if(neigh2==nullptr)
+		{
+			return false;
+		}
+		if(neigh2->GetRef().GetIsInDomain())
+		{
+			return true;
+		}
+		return false;
+	}
 };
 #endif
