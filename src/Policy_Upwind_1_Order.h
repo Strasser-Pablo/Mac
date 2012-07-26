@@ -75,6 +75,16 @@ class Policy_Upwind_1_Order : public Policy
 		}
 		return ret;
 	}
+
+	type_data_value Get_Convection_Speed(type_data_neigh* m_neigh,int i)
+	{
+		type_data_value ret=0;
+		for(int j=1;j<=type_dim;++j)
+		{
+			ret-=Get_Convection_Element(i,j,m_neigh);
+		}
+		return ret;
+	}
 };
 
 #endif
