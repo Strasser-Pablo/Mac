@@ -80,7 +80,7 @@
 #include "../src/Policy_Add_Particle_1_3.h"
 #include "../src/Policy_Is_Inbound_Filling_Layer.h"
 #include "../src/Policy_Advance_ODE_RungeKutta.h"
-#include "../src/Policy_Speed_Interpolation_Linear.h"
+#include "../src/Policy_Speed_Interpolation_Linear_Symmetric.h"
 #include "../src/Policy_Output_Grid_Speed.h"
 #include "../src/Policy_Output_Grid_Pressure.h"
 #include "../src/Policy_Output_Particle.h"
@@ -179,7 +179,7 @@ int main()
 	type_grid_table table(m_hook_table);
 	typedef Data_Viscosity<type_grid_table> type_data_viscosity;
 	type_data_viscosity m_data_viscosity(table);
-	m_data_viscosity.m_viscosity=0.000001;
+	m_data_viscosity.m_viscosity=0;
 	typedef Data_Grid_Base_Spacing<type_data_viscosity> type_data_grid;
 	type_data_grid m_data_grid(m_data_viscosity);
 	Physvector<dim,type_data_value> h;
@@ -212,22 +212,23 @@ int main()
 
 	//Initial Data
 	vect v;
-	int y0=10;
-	int imax=3;
-	for(int i=-3;i<=imax;++i)
+	int y0=20;
+	int imax=1;
+	for(int i=-1;i<=imax;++i)
 	{
 		v.Set(1,i);
 		v.Set(2,y0);
 
 		Physvector<dim,type_data_value> speed;
 		speed.Set(1,0.0);
-		speed.Set(2,-1);
+		speed.Set(2,-0.5);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().SetInflow();
+		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set_Const(1);
 
 		v.Set(2,y0+1);
 		speed.Set(1,0.0);
-		speed.Set(2,0.0);
+		speed.Set(2,-0.5);
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
 		m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set_Const(2);
 	}
@@ -237,13 +238,24 @@ int main()
 	speed.Set(1,0.0);
 	speed.Set(2,0.0);
 	m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
+	m_data_ref.m_data.GetGridData()[v].GetRef().Speed_Set_Const(1);
 
 	int y=0;
 	vect v2;
-	for(int i=-10;i<=10;++i)
+	int lim_max=10;
+	for(int i=-lim_max;i<=lim_max;++i)
 	{
 		v2.Set(1,i);
 		v2.Set(2,y);
+		m_data_ref.m_data.GetGridData()[v2].GetRef().SetSolid();
+	}
+	for(int i=0;i<=lim_max;++i)
+	{
+		v2.Set(1,-lim_max);
+		v2.Set(2,i);
+		m_data_ref.m_data.GetGridData()[v2].GetRef().SetSolid();
+		v2.Set(1,lim_max);
+		v2.Set(2,i);
 		m_data_ref.m_data.GetGridData()[v2].GetRef().SetSolid();
 	}
 
@@ -265,7 +277,7 @@ int main()
 	typedef Policy_Particle_To_Key<type_data_ref> type_pol_part_to_key;
 	type_pol_part_to_key m_pol_part_to_key(m_data_ref);
 	typedef Policy_CheckDT<type_data_ref> type_pol_check_dt;
-	type_pol_check_dt m_pol_check_dt(0.00,100000);
+	type_pol_check_dt m_pol_check_dt(0.00,0.001);
 	typedef Policy_Add_Particle_1_3<type_data_ref> type_pol_add_particle;
 	type_pol_add_particle m_add_particle(m_data_ref);
 	typedef Policy_Is_Inbound_Filling_Layer<type_data_ref> type_pol_is_inbound_filling_layer;
@@ -291,8 +303,8 @@ int main()
 	type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_layer_initial,m_alg_create_fluid_particle,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step);
 
 
-	typedef Algorithms<type_alg_solid_to_const,type_alg_speed_constant_mirror,type_alg_initialize_mac,type_alg_create_fluid_particle,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_extrapolate_init> type_alg_first_init;
-	type_alg_first_init m_alg_first_init(m_alg_solid_to_const,m_alg_speed_constant_mirror,m_alg_initialize_mac,m_alg_create_fluid_particle,m_alg_layer_initial,m_alg_update_celltype,m_alg_delete_maccell,m_alg_extrapolate_init);
+	typedef Algorithms<type_alg_solid_to_const,type_alg_initialize_mac,type_alg_create_fluid_particle,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_extrapolate_init> type_alg_first_init;
+	type_alg_first_init m_alg_first_init(m_alg_solid_to_const,m_alg_initialize_mac,m_alg_create_fluid_particle,m_alg_layer_initial,m_alg_update_celltype,m_alg_delete_maccell,m_alg_extrapolate_init);
 
 	// Policy Solve Grid
 	typedef Policy_Gravity<type_data_ref> type_pol_gravity;
@@ -311,7 +323,7 @@ int main()
 	type_pol_gradiant m_pol_gradiant(m_data_ref);
 	typedef Policy_Von_Neumann_Boundary<type_data_ref> type_pol_von_neumann_boundary;
 	type_pol_von_neumann_boundary m_pol_von_neumann_boundary(m_data_ref);
-	typedef Policy_Speed_Interpolation_Linear<type_data_ref> type_pol_speed_interpolation;
+	typedef Policy_Speed_Interpolation_Linear_Symmetric<type_data_ref> type_pol_speed_interpolation;
 	type_pol_speed_interpolation m_pol_speed_interpolation(m_data_ref);
 	typedef Policy_Convection_Apply_If<type_data_ref> type_pol_convection_apply_if;
 	type_pol_convection_apply_if m_pol_convection_apply_if;
@@ -333,8 +345,8 @@ int main()
 	typedef Algorithms_Solve_Pressure<type_data_ref,type_pol_solve_grid> type_alg_solve_pressure;
 	type_alg_solve_pressure m_alg_solve_pressure(m_data_ref,m_pol_solve_grid);
 
-	typedef Algorithms<type_alg_gravity,type_alg_viscosity,type_alg_convection,type_alg_solve_pressure> type_alg_solve_grid;
-	type_alg_solve_grid m_alg_solve_grid(m_alg_gravity,m_alg_viscosity,m_alg_convection,m_alg_solve_pressure);
+	typedef Algorithms<type_alg_gravity/*,type_alg_viscosity,type_alg_convection*/,type_alg_solve_pressure> type_alg_solve_grid;
+	type_alg_solve_grid m_alg_solve_grid(m_alg_gravity/*,m_alg_viscosity,m_alg_convection*/,m_alg_solve_pressure);
 
 	typedef Algorithms<type_alg_init,type_alg_solve_grid> type_alg;
 	type_alg m_alg(m_alg_init,m_alg_solve_grid);
@@ -342,7 +354,7 @@ int main()
 	//Policy Move
 	typedef Policy_Advance_Ode_RungeKutta<type_data_ref> type_pol_advance_ode;
 	type_pol_advance_ode m_pol_advance_ode;
-	typedef Policy_Speed_Interpolation_Linear<type_data_ref> type_pol_interpolation;
+	typedef Policy_Speed_Interpolation_Linear_Symmetric<type_data_ref> type_pol_interpolation;
 	type_pol_interpolation m_pol_interpolation(m_data_ref);
 	typedef Policies<type_pol_advance_ode,type_pol_interpolation> type_pol_move;
 	type_pol_move m_pol_move(m_pol_advance_ode,m_pol_interpolation);
@@ -375,7 +387,7 @@ int main()
 	typedef Algorithms_Fluid_To_Layer<type_data_ref,type_pol_fluid_to_layer> type_alg_fluid_to_layer;
 	type_alg_fluid_to_layer m_alg_fluid_to_layer(m_data_ref,m_pol_fluid_to_layer);
 	m_alg_first_init.Do();
-	for(int i=1;i<=1000;++i)
+	for(int i=1;i<=10000;++i)
 	{
 		cout<<"i "<<i<<endl;
 		m_alg.Do();
