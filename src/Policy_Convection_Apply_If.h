@@ -44,6 +44,27 @@ class Policy_Convection_Apply_If
 		}
 		return false;
 	}
+	bool Get_If_Apply_Convection(type_data_neigh* neigh,int i)
+	{
+		if(neigh->GetRef().GetIsFluid())
+		{
+			return true;
+		}
+		if(neigh->GetRef().GetIsLayerEmpty())
+		{
+			return false;
+		}
+		type_data_neigh* neigh2=neigh->GetNeighbour(i,-1);
+		if(neigh2==nullptr)
+		{
+			return false;
+		}
+		if(neigh2->GetRef().GetIsFluid())
+		{
+			return true;
+		}
+		return false;
+	}
 };
 
 #endif
