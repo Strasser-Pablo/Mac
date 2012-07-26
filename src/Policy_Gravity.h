@@ -20,7 +20,7 @@ class Policy_Gravity
 	type_Data_Grid& m_grid;
 	const type_data_value m_g;
 	const int m_i;
-	bool NeedToApply(type_data_neigh* neigh)
+	bool NeedToApply(const type_data_neigh* neigh)
 	{
 		if(neigh->GetRef().GetIsFluid())
 		{
@@ -30,17 +30,14 @@ class Policy_Gravity
 		{
 			return false;
 		}
-		for(int i=1;i<=type_dim;++i)
+		type_data_neigh* neigh2=neigh->GetNeighbour(m_i,-1);
+		if(neigh2==nullptr)
 		{
-			type_data_neigh* neigh2=neigh->GetNeighbour(i,-1);
-			if(neigh2==nullptr)
-			{
-				continue;
-			}
-			if(neigh2->GetRef().GetIsFluid())
-			{
-				return true;
-			}
+			return false;
+		}
+		if(neigh2->GetRef().GetIsFluid())
+		{
+			return true;
 		}
 		return false;
 	}
