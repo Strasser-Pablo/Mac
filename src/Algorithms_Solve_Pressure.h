@@ -98,8 +98,12 @@ class Algorithms_Solve_Pressure: public Policy
 							//Test if we have a neighbour.
 							if(neigh!=nullptr)
 							{
+								if(Get_Is_Von_Neumann_Boundary(next_neigh,i,s))
+								{
+									temp_diag_value+=pow(m_1_h.Get(i),2);
+								}
 								//NeighBour is in domain, assign a number if needed and add the matrice element to calculate the derivatif.
-								if(neigh->GetRef().GetIsInDomain())
+								else if(neigh->GetRef().GetIsInDomain())
 								{
 									if(neigh->GetRef().GetIsLayerEmpty())
 									{
@@ -114,11 +118,6 @@ class Algorithms_Solve_Pressure: public Policy
 									}
 									m_map.insert(type_pair(lay_cur2,pow(m_1_h.Get(i),2)));
 									neigh->GetRef().Pressure_Get();
-								}
-								// We are a von_Neumann boundary only add diagonal value.
-								else if(Get_Is_Von_Neumann_Boundary(next_neigh,i,s))
-								{
-									temp_diag_value+=pow(m_1_h.Get(i),2);
 								}
 							}
 						}
@@ -164,9 +163,12 @@ class Algorithms_Solve_Pressure: public Policy
 		}
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-			if(Get_Pressure_If_Correction(&it.data()))
+			for(int i=1;i<=type_dim;++i)
 			{
-				it.data().GetRef().Speed_Set(it.data().GetRef().Speed_Get()-Get_Gradiant(&it.data()));
+				if(Get_Pressure_If_Correction(&it.data(),i))
+				{
+					it.data().GetRef().Speed_Set(i,it.data().GetRef().Speed_Get(i)-Get_Gradiant(&it.data(),i));
+				}
 			}
 		}
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
