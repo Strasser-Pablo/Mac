@@ -18,7 +18,7 @@ class Policy_Speed_Interpolation_Linear_Functor
 	typedef typename type_Data_Grid::type_data_value type_data_value;
 	typedef typename type_Data_Grid::type_data_neigh type_data_neigh;
 	typedef typename type_data_mac_cell::type_speed type_speed;
-	Policy_Speed_Interpolation_Linear<Data>& m_interp;	
+	Policy_Speed_Interpolation_Linear<Data>& m_interp;
 	public:
 	Policy_Speed_Interpolation_Linear_Functor(Policy_Speed_Interpolation_Linear<Data>& interp):m_interp(interp)
 	{
@@ -44,7 +44,7 @@ class Policy_Speed_Interpolation_Linear
 	Round<type_data_value,type_data_key_value> m_round;
 	static const int type_dim=type_Data_Grid::type_dim;
 	const type_data_vector &m_1_h;
-	type_Data_Grid& m_grid; 
+	type_Data_Grid& m_grid;
 	Policy_Speed_Interpolation_Linear_Functor<Data> m_funct;
 	type_data_value Get_Speed_Impl(const type_data_vector& pos_scal,int i,type_data_neigh* neigh,int k)
 	{
@@ -74,11 +74,34 @@ class Policy_Speed_Interpolation_Linear
 			key0.GetRef(i)=m_round(pos_delta.GetRef(i));
 			pos_delta.GetRef(i)-=key0.GetRef(i);
 		}
-		type_data_neigh* neigh=&m_grid[key0];
+		type_data_vector pos_delta2;
 		for(int k=1;k<=type_dim;++k)
 		{
 			pos_delta.GetRef(k)+=0.5;
-			ret.GetRef(k)=Get_Speed_Impl(pos_delta,1,neigh,k);
+			type_data_key key;
+			for(int j=1;j<=type_dim;++j)
+			{
+				if(j!=k)
+				{
+					if(pos_delta.GetRef(j)<0)
+					{
+						key.GetRef(j)=key0.GetRef(j)-1;
+						pos_delta2.GetRef(j)=1+pos_delta.GetRef(j);
+					}
+					else
+					{
+						key.GetRef(j)=key0.GetRef(j);
+						pos_delta2.GetRef(j)=pos_delta.GetRef(j);
+					}
+				}
+				else
+				{
+					key.GetRef(j)=key0.GetRef(j);
+					pos_delta2.GetRef(j)=pos_delta.GetRef(j);
+				}
+			}
+			type_data_neigh* neigh=&m_grid[key];
+			ret.GetRef(k)=Get_Speed_Impl(pos_delta2,1,neigh,k);
 			pos_delta.GetRef(k)-=0.5;
 		}
 		return ret;
