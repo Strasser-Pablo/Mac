@@ -23,6 +23,7 @@ class Algorithms_Extrapolate : public Policy
 	{
 		unordered_set<type_data_neigh *> m_set;
 		unordered_set<type_data_neigh *> m_set2;
+		//We add all cell with layer 1.
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			if(it.data().GetRef().GetLayer()==1)
@@ -40,13 +41,17 @@ class Algorithms_Extrapolate : public Policy
 				m_set.erase(it++);
 				for(int i=1;i<=type_dim;++i)
 				{
+					//we look +1 direction on speed.
 					type_data_neigh* neigh2=neigh->GetNeighbour(i,1);
 					if(neigh2!=nullptr&&!(neigh2->GetRef().GetIsLayerEmpty()))
 					{
+						//Ok +1 direction on speed exist and not ignored.
 						if(neigh2->GetRef().GetLayer()>=lay)
 						{
+							//Ok we are between two cell and one with a smaller layer.
 							if(neigh2->GetRef().GetLayer()>lay)
 							{
+								//Ok we have found a next cell layer. Add to the list.
 								m_set2.insert(neigh2);
 							}
 							int n=0;
@@ -97,13 +102,17 @@ class Algorithms_Extrapolate : public Policy
 							neigh2->GetRef().Speed_Set(i,val/n);
 						}
 					}
+					//we look -1 direction on speed.
 					neigh2=neigh->GetNeighbour(i,-1);
 					if(neigh2!=nullptr&&!(neigh2->GetRef().GetIsLayerEmpty()))
 					{
+						//Ok -1 direction on speed exist and not ignored.
 						if(neigh2->GetRef().GetLayer()>=lay)
 						{
+							//Ok we are between two cell and one with a smaller layer.
 							if(neigh2->GetRef().GetLayer()>lay)
 							{
+								//Ok we have found a next cell layer. Add to the list.
 								m_set2.insert(neigh2);
 							}
 							int n=0;
@@ -199,8 +208,10 @@ class Algorithms_Extrapolate : public Policy
 					}
 				}
 			}
+			//Swap new set with the old empty one.
 			m_set2.swap(m_set);
 			++lay;
+			//new set is empty. It's a finishing case.
 			if(m_set.empty())
 			{
 				break;
