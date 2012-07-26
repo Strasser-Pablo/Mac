@@ -24,6 +24,21 @@ class Policy_Solve_Linear_Umfpack
 	{
 		if(n!=0)
 		{
+			/*
+			for(int i=0;i<n;++i)
+			{
+				cout<<"line "<<i<<endl;
+				for(int off=offset[i];off<offset[i+1];++off)
+				{
+					cout<<"indice "<<indice[off]<<endl;
+					cout<<"value "<<value[off]<<endl;
+				}
+			}
+			for(int i=0;i<n;++i)
+			{
+				cout<<"b "<<b[i]<<endl;
+			}
+			*/
 			void *Symbolic, *Numeric ;
 			(void) umfpack_di_symbolic (n, n,offset,indice,value,&Symbolic, nullptr, nullptr) ;
 			(void) umfpack_di_numeric (offset,indice,value,Symbolic,&Numeric,nullptr, nullptr) ;
