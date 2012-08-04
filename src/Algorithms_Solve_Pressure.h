@@ -35,10 +35,12 @@ class Algorithms_Solve_Pressure: public Policy
 	}
 	void Do()
 	{
+/*
 		struct tms t1;
 		struct tms t2;
 		double conv=double(sysconf(_SC_CLK_TCK));
 		long t_deb=times(&t1);
+*/
 		// Upper bound of memory usage.
 		int n=m_grid.size();
 		int nEntry=2*type_dim*m_grid.size();
@@ -193,10 +195,11 @@ class Algorithms_Solve_Pressure: public Policy
 		delete[] value;
 		delete[] b;
 		delete[] res;
-
+/*
 		long t_end=times(&t2);
 		cout<<"real solve_pres "<<(t_end-t_deb)/conv<<endl;
 		cout<<"user solve_pres "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+*/
 	}
 };
 #endif

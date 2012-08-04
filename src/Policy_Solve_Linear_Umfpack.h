@@ -23,10 +23,10 @@ class Policy_Solve_Linear_Umfpack
 	}
 	void Solve_Linear(int n,int* offset,int* indice,type_data_value* value,type_data_value* b,type_data_value* res)
 	{
-		struct tms t1;
+/*		struct tms t1;
 		struct tms t2;
 		double conv=double(sysconf(_SC_CLK_TCK));
-		long t_deb=times(&t1);
+		long t_deb=times(&t1);*/
 		if(n!=0)
 		{
 			/*
@@ -51,9 +51,10 @@ class Policy_Solve_Linear_Umfpack
 			(void) umfpack_di_solve (UMFPACK_A,offset,indice,value,res,b, Numeric, nullptr, nullptr) ;
 			umfpack_di_free_numeric (&Numeric) ;
 		}
-		long t_end=times(&t2);
+/*		long t_end=times(&t2);
 		cout<<"real solve_lin "<<(t_end-t_deb)/conv<<endl;
 		cout<<"user solve_lin "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+*/
 	}
 };
 
