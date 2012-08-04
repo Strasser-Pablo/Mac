@@ -191,7 +191,8 @@ endif()
 #set_target_properties(computation PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 add_library(lib_computation STATIC)
 set_target_properties(lib_computation PROPERTIES LINKER_LANGUAGE "CXX")
-TARGET_LINK_LIBRARIES(lib_computation vtkHybrid ${Boost_LIBRARIES} )
+#TARGET_LINK_LIBRARIES(lib_computation vtkHybrid ${Boost_LIBRARIES} )
+TARGET_LINK_LIBRARIES(lib_computation ${Boost_LIBRARIES} )
 if(USE_UMFPACK)
 	TARGET_LINK_LIBRARIES(lib_computation -lumfpack -lamd -lcholmod -lcolamd -lblas -llapack)
 endif(USE_UMFPACK)
@@ -219,6 +220,11 @@ TARGET_LINK_LIBRARIES(FillingContainer_Basic lib_computation)
 add_executable(JetDEau_Basic_2 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2.cpp)
 set_target_properties(JetDEau_Basic_2 PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(JetDEau_Basic_2 lib_computation)
+
+
+add_executable(Performance ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPerformance_Without_Particle.cpp)
+set_target_properties(Performance PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Performance lib_computation)
 
 if (USE_TESTING)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
@@ -395,4 +401,10 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Data_Chunk test/TestData_Chunk.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Chunk.h)
 	AddTestProperty(test_cov_Data_Chunk)
+
+	add_executable(test_cov_TestPerformance_Without_Particle ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPerformance_Without_Particle.cpp)
+	AddTestProperty(test_cov_TestPerformance_Without_Particle)
+	TARGET_LINK_LIBRARIES(test_cov_TestPerformance_Without_Particle lib_computation)
+	add_test(NAME test_TestPerformance_Without_Particle COMMAND test_cov_TestPerformance_Without_Particle)
+
 endif(USE_TESTING)
