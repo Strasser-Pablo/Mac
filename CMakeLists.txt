@@ -216,6 +216,10 @@ add_executable(FillingContainer_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFilli
 set_target_properties(FillingContainer_Basic PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(FillingContainer_Basic lib_computation)
 
+add_executable(JetDEau_Basic_2 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2.cpp)
+set_target_properties(JetDEau_Basic_2 PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(JetDEau_Basic_2 lib_computation)
+
 if (USE_TESTING)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 
@@ -380,4 +384,15 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Policy_Speed_Interpolation_Linear_Symmetric test/TestPolicy_Speed_Interpolation_Linear_Symmetric.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Speed_Interpolation_Linear_Symmetric.h)
 	AddTestProperty(test_cov_Policy_Speed_Interpolation_Linear_Symmetric)
+
+	add_executable(test_cov_JetDEau_Basic_2 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2.cpp)
+	AddTestProperty(test_cov_JetDEau_Basic_2)
+	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2 lib_computation)
+	add_test(NAME test_JetDEau_Basic_2 COMMAND test_cov_JetDEau_Basic_2)
+
+	CXXTEST_ADD_TEST(test_cov_Data_Neighbour_List_Empty test/TestData_Neighbour_List_Empty.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Neighbour_List_Empty.h)
+	AddTestProperty(test_cov_Data_Neighbour_List_Empty)
+
+	CXXTEST_ADD_TEST(test_cov_Data_Chunk test/TestData_Chunk.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Chunk.h)
+	AddTestProperty(test_cov_Data_Chunk)
 endif(USE_TESTING)
