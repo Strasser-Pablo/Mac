@@ -43,7 +43,7 @@ class Algorithms_Solve_Pressure: public Policy
 */
 		// Upper bound of memory usage.
 		int n=m_grid.size();
-		int nEntry=2*type_dim*m_grid.size();
+		int nEntry=(2*type_dim+1)*m_grid.size();
 		int* offset=new int[n+1];
 		int* indice=new int[nEntry];
 		type_data_value* value=new type_data_value[nEntry];
