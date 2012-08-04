@@ -81,7 +81,7 @@
 #include "../src/Policy_Add_Particle_Center.h"
 #include "../src/Policy_Is_Inbound_Filling_Layer.h"
 #include "../src/Policy_Advance_ODE_RungeKutta.h"
-#include "../src/Policy_Speed_Interpolation_Linear.h"
+#include "../src/Policy_Speed_Interpolation_Linear_Symmetric.h"
 #include "../src/Policy_Output_Grid_Speed.h"
 #include "../src/Policy_Output_Grid_Pressure.h"
 #include "../src/Policy_Output_Particle.h"
@@ -291,7 +291,7 @@ int main()
 	type_pol_gradiant m_pol_gradiant(m_data_ref);
 	typedef Policy_Von_Neumann_Boundary<type_data_ref> type_pol_von_neumann_boundary;
 	type_pol_von_neumann_boundary m_pol_von_neumann_boundary(m_data_ref);
-	typedef Policy_Speed_Interpolation_Linear<type_data_ref> type_pol_speed_interpolation;
+	typedef Policy_Speed_Interpolation_Linear_Symmetric<type_data_ref> type_pol_speed_interpolation;
 	type_pol_speed_interpolation m_pol_speed_interpolation(m_data_ref);
 	typedef Policy_Convection_Apply_If<type_data_ref> type_pol_convection_apply_if;
 	type_pol_convection_apply_if m_pol_convection_apply_if;
@@ -322,7 +322,7 @@ int main()
 	//Policy Move
 	typedef Policy_Advance_Ode_RungeKutta<type_data_ref> type_pol_advance_ode;
 	type_pol_advance_ode m_pol_advance_ode;
-	typedef Policy_Speed_Interpolation_Linear<type_data_ref> type_pol_interpolation;
+	typedef Policy_Speed_Interpolation_Linear_Symmetric<type_data_ref> type_pol_interpolation;
 	type_pol_interpolation m_pol_interpolation(m_data_ref);
 	typedef Policies<type_pol_advance_ode,type_pol_interpolation> type_pol_move;
 	type_pol_move m_pol_move(m_pol_advance_ode,m_pol_interpolation);

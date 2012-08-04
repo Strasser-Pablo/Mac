@@ -179,7 +179,7 @@ int main()
 	type_grid_table table(m_hook_table);
 	typedef Data_Viscosity<type_grid_table> type_data_viscosity;
 	type_data_viscosity m_data_viscosity(table);
-	m_data_viscosity.m_viscosity=0;
+	m_data_viscosity.m_viscosity=1.3e-6;
 	typedef Data_Grid_Base_Spacing<type_data_viscosity> type_data_grid;
 	type_data_grid m_data_grid(m_data_viscosity);
 	Physvector<dim,type_data_value> h;
@@ -345,8 +345,8 @@ int main()
 	typedef Algorithms_Solve_Pressure<type_data_ref,type_pol_solve_grid> type_alg_solve_pressure;
 	type_alg_solve_pressure m_alg_solve_pressure(m_data_ref,m_pol_solve_grid);
 
-	typedef Algorithms<type_alg_gravity/*,type_alg_viscosity,type_alg_convection*/,type_alg_solve_pressure> type_alg_solve_grid;
-	type_alg_solve_grid m_alg_solve_grid(m_alg_gravity/*,m_alg_viscosity,m_alg_convection*/,m_alg_solve_pressure);
+	typedef Algorithms<type_alg_gravity,type_alg_viscosity,type_alg_convection,type_alg_solve_pressure> type_alg_solve_grid;
+	type_alg_solve_grid m_alg_solve_grid(m_alg_gravity,m_alg_viscosity,m_alg_convection,m_alg_solve_pressure);
 
 	typedef Algorithms<type_alg_init,type_alg_solve_grid> type_alg;
 	type_alg m_alg(m_alg_init,m_alg_solve_grid);
