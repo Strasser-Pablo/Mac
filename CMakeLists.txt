@@ -191,8 +191,8 @@ endif()
 #set_target_properties(computation PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 add_library(lib_computation STATIC)
 set_target_properties(lib_computation PROPERTIES LINKER_LANGUAGE "CXX")
-#TARGET_LINK_LIBRARIES(lib_computation vtkHybrid ${Boost_LIBRARIES} )
-TARGET_LINK_LIBRARIES(lib_computation ${Boost_LIBRARIES} )
+TARGET_LINK_LIBRARIES(lib_computation vtkHybrid ${Boost_LIBRARIES} )
+
 if(USE_UMFPACK)
 	TARGET_LINK_LIBRARIES(lib_computation -lumfpack -lamd -lcholmod -lcolamd -lblas -llapack)
 endif(USE_UMFPACK)
@@ -406,5 +406,11 @@ endfunction(AddTestProperty)
 	AddTestProperty(test_cov_TestPerformance_Without_Particle)
 	TARGET_LINK_LIBRARIES(test_cov_TestPerformance_Without_Particle lib_computation)
 	add_test(NAME test_TestPerformance_Without_Particle COMMAND test_cov_TestPerformance_Without_Particle)
+
+	CXXTEST_ADD_TEST(test_cov_Offset test/Test_Offset.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Offset.h)
+	AddTestProperty(test_cov_Offset)
+
+	CXXTEST_ADD_TEST(test_cov_Offset_Base test/Test_Offset_Base.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Offset_Base.h)
+	AddTestProperty(test_cov_Offset_Base)
 
 endif(USE_TESTING)
