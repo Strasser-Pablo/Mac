@@ -6,16 +6,16 @@
 #include "../src/Neighbour_List_Empty.h"
 #include "../src/Data_Chunk.h"
 
-
 class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE 
 {
 	public:
 	void test1d()
 	{
-		typedef Data_Chunk_Speed<int> type_speed;
-		typedef Data_Chunk_Pressure<int> type_pressure;
-		typedef Data_Chunk_Layer<int> type_layer;
-		typedef Data_Chunk_CellType<int> type_celltype;
+		const int N=10;
+		typedef Data_Chunk_Speed<int,N> type_speed;
+		typedef Data_Chunk_Pressure<int,N> type_pressure;
+		typedef Data_Chunk_Layer<int,N> type_layer;
+		typedef Data_Chunk_CellType<int,N> type_celltype;
 		typedef Data_Chunk<type_speed,type_pressure,type_layer,type_celltype> type_chunk;
 		typedef Neighbour_List_Empty<1,type_chunk> type_neigh;
 
@@ -60,5 +60,19 @@ class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE
 		TS_ASSERT_EQUALS(c1.GetNeighbour(1,-1)->Pressure_GetRef(),i4);
 		TS_ASSERT_EQUALS(c1.GetNeighbour(1,-1)->Layer_GetRef(),i4);
 		TS_ASSERT_EQUALS(c1.GetNeighbour(1,-1)->CellType_GetRef(),i1);
+	}
+
+	void testAllocate()
+	{
+		const int N=10;
+		typedef Data_Chunk_Speed<int,N> type_speed;
+		typedef Data_Chunk_Pressure<int,N> type_pressure;
+		typedef Data_Chunk_Layer<int,N> type_layer;
+		typedef Data_Chunk_CellType<int,N> type_celltype;
+		typedef Data_Chunk<type_speed,type_pressure,type_layer,type_celltype> type_chunk;
+
+		type_chunk c;
+		c.Allocate();
+		TS_ASSERT(c.Speed_GetPointer()!=nullptr);
 	}
 };

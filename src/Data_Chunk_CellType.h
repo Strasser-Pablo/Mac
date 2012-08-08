@@ -1,10 +1,22 @@
 #ifndef Data_Chunk_CellType_H
 #define Data_Chunk_CellType_H
-template <typename Data>
-class Data_Chunk_CellType
+
+#include "Data_Chunk_Base.h"
+
+template <typename Data,int N>
+class Data_Chunk_CellType;
+
+template<typename Data,int N>
+struct Data_Chunk_Trait<Data_Chunk_CellType<Data,N> >
 {
-	Data* m_data;
+	typedef Data type_data;
+};
+
+template <typename Data,int N>
+class Data_Chunk_CellType : public Data_Chunk_Base<Data_Chunk_CellType<Data,N>,N >
+{
 	public:
+	Data* m_data;
 	Data_Chunk_CellType():m_data(nullptr)
 	{
 	}

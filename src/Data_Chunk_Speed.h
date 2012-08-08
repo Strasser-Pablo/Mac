@@ -1,10 +1,22 @@
 #ifndef Data_Chunk_Speed_H
 #define Data_Chunk_Speed_H
-template <typename Data>
-class Data_Chunk_Speed
+
+#include "Data_Chunk_Base.h"
+
+template <typename Data,int N>
+class Data_Chunk_Speed;
+
+template<typename Data,int N>
+struct Data_Chunk_Trait<Data_Chunk_Speed<Data,N> >
 {
-	Data* m_data;
+	typedef Data type_data;
+};
+
+template <typename Data,int N>
+class Data_Chunk_Speed : public Data_Chunk_Base<Data_Chunk_Speed<Data,N>,N >
+{
 	public:
+	Data* m_data;
 	Data_Chunk_Speed():m_data(nullptr)
 	{
 	}
@@ -14,11 +26,11 @@ class Data_Chunk_Speed
 	}
 	Data& Speed_GetRef()
 	{
-		return *m_data;	
+		return *m_data;
 	}
 	const Data& Speed_GetRef() const
 	{
-		return *m_data;	
+		return *m_data;
 	}
 	void Speed_SetPointer(Data* data)
 	{

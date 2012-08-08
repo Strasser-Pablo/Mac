@@ -1,5 +1,5 @@
-#ifndef Hook_Neighbour_List_H
-#define Hook_Neighbour_List_H
+#ifndef Hook_Neighbour_List_Chunk_H
+#define Hook_Neighbour_List_Chunk_H
 
 /**
  * @ingroup GR_Data_Storage
@@ -13,7 +13,7 @@
  * @tparam HashTable hash table.
  **/
 template<class HashTable>
-class Hook_Neighbour_List
+class Hook_Neighbour_List_Chunk
 {
 	public:
 	/**
@@ -52,20 +52,20 @@ class Hook_Neighbour_List
 		}
 		// Loop with all neighbour see if it exist. And add in the Neighbour.
 		type_key k=in.first.key();
-		type_data & data=(*m_hashtable)[k];
+		type_data & data=m_hashtable->DirectAcessChunk(k);
 		for(int i=1;i<=type_dim;++i)
 		{
 			k.GetRef(i)-=1;
-			if(m_hashtable->Exist(k))
+			if(m_hashtable->ChunkExist(k))
 			{
-				data.SetNeighbour(i,-1,&(*m_hashtable)[k]);
-				(*m_hashtable)[k].SetNeighbour(i,1,&data);
+				data.SetNeighbour(i,-1,&m_hashtable->DirectAcessChunk(k));
+				m_hashtable->DirectAcessChunk(k).SetNeighbour(i,1,&data);
 			}
 			k.GetRef(i)+=2;
 			if(m_hashtable->Exist(k))
 			{
-				data.SetNeighbour(i,1,&(*m_hashtable)[k]);
-				(*m_hashtable)[k].SetNeighbour(i,-1,&data);
+				data.SetNeighbour(i,1,&m_hashtable->DirectAcessChunk(k));
+				m_hashtable->DirectAcessChunk(k).SetNeighbour(i,-1,&data);
 			}
 			k.GetRef(i)-=1;
 		}
@@ -102,7 +102,7 @@ class Hook_Neighbour_List
 	 **/
 	void erase(const type_key &k)
 	{
-		type_data& data=(*m_hashtable)[k];
+		type_data& data=m_hashtable->DirectAcessChunk(k);
 		for(int i=1;i<=type_dim;++i)
 		{
 			type_data *neigh=data.GetNeighbour(i,-1);
@@ -133,17 +133,17 @@ class Hook_Neighbour_List
 		{
 			// We look at the position below
 			k.GetRef(i)-=1;
-			if(m_hashtable->Exist(k))
+			if(m_hashtable->ChunkExist(k))
 			{
-				data.SetNeighbour(i,-1,&((*m_hashtable)[k]));
-				(*m_hashtable)[k].SetNeighbour(i,1,&data);
+				data.SetNeighbour(i,-1,&m_hashtable->DirectAcessChunk(k));
+				m_hashtable->DirectAcessChunk(k).SetNeighbour(i,1,&data);
 			}
 			// We look at the position above (-1+2=1)
 			k.GetRef(i)+=2;
-			if(m_hashtable->Exist(k))
+			if(m_hashtable->ChunkExist(k))
 			{
-				data.SetNeighbour(i,1,&((*m_hashtable)[k]));
-				(*m_hashtable)[k].SetNeighbour(i,-1,&data);
+				data.SetNeighbour(i,1,&m_hashtable->DirectAcessChunk(k));
+				m_hashtable->DirectAcessChunk(k).SetNeighbour(i,-1,&data);
 			}
 			// We are at same point (-1+2-1=0)
 			k.GetRef(i)-=1;
@@ -154,7 +154,7 @@ class Hook_Neighbour_List
 	 * Constructor.
 	 * @param hash Table linked to this Hook
 	 **/
-	Hook_Neighbour_List(HashTable * hash) : m_hashtable(hash)
+	Hook_Neighbour_List_Chunk(HashTable * hash) : m_hashtable(hash)
 	{
 	}
 };

@@ -221,10 +221,14 @@ add_executable(JetDEau_Basic_2 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basi
 set_target_properties(JetDEau_Basic_2 PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(JetDEau_Basic_2 lib_computation)
 
-
 add_executable(Performance ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPerformance_Without_Particle.cpp)
 set_target_properties(Performance PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(Performance lib_computation)
+
+
+add_executable(Chunk_Hash_Table_Performance ${CMAKE_CURRENT_SOURCE_DIR}/test/TestChunk_Hash_Table_Performance.cpp)
+set_target_properties(Chunk_Hash_Table_Performance PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Chunk_Hash_Table_Performance lib_computation)
 
 if (USE_TESTING)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
@@ -412,5 +416,13 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Offset_Base test/Test_Offset_Base.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Offset_Base.h)
 	AddTestProperty(test_cov_Offset_Base)
+
+	CXXTEST_ADD_TEST(test_cov_ChunkHashTable test/TestChunkHashTable.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestChunkHashTable.h)
+	AddTestProperty(test_cov_ChunkHashTable)
+
+	add_executable(test_cov_TestChunk_Hash_Table_Performance ${CMAKE_CURRENT_SOURCE_DIR}/test/TestChunk_Hash_Table_Performance.cpp)
+	AddTestProperty(test_cov_TestChunk_Hash_Table_Performance)
+	TARGET_LINK_LIBRARIES(test_cov_TestChunk_Hash_Table_Performance lib_computation)
+	add_test(NAME test_cov_TestChunk_Hash_Table_Performance COMMAND test_cov_TestChunk_Hash_Table_Performance)
 
 endif(USE_TESTING)

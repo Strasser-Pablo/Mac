@@ -4,6 +4,7 @@
 template <typename Offset,typename Base>
 class Offset_Base
 {
+	protected:
 	Offset m_off;
 	Base* m_base;
 	public:
@@ -26,6 +27,19 @@ class Offset_Base
 		}
 		return res;
 	}
+	const Offset_Base<Offset,Base> GetNeighbour(int i,int sign) const
+	{
+		Offset_Base res;
+		if(m_off.GetNeighbour(i,sign,res.m_off))
+		{
+			res.m_base=m_base->GetNeighbour(i,sign);
+		}
+		else
+		{
+			res.m_base=m_base;
+		}
+		return res;
+	}
 	void SetOffset(Offset off)
 	{
 		m_off=off;
@@ -34,7 +48,7 @@ class Offset_Base
 	{
 		m_base=base;
 	}
-	Offset GetOffset()
+	Offset GetOffset() const
 	{
 		return m_off;
 	}
@@ -42,6 +56,7 @@ class Offset_Base
 	{
 		return m_base;	
 	}
+	typedef Offset type_offset;
 
 };
 #endif

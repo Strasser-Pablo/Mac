@@ -213,7 +213,7 @@ int main()
 
 	//Initial Data
 	vect v;
-	int N=10;
+	int N=100;
 	for(int i=-N;i<=N;++i)
 	{
 		for(int j=-N;j<=N;++j)
