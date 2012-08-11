@@ -25,7 +25,8 @@ class Neighbour_List_Empty : public Base
 	 * @brief
 	 * Default Constructor.
 	 **/
-	Neighbour_List_Empty()
+	template< typename ...Arg>
+	Neighbour_List_Empty(Arg &... arg):Base(arg...)
 	{
 		for(int i=0;i<2*DIM;++i)
 		{

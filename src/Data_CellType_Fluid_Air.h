@@ -1,5 +1,6 @@
 #ifndef Data_CellType_Fluid_Air_H
 #define Data_CellType_Fluid_Air_H
+using namespace std;
 #include "Data_CellType_Implemented_Fluid_Air.h"
 #include "Inversible_Value.h"
 template <typename DataBase>
@@ -53,6 +54,9 @@ template <typename DataBase>
 class Data_CellType_Fluid_Air : public Data_CellType_Implemented_Fluid_Air<Data_CellType_Fluid_Air<DataBase> >, public DataBase
 {
 	public:
+		~Data_CellType_Fluid_Air()
+		{
+		}
 		/**
 		 * @brief
 		 * Basic Type for floating point calculation.
@@ -261,7 +265,7 @@ class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_A
 		 * Constructor from a Data_CellType_Fluid_Air class. With default cell_type Air.
 		 * @param data Instance of Data_CellType_Fluid_Air that will store the density.
 		 **/
-		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> ,DataBase>(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),m_data_cell_type(data),m_no_delete(false)
+		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> ,DataBase>(static_cast<const DataBase&>(data)),m_mat(Material_Type::Air),m_data_cell_type(const_cast<Data_CellType_Fluid_Air<DataBase>&>(data)),m_no_delete(false)
 		{
 		}
 		/**
@@ -270,9 +274,14 @@ class Data_CellType_Fluid_Air__InCell : public Data_CellType_Implemented_Fluid_A
 		 * @param data Instance of Data_CellType_Fluid_Air that will store the density.
 		 * @param mat Value of the type of cell.
 		 **/
-		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data,Material_Type mat):m_mat(mat),m_data_cell_type(data),m_no_delete(false)
+		Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air<DataBase> & data,Material_Type mat):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> ,DataBase>(static_cast<const DataBase&>(data)),m_mat(mat),m_data_cell_type(data),m_no_delete(false)
 		{
 		}
+	/*	Data_CellType_Fluid_Air__InCell(const Data_CellType_Fluid_Air__InCell<DataBase> & cop):Data_CellType_Implemented_Fluid_Air__InCell<Data_CellType_Fluid_Air__InCell<DataBase> ,DataBase>(static_cast<const DataBase&>(cop.m_data_cell_type)),m_mat(cop.m_mat),m_data_cell_type(const_cast<Data_CellType_Fluid_Air<DataBase>&>(cop.m_data_cell_type)),m_no_delete(cop.m_no_delete)
+		{
+			cout<<"cop celltype "<<this<<endl;
+			cout<<&m_data_cell_type<<endl;
+		}*/
 		/**
 		 * @brief
 		 * Set the Material Type to Air.

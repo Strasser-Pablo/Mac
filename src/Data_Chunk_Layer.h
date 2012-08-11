@@ -16,8 +16,9 @@ template <typename Data,int N>
 class Data_Chunk_Layer : public Data_Chunk_Base<Data_Chunk_Layer<Data,N>,N >
 {
 	public:
+	const Data& m_cop;
 	Data* m_data;
-	Data_Chunk_Layer():m_data(nullptr)
+	Data_Chunk_Layer(const Data& cop):m_cop(cop),m_data(nullptr)
 	{
 	}
 	Data* Layer_GetPointer()

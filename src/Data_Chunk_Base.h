@@ -20,13 +20,25 @@ class Data_Chunk_Base
 	void Allocate()
 	{
 		UnAllocate();
-		static_cast<Child&>(*this).m_data=new type_data[N];
+		static_cast<Child&>(*this).m_data=reinterpret_cast<type_data*>(::operator new (N*sizeof(type_data)));
+		for(int i=0;i<N;++i)
+		{
+			new  (static_cast<Child&>(*this).m_data+i) type_data(static_cast<Child&>(*this).m_cop);
+		}
+	
 	}
 	void UnAllocate()
 	{
 		if(static_cast<Child&>(*this).m_data!=nullptr)
 		{
-			delete[] static_cast<Child&>(*this).m_data;
+			for(int i=0;i<N;++i)
+			{
+				static_cast<Child&>(*this).m_data[i].~type_data();
+			}
+			if(static_cast<Child&>(*this).m_data!=nullptr)
+			{
+				::operator delete(reinterpret_cast<void*>(static_cast<Child&>(*this).m_data));
+			}
 		}
 	}
 };

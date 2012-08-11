@@ -42,6 +42,13 @@ class Offset_Base_Neighbour : public Base
 		{
 			res.m_base=this->m_base;
 		}
+		if(res.m_base!=nullptr)
+		{
+			if(!res.m_base->GetChunk_Bool_Array()[res.m_off.Get()])
+			{
+				res.m_base=nullptr;
+			}
+		}
 		return res;
 	}
 };

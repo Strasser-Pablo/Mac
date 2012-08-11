@@ -22,6 +22,7 @@ using namespace std;
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash=std::hash<TypeKey>,class TypeComp=equal_to<TypeKey> >
 class ChunkHashTable
 {
+	const TypeData& m_cop;
 	TypeHash m_hash;
 protected:
 	unordered_map<TypeKey,TypeData,TypeHash,TypeComp> m_map;
@@ -65,7 +66,7 @@ public:
 	 * Construct an empty map with ordening given by argument.
 	 * @param comp Class overloading () that compare two key and return true if first is before than second.
 	 **/
-	ChunkHashTable(const TypeHash& hash=std::hash<TypeKey>(),const TypeComp& comp=equal_to<TypeKey>());
+	ChunkHashTable(const TypeData& cop,const TypeHash& hash=std::hash<TypeKey>(),const TypeComp& comp=equal_to<TypeKey>());
 	/**
 	 * @brief
 	 * Destructor.

@@ -22,6 +22,10 @@
 class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE 
 {
 	public:
+	~TestData_Chunk()
+	{
+		SingletonManager::Kill();
+	}
 	void test1d()
 	{
 		const int N=10;
@@ -31,7 +35,14 @@ class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE
 		typedef Data_Chunk_CellType<int,N> type_celltype;
 		typedef Data_Chunk_Bool_Array<N> type_bool_array;
 		typedef Data_Chunk<type_speed,type_pressure,type_layer,type_celltype,type_bool_array> type_chunk;
+		type_speed m_speed(0);
+		type_pressure m_pressure(0);
+		type_layer m_layer(0);
+		type_celltype m_celltype(0);
+		type_bool_array m_bool_array;
+		type_chunk m_chunk(m_speed,m_pressure,m_layer,m_celltype,m_bool_array);
 		typedef Neighbour_List_Empty<1,type_chunk> type_neigh;
+		type_neigh m_neigh(m_chunk);
 		typedef Offset<int,1,N> type_off;
 		typedef Offset_Base<type_off,type_neigh> type_off_base;
 		typedef Offset_Base_Speed<int,type_off_base> type_off_base_speed;
@@ -43,7 +54,7 @@ class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE
 		typedef HashPhysvector<1,int> type_hash;
 		typedef ChunkHashTable<Hook_Neighbour_List_Chunk,type_vect,type_neigh,type_off_base_neighbour,type_hash> type_chunk_table;
 		type_hash hash;
-		type_chunk_table m_table(hash);
+		type_chunk_table m_table(m_neigh,hash);
 		
 		type_vect v;
 		v.Set(1,4);
@@ -73,7 +84,14 @@ class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE
 		typedef Data_Chunk_CellType<int,N> type_celltype;
 		typedef Data_Chunk_Bool_Array<N> type_bool_array;
 		typedef Data_Chunk<type_speed,type_pressure,type_layer,type_celltype,type_bool_array> type_chunk;
+		type_speed m_speed(0);
+		type_pressure m_pressure(0);
+		type_layer m_layer(0);
+		type_celltype m_celltype(0);
+		type_bool_array m_bool_array;
+		type_chunk m_chunk(m_speed,m_pressure,m_layer,m_celltype,m_bool_array);
 		typedef Neighbour_List_Empty<1,type_chunk> type_neigh;
+		type_neigh m_neigh(m_chunk);
 		typedef Offset<int,1,N> type_off;
 		typedef Offset_Base<type_off,type_neigh> type_off_base;
 		typedef Offset_Base_Speed<int,type_off_base> type_off_base_speed;
@@ -85,7 +103,7 @@ class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE
 		typedef HashPhysvector<1,int> type_hash;
 		typedef ChunkHashTable<Hook_Neighbour_List_Chunk,type_vect,type_neigh,type_off_base_neighbour,type_hash> type_chunk_table;
 		type_hash hash;
-		type_chunk_table m_table(hash);
+		type_chunk_table m_table(m_neigh,hash);
 		
 		type_vect v;
 		v.Set(1,4);

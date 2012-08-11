@@ -36,7 +36,6 @@ struct Offset
 			res.off-=m_pow.Get(i);
 			return true;
 		}
-		res.off=off;
 		return false;
 	}
 	Offset<type,DIM,N>& operator++()

@@ -16,8 +16,9 @@ template <typename Data,int N>
 class Data_Chunk_CellType : public Data_Chunk_Base<Data_Chunk_CellType<Data,N>,N >
 {
 	public:
+	const Data& m_cop;
 	Data* m_data;
-	Data_Chunk_CellType():m_data(nullptr)
+	Data_Chunk_CellType(const Data& cop):m_cop(cop),m_data(nullptr)
 	{
 	}
 	Data* CellType_GetPointer()

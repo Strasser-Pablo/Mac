@@ -425,4 +425,7 @@ endfunction(AddTestProperty)
 	TARGET_LINK_LIBRARIES(test_cov_TestChunk_Hash_Table_Performance lib_computation)
 	add_test(NAME test_cov_TestChunk_Hash_Table_Performance COMMAND test_cov_TestChunk_Hash_Table_Performance)
 
+	CXXTEST_ADD_TEST(test_cov_MacCell2 test/Test_MacCell2.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_MacCell2.h)
+	AddTestProperty(test_cov_MacCell2)
+
 endif(USE_TESTING)

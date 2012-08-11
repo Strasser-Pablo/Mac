@@ -5,8 +5,8 @@
  **/
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
-ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkHashTable(const TypeHash& hash,const TypeComp& comp):m_map(100,hash,comp),m_hook(this),m_hash(hash)
-{	
+ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkHashTable(const TypeData& cop,const TypeHash& hash,const TypeComp& comp):m_cop(cop),m_hash(hash),m_map(100,hash,comp),m_hook(this)
+{
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
@@ -46,11 +46,12 @@ Offset ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::operator[
 	type_base_offset cur_off=ToOffsetFromKey(key);
 	if(m_map.count(key_chunk)==0)
 	{
-		m_map[key_chunk].Allocate();
-		m_hook.directacess(key_chunk,m_map[key_chunk]);
+		
+		m_map.insert(pair<const TypeKey,TypeData>(key_chunk,m_cop)).first->second.Allocate();
+		m_hook.directacess(key_chunk,m_map.at(key_chunk));
 	}
-	m_map[key_chunk].GetChunk_Bool_Array()[cur_off.Get()]=true;
-	Offset off(cur_off,&m_map[key_chunk]);
+	m_map.at(key_chunk).GetChunk_Bool_Array()[cur_off.Get()]=true;
+	Offset off(cur_off,&m_map.at(key_chunk));
 	return off;
 }
 
@@ -149,7 +150,7 @@ typename ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::type_ba
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
 TypeData & ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::DirectAcessChunk(const TypeKey& key_chunk)
 {
-	return m_map[key_chunk];
+	return m_map.at(key_chunk);
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>

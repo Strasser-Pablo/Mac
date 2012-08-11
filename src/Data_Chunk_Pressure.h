@@ -16,8 +16,9 @@ template <typename Data,int N>
 class Data_Chunk_Pressure : public Data_Chunk_Base<Data_Chunk_Pressure<Data,N>,N >
 {
 	public:
+	const Data& m_cop;
 	Data* m_data;
-	Data_Chunk_Pressure():m_data(nullptr)
+	Data_Chunk_Pressure(const Data& cop):m_cop(cop),m_data(nullptr)
 	{
 	}
 	Data* Pressure_GetPointer()
@@ -36,5 +37,6 @@ class Data_Chunk_Pressure : public Data_Chunk_Base<Data_Chunk_Pressure<Data,N>,N
 	{
 		m_data=data;
 	}
+	typedef Data type_pressure;
 };
 #endif

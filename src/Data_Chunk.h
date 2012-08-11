@@ -5,6 +5,9 @@ template <class ... Chunk>
 class Data_Chunk : public Chunk...
 {
 	public:
+	Data_Chunk(const Chunk&...  chunk): Chunk(chunk)...
+	{
+	}
 	void Allocate()
 	{
 		Allocate_Impl(static_cast<Chunk*>(this) ...);

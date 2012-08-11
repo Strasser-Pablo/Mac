@@ -18,15 +18,19 @@ class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE
 		typedef Data_Chunk_CellType<int,N> type_celltype;
 		typedef Data_Chunk<type_speed,type_pressure,type_layer,type_celltype> type_chunk;
 		typedef Neighbour_List_Empty<1,type_chunk> type_neigh;
-
+		type_speed m_speed(0);
+		type_pressure m_pressure(0);
+		type_layer m_layer(0);
+		type_celltype m_celltype(0);
+		type_chunk m_chunk(m_speed,m_pressure,m_layer,m_celltype);
 		int i1=1;
 		int i2=2;
 		int i3=3;
 		int i4=4;
 
-		type_neigh c1;
-		type_neigh c2;
-		type_neigh c3;
+		type_neigh c1(m_chunk);
+		type_neigh c2(m_chunk);
+		type_neigh c3(m_chunk);
 		c1.Speed_SetPointer(&i1);
 		c2.Speed_SetPointer(&i2);
 		c3.Speed_SetPointer(&i3);
@@ -70,9 +74,13 @@ class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE
 		typedef Data_Chunk_Layer<int,N> type_layer;
 		typedef Data_Chunk_CellType<int,N> type_celltype;
 		typedef Data_Chunk<type_speed,type_pressure,type_layer,type_celltype> type_chunk;
-
-		type_chunk c;
+		type_speed m_speed(0);
+		type_pressure m_pressure(0);
+		type_layer m_layer(0);
+		type_celltype m_celltype(0);
+		type_chunk c(m_speed,m_pressure,m_layer,m_celltype);
 		c.Allocate();
 		TS_ASSERT(c.Speed_GetPointer()!=nullptr);
+		c.UnAllocate();
 	}
 };
