@@ -16,7 +16,7 @@ ChunkHashTableIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset>::~ChunkHashTab
 }
 
 template <class TypeKey,class TypeData,class TypeHash,class TypeComp,class Offset>
-ChunkHashTableIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset>::ChunkHashTableIterator(typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator,type_offset off,typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator_end):m_iterator(iterator),m_off(off),m_iterator_end(iterator_end)
+ChunkHashTableIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset>::ChunkHashTableIterator(typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator,type_offset off,typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator_end):m_off(off),m_iterator(iterator),m_iterator_end(iterator_end)
 {
 }
 
