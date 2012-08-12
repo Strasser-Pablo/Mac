@@ -46,6 +46,9 @@ public:
 	{
 		return m_hash;
 	}
+	typedef unordered_map<TypeKey,TypeData,TypeHash,TypeComp> type_map;
+	typedef typename type_map::iterator chunk_iterator;
+	typedef typename type_map::const_iterator chunk_const_iterator;
 	/**
 	 * @brief
 	 * Type used for size.

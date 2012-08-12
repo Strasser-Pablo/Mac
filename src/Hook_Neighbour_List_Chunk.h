@@ -31,6 +31,8 @@ class Hook_Neighbour_List_Chunk
 	 * type of Data of the Hash Table
 	 **/
 	typedef typename HashTable::type_data type_data;
+	typedef typename HashTable::chunk_iterator iterator;
+	typedef typename HashTable::chunk_const_iterator const_iterator;
 	/**
 	 * @brief
 	 * Dimension of the Hash Table.
@@ -38,61 +40,28 @@ class Hook_Neighbour_List_Chunk
 	static const int type_dim=HashTable::type_key::type_dim;
 	/**
 	 * @brief
-	 * Hook called when we insert a value in the hash table.
-	 * We need to see if one of the neighbour exist.
-	 * If it's the case we update the neighbour.
-	 * @param in A pair of iterator and boolean. The boolean indicate if an element was inserted.
-	 **/
-	void insert(const pair<typename HashTable::iterator,bool>&  in)
-	{
-		// Ok we don't insert anything. Return.
-		if(!in.second)
-		{
-			return;
-		}
-		// Loop with all neighbour see if it exist. And add in the Neighbour.
-		type_key k=in.first.key();
-		type_data & data=m_hashtable->DirectAcessChunk(k);
-		for(int i=1;i<=type_dim;++i)
-		{
-			k.GetRef(i)-=1;
-			if(m_hashtable->ChunkExist(k))
-			{
-				data.SetNeighbour(i,-1,&m_hashtable->DirectAcessChunk(k));
-				m_hashtable->DirectAcessChunk(k).SetNeighbour(i,1,&data);
-			}
-			k.GetRef(i)+=2;
-			if(m_hashtable->Exist(k))
-			{
-				data.SetNeighbour(i,1,&m_hashtable->DirectAcessChunk(k));
-				m_hashtable->DirectAcessChunk(k).SetNeighbour(i,-1,&data);
-			}
-			k.GetRef(i)-=1;
-		}
-	}
-	/**
-	 * @brief
 	 * Hook called when we erase a value.
 	 * Wee need to update neighbour and set there pointer to nullptr.
 	 * @param it Iterator to the element that will be erased.
 	 **/
-	void erase(typename HashTable::iterator it)
+	void erase(const iterator& it)
 	{
+		/*
 		for(int i=1;i<=type_dim;++i)
 		{
-			type_data *neigh=it.data().GetNeighbour(i,-1);
+			type_data *neigh=it->second.GetNeighbour(i,-1);
 			if(neigh!=nullptr)
 			{
 				neigh->SetNeighbour(i,1,nullptr);
-				it.data().SetNeighbour(i,-1,nullptr);
+				it->second.SetNeighbour(i,-1,nullptr);
 			}
-			neigh=it.data().GetNeighbour(i,1);
+			neigh=it->second.GetNeighbour(i,1);
 			if(neigh!=nullptr)
 			{
 				neigh->SetNeighbour(i,-1,nullptr);
-				it.data().SetNeighbour(i,1,nullptr);
+				it->second.SetNeighbour(i,1,nullptr);
 			}
-		}
+		}*/
 	}
 	/**
 	 * @brief
@@ -102,6 +71,7 @@ class Hook_Neighbour_List_Chunk
 	 **/
 	void erase(const type_key &k)
 	{
+		/*
 		type_data& data=m_hashtable->DirectAcessChunk(k);
 		for(int i=1;i<=type_dim;++i)
 		{
@@ -117,7 +87,7 @@ class Hook_Neighbour_List_Chunk
 				neigh->SetNeighbour(i,-1,nullptr);
 				data.SetNeighbour(i,1,nullptr);
 			}
-		}
+		}*/
 	}
 	/**
 	 * @brief

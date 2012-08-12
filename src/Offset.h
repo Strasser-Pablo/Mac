@@ -10,7 +10,6 @@ struct Offset
 	type off;
 	template <typename Key>
 	Offset(const Key& key)
-
 	{
 		off=0;
 		int B=1;
@@ -44,13 +43,13 @@ struct Offset
 		return *this;
 	}
 	template <typename Key>
-	void ToKey(Key& key,Key& key0) const
+	void ToKey(Key& key,const Key& key0) const
 	{
 		type m_off=off;
 		for(int i=1;i<=DIM;++i)
 		{
-			int B=m_pow.Get(DIM-i);
-			key.GetRef(i)=key0.GetRef(i)*N+m_off/B;
+			int B=m_pow.Get(DIM+1-i);
+			key.GetRef(i)=key0.Get(i)*N+m_off/B;
 			m_off-=m_off%B;
 		}
 	}

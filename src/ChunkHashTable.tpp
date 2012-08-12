@@ -84,15 +84,15 @@ template<template<class Self> class Hook,class TypeKey,class TypeData,class Offs
 typename ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::iterator  ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::erase(iterator pos)
 {
 	TypeKey key_chunk=ToChunkKey(pos.key());
-	type_base_offset cur_off=pos.data();
-	m_map[key_chunk].GetChunk_Bool_Array()[cur_off.Get()]=false;
-	Offset off(cur_off,m_map[key_chunk]);
-	if(m_map[key_chunk].GetChunk_Bool_Array().none())
+	type_base_offset cur_off=pos.data().GetOffset();
+	m_map.at(key_chunk).GetChunk_Bool_Array()[cur_off.Get()]=false;
+	Offset off(cur_off,&m_map.at(key_chunk));
+	if(m_map.at(key_chunk).GetChunk_Bool_Array().none())
 	{
-		pos.data().UnAllocate();
+		m_map.at(key_chunk).UnAllocate();
 		typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator it=m_map.erase(pos.GetMapIterator());
 		m_hook.erase(pos.GetMapIterator());
-		return ChunkHashTableIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset>(it,type_base_offset(0));
+		return ChunkHashTableIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset>(it,type_base_offset(0),m_map.end());
 	}
 	return ++pos;
 }

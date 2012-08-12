@@ -2,7 +2,6 @@
 #define Data_Chunk_CellType_H
 
 #include "Data_Chunk_Base.h"
-
 template <typename Data,int N>
 class Data_Chunk_CellType;
 
@@ -37,5 +36,7 @@ class Data_Chunk_CellType : public Data_Chunk_Base<Data_Chunk_CellType<Data,N>,N
 	{
 		m_data=data;
 	}
+	typedef Data type_cell_type;
+	typedef void type_chunk_cell_type_exist;
 };
 #endif
