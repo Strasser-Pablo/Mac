@@ -1,4 +1,3 @@
-
 #include <cxxtest/TestSuite.h>
 #include "../src/Neighbour_List_Empty.h"
 #include "../src/ChunkHashTable.h"
