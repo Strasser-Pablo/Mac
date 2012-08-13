@@ -37,5 +37,6 @@ class Data_Chunk_Speed : public Data_Chunk_Base<Data_Chunk_Speed<Data,N>,N >
 	{
 		m_data=data;
 	}
+	typedef Data type_speed;
 };
 #endif

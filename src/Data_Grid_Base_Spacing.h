@@ -10,7 +10,7 @@
  * @brief
  * Class where the spacing of the grid is stored.
  **/
-template <typename DataBase>
+template <typename DataBase,typename Type_Data_Vector>
 class Data_Grid_Base_Spacing : public DataBase
 {
 	public:
@@ -18,7 +18,8 @@ class Data_Grid_Base_Spacing : public DataBase
 	 * @brief
 	 * Type of vector.
 	 **/
-	typedef typename DataBase::type_data_vector type_data_vector;
+	typedef Type_Data_Vector type_data_vector;
+	typedef Inversible_Value<Type_Data_Vector> type_data_inversible_vector;
 	/**
 	 * @brief
 	 * Spacing of the vector.
