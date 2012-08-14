@@ -7,7 +7,7 @@ class Algorithms_Calculate_Time_Step : public Policy
 	using Policy::CheckDT;
 	typedef typename DataType::type_data_struct type_data;
 	typedef typename type_data::type_Data_Grid type_grid;
-	typedef typename type_grid::type_data_vector type_data_vector;
+	typedef typename type_grid::type_spacing_vector type_data_vector;
 	typedef typename type_grid::iterator iterator;
 	typedef typename type_grid::type_data::type_speed type_chunk_speed;
 	typedef typename type_chunk_speed::type_data_value type_speed_data_value;
