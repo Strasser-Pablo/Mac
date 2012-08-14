@@ -61,6 +61,13 @@ class Offset_Base
 	{
 		return m_base!=nullptr;
 	}
-
+	bool operator==(const Offset_Base<Offset,Base> & B) const
+	{
+		return m_off==B.m_off&&m_base==B.m_base;
+	}
+	bool operator!=(const Offset_Base<Offset,Base> & B) const
+	{
+		return m_off!=B.m_off||m_base!=B.m_base;
+	}
 };
 #endif
