@@ -124,7 +124,7 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(1,0.0);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
-		
+
 		v.Set(1,1);
 		speed.Set(1,1.0);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
@@ -147,9 +147,9 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		type_pol_convect_apply_if m_pol_convect_apply;
 		typedef Policy_Upwind_1_Order<type_data_ref,type_pol_speed> type_policy_convect;
 		type_policy_convect m_pol_conv(m_data_ref,m_pol_speed);
-		typedef Policies<type_pol_speed,type_pol_convect_apply_if,type_policy_convect> type_pol;
-		type_pol m_pol(m_pol_speed,m_pol_convect_apply,m_pol_conv);
-		
+		typedef Policies<type_pol_convect_apply_if,type_policy_convect> type_pol;
+		type_pol m_pol(m_pol_convect_apply,m_pol_conv);
+
 		typedef Algorithms_Convection<type_data_ref,type_pol> type_alg_conv;
 		type_alg_conv m_alg_conv(m_data_ref,m_pol);
 
@@ -161,7 +161,7 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(1,-0.1);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
-		
+
 		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Get(1),-0.1,eps);
 	}
 	void test2d1()
@@ -238,7 +238,7 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		type_timing m_timing(m_time,m_grid_data);
 		typedef DataRef<type_timing> type_data_ref;
 		type_data_ref m_data_ref(m_timing);
-		
+
 		vect v;
 		v.Set(1,0);
 		v.Set(2,0);
@@ -247,7 +247,7 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(2,-1);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
-		
+
 		v.Set(1,1);
 		v.Set(2,1);
 		speed.Set(1,1.0);
@@ -404,12 +404,12 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		type_pol_convect_apply_if m_pol_convect_apply;
 		typedef Policy_Upwind_1_Order<type_data_ref,type_pol_speed> type_policy_convect;
 		type_policy_convect m_pol_conv(m_data_ref,m_pol_speed);
-		typedef Policies<type_pol_speed,type_pol_convect_apply_if,type_policy_convect> type_pol;
-		type_pol m_pol(m_pol_speed,m_pol_convect_apply,m_pol_conv);
-		
+		typedef Policies<type_pol_convect_apply_if,type_policy_convect> type_pol;
+		type_pol m_pol(m_pol_convect_apply,m_pol_conv);
+
 		typedef Algorithms_Convection<type_data_ref,type_pol> type_alg_conv;
 		type_alg_conv m_alg_conv(m_data_ref,m_pol);
-		
+
 		m_alg_conv.Do();
 
 		v.Set(1,0);
@@ -498,7 +498,7 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(1,0.0);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
-		
+
 		v.Set(1,1);
 		speed.Set(1,1.0);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
@@ -521,9 +521,9 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		type_pol_convect_apply_if m_pol_convect_apply;
 		typedef Policy_Upwind_1_Order_Dir<type_data_ref,type_pol_speed> type_policy_convect;
 		type_policy_convect m_pol_conv(m_data_ref,m_pol_speed);
-		typedef Policies<type_pol_speed,type_pol_convect_apply_if,type_policy_convect> type_pol;
-		type_pol m_pol(m_pol_speed,m_pol_convect_apply,m_pol_conv);
-		
+		typedef Policies<type_pol_convect_apply_if,type_policy_convect> type_pol;
+		type_pol m_pol(m_pol_convect_apply,m_pol_conv);
+
 		typedef Algorithms_Convection<type_data_ref,type_pol> type_alg_conv;
 		type_alg_conv m_alg_conv(m_data_ref,m_pol);
 
@@ -535,7 +535,7 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(1,-0.1);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<1,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
-		
+
 		TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Get(1),-0.1,eps);
 	}
 	void test2d2()
@@ -612,7 +612,7 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		type_timing m_timing(m_time,m_grid_data);
 		typedef DataRef<type_timing> type_data_ref;
 		type_data_ref m_data_ref(m_timing);
-		
+
 		vect v;
 		v.Set(1,0);
 		v.Set(2,0);
@@ -621,7 +621,7 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		speed.Set(2,-1);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<2,double>(speed));
 		m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
-		
+
 		v.Set(1,1);
 		v.Set(2,1);
 		speed.Set(1,1.0);
@@ -778,12 +778,12 @@ class TestAlgorithms_Convection: public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		type_pol_convect_apply_if m_pol_convect_apply;
 		typedef Policy_Upwind_1_Order_Dir<type_data_ref,type_pol_speed> type_policy_convect;
 		type_policy_convect m_pol_conv(m_data_ref,m_pol_speed);
-		typedef Policies<type_pol_speed,type_pol_convect_apply_if,type_policy_convect> type_pol;
-		type_pol m_pol(m_pol_speed,m_pol_convect_apply,m_pol_conv);
-		
+		typedef Policies<type_pol_convect_apply_if,type_policy_convect> type_pol;
+		type_pol m_pol(m_pol_convect_apply,m_pol_conv);
+
 		typedef Algorithms_Convection<type_data_ref,type_pol> type_alg_conv;
 		type_alg_conv m_alg_conv(m_data_ref,m_pol);
-		
+
 		m_alg_conv.Do();
 
 		v.Set(1,0);
