@@ -21,7 +21,7 @@
 
 int main()
 {
-		const int NL=32;
+		const int NL=8;
 		const int N=pow(NL,3);
 		typedef Data_Chunk_Speed<double,N> type_speed;
 		type_speed m_speed(0);
@@ -41,13 +41,13 @@ int main()
 		type_hash hash;
 		type_chunk_table m_table(m_neigh,hash);
 		type_vect v;
-		for(int i=0;i<=200;++i)
+		for(int i=0;i<=50;++i)
 		{
 			v.Set(1,i);
-			for(int j=0;j<=200;++j)
+			for(int j=0;j<=50;++j)
 			{
 				v.Set(2,j);
-				for(int k=0;k<=200;++k)
+				for(int k=0;k<=50;++k)
 				{
 					v.Set(3,k);
 					m_table[v].Speed_GetRef()=(i+j+k)*0.01;
@@ -56,7 +56,7 @@ int main()
 		}
 
 		double sum=0;
-		for(int i=0;i<=10;++i)
+		for(int i=0;i<=1;++i)
 		{
 			for(typename type_chunk_table::iterator it=m_table.begin();it!=m_table.end();++it)
 			{
@@ -71,7 +71,6 @@ int main()
 						}
 					}
 				}
-				
 			}
 		}
 		cout<<sum<<endl;
