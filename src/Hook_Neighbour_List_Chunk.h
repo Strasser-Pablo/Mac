@@ -46,7 +46,6 @@ class Hook_Neighbour_List_Chunk
 	 **/
 	void erase(const iterator& it)
 	{
-		
 		for(int i=1;i<=type_dim;++i)
 		{
 			type_data *neigh=it->second.GetNeighbour(i,-1);

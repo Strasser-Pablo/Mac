@@ -18,13 +18,13 @@ class Data_Grid_Base_Spacing : public DataBase
 	 * @brief
 	 * Type of vector.
 	 **/
-	typedef Type_Data_Vector type_data_vector;
-	typedef Inversible_Value<Type_Data_Vector> type_data_inversible_vector;
+	typedef Type_Data_Vector type_spacing_vector;
+	typedef Inversible_Value<Type_Data_Vector> type_spacing_inversible_vector;
 	/**
 	 * @brief
 	 * Spacing of the vector.
 	 **/
-	Inversible_Value<type_data_vector> m_h;
+	Inversible_Value<type_spacing_vector> m_h;
 	/**
 	 * @brief
 	 * Defualt Constructor
