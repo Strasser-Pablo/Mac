@@ -10,28 +10,24 @@ class Algorithms_Update_CellType_Layer : public Policy
 	using Policy::GetLayerMax;
 	typedef typename DataType::type_data_struct type_data;
 	typedef typename type_data::type_Data_Grid type_grid;
-	typedef typename type_grid::type_data_neigh type_data_neigh;
-	typedef typename type_grid::type_data_key type_data_key;
-	typedef typename type_grid::type_data_mac_cell type_data_grid;
-	typedef typename type_data::type_Data_Topology type_topology;
-	typedef typename type_topology::type_particle_list type_particle_list;
+	typedef typename type_grid::type_offset type_data_neigh;
+	typedef typename type_grid::type_key type_data_key;
 	typedef typename type_grid::iterator iterator;
 	static const int type_dim=type_data_key::type_dim;
-	type_data& m_data;
 	type_grid& m_grid;
 	public:
-	Algorithms_Update_CellType_Layer(DataType data,const Policy& pol) :Policy(pol),m_data(data.m_data), m_grid(m_data.GetGridData())
+	Algorithms_Update_CellType_Layer(DataType data,const Policy& pol) :Policy(pol),m_grid(data.m_data.GetGridData())
 	{
 	}
 	void Do()
 	{
-		typedef pair<type_data_neigh*,type_data_key> type_pair;
+		typedef pair<type_data_neigh,type_data_key> type_pair;
 		stack<type_pair> s;
 		stack<type_pair> s2;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			bool b=false;
-			if(it.data().GetRef().GetLayer()==0)
+			if(it.data().Layer_GetRef().GetLayer()==0)
 			{
 				for(int i=1;i<=type_dim;++i)
 				{
@@ -39,9 +35,9 @@ class Algorithms_Update_CellType_Layer : public Policy
 					{
 						for(int si=-1;si<=1;si+=2)
 						{
-							if(it.data().GetNeighbour(i,si)==nullptr|| it.data().GetNeighbour(i,si)->GetRef().GetIsLayerEmpty())
+							if((!it.data().GetNeighbour(i,si).IsValid())|| it.data().GetNeighbour(i,si).Layer_GetRef().GetIsLayerEmpty())
 							{
-								s.push(type_pair(&it.data(),it.key()));
+								s.push(type_pair(it.data(),it.key()));
 								b=true;
 								break;
 							}
@@ -54,19 +50,19 @@ class Algorithms_Update_CellType_Layer : public Policy
 		{
 			while(!s.empty())
 			{
-				type_data_neigh* neigh=s.top().first;
+				type_data_neigh neigh=s.top().first;
 				type_data_key key=s.top().second;
 				s.pop();
 				for(int i=1;i<=type_dim;++i)
 				{
 					for(int si=-1;si<=1;si+=2)
 					{
-						if(neigh->GetNeighbour(i,si)==nullptr||neigh->GetNeighbour(i,si)->GetRef().GetIsLayerEmpty())
+						if((!neigh.GetNeighbour(i,si).IsValid())||neigh.GetNeighbour(i,si).Layer_GetRef().GetIsLayerEmpty())
 						{
 							key.GetRef(i)+=si;
-							m_grid[key].GetRef().SetLayer(lay);
-							m_grid[key].GetRef().SetAir();
-							s2.push(type_pair(&m_grid[key],key));
+							m_grid[key].Layer_GetRef().SetLayer(lay);
+							m_grid[key].CellType_GetRef().SetAir();
+							s2.push(type_pair(m_grid[key],key));
 							key.GetRef(i)-=si;
 						}
 					}
@@ -76,16 +72,16 @@ class Algorithms_Update_CellType_Layer : public Policy
 		}
 		while(!s.empty())
 		{
-			type_data_neigh* neigh=s.top().first;
+			type_data_neigh neigh=s.top().first;
 			type_data_key key=s.top().second;
 			s.pop();
 			for(int i=1;i<=type_dim;++i)
 			{
-				if(neigh->GetNeighbour(i,1)==nullptr||neigh->GetNeighbour(i,1)->GetRef().GetIsLayerEmpty())
+				if((!neigh.GetNeighbour(i,1).IsValid())||neigh.GetNeighbour(i,1).Layer_GetRef().GetIsLayerEmpty())
 				{
 					key.GetRef(i)+=1;
-					m_grid[key].GetRef().SetLayer(GetLayerMax()+1);
-					m_grid[key].GetRef().SetAir();
+					m_grid[key].Layer_GetRef().SetLayer(GetLayerMax()+1);
+					m_grid[key].CellType_GetRef().SetAir();
 					key.GetRef(i)-=1;
 				}
 			}

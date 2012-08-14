@@ -8,6 +8,10 @@ template<template<class Self> class Hook,class TypeKey,class TypeData,class Offs
 ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkHashTable(const TypeData& cop,const TypeHash& hash,const TypeComp& comp):m_cop(cop),m_hash(hash),m_map(100,hash,comp),m_hook(this)
 {
 }
+template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
+ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkHashTable(const ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp> & cop):m_cop(cop.m_cop),m_hash(cop.m_hash),m_map(cop.m_map),m_hook(this)
+{
+}
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
 ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::~ChunkHashTable()
@@ -46,7 +50,6 @@ Offset ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::operator[
 	type_base_offset cur_off=ToOffsetFromKey(key);
 	if(m_map.count(key_chunk)==0)
 	{
-		
 		m_map.insert(pair<const TypeKey,TypeData>(key_chunk,m_cop)).first->second.Allocate();
 		m_hook.directacess(key_chunk,m_map.at(key_chunk));
 	}
@@ -135,7 +138,14 @@ TypeKey ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ToChunkK
 	TypeKey ret;
 	for(int i=1;i<=TypeKey::type_dim;++i)
 	{
-		ret.GetRef(i)=key.Get(i)/type_base_offset::LineN();
+		if(key.Get(i)>=0)
+		{
+			ret.GetRef(i)=key.Get(i)/type_base_offset::LineN();
+		}
+		else
+		{
+			ret.GetRef(i)=(key.Get(i)+1)/type_base_offset::LineN()-1;
+		}
 	}
 	return ret;
 }

@@ -37,5 +37,6 @@ class Data_Chunk_Layer : public Data_Chunk_Base<Data_Chunk_Layer<Data,N>,N >
 	{
 		m_data=data;
 	}
+	typedef Data type_layer;
 };
 #endif

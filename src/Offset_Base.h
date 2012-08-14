@@ -57,6 +57,10 @@ class Offset_Base
 		return m_base;	
 	}
 	typedef Offset type_offset;
+	bool IsValid() const
+	{
+		return m_base!=nullptr;
+	}
 
 };
 #endif

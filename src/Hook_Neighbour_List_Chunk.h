@@ -46,7 +46,7 @@ class Hook_Neighbour_List_Chunk
 	 **/
 	void erase(const iterator& it)
 	{
-		/*
+		
 		for(int i=1;i<=type_dim;++i)
 		{
 			type_data *neigh=it->second.GetNeighbour(i,-1);
@@ -61,7 +61,7 @@ class Hook_Neighbour_List_Chunk
 				neigh->SetNeighbour(i,-1,nullptr);
 				it->second.SetNeighbour(i,1,nullptr);
 			}
-		}*/
+		}
 	}
 	/**
 	 * @brief
@@ -71,7 +71,6 @@ class Hook_Neighbour_List_Chunk
 	 **/
 	void erase(const type_key &k)
 	{
-		/*
 		type_data& data=m_hashtable->DirectAcessChunk(k);
 		for(int i=1;i<=type_dim;++i)
 		{
@@ -87,7 +86,7 @@ class Hook_Neighbour_List_Chunk
 				neigh->SetNeighbour(i,-1,nullptr);
 				data.SetNeighbour(i,1,nullptr);
 			}
-		}*/
+		}
 	}
 	/**
 	 * @brief

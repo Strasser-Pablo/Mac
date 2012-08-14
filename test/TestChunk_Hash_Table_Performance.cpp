@@ -24,9 +24,13 @@ int main()
 		const int NL=32;
 		const int N=pow(NL,3);
 		typedef Data_Chunk_Speed<double,N> type_speed;
+		type_speed m_speed(0);
 		typedef Data_Chunk_Bool_Array<N> type_bool_array;
+		type_bool_array m_bool_array;
 		typedef Data_Chunk<type_speed,type_bool_array> type_chunk;
+		type_chunk m_chunk(m_speed,m_bool_array);
 		typedef Neighbour_List_Empty<3,type_chunk> type_neigh;
+		type_neigh m_neigh(m_chunk);
 		typedef Offset<int,3,NL> type_off;
 		typedef Offset_Base<type_off,type_neigh> type_off_base;
 		typedef Offset_Base_Speed<double,type_off_base> type_off_base_speed;
@@ -35,7 +39,7 @@ int main()
 		typedef HashPhysvector<3,int> type_hash;
 		typedef ChunkHashTable<Hook_Neighbour_List_Chunk,type_vect,type_neigh,type_off_base_neighbour,type_hash> type_chunk_table;
 		type_hash hash;
-		type_chunk_table m_table(hash);
+		type_chunk_table m_table(m_neigh,hash);
 		type_vect v;
 		for(int i=0;i<=200;++i)
 		{
@@ -67,6 +71,7 @@ int main()
 						}
 					}
 				}
+				
 			}
 		}
 		cout<<sum<<endl;

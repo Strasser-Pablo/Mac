@@ -49,13 +49,13 @@ class ChunkHashTableIterator
 	 * Equality operator. Check if two iterator represent the same target.
 	 * \param B Iterator to compare with.
 	 **/
-	bool operator==(const ChunkHashTableIterator &B) __attribute__((pure));
+	bool operator==(const ChunkHashTableIterator &B);
 	/**
 	 * @brief
 	 * Inequality operator. Check is two iterator represent different target.
 	 * \param B Iterator to compare with.
 	 **/
-	bool operator!=(const ChunkHashTableIterator &B) __attribute__((pure));
+	bool operator!=(const ChunkHashTableIterator &B);
 	/**
 	 * @brief
 	 * Increment the iterator to point to the next element.
@@ -71,32 +71,32 @@ class ChunkHashTableIterator
 	 * Operator that return the value pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	Offset operator*() __attribute__((pure));
+	Offset operator*();
 	/**
 	 * @brief
 	 * Return the value of the key pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	TypeKey key() const  __attribute__((pure));
+	TypeKey key() const;
 	/**
 	 * @brief
 	 * Return the value of the data pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	Offset data() __attribute__((pure));
-	const Offset data() const  __attribute__((pure));
+	Offset data();
+	const Offset data() const;
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
 	 * @return unordered_Map iterator.
 	 **/
-	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator() __attribute__((const));
+	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator();
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
 	 * @return unordered_Map iterator.
 	 **/
-	const typename  unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator() const __attribute__((const));
+	const typename  unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator() const;
 };
 
 template <class TypeKey,class TypeData,class TypeHash,class TypeComp,class Offset>
@@ -145,13 +145,13 @@ class ChunkHashTableConstIterator
 	 * Equality operator. Check if two iterator represent the same target.
 	 * \param B Iterator to compare with.
 	 **/
-	bool operator==(const ChunkHashTableConstIterator &B) __attribute__((pure));
+	bool operator==(const ChunkHashTableConstIterator &B);
 	/**
 	 * @brief
 	 * Inequality operator. Check is two iterator represent different target.
 	 * \param B Iterator to compare with.
 	 **/
-	bool operator!=(const ChunkHashTableConstIterator &B) __attribute__((pure));
+	bool operator!=(const ChunkHashTableConstIterator &B);
 	/**
 	 * @brief
 	 * Increment the iterator to point to the next element.
@@ -167,31 +167,31 @@ class ChunkHashTableConstIterator
 	 * Operator that return the value pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	const Offset operator*() __attribute__((pure));
+	const Offset operator*();
 	/**
 	 * @brief
 	 * Return the value of the key pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	const TypeKey key() const  __attribute__((pure));
+	const TypeKey key() const;
 	/**
 	 * @brief
 	 * Return the value of the data pointed by the iterator.
 	 * It can only be dereferenced safety if it's not end and not invalidated.
 	 **/
-	const Offset data() const __attribute__((pure));
+	const Offset data() const;
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
 	 * @return unordered_Map iterator.
 	 **/
-	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator& GetMapIterator() __attribute__((const));
+	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator& GetMapIterator();
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.
 	 * @return unordered_Map iterator.
 	 **/
-	const typename  unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator& GetMapIterator() const __attribute__((const));
+	const typename  unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::const_iterator& GetMapIterator() const;
 };
 
 #include "ChunkHashTableIterator.tpp"

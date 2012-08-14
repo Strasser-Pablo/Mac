@@ -36,9 +36,14 @@
 class TestAlgorithm_Calculate_Time_Step : public CxxTest::TestSuite  //LCOV_EXCL_LINE 
 {
 	public:
+	~TestAlgorithm_Calculate_Time_Step()
+	{
+		SingletonManager::Kill();
+	}
 	void test1()
 	{
 		const int N=4;
+		const int NStock=pow(4,3);
 		typedef Data_Base_Dim_Type<double,3> DataBase0;
 		DataBase0 base0;
 		typedef Data_Staggered_Left<DataBase0> DataBase;
@@ -61,16 +66,16 @@ class TestAlgorithm_Calculate_Time_Step : public CxxTest::TestSuite  //LCOV_EXCL
 		typedef Data_Grid_CellType_To_Grid_CellType<type_grid_celltype> type_cell_grid_celltype;
 		type_cell_grid_celltype m_cell_grid_celltype(m_grid_celltype);
 
-		typedef Data_Chunk_Layer<type_empt_lay,N> type_chunk_layer;
+		typedef Data_Chunk_Layer<type_empt_lay,NStock> type_chunk_layer;
 		type_chunk_layer m_chunk_layer(m_empt_lay);
 
-		typedef Data_Chunk_Bool_Array<N> type_bool_array;
+		typedef Data_Chunk_Bool_Array<NStock> type_bool_array;
 		type_bool_array m_bool_array;
 
-		typedef Data_Chunk_CellType<type_cell_grid_celltype,N> type_chunk_celltype;
+		typedef Data_Chunk_CellType<type_cell_grid_celltype,NStock> type_chunk_celltype;
 		type_chunk_celltype m_chunk_celltype(m_cell_grid_celltype);
 
-		typedef Data_Chunk_Speed<type_grid_speed,N> type_chunk_speed;
+		typedef Data_Chunk_Speed<type_grid_speed,NStock> type_chunk_speed;
 		type_chunk_speed m_chunk_speed(m_grid_speed);
 
 		typedef Data_Chunk<type_bool_array,type_chunk_layer,type_chunk_celltype,type_chunk_speed> type_chunk;

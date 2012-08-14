@@ -25,9 +25,14 @@
 class TestAlgorithmes_Initialize_MacCell : public CxxTest::TestSuite  //LCOV_EXCL_LINE 
 {
 	public:
+	~TestAlgorithmes_Initialize_MacCell()
+	{
+		SingletonManager::Kill();
+	}
 	void test_Layer_Initial1()
 	{
 		const int N=4;
+		const int NStock=pow(4,3);
 		typedef Data_Base_Dim_Type<double,3> DataBase0;
 		DataBase0 base0;
 		typedef Data_Staggered_Left<DataBase0> DataBase;
@@ -38,10 +43,10 @@ class TestAlgorithmes_Initialize_MacCell : public CxxTest::TestSuite  //LCOV_EXC
 		typedef Data_Grid_Layer_Empty<type_layer> type_empt_lay;
 		type_empt_lay m_empt_lay(layer);
 
-		typedef Data_Chunk_Layer<type_empt_lay,N> type_chunk_layer;
+		typedef Data_Chunk_Layer<type_empt_lay,NStock> type_chunk_layer;
 		type_chunk_layer m_chunk_layer(m_empt_lay);
 
-		typedef Data_Chunk_Bool_Array<N> type_bool_array;
+		typedef Data_Chunk_Bool_Array<NStock> type_bool_array;
 		type_bool_array m_bool_array;
 
 		typedef Data_Chunk<type_bool_array,type_chunk_layer> type_chunk;

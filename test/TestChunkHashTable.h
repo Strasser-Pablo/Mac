@@ -153,4 +153,101 @@ class TestData_Chunk : public CxxTest::TestSuite   //LCOV_EXCL_LINE
 		TS_ASSERT_EQUALS(it4.Layer_GetRef(),5);
 		TS_ASSERT_EQUALS(it4.CellType_GetRef(),1);
 	}
+	void test2dNeighbour()
+	{
+		const int N=2;
+		const int NStor=4;
+		typedef Data_Chunk_Speed<int,NStor> type_speed;
+		typedef Data_Chunk_Pressure<int,NStor> type_pressure;
+		typedef Data_Chunk_Layer<int,NStor> type_layer;
+		typedef Data_Chunk_CellType<int,NStor> type_celltype;
+		typedef Data_Chunk_Bool_Array<NStor> type_bool_array;
+		typedef Data_Chunk<type_speed,type_pressure,type_layer,type_celltype,type_bool_array> type_chunk;
+		type_speed m_speed(0);
+		type_pressure m_pressure(0);
+		type_layer m_layer(0);
+		type_celltype m_celltype(0);
+		type_bool_array m_bool_array;
+		type_chunk m_chunk(m_speed,m_pressure,m_layer,m_celltype,m_bool_array);
+		typedef Neighbour_List_Empty<2,type_chunk> type_neigh;
+		type_neigh m_neigh(m_chunk);
+		typedef Offset<int,2,N> type_off;
+		typedef Offset_Base<type_off,type_neigh> type_off_base;
+		typedef Offset_Base_Speed<int,type_off_base> type_off_base_speed;
+		typedef Offset_Base_Pressure<int,type_off_base_speed> type_off_base_pressure;
+		typedef Offset_Base_Layer<int,type_off_base_pressure> type_off_base_layer;
+		typedef Offset_Base_CellType<int,type_off_base_layer> type_off_base_celltype;
+		typedef Offset_Base_Neighbour<type_off_base_celltype> type_off_base_neighbour;
+		typedef Physvector<2,int> type_vect;
+		typedef HashPhysvector<2,int> type_hash;
+		typedef ChunkHashTable<Hook_Neighbour_List_Chunk,type_vect,type_neigh,type_off_base_neighbour,type_hash> type_chunk_table;
+		type_hash hash;
+		type_chunk_table m_table(m_neigh,hash);
+		
+		type_vect v;
+
+		v.Set(1,0);
+		v.Set(2,0);
+
+		m_table[v].Speed_GetRef()=10;
+		m_table[v].Pressure_GetRef()=12;
+		m_table[v].Layer_GetRef()=16;
+		m_table[v].CellType_GetRef()=16;
+
+		v.Set(1,0);
+		v.Set(2,1);
+
+		m_table[v].Speed_GetRef()=3;
+		m_table[v].Pressure_GetRef()=5;
+		m_table[v].Layer_GetRef()=2;
+		m_table[v].CellType_GetRef()=5;
+
+		v.Set(1,1);
+		v.Set(2,0);
+
+		m_table[v].Speed_GetRef()=87;
+		m_table[v].Pressure_GetRef()=3;
+		m_table[v].Layer_GetRef()=8;
+		m_table[v].CellType_GetRef()=2;
+
+		v.Set(1,1);
+		v.Set(2,1);
+
+		m_table[v].Speed_GetRef()=5;
+		m_table[v].Pressure_GetRef()=2;
+		m_table[v].Layer_GetRef()=5;
+		m_table[v].CellType_GetRef()=1;
+
+		v.Set(1,0);
+		v.Set(2,0);
+
+		TS_ASSERT_EQUALS(m_table[v].Speed_GetRef(),10);
+		TS_ASSERT_EQUALS(m_table[v].Pressure_GetRef(),12);
+		TS_ASSERT_EQUALS(m_table[v].Layer_GetRef(),16);
+		TS_ASSERT_EQUALS(m_table[v].CellType_GetRef(),16);
+
+		v.Set(1,0);
+		v.Set(2,1);
+
+		TS_ASSERT_EQUALS(m_table[v].Speed_GetRef(),3);
+		TS_ASSERT_EQUALS(m_table[v].Pressure_GetRef(),5);
+		TS_ASSERT_EQUALS(m_table[v].Layer_GetRef(),2);
+		TS_ASSERT_EQUALS(m_table[v].CellType_GetRef(),5);
+
+		v.Set(1,1);
+		v.Set(2,0);
+
+		TS_ASSERT_EQUALS(m_table[v].Speed_GetRef(),87);
+		TS_ASSERT_EQUALS(m_table[v].Pressure_GetRef(),3);
+		TS_ASSERT_EQUALS(m_table[v].Layer_GetRef(),8);
+		TS_ASSERT_EQUALS(m_table[v].CellType_GetRef(),2);
+
+		v.Set(1,1);
+		v.Set(2,1);
+
+		TS_ASSERT_EQUALS(m_table[v].Speed_GetRef(),5);
+		TS_ASSERT_EQUALS(m_table[v].Pressure_GetRef(),2);
+		TS_ASSERT_EQUALS(m_table[v].Layer_GetRef(),5);
+		TS_ASSERT_EQUALS(m_table[v].CellType_GetRef(),1);
+	}
 };

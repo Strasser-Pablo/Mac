@@ -2,6 +2,7 @@
 #define OFFSET_H
 #include "Physvector.h"
 #include "Pow_Int.h"
+#include "Modulo.h"
 using namespace std;
 template <typename type,int DIM,int N>
 struct Offset
@@ -15,7 +16,7 @@ struct Offset
 		int B=1;
 		for(int i=1;i<=DIM;++i)
 		{
-			off+=key.Get(i)%N*B;
+			off+=Modulo(key.Get(i),N)*B;
 			B*=N;
 		}
 	}
@@ -27,12 +28,17 @@ struct Offset
 		res.off=off+dir*m_pow.Get(i-1);
 		if(res.off<0)
 		{
-			res.off+=N*m_pow.Get(i-1);
+			res.off+=m_pow.Get(i);
 			return true;
 		}
-		else if(((res.off%m_pow.Get(i))==0&&dir>0)||res.off>m_pow.Get(DIM))
+		else if(dir==1&&((res.off/m_pow.Get(i-1)%N)==0))
 		{
 			res.off-=m_pow.Get(i);
+			return true;
+		}
+		else if(dir==-1&&((res.off/m_pow.Get(i-1)%N)==N-1))
+		{
+			res.off+=m_pow.Get(i);
 			return true;
 		}
 		return false;
@@ -46,11 +52,11 @@ struct Offset
 	void ToKey(Key& key,const Key& key0) const
 	{
 		type m_off=off;
-		for(int i=1;i<=DIM;++i)
+		for(int i=DIM;i>=1;--i)
 		{
-			int B=m_pow.Get(DIM+1-i);
+			int B=m_pow.Get(i-1);
 			key.GetRef(i)=key0.Get(i)*N+m_off/B;
-			m_off-=m_off%B;
+			m_off=m_off%B;
 		}
 	}
 	/**
@@ -79,7 +85,7 @@ struct Offset
 	{
 		off=val;
 	}
-	type Get()
+	type Get() const
 	{
 		return off;
 	}

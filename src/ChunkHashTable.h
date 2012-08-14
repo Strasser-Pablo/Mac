@@ -70,6 +70,7 @@ public:
 	 * @param comp Class overloading () that compare two key and return true if first is before than second.
 	 **/
 	ChunkHashTable(const TypeData& cop,const TypeHash& hash=std::hash<TypeKey>(),const TypeComp& comp=equal_to<TypeKey>());
+	ChunkHashTable(const ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp> &);
 	/**
 	 * @brief
 	 * Destructor.
