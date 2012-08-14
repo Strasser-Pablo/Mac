@@ -77,6 +77,7 @@ class Data_Speed_Data : public Data_Speed_Get<Dim,TypeData>
 	 * Type of the data.
 	 **/
 	typedef TypeData type_data;
+	typedef Physvector<Dim,TypeData> type_vector;
 	/**
 	 * @brief
 	 * Speed vector.

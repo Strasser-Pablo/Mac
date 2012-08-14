@@ -23,7 +23,7 @@ struct Offset
 	Offset(type m_off=0):off(m_off)
 	{
 	}
-	bool GetNeighbour(int i,int dir,Offset<type,DIM,N>& res)
+	bool GetNeighbour(int i,int dir,Offset<type,DIM,N>& res) const
 	{
 		res.off=off+dir*m_pow.Get(i-1);
 		if(res.off<0)

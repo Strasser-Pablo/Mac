@@ -13,7 +13,7 @@ class Policy_Speed_Interpolation_Linear_Functor
 	typedef typename Data::type_data_struct::type_Data_Grid type_Data_Grid;
 	typedef typename type_Data_Grid::type_spacing_vector type_spacing_vector;
 	typedef typename type_Data_Grid::type_data::type_speed type_speed;
-	typedef typename type_speed::type_speed type_speed_vect;
+	typedef typename type_speed::type_speed::type_vector type_speed_vect;
 	Policy_Speed_Interpolation_Linear<Data>& m_interp;
 	public:
 	Policy_Speed_Interpolation_Linear_Functor(Policy_Speed_Interpolation_Linear<Data>& interp):m_interp(interp)
@@ -33,7 +33,7 @@ class Policy_Speed_Interpolation_Linear
 	typedef typename type_Data_Grid::type_offset type_neigh;
 	typedef typename type_Data_Grid::type_data::type_speed type_speed;
 	typedef typename type_speed::type_data_value type_speed_data_value;
-	typedef typename type_speed::type_speed type_speed_vect;
+	typedef typename type_speed::type_speed::type_vector type_speed_vect;
 	typedef typename type_Data_Grid::type_key::type_data type_key_value;
 	typedef typename type_Data_Grid::type_key type_key;
 	typedef typename type_Data_Grid::type_spacing_vector type_spacing_vector;
