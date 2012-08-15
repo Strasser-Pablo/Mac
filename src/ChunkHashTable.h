@@ -91,7 +91,8 @@ public:
 	 * @brief
 	 * Return the size of the container.
 	 **/
-	size_type size();
+	size_type size_chunk();
+	size_type size_upper();
 	/**
 	 * @brief
 	 * Return if key Exist.

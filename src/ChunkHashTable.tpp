@@ -26,9 +26,15 @@ bool ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::empty()
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
-typename ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::size_type ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::size()
+typename ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::size_type ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::size_chunk()
 {
 	return m_map.size();
+}
+
+template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
+typename ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::size_type ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::size_upper()
+{
+	return m_map.size()*type_base_offset::MaxOffset();
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>

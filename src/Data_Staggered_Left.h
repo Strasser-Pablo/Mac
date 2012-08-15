@@ -32,7 +32,7 @@ class Is_Staggered_Left_SFINAE
  * @tparam dummy if void the class work correctly, in the contrary only this version is instantiated.
  **/
 template<typename Base,typename Type>
-class Is_Staggered_Left_SFINAE<Type,Base,Type,typename Base::type_data_mac_cell::type_staggered_pos_left>
+class Is_Staggered_Left_SFINAE<Type,Base,Type,typename Base::type_staggered_pos_left>
 {
 	public:
 	/**
@@ -72,7 +72,7 @@ class Is_Staggered_SFINAE
  * @tparam dummy if void the class work correctly, in the contrary only this version is instantiated.
  **/
 template<typename Base,typename Type>
-class Is_Staggered_SFINAE<Type,Base,Type,typename Base::type_data_mac_cell::type_staggered_pos>
+class Is_Staggered_SFINAE<Type,Base,Type,typename Base::type_staggered_pos>
 {
 	public:
 	/**
@@ -121,30 +121,6 @@ class Data_Staggered_Left : public Base
 	 * Default constructor.
 	 **/
 	Data_Staggered_Left()
-	{
-	}
-	/**
-	 * @brief
-	 * Type where the base class of this class has as new base InheritedWith
-	 * @tparam InheritedWith Class to inherit with.
-	 **/
-	template <typename InheritedWith>
-	using type_DataBase_SubInherite=Data_Staggered_Left<typename Base::template type_DataBase_SubInherite<InheritedWith> >;
-	/**
-	 * @brief
-	 * Type pointing to the base type without additional inheritance.
-	 * Because after addition of additional base class we are of this class but with another template value, we need this type to know the type.
-	 **/
-	typedef Data_Staggered_Left<typename Base::type_SubInherite_Base> type_SubInherite_Base;
-	/**
-	 * @brief
-	 * Constructor used to created a inherited base class.
-	 * @tparam InheritedWith Class to inherit with.
-	 * @param base element of type before transformation.
-	 * @param in elememnt of type witch will be the new base class.
-	 **/
-	template<typename InheritedWith> 
-	Data_Staggered_Left(const  type_SubInherite_Base& base, const InheritedWith& in): Base(base,in)
 	{
 	}
 };
