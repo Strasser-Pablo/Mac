@@ -62,7 +62,16 @@ Offset ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::operator[
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
 typename ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::iterator ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::begin()
 {
-	return ChunkHashTableIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset>(m_map.begin(),type_base_offset(0),m_map.end());
+	ChunkHashTableIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset> temp(m_map.begin(),type_base_offset(0),m_map.end());
+	if(m_map.begin()!=m_map.end())
+	{
+		chunk_iterator it=m_map.begin();
+		if(!it->second.GetChunk_Bool_Array()[0])
+		{
+			++temp;
+		}
+	}
+	return temp;
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
@@ -74,7 +83,16 @@ typename ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::iterato
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
 typename ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::const_iterator ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::begin() const
 {
-	return ChunkHashTableConstIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset>(m_map.begin(),type_base_offset(0),m_map.end());
+	ChunkHashTableIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset> temp(m_map.begin(),type_base_offset(0),m_map.end());
+	if(m_map.begin()!=m_map.end())
+	{
+		chunk_iterator it=m_map.begin();
+		if(!it->second.GetChunk_Bool_Array()[0])
+		{
+			++temp;
+		}
+	}
+	return temp;
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>

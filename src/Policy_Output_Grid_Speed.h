@@ -20,18 +20,13 @@ template <typename Data>
 class Policy_Output_Grid_Speed
 {
 	typedef typename Data::type_data_struct::type_Data_Grid type_Data_Grid;
-	typedef typename type_Data_Grid::type_data_mac_cell type_data_mac_cell;
-	typedef typename type_data_mac_cell::type_pressure type_pressure;
-	typedef typename type_Data_Grid::type_data_key type_data_key;
-	typedef typename type_Data_Grid::type_data_key_value type_data_key_value;
-	typedef typename type_Data_Grid::type_data_vector type_data_vector;
-	typedef typename type_Data_Grid::type_data_value type_data_value;
-	typedef typename type_Data_Grid::type_data_neigh type_data_neigh;
-	typedef typename type_data_mac_cell::type_speed type_speed;
+	typedef typename type_Data_Grid::type_offset type_neigh;
+	typedef typename type_Data_Grid::type_spacing_vector type_spacing_vector;
+	typedef typename type_Data_Grid::type_spacing_vector::type_data type_spacing_value;
 	typedef typename type_Data_Grid::iterator iterator;
-	static const int type_dim=type_Data_Grid::type_dim;
+	static const int type_dim=type_Data_Grid::type_data::type_speed::type_dim;
 	type_Data_Grid& m_grid;
-	const type_data_vector &m_h;
+	const type_spacing_vector &m_h;
 	const char * m_pref;
 	public:
 	Policy_Output_Grid_Speed(Data & data,const char* pref): m_grid(data.m_data.GetGridData()),m_h(data.m_data.GetGridData().m_h.GetRef()),m_pref(pref)
@@ -46,12 +41,12 @@ class Policy_Output_Grid_Speed
 			int num=0;
 			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
-				if(it.data().GetRef().GetIsLayerEmpty())
+				if(it.data().Layer_GetRef().GetIsLayerEmpty())
 				{
 					continue;
 				}
-				it.data().GetRef().SetLayer(num);
-				type_data_value vtemp[3];
+				it.data().Layer_GetRef().SetLayer(num);
+				type_spacing_value vtemp[3];
 				for(int ipos=1;ipos<=type_dim;++ipos)
 				{
 					if(ipos!=ispeed)
@@ -87,58 +82,58 @@ class Policy_Output_Grid_Speed
 			int nbcont=pow(2,type_dim);
 			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
-				if(it.data().GetRef().GetIsLayerEmpty())
+				if(it.data().Layer_GetRef().GetIsLayerEmpty())
 				{
 					continue;
 				}
 				vtkIdType con[nbcont];
-				con[0]=it.data().GetRef().GetLayer();
-				type_data_neigh* neigh=it.data().GetNeighbour(1,1);
-				if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
+				con[0]=it.data().Layer_GetRef().GetLayer();
+				type_neigh neigh=it.data().GetNeighbour(1,1);
+				if(!neigh.IsValid()||neigh.Layer_GetRef().GetIsLayerEmpty())
 				{
 					continue;
 				}
-				con[1]=neigh->GetRef().GetLayer();
+				con[1]=neigh.Layer_GetRef().GetLayer();
 				if(type_dim>=2)
 				{
 					neigh=it.data().GetNeighbour(2,1);
-					if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
+					if(!neigh.IsValid()||neigh.Layer_GetRef().GetIsLayerEmpty())
 					{
 						continue;
 					}
-					con[2]=neigh->GetRef().GetLayer();
-					neigh=neigh->GetNeighbour(1,1);
-					if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
+					con[2]=neigh.Layer_GetRef().GetLayer();
+					neigh=neigh.GetNeighbour(1,1);
+					if(!neigh.IsValid()||neigh.Layer_GetRef().GetIsLayerEmpty())
 					{
 						continue;
 					}
-					con[3]=neigh->GetRef().GetLayer();
+					con[3]=neigh.Layer_GetRef().GetLayer();
 					if(type_dim>=3)
 					{
 						neigh=it.data().GetNeighbour(3,1);
-						if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
+						if(!neigh.IsValid()||neigh.Layer_GetRef().GetIsLayerEmpty())
 						{
 							continue;
 						}
-						con[4]=neigh->GetRef().GetLayer();
-						type_data_neigh* neigh2=neigh->GetNeighbour(1,1);
-						if(neigh2==nullptr||neigh2->GetRef().GetIsLayerEmpty())
+						con[4]=neigh.Layer_GetRef().GetLayer();
+						type_neigh neigh2=neigh.GetNeighbour(1,1);
+						if(!neigh2.IsValid()||neigh2.Layer_GetRef().GetIsLayerEmpty())
 						{
 							continue;
 						}
-						con[5]=neigh2->GetRef().GetLayer();
-						neigh=neigh->GetNeighbour(2,1);
-						if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
+						con[5]=neigh2.Layer_GetRef().GetLayer();
+						neigh=neigh.GetNeighbour(2,1);
+						if(!neigh.IsValid()||neigh.Layer_GetRef().GetIsLayerEmpty())
 						{
 							continue;
 						}
-						con[6]=neigh->GetRef().GetLayer();
-						neigh=neigh->GetNeighbour(1,1);
-						if(neigh==nullptr||neigh->GetRef().GetIsLayerEmpty())
+						con[6]=neigh.Layer_GetRef().GetLayer();
+						neigh=neigh.GetNeighbour(1,1);
+						if(!neigh.IsValid()||neigh.Layer_GetRef().GetIsLayerEmpty())
 						{
 							continue;
 						}
-						con[7]=neigh->GetRef().GetLayer();
+						con[7]=neigh.Layer_GetRef().GetLayer();
 					}
 				}
 				vtkunstruct->InsertNextCell(ntype,nbcont,con);
@@ -146,11 +141,11 @@ class Policy_Output_Grid_Speed
 			vtkSmartPointer<vtkDoubleArray> vtkspeedarray=vtkSmartPointer<vtkDoubleArray>::New();
 			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
-				if(it.data().GetRef().GetIsLayerEmpty())
+				if(it.data().Layer_GetRef().GetIsLayerEmpty())
 				{
 					continue;
 				}
-				vtkspeedarray->InsertComponent(it.data().GetRef().GetLayer(),0,it.data().GetRef().Speed_Get(ispeed));
+				vtkspeedarray->InsertComponent(it.data().Layer_GetRef().GetLayer(),0,it.data().Speed_GetRef().Speed_Get(ispeed));
 			}
 			if(ispeed==1)
 			{

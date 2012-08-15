@@ -25,7 +25,7 @@ class Policy_Output_Particle
 	typedef typename type_Data_Topology::type_particle type_particle;
 	typedef typename type_particle::type_data_value type_data_value;
 	typedef typename type_particle::type_data_vector type_data_vector;
-	static const int type_dim=type_Data_Grid::type_dim;
+	static const int type_dim=type_data_vector::type_dim;
 	typedef typename type_particle_list::const_iterator iterator;
 	public:
 	const type_particle_list& m_part;

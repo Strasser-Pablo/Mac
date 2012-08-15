@@ -14,14 +14,8 @@ class Algorithms_Output : Policy
 	using Policy::OutputTopology;
 	using Policy::OutputAnimation;
 	typedef typename Data::type_data_struct type_data;
-	typedef typename type_data::type_Data_Grid type_grid;
-	typedef typename type_grid::type_data_mac_cell type_data_grid;
-	typedef typename type_data_grid::type_data_value type_data_value;
-	typedef typename type_data_grid::type_data_vector type_data_vector;
-	typedef typename type_grid::const_iterator iterator;
 	typedef typename type_data::type_Data_Timing type_Data_Timing;
 	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
-	static const int type_dim=type_grid::type_dim;
 	int m_i=0;
 	const type_Time_Type & m_t;
 	list<string> filename_list;

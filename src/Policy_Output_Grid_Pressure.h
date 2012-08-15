@@ -23,33 +23,33 @@ template <typename Data>
 class Policy_Output_Grid_Pressure
 {
 	typedef typename Data::type_data_struct::type_Data_Grid type_Data_Grid;
-	typedef typename type_Data_Grid::type_data_mac_cell type_data_mac_cell;
-	typedef typename type_data_mac_cell::type_pressure type_pressure;
-	typedef typename type_Data_Grid::type_data_key type_data_key;
+	typedef typename type_Data_Grid::type_data::type_pressure type_pressure;
+	typedef typename type_Data_Grid::type_key type_key;
 	typedef typename type_Data_Grid::type_hash type_hash;
-	typedef typename type_Data_Grid::type_data_key_value type_data_key_value;
-	typedef typename type_Data_Grid::type_data_vector type_data_vector;
-	typedef typename type_Data_Grid::type_data_value type_data_value;
-	typedef typename type_Data_Grid::type_data_neigh type_data_neigh;
-	typedef typename type_data_mac_cell::type_speed type_speed;
+	typedef typename type_Data_Grid::type_key::type_data type_key_value;
+	typedef typename type_Data_Grid::type_spacing_vector type_spacing_vector;
+	typedef typename type_Data_Grid::type_spacing_vector::type_data type_spacing_value;
+	typedef typename type_Data_Grid::type_offset type_neigh;
+	typedef typename type_Data_Grid::type_data::type_speed type_speed;
+	typedef typename type_Data_Grid::type_data::type_cell_type type_cell_type;
 	typedef typename type_Data_Grid::iterator iterator;
-	static const int type_dim=type_Data_Grid::type_dim;
-	typedef unordered_map<type_data_key,int,type_hash> type_map;
+	static const int type_dim=type_Data_Grid::type_spacing_vector::type_dim;
+	typedef unordered_map<type_key,int,type_hash> type_map;
 	type_Data_Grid& m_grid;
-	const type_data_vector &m_h;
+	const type_spacing_vector &m_h;
 	const char * m_pref;
-	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data_mac_cell,type_data_mac_cell>::type=0>
+	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data::type_cell_type,type_cell_type>::type=0>
 	void AddSolid(T& grid __attribute__ ((unused)),type_map &m_map,vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct)
 	{
   		vtkSmartPointer<vtkIntArray> vtkSolid_Cell=vtkSmartPointer<vtkIntArray>::New();
 		for(typename type_map::iterator it=m_map.begin();it!=m_map.end();++it)
 		{
-			vtkSolid_Cell->InsertValue(it->second,m_grid[it->first].GetRef().GetIsSolid());
+			vtkSolid_Cell->InsertValue(it->second,m_grid[it->first].CellType_GetRef().GetIsSolid());
 		}
 		vtkSolid_Cell->SetName("Solid");
 		vtkunstruct->GetCellData()->AddArray(vtkSolid_Cell);
 	}
-	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data_mac_cell,type_data_mac_cell>::type2=0>
+	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data::type_cell_type,type_cell_type>::type2=0>
 	void AddSolid(T& grid __attribute__ ((unused)),type_map &m_map __attribute__ ((unused)),vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct __attribute__ ((unused)))
 	{
 	}
@@ -66,7 +66,7 @@ class Policy_Output_Grid_Pressure
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			m_map[it.key()]=num;
-			type_data_value vtemp[3];
+			type_spacing_value vtemp[3];
 			for(int ipos=1;ipos<=type_dim;++ipos)
 			{
 				vtemp[ipos-1]=(it.key().Get(ipos)-0.5)*m_h.Get(ipos);
@@ -77,12 +77,12 @@ class Policy_Output_Grid_Pressure
 			}
 			vtkpoints->InsertPoint(num,vtemp);
 			++num;
-			type_data_key k=it.key();
+			type_key k=it.key();
 			for(int i=1;i<=type_dim;++i)
 			{
-				type_data_neigh * neigh=it.data().GetNeighbour(i,1);
+				type_neigh neigh=it.data().GetNeighbour(i,1);
 				k.GetRef(i)+=1;
-				if(neigh==nullptr&&m_map.count(k)==0)
+				if(!neigh.IsValid()&&m_map.count(k)==0)
 				{
 					for(int ipos=1;ipos<=type_dim;++ipos)
 					{
@@ -99,7 +99,7 @@ class Policy_Output_Grid_Pressure
 				k.GetRef(i)-=1;
 			}
 		}
-		typedef unordered_map<type_data_key,int,type_hash> type_map;
+		typedef unordered_map<type_key,int,type_hash> type_map;
 		type_map m_map2(10,m_grid.GetHash());
 		vtkunstruct->SetPoints(vtkpoints);
 		int ntype;
@@ -125,7 +125,7 @@ class Policy_Output_Grid_Pressure
 				continue;
 			}
 			con[0]=it->second;
-			type_data_key k=it->first;
+			type_key k=it->first;
 			k.GetRef(1)+=1;
 			if(m_map.count(k)==0)
 			{
@@ -186,8 +186,8 @@ class Policy_Output_Grid_Pressure
   		vtkSmartPointer<vtkIntArray> vtkType_Cell=vtkSmartPointer<vtkIntArray>::New();
 		for(typename type_map::iterator it=m_map2.begin();it!=m_map2.end();++it)
 		{
-			vtkPressurearray->InsertValue(it->second,m_grid[it->first].GetRef().Pressure_Get().Get());
-			vtkType_Cell->InsertValue(it->second,m_grid[it->first].GetRef().GetIsFluid());
+			vtkPressurearray->InsertValue(it->second,m_grid[it->first].Pressure_GetRef().Pressure_Get().Get());
+			vtkType_Cell->InsertValue(it->second,m_grid[it->first].CellType_GetRef().GetIsFluid());
 		}
 		vtkPressurearray->SetName("Pressure");
 		vtkType_Cell->SetName("Fluid");
