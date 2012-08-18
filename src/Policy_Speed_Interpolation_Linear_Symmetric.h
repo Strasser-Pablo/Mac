@@ -43,7 +43,7 @@ class Policy_Speed_Interpolation_Linear_Symmetric
 	const type_spacing_vector &m_1_h;
 	type_Data_Grid& m_grid;
 	Policy_Speed_Interpolation_Linear_Functor_Symmetric<Data> m_funct;
-	type_data_value Get_Speed_Impl(const type_spacing_vector& pos_scal,int i,type_neigh neigh,int k)
+	type_speed_data_value Get_Speed_Impl(const type_spacing_vector& pos_scal,int i,type_neigh neigh,int k)
 	{
 		if(i<type_dim)
 		{
@@ -76,7 +76,7 @@ class Policy_Speed_Interpolation_Linear_Symmetric
 	Policy_Speed_Interpolation_Linear_Symmetric(Data& data) : m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_grid(data.m_data.GetGridData()),m_funct(*this)
 	{
 	}
-	type_speed_vect Get_Speed(const type_data_vector& pos)
+	type_speed_vect Get_Speed(const type_spacing_vector& pos)
 	{
 		type_spacing_vector pos_delta;
 		type_key key0;
@@ -87,10 +87,10 @@ class Policy_Speed_Interpolation_Linear_Symmetric
 			key0.GetRef(i)=m_round(pos_delta.GetRef(i));
 			pos_delta.GetRef(i)-=key0.GetRef(i);
 		}
-		type_data_vector pos_delta2;
+		type_spacing_vector pos_delta2;
 		for(int k=1;k<=type_dim;++k)
 		{
-			type_data_key key;
+			type_key key;
 			for(int j=1;j<=type_dim;++j)
 			{
 				if(j!=k)
@@ -112,7 +112,7 @@ class Policy_Speed_Interpolation_Linear_Symmetric
 					pos_delta2.GetRef(j)=pos_delta.GetRef(j);
 				}
 			}
-			type_data_neigh neigh=m_grid[key];
+			type_neigh neigh=m_grid[key];
 			ret.GetRef(k)=Get_Speed_Impl(pos_delta2,1,neigh,k);
 		}
 		return ret;

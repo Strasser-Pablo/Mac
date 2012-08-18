@@ -8,7 +8,7 @@ class Policy_Particle_To_Key
 	typedef typename Data::type_data_struct::type_Data_Grid type_Data_Grid;
 	typedef typename type_Data_Grid::type_key type_data_key;
 	typedef typename type_data_key::type_data type_data_key_value;
-	typedef typename type_Data_Grid::type_data_vector type_data_cell_spacing;
+	typedef typename type_Data_Grid::type_spacing_vector type_data_cell_spacing;
 	typedef typename Data::type_data_struct::type_Data_Topology type_Data_Topology;
 	typedef typename type_Data_Topology::type_particle_list type_particle_list;
 	typedef typename type_Data_Topology::type_particle type_particle;

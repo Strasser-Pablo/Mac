@@ -21,7 +21,7 @@
 
 int main()
 {
-		const int NL=8;
+		const int NL=2;
 		const int N=pow(NL,3);
 		typedef Data_Chunk_Speed<double,N> type_speed;
 		type_speed m_speed(0);

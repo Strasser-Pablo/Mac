@@ -99,7 +99,7 @@ class Data_Grid_Speed
 	 * @pre i need to be between 1 to type_dim. No checking is done.
 	 * @return if value is constant.
 	 **/
-	bool Speed_Get_Const(int i) const;
+	bool Speed_Get_Const(int i) const __attribute__ ((pure));
 	/**
 	 * @brief
 	 * Set the ith element of speed. If this element is constant, it will not be modified.
@@ -115,13 +115,13 @@ class Data_Grid_Speed
 	 * @pre i need to be between 1 to type_dim. No checking is done.
 	 * @return Speed of the given element.
 	 **/
-	auto Speed_Get(int i) const ->type_data_value;
+	auto  __attribute__ ((pure)) Speed_Get(int i) const -> type_data_value ;
 	/**
 	 * @brief
 	 * Get the speed vector.
 	 * @return The speed vector.
 	 **/
-	auto Speed_Get() const ->type_speed;
+	auto Speed_Get() const -> type_speed;
 	/**
 	 * @brief
 	 * Set the speed vector. If an element is constant, it will not be changed.
@@ -143,7 +143,7 @@ class Data_Grid_Speed
 	 * @pre i need to be between 1 to type_dim. No checking is done.
 	 * @return tempary Speed of the given element.
 	 **/
-	auto Speed_Temp_Get(int i) const ->type_data_value;
+	auto __attribute__ ((pure)) Speed_Temp_Get(int i) const ->type_data_value;
 	/**
 	 * @brief
 	 * Get the temporary speed vector.

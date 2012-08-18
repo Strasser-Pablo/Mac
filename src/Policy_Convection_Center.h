@@ -30,8 +30,8 @@ class Policy_Convection_Center : public Policy
 		else
 		{
 			type_speed_data_value U0=m_neigh.Speed_GetRef().Speed_Get(i);
-			type_speed_data_value U1=m_neigh.GetNeighbour(i,1)->Speed_GetRef().Speed_Get(i);
-			type_speed_data_value U2=m_neigh.GetNeighbour(i,-1)->Speed_GetRef().Speed_Get(i);
+			type_speed_data_value U1=m_neigh.GetNeighbour(i,1).Speed_GetRef().Speed_Get(i);
+			type_speed_data_value U2=m_neigh.GetNeighbour(i,-1).Speed_GetRef().Speed_Get(i);
 			type_speed_data_value U=0.25*U1+0.25*U2+0.5*U0;
 			U*=0.5*(U1-U2)*m_1_h.Get(j);
 			return U;
@@ -56,7 +56,7 @@ class Policy_Convection_Center : public Policy
 		return ret;
 	}
 
-	type_speed_data_value Get_Convection_Speed(type_data_neigh* m_neigh)
+	type_speed_data_value Get_Convection_Speed(type_neigh m_neigh,int i)
 	{
 		type_speed_data_value ret=0;
 		for(int j=1;j<=type_dim;++j)

@@ -52,7 +52,7 @@ class Data_Pressure_Data : private Data_Operation_Scalar_Relation<Data_Pressure_
 	 * Method to get the value.
 	 * @return Return the pressure.
 	 **/
-	TypeData Get() const;
+	TypeData Get() const __attribute__ ((pure));
 	/**
 	 * @brief
 	 * Set the value.

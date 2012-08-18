@@ -48,7 +48,7 @@ class Neighbour_List_Empty : public Base
 	 * @param sign Sign of the neighbour, +-1.
 	 * @return Pointer stored.
 	 **/
-	Neighbour_List_Empty<DIM,Base>* GetNeighbour(int dim,int sign) const;
+	Neighbour_List_Empty<DIM,Base>* GetNeighbour(int dim,int sign) const __attribute__ ((pure));
 };
 
 #include "Neighbour_List_Empty.tpp"

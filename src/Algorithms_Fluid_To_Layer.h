@@ -9,7 +9,7 @@ class Algorithms_Fluid_To_Layer : public Policy
 	typedef typename DataType::type_data_struct type_data;
 	typedef typename type_data::type_Data_Grid type_Data_Grid;
 	typedef typename type_Data_Grid::iterator iterator;
-	type_grid& m_grid;
+	type_Data_Grid& m_grid;
 	public:
 	Algorithms_Fluid_To_Layer(DataType data,const Policy& pol) :Policy(pol), m_grid(data.m_data.GetGridData())
 	{

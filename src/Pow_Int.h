@@ -9,7 +9,7 @@ class Pow_Int : public Singleton<Pow_Int<N,Dim,Type> >
 	Type m_pow[Dim+1];
 	Pow_Int();
 	Pow_Int(const Pow_Int<N,Dim,Type>&)=delete;
-	~Pow_Int();
+	~Pow_Int() __attribute__ ((const)); 
 	public:
 	Type Get(int i)
 	{

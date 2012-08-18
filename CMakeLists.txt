@@ -165,7 +165,7 @@ if(USE_DEB_INFO)
 endif()
 
 if(COMPILER_EXTRA)
-	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -Wextra -Wunsafe-loop-optimizations -Wdisabled-optimization -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn -Wno-unused-parameter " )
+	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -Wextra -Wunsafe-loop-optimizations -Wdisabled-optimization -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn -Wno-unused-parameter -funsafe-loop-optimizations -Wstrict-overflow=5 -Wtrampolines -Wcast-qual -Wcast-align -Wvector-operation-performance -Wdisabled-optimization ")
 else()
 endif()
 
@@ -213,6 +213,11 @@ endif(USE_GOOGLE_PERF)
 #set_target_properties(Container_Filling PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 #TARGET_LINK_LIBRARIES(Container_Filling lib_computation)
 
+add_executable(FillingContainer2D_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer2D_Basic.cpp)
+set_target_properties(FillingContainer2D_Basic PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(FillingContainer2D_Basic lib_computation)
+
+
 add_executable(FillingContainer_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer_Basic.cpp)
 set_target_properties(FillingContainer_Basic PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(FillingContainer_Basic lib_computation)
@@ -221,10 +226,17 @@ add_executable(JetDEau_Basic_2 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basi
 set_target_properties(JetDEau_Basic_2 PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(JetDEau_Basic_2 lib_computation)
 
+add_executable(JetDEau_Basic_3 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_3.cpp)
+set_target_properties(JetDEau_Basic_3 PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(JetDEau_Basic_3 lib_computation)
+
 add_executable(Performance ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPerformance_Without_Particle.cpp)
 set_target_properties(Performance PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(Performance lib_computation)
 
+add_executable(Convection ${CMAKE_CURRENT_SOURCE_DIR}/test/TestConvection.cpp)
+set_target_properties(Convection PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Convection lib_computation)
 
 add_executable(Chunk_Hash_Table_Performance ${CMAKE_CURRENT_SOURCE_DIR}/test/TestChunk_Hash_Table_Performance.cpp)
 set_target_properties(Chunk_Hash_Table_Performance PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
@@ -399,6 +411,11 @@ endfunction(AddTestProperty)
 	AddTestProperty(test_cov_JetDEau_Basic_2)
 	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2 lib_computation)
 	add_test(NAME test_JetDEau_Basic_2 COMMAND test_cov_JetDEau_Basic_2)
+
+	add_executable(test_cov_JetDEau_Basic_3 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_3.cpp)
+	AddTestProperty(test_cov_JetDEau_Basic_3)
+	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_3 lib_computation)
+	add_test(NAME test_JetDEau_Basic_3 COMMAND test_cov_JetDEau_Basic_3)
 
 	CXXTEST_ADD_TEST(test_cov_Data_Neighbour_List_Empty test/TestData_Neighbour_List_Empty.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Neighbour_List_Empty.h)
 	AddTestProperty(test_cov_Data_Neighbour_List_Empty)

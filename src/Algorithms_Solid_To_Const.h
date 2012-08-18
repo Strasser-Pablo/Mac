@@ -23,7 +23,7 @@ class Algorithms_Solid_To_Const : public Policy
 	}
 	void Do()
 	{
-		stack<type_data_key> s;
+		stack<type_key> s;
 
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
@@ -34,7 +34,7 @@ class Algorithms_Solid_To_Const : public Policy
 		}
 		while(!s.empty())
 		{
-			type_data_key k=s.top();
+			type_key k=s.top();
 			s.pop();
 			m_grid[k].CellType_GetRef().SetIsNoDelete();
 			m_grid[k].Pressure_GetRef().Pressure_Set(0);
@@ -43,7 +43,7 @@ class Algorithms_Solid_To_Const : public Policy
 				m_grid[k].Speed_GetRef().Speed_Set(i,0);
 				m_grid[k].Speed_GetRef().Speed_Set_Const(i);
 				k.GetRef(i)+=1;
-				m_grid[k].GetRef().SetIsNoDelete();
+				m_grid[k].CellType_GetRef().SetIsNoDelete();
 				for(int j=1;j<=type_dim;++j)
 				{
 					m_grid[k].Speed_GetRef().Speed_Set(j,0);

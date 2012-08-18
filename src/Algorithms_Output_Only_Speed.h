@@ -12,8 +12,7 @@ class Algorithms_Output_Only_Speed : Policy
 	using Policy::OutputGridSpeed;
 	using Policy::OutputAnimation;
 	typedef typename Data::type_data_struct type_data;
-	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
-	static const int type_dim=type_grid::type_dim;
+	typedef typename type_data::type_Data_Timing::type_Time_Type type_Time_Type;
 	int m_i=0;
 	const type_Time_Type & m_t;
 	list<string> filename_list;

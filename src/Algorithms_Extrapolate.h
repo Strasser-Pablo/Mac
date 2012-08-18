@@ -23,7 +23,6 @@ class Algorithms_Extrapolate : public Policy
 	}
 	void Do()
 	{
-		
 		typedef std::function<size_t(type_neigh)> type_hash;
 		type_hash f=[](type_neigh neigh)
 		{

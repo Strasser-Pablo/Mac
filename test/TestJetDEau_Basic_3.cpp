@@ -91,7 +91,7 @@
 #include "../src/Policy_Divergence.h"
 #include "../src/Policy_Gradiant.h"
 #include "../src/Policy_Von_Neumann_Boundary.h"
-#include "../src/Policy_Add_Particle_1_3.h"
+#include "../src/Policy_Add_Particle_Cube.h"
 #include "../src/Policy_Is_Inbound_Filling_Layer_CellType.h"
 #include "../src/Policy_Advance_ODE_RungeKutta.h"
 #include "../src/Policy_Speed_Interpolation_Linear_Symmetric.h"
@@ -132,12 +132,13 @@
 // Output
 #include "../src/Algorithms_Output.h"
 
+#include <sys/times.h>
 
 int main()
 {
 	const int DIM=3;
 	typedef double type_data_value;
-	const int N=8;
+	const int N=1;
 	const int NStock=pow(N,DIM);
 	typedef Data_Base_Dim_Type<double,DIM> DataBase0;
 	DataBase0 base0;
@@ -209,9 +210,9 @@ int main()
 	typedef Data_Grid_Base_Spacing<type_data_viscosity,Physvector<DIM,type_data_value> > type_data_grid;
 	type_data_grid m_data_grid(m_data_viscosity);
 	Physvector<DIM,type_data_value> h;
-	h.Set(1,0.01);
-	h.Set(2,0.01);
-	h.Set(3,0.01);
+	h.Set(1,0.0025);
+	h.Set(2,0.0025);
+	h.Set(3,0.0025);
 	m_data_grid.m_h.Set(h);
 	typedef Data_Staggered_Left<type_data_grid> type_data_stag_left;
 	type_data_stag_left m_data_stag_left(m_data_grid);
@@ -241,12 +242,12 @@ int main()
 
 	//Initial Data
 	vect v;
-	int y0=10;
-	int imax=3;
-	int jmax=3;
-	for(int i=-3;i<=imax;++i)
+	int y0=0;
+	int imax=10;
+	int jmax=10;
+	for(int i=-10;i<=imax;++i)
 	{
-		for(int j=-3;j<=jmax;++j)
+		for(int j=-10;j<=jmax;++j)
 		{
 			v.Set(1,i);
 			v.Set(2,y0);
@@ -254,30 +255,31 @@ int main()
 
 			Physvector<DIM,type_data_value> speed;
 			speed.Set(1,0.0);
-			speed.Set(2,-1);
+			speed.Set(2,10.0);
 			speed.Set(3,0.0);
 			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
 			m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetInflow();
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(1);
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(2);
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(3);
 
 			v.Set(2,y0+1);
 			speed.Set(1,0.0);
-			speed.Set(2,0.0);
+			speed.Set(2,10.0);
 			speed.Set(3,0.0);
 			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(2);
 		}
-
 		Physvector<DIM,type_data_value> speed;
-		v.Set(2,y0);
 		v.Set(1,i);
+		v.Set(2,y0);
 		v.Set(3,jmax+1);
 		speed.Set(1,0.0);
 		speed.Set(2,0.0);
 		speed.Set(3,0.0);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(2);
 	}
-
-	for(int j=-3;j<=jmax;++j)
+	for(int j=-10;j<=jmax;++j)
 	{
 		Physvector<DIM,type_data_value> speed;
 		v.Set(2,y0);
@@ -285,24 +287,47 @@ int main()
 		v.Set(3,j);
 		speed.Set(1,0.0);
 		speed.Set(2,0.0);
-		speed.Set(3,0.0);
 		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(1);
 	}
 
-
-	int y=0;
-	vect v2;
-	for(int i=-10;i<=10;++i)
+	for(int y=y0+1;y<=10;++y)
 	{
-		for(int j=-10;j<=10;++j)
+		for(int i=-10;i<=imax;++i)
 		{
-			v2.Set(1,i);
-			v2.Set(2,y);
-			v2.Set(3,j);
-			m_data_ref.m_data.GetGridData()[v2].CellType_GetRef().SetSolid();
+			for(int j=-10;j<=jmax;++j)
+			{
+				v.Set(1,i);
+				v.Set(2,y);
+				v.Set(3,j);
+
+				Physvector<DIM,type_data_value> speed;
+				speed.Set(1,0.0);
+				speed.Set(2,10.0);
+				speed.Set(3,0.0);
+				m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
+				m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetInflow();
+			}
+			Physvector<DIM,type_data_value> speed;
+			v.Set(1,i);
+			v.Set(2,y0);
+			v.Set(3,jmax+1);
+			speed.Set(1,0.0);
+			speed.Set(2,0.0);
+			speed.Set(3,0.0);
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
+		}
+		for(int j=-10;j<=jmax;++j)
+		{
+			Physvector<DIM,type_data_value> speed;
+			v.Set(2,y0);
+			v.Set(1,imax+1);
+			v.Set(3,j);
+			speed.Set(1,0.0);
+			speed.Set(2,0.0);
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
 		}
 	}
-
 
 	//Policy First Init
 	typedef Policies<> type_pol_init_first;
@@ -313,8 +338,6 @@ int main()
 	type_alg_speed_constant_mirror m_alg_speed_constant_mirror(m_data_ref,m_pol_init_first);
 	typedef Algorithms_Extrapolate<type_data_ref,type_pol_init_first> type_alg_extrapolate_init;
 	type_alg_extrapolate_init m_alg_extrapolate_init(m_data_ref,m_pol_init_first);
-	typedef Algorithms_Solid_To_Const<type_data_ref,type_pol_init_first> type_alg_solid_to_const;
-	type_alg_solid_to_const m_alg_solid_to_const(m_data_ref,m_pol_init_first);
 
 	//Policy Init
 	typedef Policy_Layer_Max<type_data_ref> type_pol_layer;
@@ -322,9 +345,9 @@ int main()
 	typedef Policy_Particle_To_Key<type_data_ref> type_pol_part_to_key;
 	type_pol_part_to_key m_pol_part_to_key(m_data_ref);
 	typedef Policy_CheckDT<type_data_ref> type_pol_check_dt;
-	type_pol_check_dt m_pol_check_dt(0.00,100000);
-	typedef Policy_Add_Particle_1_3<type_data_ref> type_pol_add_particle;
-	type_pol_add_particle m_add_particle(m_data_ref);
+	type_pol_check_dt m_pol_check_dt(0.00,0.001);
+	typedef Policy_Add_Particle_Cube<type_data_ref> type_pol_add_particle;
+	type_pol_add_particle m_add_particle(m_data_ref,1);
 	typedef Policy_Is_Inbound_Filling_Layer_CellType<type_data_ref> type_pol_is_inbound_filling_layer;
 	type_pol_is_inbound_filling_layer m_pol_is_inbound_filling_layer;
 	typedef Policies<type_pol_layer,type_pol_part_to_key,type_pol_check_dt,type_pol_add_particle,type_pol_is_inbound_filling_layer> type_pol_init;
@@ -348,8 +371,8 @@ int main()
 	type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_layer_initial,m_alg_create_fluid_particle,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step);
 
 
-	typedef Algorithms<type_alg_solid_to_const,type_alg_speed_constant_mirror,type_alg_initialize_mac,type_alg_create_fluid_particle,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_extrapolate_init> type_alg_first_init;
-	type_alg_first_init m_alg_first_init(m_alg_solid_to_const,m_alg_speed_constant_mirror,m_alg_initialize_mac,m_alg_create_fluid_particle,m_alg_layer_initial,m_alg_update_celltype,m_alg_delete_maccell,m_alg_extrapolate_init);
+	typedef Algorithms<type_alg_initialize_mac,type_alg_create_fluid_particle,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_extrapolate_init> type_alg_first_init;
+	type_alg_first_init m_alg_first_init(m_alg_initialize_mac,m_alg_create_fluid_particle,m_alg_layer_initial,m_alg_update_celltype,m_alg_delete_maccell,m_alg_extrapolate_init);
 
 	// Policy Solve Grid
 	typedef Policy_Gravity<type_data_ref> type_pol_gravity;
@@ -360,7 +383,7 @@ int main()
 	type_pol_laplacian_speed m_pol_laplacian_speed(m_data_ref);
 	typedef Policy_Viscosity_Apply_If<type_data_ref> type_pol_viscosity_apply_if;
 	type_pol_viscosity_apply_if m_pol_viscosity_apply_if;
-	typedef Policy_Solve_Linear_Umfpack<type_data_value> type_pol_solve_linear;
+	typedef Policy_Solve_Linear_Umfpack<double> type_pol_solve_linear;
 	type_pol_solve_linear m_pol_solve_linear;
 	typedef Policy_Divergence<type_data_ref> type_pol_divergence;
 	type_pol_divergence m_pol_divergence(m_data_ref);
@@ -432,13 +455,15 @@ int main()
 	typedef Algorithms_Fluid_To_Layer<type_data_ref,type_pol_fluid_to_layer> type_alg_fluid_to_layer;
 	type_alg_fluid_to_layer m_alg_fluid_to_layer(m_data_ref,m_pol_fluid_to_layer);
 	m_alg_first_init.Do();
-	for(int i=1;i<=100;++i)
+	for(int i=1;;++i)
 	{
+		cout<<"i "<<i<<endl;
 		struct tms t1;
 		struct tms t2;
+		struct tms to1;
+		struct tms to2;
 		double conv=double(sysconf(_SC_CLK_TCK));
 		long t_deb=times(&t1);
-		cout<<"i "<<i<<endl;
 		m_alg.Do();
 		m_alg_fluid_to_layer.Do();
 		m_alg_update_celltype.Do();
@@ -447,10 +472,17 @@ int main()
 		m_data_ref.m_data.GetTimingData().m_t+=m_data_ref.m_data.GetTimingData().m_dt;
 		cout<<"dt "<<m_data_ref.m_data.GetTimingData().m_dt<<endl;
 		cout<<"t "<<m_data_ref.m_data.GetTimingData().m_t<<endl;
-		m_alg_output.Do();
+		if(i%20==0)
+		{
+			long to_deb=times(&to1);
+			m_alg_output.Do();
+			long to_end=times(&to2);
+			cout<<"real output "<<(to_end-to_deb)/conv<<endl;
+			cout<<"user output "<<(to2.tms_utime-to1.tms_utime)/conv<<endl;
+		}
 		long t_end=times(&t2);
-		cout<<"real tot it "<<(t_end-t_deb)/conv<<endl;
-		cout<<"user tot it "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		cout<<"real "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 	SingletonManager::Kill();
 }

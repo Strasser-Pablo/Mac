@@ -112,7 +112,7 @@ class Data_Speed_Data : public Data_Speed_Get<Dim,TypeData>
 	 * @param i component de get between 1 and dim.
 	 * @return Value to get.
 	 **/
-	TypeData Get(int i) const;
+	TypeData Get(int i) const __attribute__ ((pure));
 	/**
 	 * @brief
 	 * Get the ith component to the given value.

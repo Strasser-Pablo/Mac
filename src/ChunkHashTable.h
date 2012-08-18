@@ -31,7 +31,7 @@ public:
 	typedef typename Offset::type_offset type_base_offset;
 	typedef Offset type_offset;
 protected:
-	type_base_offset ToOffsetFromKey(const TypeKey& key) const;
+	type_base_offset ToOffsetFromKey(const TypeKey& key) const __attribute__ ((const));
 public:
 	typedef typename type_base_offset::type_type type_value_offset;
 	typedef TypeData type_data;
@@ -92,7 +92,7 @@ public:
 	 * Return the size of the container.
 	 **/
 	size_type size_chunk();
-	size_type size_upper();
+	size_type size_upper() __attribute__ ((pure));
 	/**
 	 * @brief
 	 * Return if key Exist.
@@ -151,7 +151,7 @@ public:
 	 **/
 	void reserve(size_type count);
 	TypeData & DirectAcessChunk(const TypeKey& key_chunk);
-	bool ChunkExist(const TypeKey& key_chunk);
+	bool ChunkExist(const TypeKey& key_chunk) __attribute__ ((pure));
 private:
 	Hook<ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp> > m_hook;
 };

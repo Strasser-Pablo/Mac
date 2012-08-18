@@ -38,24 +38,24 @@ class ChunkHashTableIterator
 	 * Constructor constructing the iterator from the unordered_map iterator.
 	 * @param iterator unordered_Map iterator to use.
 	 **/
-	ChunkHashTableIterator(typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator,type_offset off,typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator_end);
+	ChunkHashTableIterator(typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator,type_offset off,typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator_end) __attribute__ ((const));
 	/**
 	 * @brief
 	 * Destructor.
 	 **/
-	~ChunkHashTableIterator();
+	~ChunkHashTableIterator() __attribute__ ((const));
 	/**
 	 * @brief
 	 * Equality operator. Check if two iterator represent the same target.
 	 * \param B Iterator to compare with.
 	 **/
-	bool operator==(const ChunkHashTableIterator &B);
+	bool operator==(const ChunkHashTableIterator &B) __attribute__ ((pure));
 	/**
 	 * @brief
 	 * Inequality operator. Check is two iterator represent different target.
 	 * \param B Iterator to compare with.
 	 **/
-	bool operator!=(const ChunkHashTableIterator &B);
+	bool operator!=(const ChunkHashTableIterator &B) __attribute__ ((pure));
 	/**
 	 * @brief
 	 * Increment the iterator to point to the next element.
@@ -90,7 +90,7 @@ class ChunkHashTableIterator
 	 * Return the unordered_map iterator used internaly.
 	 * @return unordered_Map iterator.
 	 **/
-	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator();
+	typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator& GetMapIterator() __attribute__ ((const));
 	/**
 	 * @brief 
 	 * Return the unordered_map iterator used internaly.

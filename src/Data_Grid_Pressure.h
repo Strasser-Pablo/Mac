@@ -41,7 +41,7 @@ class Data_Grid_Pressure
 	 * Get Pressure.
 	 * @return Returned Pressure.
 	 **/
-	auto Pressure_Get() const -> type_pressure;
+	auto __attribute__ ((pure)) Pressure_Get() const -> type_pressure;
 	private:
 	/**
 	 * @brief

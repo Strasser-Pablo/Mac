@@ -9,7 +9,7 @@ ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkHashTable(c
 {
 }
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
-ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkHashTable(const ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp> & cop):m_cop(cop.m_cop),m_hash(cop.m_hash),m_map(cop.m_map),m_hook(this)
+ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkHashTable(const ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp> & cop):m_cop(cop.m_cop),m_hash(cop.m_hash),m_map(cop.m_map),m_hook(this) 
 {
 }
 
