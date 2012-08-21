@@ -23,8 +23,10 @@ template<template<class Self> class Hook,class TypeKey,class TypeData,class Offs
 class ChunkHashTable
 {
 	const TypeData& m_cop;
+	typename TypeKey::type_data m_bound[2*TypeKey::type_dim];
 	TypeHash m_hash;
 protected:
+	static const int type_dim=TypeKey::type_dim;
 	unordered_map<TypeKey,TypeData,TypeHash,TypeComp> m_map;
 	TypeKey ToChunkKey(const TypeKey& key) const;
 public:
@@ -143,6 +145,7 @@ public:
 	 * Clear the container.
 	 **/
 	void clear();
+	typename TypeKey::type_data GetBound(int i,int dir);
 	/**
 	 * @brief
 	 * Reserve the given size to the container.

@@ -194,7 +194,7 @@ set_target_properties(lib_computation PROPERTIES LINKER_LANGUAGE "CXX")
 TARGET_LINK_LIBRARIES(lib_computation vtkHybrid ${Boost_LIBRARIES} )
 
 if(USE_UMFPACK)
-	TARGET_LINK_LIBRARIES(lib_computation -lumfpack -lamd -lcholmod -lcolamd -lblas -llapack)
+	TARGET_LINK_LIBRARIES(lib_computation -lumfpack -lsuitesparseconfig -lrt -lamd -lcholmod -lcolamd -lblas -llapack)
 endif(USE_UMFPACK)
 
 if(USE_GOOGLE_PERF)
@@ -444,5 +444,11 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_MacCell2 test/Test_MacCell2.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_MacCell2.h)
 	AddTestProperty(test_cov_MacCell2)
+
+	CXXTEST_ADD_TEST(test_cov_Algorithm_Apply_Wind test/TestAlgorithm_Apply_Wind.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithm_Apply_Wind.h)
+	AddTestProperty(test_cov_Algorithm_Apply_Wind)
+
+	CXXTEST_ADD_TEST(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_Interior test/TestData_CellType_Fluid_Air_Solid_Inflow_Interior.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_CellType_Fluid_Air_Solid_Inflow_Interior.h)
+	AddTestProperty(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_Interior)
 
 endif(USE_TESTING)

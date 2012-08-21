@@ -102,6 +102,7 @@
 #include "../src/Policy_Upwind_1_Order.h"
 #include "../src/Policy_Convection_Apply_If.h"
 #include "../src/Policy_Pressure_If_Correction.h"
+#include "../src/Policy_Wind.h"
 /// To add Convection
 
 //Algorithms
@@ -125,6 +126,7 @@
 #include "../src/Algorithms_Viscosity.h"
 #include "../src/Algorithms_Solve_Pressure.h"
 #include "../src/Algorithms_Convection.h"
+#include "../src/Algorithms_Apply_Wind.h"
 
 //Move Particle
 #include "../src/Algorithms_Move_Particles.h"
@@ -138,7 +140,7 @@ int main()
 {
 	const int DIM=2;
 	typedef double type_data_value;
-	const int N=32;
+	const int N=8;
 	const int NStock=pow(N,DIM);
 	typedef Data_Base_Dim_Type<double,DIM> DataBase0;
 	DataBase0 base0;
@@ -210,8 +212,8 @@ int main()
 	typedef Data_Grid_Base_Spacing<type_data_viscosity,Physvector<DIM,type_data_value> > type_data_grid;
 	type_data_grid m_data_grid(m_data_viscosity);
 	Physvector<DIM,type_data_value> h;
-	h.Set(1,0.00025);
-	h.Set(2,0.00025);
+	h.Set(1,0.001);
+	h.Set(2,0.001);
 	m_data_grid.m_h.Set(h);
 	typedef Data_Staggered_Left<type_data_grid> type_data_stag_left;
 	type_data_stag_left m_data_stag_left(m_data_grid);
@@ -242,8 +244,8 @@ int main()
 	//Initial Data
 	vect v;
 	int y0=0;
-	int imax=100;
-	for(int i=-100;i<=imax;++i)
+	int imax=10;
+	for(int i=-10;i<=imax;++i)
 	{
 		v.Set(1,i);
 		v.Set(2,y0);
@@ -339,9 +341,11 @@ int main()
 	type_pol_convection m_pol_convection(m_data_ref,m_pol_speed_interpolation);
 	typedef Policy_Pressure_If_Correction<type_data_ref> type_pol_pres_cor_if;
 	type_pol_pres_cor_if m_pol_pres_cor_if;
+	typedef Policy_Wind<type_data_ref> type_pol_wind;
+	type_pol_wind m_pol_wind(100,1,1);
 
-	typedef Policies<type_pol_gravity,type_pol_laplacian,type_pol_laplacian_speed,type_pol_viscosity_apply_if,type_pol_solve_linear,type_pol_divergence,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_convection_apply_if,type_pol_convection,type_pol_pres_cor_if> type_pol_solve_grid;
-	type_pol_solve_grid m_pol_solve_grid(m_pol_gravity,m_pol_laplacian,m_pol_laplacian_speed,m_pol_viscosity_apply_if,m_pol_solve_linear,m_pol_divergence,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_convection_apply_if,m_pol_convection,m_pol_pres_cor_if);
+	typedef Policies<type_pol_gravity,type_pol_laplacian,type_pol_laplacian_speed,type_pol_viscosity_apply_if,type_pol_solve_linear,type_pol_divergence,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_convection_apply_if,type_pol_convection,type_pol_pres_cor_if,type_pol_wind> type_pol_solve_grid;
+	type_pol_solve_grid m_pol_solve_grid(m_pol_gravity,m_pol_laplacian,m_pol_laplacian_speed,m_pol_viscosity_apply_if,m_pol_solve_linear,m_pol_divergence,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_convection_apply_if,m_pol_convection,m_pol_pres_cor_if,m_pol_wind);
 
 	//Algorithms Solve Grid
 	typedef Algorithms_Gravity<type_data_ref,type_pol_solve_grid> type_alg_gravity;
@@ -350,11 +354,13 @@ int main()
 	type_alg_viscosity m_alg_viscosity(m_data_ref,m_pol_solve_grid);
 	typedef Algorithms_Convection<type_data_ref,type_pol_solve_grid> type_alg_convection;
 	type_alg_convection m_alg_convection(m_data_ref,m_pol_solve_grid);
+	typedef Algorithms_Apply_Wind<type_data_ref,type_pol_solve_grid> type_alg_wind;
+	type_alg_wind m_alg_wind(m_data_ref,m_pol_solve_grid);
 	typedef Algorithms_Solve_Pressure<type_data_ref,type_pol_solve_grid> type_alg_solve_pressure;
 	type_alg_solve_pressure m_alg_solve_pressure(m_data_ref,m_pol_solve_grid);
 
-	typedef Algorithms<type_alg_gravity,type_alg_viscosity,type_alg_convection,type_alg_solve_pressure> type_alg_solve_grid;
-	type_alg_solve_grid m_alg_solve_grid(m_alg_gravity,m_alg_viscosity,m_alg_convection,m_alg_solve_pressure);
+	typedef Algorithms<type_alg_gravity,type_alg_viscosity,type_alg_convection,type_alg_wind,type_alg_solve_pressure> type_alg_solve_grid;
+	type_alg_solve_grid m_alg_solve_grid(m_alg_gravity,m_alg_viscosity,m_alg_convection,m_alg_wind,m_alg_solve_pressure);
 
 	typedef Algorithms<type_alg_init,type_alg_solve_grid> type_alg;
 	type_alg m_alg(m_alg_init,m_alg_solve_grid);

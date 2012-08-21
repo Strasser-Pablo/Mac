@@ -7,10 +7,20 @@
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
 ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkHashTable(const TypeData& cop,const TypeHash& hash,const TypeComp& comp):m_cop(cop),m_hash(hash),m_map(100,hash,comp),m_hook(this)
 {
+	for(int i=1;i<=type_dim;++i)
+	{
+		m_bound[2*i-2]=0;
+		m_bound[2*i-1]=0;
+	}
 }
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
 ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkHashTable(const ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp> & cop):m_cop(cop.m_cop),m_hash(cop.m_hash),m_map(cop.m_map),m_hook(this) 
 {
+	for(int i=1;i<=type_dim;++i)
+	{
+		m_bound[2*i-2]=cop.m_bound[2*i-2];
+		m_bound[2*i-1]=cop.m_bound[2*i-1];
+	}
 }
 
 template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
@@ -58,6 +68,18 @@ Offset ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::operator[
 	{
 		m_map.insert(pair<const TypeKey,TypeData>(key_chunk,m_cop)).first->second.Allocate();
 		m_hook.directacess(key_chunk,m_map.at(key_chunk));
+		for(int i=1;i<=type_dim;++i)
+		{
+			typename TypeKey::type_data val=key_chunk.Get(i);
+			if(val<m_bound[2*i-2])
+			{
+				m_bound[2*i-2]=val;
+			}
+			if(m_bound[2*i-1]<val)
+			{
+				m_bound[2*i-1]=val;
+			}
+		}
 	}
 	m_map.at(key_chunk).GetChunk_Bool_Array()[cur_off.Get()]=true;
 	Offset off(cur_off,&m_map.at(key_chunk));
@@ -191,4 +213,10 @@ template<template<class Self> class Hook,class TypeKey,class TypeData,class Offs
 bool ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::ChunkExist(const TypeKey& key_chunk)
 {
 	return m_map.count(key_chunk)>0;
+}
+
+template<template<class Self> class Hook,class TypeKey,class TypeData,class Offset,class TypeHash,class TypeComp>
+typename TypeKey::type_data ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::GetBound(int i,int dir)
+{
+	return type_base_offset::LineN()*(m_bound[2*i+(dir+1)/2-2]+(dir+1)/2);
 }
