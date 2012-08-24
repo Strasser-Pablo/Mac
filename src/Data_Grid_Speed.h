@@ -1,6 +1,5 @@
 #ifndef Data_Grid_Speed_H
 #define Data_Grid_Speed_H
-#include "Data_Speed_Data.h"
 /**
  * @ingroup GR_Data_Speed
  * @brief
@@ -17,30 +16,31 @@
  *
  * @tparam DataBase Class storing basic information.
  **/
-template <typename DataBase>
-class Data_Grid_Speed 
+template <typename DataBase,typename Const,typename Speed>
+class Data_Grid_Speed
 {
 	public:
+	typedef Const type_const;
 	/**
 	 * @brief
-	 * Dimension of the problem. 
+	 * Dimension of the problem.
 	 **/
 	const static int type_dim=DataBase::type_dim;
 	/**
 	 * @brief
 	 * Type of the numerical value.
 	 **/
-	typedef typename DataBase::type_data_value type_data_value;
+	typedef typename Speed::type_data type_data_value;
 	/**
 	 * @brief
 	 * Type for speed.
 	 **/
-	typedef Data_Speed_Data<type_dim,type_data_value> type_speed;
+	typedef Speed type_speed;
 	/**
 	 * @brief
 	 * Type of this class.
 	 **/
-	typedef Data_Grid_Speed<DataBase> type_cell_speed;
+	typedef Data_Grid_Speed<DataBase,Const,Speed> type_cell_speed;
 	/**
 	 * @brief
 	 * Indicate that this type exist for SFINAE.
@@ -55,28 +55,19 @@ class Data_Grid_Speed
 	 * @brief
 	 * The temporary speed.
 	 **/
-	type_speed m_temp_speed;
+	type_speed& m_temp_speed;
 	/**
 	 * @brief
 	 * The constant vector.
 	 **/
-	bool m_const[type_dim];
-	/**
-	 * @brief
-	 * Say if one of the constant vector is true.
-	 **/
-	bool m_has_const; 
+	Const& m_const;
 	public:
 	/**
 	 * @brief
 	 * Default construction with vector that is not constant.
 	 **/
-	Data_Grid_Speed(): m_has_const(false)
+	Data_Grid_Speed(type_speed& temp,Const& _const): m_temp_speed(temp),m_const(_const)
 	{
-		for(int i=0;i<type_dim;++i)
-		{
-			m_const[i]=false;
-		}
 	}
 	/**
 	 * @brief
@@ -99,7 +90,7 @@ class Data_Grid_Speed
 	 * @pre i need to be between 1 to type_dim. No checking is done.
 	 * @return if value is constant.
 	 **/
-	bool Speed_Get_Const(int i) const __attribute__ ((pure));
+	bool Speed_Get_Const(int i) const;
 	/**
 	 * @brief
 	 * Set the ith element of speed. If this element is constant, it will not be modified.
@@ -115,7 +106,7 @@ class Data_Grid_Speed
 	 * @pre i need to be between 1 to type_dim. No checking is done.
 	 * @return Speed of the given element.
 	 **/
-	auto  __attribute__ ((pure)) Speed_Get(int i) const -> type_data_value ;
+	auto __attribute__ ((pure)) Speed_Get(int i) const -> type_data_value ;
 	/**
 	 * @brief
 	 * Get the speed vector.
@@ -126,7 +117,7 @@ class Data_Grid_Speed
 	 * @brief
 	 * Set the speed vector. If an element is constant, it will not be changed.
 	 * @param val Value of speed to set.
-	 **/ 
+	 **/
 	void Speed_Set(const type_speed &val);
 	/**
 	 * @brief
@@ -143,7 +134,7 @@ class Data_Grid_Speed
 	 * @pre i need to be between 1 to type_dim. No checking is done.
 	 * @return tempary Speed of the given element.
 	 **/
-	auto __attribute__ ((pure)) Speed_Temp_Get(int i) const ->type_data_value;
+	auto Speed_Temp_Get(int i) const ->type_data_value;
 	/**
 	 * @brief
 	 * Get the temporary speed vector.
@@ -154,7 +145,7 @@ class Data_Grid_Speed
 	 * @brief
 	 * Set the temporary speed vector. If an element is constant, it will not be changed.
 	 * @param val Value of temporary speed to set.
-	 **/ 
+	 **/
 	void Speed_Temp_Set(const type_speed &val);
 	/**
 	 * @brief

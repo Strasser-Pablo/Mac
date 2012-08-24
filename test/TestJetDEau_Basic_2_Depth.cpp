@@ -44,6 +44,7 @@
 
 //Data Grid Speed
 #include "../src/Data_Grid_Speed.h"
+#include "../src/Data_Speed_Data.h"
 
 //Data Grid Pressure
 #include "../src/Data_Grid_Pressure.h"
@@ -138,6 +139,11 @@
 
 #include <sys/times.h>
 
+
+#include <bitset>
+
+using namespace std;
+
 int main()
 {
 	const int DIM=2;
@@ -160,8 +166,10 @@ int main()
 	typedef Data_Grid_Depth_Empty<type_depth> type_empt_depth;
 	type_empt_depth m_empt_depth(depth);
 
-	typedef Data_Grid_Speed<DataBase> type_grid_speed;
-	type_grid_speed m_grid_speed;
+	typedef Data_Speed_Data<DIM,type_data_value> type_speed_data;
+	type_speed_data m_temp_speed;
+	typedef bitset<DIM> type_const;
+	typedef Data_Grid_Speed<DataBase,type_const,type_speed_data> type_grid_speed;
 
 	typedef Data_Grid_Pressure<DataBase> type_grid_pressure;
 	type_grid_pressure m_grid_pressure;
@@ -191,8 +199,8 @@ int main()
 	typedef Data_Chunk_CellType<type_cell_grid_celltype,NStock> type_chunk_celltype;
 	type_chunk_celltype m_chunk_celltype(m_cell_grid_celltype);
 
-	typedef Data_Chunk_Speed<type_grid_speed,NStock> type_chunk_speed;
-	type_chunk_speed m_chunk_speed(m_grid_speed);
+	typedef Data_Chunk_Speed<type_grid_speed,1,NStock> type_chunk_speed;
+	type_chunk_speed m_chunk_speed(m_temp_speed);
 
 	typedef Data_Chunk_Pressure<type_grid_pressure,NStock> type_chunk_pressure;
 	type_chunk_pressure m_chunk_pressure(m_grid_pressure);

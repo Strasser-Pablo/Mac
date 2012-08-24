@@ -1,52 +1,45 @@
-template <typename DataBase>
-void Data_Grid_Speed<DataBase>::Speed_Set_Const(int i)
+template <typename DataBase,typename Const,typename Speed>
+void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Set_Const(int i)
 {
 	m_const[i-1]=true;
-	m_has_const=true;
 }
 
-template <typename DataBase>
-void Data_Grid_Speed<DataBase>::Speed_Set_None_Const(int i)
+template <typename DataBase,typename Const,typename Speed>
+void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Set_None_Const(int i)
 {
 	m_const[i-1]=false;
-	bool b=false;
-	for(int i=0;i<type_dim;++i)
-	{
-		b=b||m_const[i];
-	}
-	m_has_const=b;
 }
 
-template <typename DataBase>
-bool Data_Grid_Speed<DataBase>::Speed_Get_Const(int i) const
+template <typename DataBase,typename Const,typename Speed>
+bool Data_Grid_Speed<DataBase,Const,Speed>::Speed_Get_Const(int i) const
 {
 	return m_const[i-1];
 }
 
-template <typename DataBase>
-void Data_Grid_Speed<DataBase>::Speed_Set(int i,const type_data_value& val)
+template <typename DataBase,typename Const,typename Speed>
+void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Set(int i,const type_data_value& val)
 {
 	if(!m_const[i-1])
 	{
 		m_speed.Set(i,val);
 	}
 }
-template <typename DataBase>
-auto Data_Grid_Speed<DataBase>::Speed_Get(int i) const -> type_data_value
+template <typename DataBase,typename Const,typename Speed>
+auto Data_Grid_Speed<DataBase,Const,Speed>::Speed_Get(int i) const -> type_data_value
 {
 	return m_speed.Get(i);
 }
 
-template <typename DataBase>
-auto Data_Grid_Speed<DataBase>::Speed_Get() const -> type_speed
+template <typename DataBase,typename Const,typename Speed>
+auto Data_Grid_Speed<DataBase,Const,Speed>::Speed_Get() const -> type_speed
 {
 	return m_speed;
 }
 
-template <typename DataBase>
-void Data_Grid_Speed<DataBase>::Speed_Set(const type_speed &val)
+template <typename DataBase,typename Const,typename Speed>
+void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Set(const type_speed &val)
 {
-	if(!m_has_const)
+	if(m_const.none())
 	{
 		m_speed=val;
 	}
@@ -57,30 +50,30 @@ void Data_Grid_Speed<DataBase>::Speed_Set(const type_speed &val)
 }
 
 
-template <typename DataBase>
-void Data_Grid_Speed<DataBase>::Speed_Temp_Set(int i,const type_data_value& val)
+template <typename DataBase,typename Const,typename Speed>
+void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_Set(int i,const type_data_value& val)
 {
 	if(!m_const[i-1])
 	{
 		m_temp_speed.Set(i,val);
 	}
 }
-template <typename DataBase>
-auto Data_Grid_Speed<DataBase>::Speed_Temp_Get(int i) const -> type_data_value
+template <typename DataBase,typename Const,typename Speed>
+auto Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_Get(int i) const -> type_data_value
 {
 	return m_temp_speed.Get(i);
 }
 
-template <typename DataBase>
-auto Data_Grid_Speed<DataBase>::Speed_Temp_Get() const -> type_speed
+template <typename DataBase,typename Const,typename Speed>
+auto Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_Get() const -> type_speed
 {
 	return m_temp_speed;
 }
 
-template <typename DataBase>
-void Data_Grid_Speed<DataBase>::Speed_Temp_Set(const type_speed &val)
+template <typename DataBase,typename Const,typename Speed>
+void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_Set(const type_speed &val)
 {
-	if(!m_has_const)
+	if(m_const.none())
 	{
 		m_temp_speed=val;
 	}
@@ -91,20 +84,20 @@ void Data_Grid_Speed<DataBase>::Speed_Temp_Set(const type_speed &val)
 }
 
 
-template <typename DataBase>
-void Data_Grid_Speed<DataBase>::Speed_Temp_To_Speed()
+template <typename DataBase,typename Const,typename Speed>
+void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_To_Speed()
 {
 	m_speed=m_temp_speed;
 }
 
-template <typename DataBase>
-void Data_Grid_Speed<DataBase>::Speed_Speed_To_Temp()
+template <typename DataBase,typename Const,typename Speed>
+void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Speed_To_Temp()
 {
 	m_temp_speed=m_speed;
 }
 
-template <typename DataBase>
-bool Data_Grid_Speed<DataBase>::Speed_Is_One_Const() const
+template <typename DataBase,typename Const,typename Speed>
+bool Data_Grid_Speed<DataBase,Const,Speed>::Speed_Is_One_Const() const
 {
-	return m_has_const;
+	return m_const.any();
 }
