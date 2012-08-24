@@ -213,6 +213,10 @@ endif(USE_GOOGLE_PERF)
 #set_target_properties(Container_Filling PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 #TARGET_LINK_LIBRARIES(Container_Filling lib_computation)
 
+add_executable(JetDEau_Basic_2_Depth ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Depth.cpp)
+set_target_properties(JetDEau_Basic_2_Depth PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(JetDEau_Basic_2_Depth lib_computation)
+
 add_executable(FillingContainer2D_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer2D_Basic.cpp)
 set_target_properties(FillingContainer2D_Basic PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(FillingContainer2D_Basic lib_computation)
@@ -450,5 +454,10 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_Interior test/TestData_CellType_Fluid_Air_Solid_Inflow_Interior.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_CellType_Fluid_Air_Solid_Inflow_Interior.h)
 	AddTestProperty(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_Interior)
+
+	add_executable(test_cov_JetDEau_Basic_2_Depth ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Depth.cpp)
+	AddTestProperty(test_cov_JetDEau_Basic_2_Depth)
+	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Depth lib_computation)
+	add_test(NAME test_JetDEau_Basic_2_Depth COMMAND test_cov_JetDEau_Basic_2_Depth)
 
 endif(USE_TESTING)

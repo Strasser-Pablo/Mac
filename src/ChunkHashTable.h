@@ -145,7 +145,7 @@ public:
 	 * Clear the container.
 	 **/
 	void clear();
-	typename TypeKey::type_data GetBound(int i,int dir);
+	typename TypeKey::type_data GetBound(int i,int dir) __attribute__ ((pure));
 	/**
 	 * @brief
 	 * Reserve the given size to the container.

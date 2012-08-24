@@ -17,6 +17,7 @@
 #include <vtkXMLUnstructuredGridWriter.h>
 #include <unordered_map>
 #include "Data_CellType_Solid_SFINAE.h"
+#include "Data_CellType_Interior_SFINAE.h"
 using namespace std;
 
 template <typename Data>
@@ -51,6 +52,21 @@ class Policy_Output_Grid_Pressure
 	}
 	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data::type_cell_type,type_cell_type>::type2=0>
 	void AddSolid(T& grid __attribute__ ((unused)),type_map &m_map __attribute__ ((unused)),vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct __attribute__ ((unused)))
+	{
+	}
+	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data::type_cell_type,type_cell_type>::type=0>
+	void AddInterior(T& grid __attribute__ ((unused)),type_map &m_map,vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct)
+	{
+  		vtkSmartPointer<vtkIntArray> vtkInterior_Cell=vtkSmartPointer<vtkIntArray>::New();
+		for(typename type_map::iterator it=m_map.begin();it!=m_map.end();++it)
+		{
+			vtkInterior_Cell->InsertValue(it->second,m_grid[it->first].CellType_GetRef().GetIsInterior());
+		}
+		vtkInterior_Cell->SetName("Interior");
+		vtkunstruct->GetCellData()->AddArray(vtkInterior_Cell);
+	}
+	template<typename T,typename Data_CellType_Solid_SFINAE<typename T::type_data::type_cell_type,type_cell_type>::type2=0>
+	void AddInterior(T& grid __attribute__ ((unused)),type_map &m_map __attribute__ ((unused)),vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct __attribute__ ((unused)))
 	{
 	}
 	public:
@@ -192,6 +208,7 @@ class Policy_Output_Grid_Pressure
 		vtkPressurearray->SetName("Pressure");
 		vtkType_Cell->SetName("Fluid");
 		AddSolid(m_grid,m_map2,vtkunstruct);
+		AddInterior(m_grid,m_map2,vtkunstruct);
 		vtkunstruct->GetCellData()->AddArray(vtkPressurearray);
 		vtkunstruct->GetCellData()->AddArray(vtkType_Cell);
 		

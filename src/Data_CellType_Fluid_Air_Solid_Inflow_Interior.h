@@ -240,6 +240,7 @@ class Data_CellType_Fluid_Air_Solid_Inflow_Interior : public Data_CellType_Imple
 		 **/
 		typedef void type_Cell_type__InCell_exist;
 		typedef void type_method_solid_exist;
+		typedef void type_method_interior_exist;
 };
 
 template<typename DataBase>
@@ -359,6 +360,7 @@ class Data_CellType_Fluid_Air_Solid_Inflow_Interior__InCell : public Data_CellTy
 		const Data_CellType_Fluid_Air_Solid_Inflow_Interior<DataBase> & m_data_cell_type;
 		bool m_no_delete=false;
 		typedef void type_method_solid_exist;
+		typedef void type_method_interior_exist;
 };
 
 
