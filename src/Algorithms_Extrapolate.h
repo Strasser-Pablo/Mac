@@ -3,6 +3,7 @@
 
 #include <unordered_set>
 #include <functional>
+#include <sys/times.h>
 
 using namespace std;
 
@@ -79,7 +80,7 @@ class Algorithms_Extrapolate : public Policy
 											if(neigh3.Layer_GetRef().GetLayer()<lay)
 											{
 												++n;
-												val+=neigh.Speed_GetRef().Speed_Get(i);
+												val+=neigh.Speed_GetRef().Get(i);
 											}
 										}
 									}
@@ -91,7 +92,7 @@ class Algorithms_Extrapolate : public Policy
 											if(neigh3.Layer_GetRef().GetLayer()<lay)
 											{
 												++n;
-												val+=neigh3.Speed_GetRef().Speed_Get(i);
+												val+=neigh3.Speed_GetRef().Get(i);
 											}
 										}
 									}
@@ -104,13 +105,13 @@ class Algorithms_Extrapolate : public Policy
 											if(neigh3.Layer_GetRef().GetLayer()<lay||neigh4.Layer_GetRef().GetLayer()<lay)
 											{
 												++n;
-												val+=neigh3.Speed_GetRef().Speed_Get(i);
+												val+=neigh3.Speed_GetRef().Get(i);
 											}
 										}
 									}
 								}
 							}
-							neigh2.Speed_GetRef().Speed_Set(i,val/n);
+							neigh2.Speed_GetRef().Set(i,val/n);
 						}
 					}
 					//we look -1 direction on speed.
@@ -140,7 +141,7 @@ class Algorithms_Extrapolate : public Policy
 											if(neigh3.Layer_GetRef().GetLayer()<lay)
 											{
 												++n;
-												val+=neigh3.Speed_GetRef().Speed_Get(j);
+												val+=neigh3.Speed_GetRef().Get(j);
 											}
 										}
 									}
@@ -152,7 +153,7 @@ class Algorithms_Extrapolate : public Policy
 											if(neigh3.Layer_GetRef().GetLayer()<lay)
 											{
 												++n;
-												val+=neigh2.Speed_GetRef().Speed_Get(j);
+												val+=neigh2.Speed_GetRef().Get(j);
 											}
 										}
 									}
@@ -165,13 +166,13 @@ class Algorithms_Extrapolate : public Policy
 											if(neigh3.Layer_GetRef().GetLayer()<lay||neigh4.Layer_GetRef().GetLayer()<lay)
 											{
 												++n;
-												val+=neigh4.Speed_GetRef().Speed_Get(i);
+												val+=neigh4.Speed_GetRef().Get(i);
 											}
 										}
 									}
 								}
 							}
-							neigh.Speed_GetRef().Speed_Set(i,val/n);
+							neigh.Speed_GetRef().Set(i,val/n);
 						}
 					}
 					else
@@ -190,7 +191,7 @@ class Algorithms_Extrapolate : public Policy
 										if(neigh3.Layer_GetRef().GetLayer()<lay)
 										{
 											++n;
-											val+=neigh3.Speed_GetRef().Speed_Get(j);
+											val+=neigh3.Speed_GetRef().Get(j);
 										}
 									}
 								}
@@ -208,14 +209,14 @@ class Algorithms_Extrapolate : public Policy
 											if(neigh3.Layer_GetRef().GetLayer()<lay||neigh4.Layer_GetRef().GetLayer()<lay)
 											{
 												++n;
-												val+=neigh4.Speed_GetRef().Speed_Get(i);
+												val+=neigh4.Speed_GetRef().Get(i);
 											}
 										}
 									}
 								}
 							}
 						}
-						neigh.Speed_GetRef().Speed_Set(i,val/n);
+						neigh.Speed_GetRef().Set(i,val/n);
 					}
 				}
 			}

@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(MAC CXX)
+
+include_directories("${PROJECT_BINARY_DIR}")
+include_directories ("${PROJECT_SOURCE_DIR}/src" )
+
 option (USE_TESTING
         "Build the test case?" ON)
 option(USE_DEB_INFO
@@ -10,11 +14,11 @@ option(USE_GENERATE_PROFILE_BASED_OPTIMIZATION
 option(USE_USE_PROFILE_BASED_OPTIMIZATION
 	"Build with usage of previous profile based optimization",OFF)
 
-option (USE_UMFPACK 
-        "Link Umfpack to solve linear equation" ON) 
+option (USE_UMFPACK
+        "Link Umfpack to solve linear equation" ON)
 
-option (USE_DOXYGEN 
-        "Build the documentation" ON) 
+option (USE_DOXYGEN
+        "Build the documentation" ON)
 
 option (USE_INSTALLATION
 		"Build installation" ON)
@@ -28,6 +32,8 @@ option (USE_COMPILER_OPTION_IGNORE_WARNING_REORDER "Build with -Wnoreorder to ig
 option (USE_COMPILER_EXTRA "Build with -WExtra" OFF)
 
 option (USE_COMPILER_OPTIMISATION_FLAG "Optimize Code" on)
+
+option (USE_LUSOL "Use LUSOL Fortran code" on)
 include(CheckCXXCompilerFlag)
 find_package( Boost 1.46.0 COMPONENTS "serialization")
 link_directories ( ${Boost_LIBRARY_DIRS} )
@@ -36,6 +42,17 @@ if (USE_TESTING)
  ENABLE_TESTING()
 endif (USE_TESTING)
 
+if(USE_LUSOL)
+	enable_language(C)
+	enable_language(Fortran)
+	include(FortranCInterface)
+	find_package( BLAS REQUIRED )
+	FortranCInterface_VERIFY( CXX)
+	FortranCInterface_HEADER(lusol_int.h SYMBOLS "lu1fac" "lu6sol" "lu8adc" "lu8adr" "lu8dlc" "lu8dlr" "lu8rpc" "lu8rpr" "testtest")
+	add_library(lib_lusol src/lusol.f)
+	target_link_libraries(lib_lusol ${BLAS_LIBRARIES})
+	set_target_properties(lib_lusol PROPERTIES LINK_FLAGS "${BLAS_LINKER_FLAGS}")
+endif(USE_LUSOL)
 if(USE_INSTALLATION)
 include (InstallRequiredSystemLibraries)
 include (CPack)
@@ -57,7 +74,7 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/src/Config.h.in"
   "${PROJECT_BINARY_DIR}/Config.h"
   )
-  
+
   include_directories("${PROJECT_BINARY_DIR}")
 
   find_package(MyCxxTest PATHS ${CMAKE_CURRENT_SOURCE_DIR})
@@ -191,11 +208,15 @@ endif()
 #set_target_properties(computation PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 add_library(lib_computation STATIC)
 set_target_properties(lib_computation PROPERTIES LINKER_LANGUAGE "CXX")
-TARGET_LINK_LIBRARIES(lib_computation vtkHybrid ${Boost_LIBRARIES} )
+TARGET_LINK_LIBRARIES(lib_computation vtkHybrid ${Boost_LIBRARIES})
 
 if(USE_UMFPACK)
 	TARGET_LINK_LIBRARIES(lib_computation -lumfpack -lsuitesparseconfig -lrt -lamd -lcholmod -lcolamd -lblas -llapack)
 endif(USE_UMFPACK)
+
+if(USE_LUSOL)
+	TARGET_LINK_LIBRARIES(lib_computation lib_lusol)
+endif(USE_LUSOL)
 
 if(USE_GOOGLE_PERF)
 	TARGET_LINK_LIBRARIES(lib_computation -lprofiler)
@@ -213,9 +234,17 @@ endif(USE_GOOGLE_PERF)
 #set_target_properties(Container_Filling PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 #TARGET_LINK_LIBRARIES(Container_Filling lib_computation)
 
+add_executable(test_lusol ${CMAKE_CURRENT_SOURCE_DIR}/test/test_lusol.cpp)
+set_target_properties(test_lusol PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(test_lusol lib_computation)
+
 add_executable(JetDEau_Basic_2_Depth ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Depth.cpp)
 set_target_properties(JetDEau_Basic_2_Depth PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(JetDEau_Basic_2_Depth lib_computation)
+
+add_executable(JetDEau_Basic_2_Updating ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Updating.cpp)
+set_target_properties(JetDEau_Basic_2_Updating PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(JetDEau_Basic_2_Updating lib_computation)
 
 add_executable(FillingContainer2D_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer2D_Basic.cpp)
 set_target_properties(FillingContainer2D_Basic PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
@@ -245,6 +274,10 @@ TARGET_LINK_LIBRARIES(Convection lib_computation)
 add_executable(Chunk_Hash_Table_Performance ${CMAKE_CURRENT_SOURCE_DIR}/test/TestChunk_Hash_Table_Performance.cpp)
 set_target_properties(Chunk_Hash_Table_Performance PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(Chunk_Hash_Table_Performance lib_computation)
+
+add_executable(Gravity ${CMAKE_CURRENT_SOURCE_DIR}/test/TestGravity.cpp)
+set_target_properties(Gravity PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Gravity lib_computation)
 
 if (USE_TESTING)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
@@ -459,5 +492,15 @@ endfunction(AddTestProperty)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Depth)
 	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Depth lib_computation)
 	add_test(NAME test_JetDEau_Basic_2_Depth COMMAND test_cov_JetDEau_Basic_2_Depth)
+
+	add_executable(test_cov_JetDEau_Basic_2_Updating ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Updating.cpp)
+	AddTestProperty(test_cov_JetDEau_Basic_2_Updating)
+	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Updating lib_computation)
+	add_test(NAME test_JetDEau_Basic_2_Updating COMMAND test_cov_JetDEau_Basic_2_Updating)
+
+	add_executable(test_cov_Gravity ${CMAKE_CURRENT_SOURCE_DIR}/test/TestGravity.cpp)
+	AddTestProperty(test_cov_Gravity)
+	TARGET_LINK_LIBRARIES(test_cov_Gravity lib_computation)
+	add_test(NAME test_Gravity COMMAND test_cov_Gravity)
 
 endif(USE_TESTING)

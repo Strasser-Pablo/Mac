@@ -10,12 +10,9 @@ class Algorithms_Apply_Wind : public Policy
 	typedef typename type_Data_Grid::type_key type_key;
 	typedef typename type_Data_Grid::type_data::type_speed::type_data_value type_speed_value;
 	static const int type_dim=type_key::type_dim;
-	typedef typename Data::type_data_struct::type_Data_Timing type_Data_Timing;
-	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
-	type_Time_Type& m_dt;
 	type_Data_Grid& m_grid;
 	public:
-	Algorithms_Apply_Wind(Data data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt)
+	Algorithms_Apply_Wind(Data data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData())
 	{
 	}
 	void Do()
@@ -45,12 +42,11 @@ class Algorithms_Apply_Wind : public Policy
 					{
 						if(dir==1)
 						{
-							m_grid[k].Speed_GetRef().Speed_Set(idir,m_grid[k].Speed_GetRef().Speed_Get(idir)+speed*m_dt);
+							m_grid[k].Acceleration_GetRef().Set(idir,m_grid[k].Acceleration_GetRef().Get(idir)+speed);
 						}
 						else
 						{
-							
-							m_grid[k].GetNeighbour(idir,1).Speed_GetRef().Speed_Set(idir,m_grid[k].GetNeighbour(idir,1).Speed_GetRef().Speed_Get(idir)+speed*m_dt);
+							m_grid[k].GetNeighbour(idir,1).Acceleration_GetRef().Set(idir,m_grid[k].GetNeighbour(idir,1).Acceleration_GetRef().Get(idir)+speed);
 						}
 						break;
 					}

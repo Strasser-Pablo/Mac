@@ -22,16 +22,16 @@ class Policy_Upwind_1_Order : public Policy
 		type_speed_data_value U=Get_Speed_At_Bound(m_neigh,i,j);
 		if(U>0)
 		{
-			U1=m_neigh.Speed_GetRef().Speed_Get(i);
+			U1=m_neigh.Speed_GetRef().Get(i);
 			m_neigh=m_neigh.GetNeighbour(j,-1);
-			U2=m_neigh.Speed_GetRef().Speed_Get(i);
+			U2=m_neigh.Speed_GetRef().Get(i);
 			U*=(U1-U2)*m_1_h.Get(j);
 		}
 		else
 		{
-			U1=m_neigh.Speed_GetRef().Speed_Get(i);
+			U1=m_neigh.Speed_GetRef().Get(i);
 			m_neigh=m_neigh.GetNeighbour(j,1);
-			U2=m_neigh.Speed_GetRef().Speed_Get(i);
+			U2=m_neigh.Speed_GetRef().Get(i);
 			U*=(U2-U1)*m_1_h.Get(j);
 		}
 		return U;

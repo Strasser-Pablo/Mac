@@ -16,6 +16,8 @@ class Algorithms_Solve_Pressure: public Policy
 	using Policy::Get_Gradiant;
 	using Policy::Get_Is_Von_Neumann_Boundary;
 	using Policy::Get_Pressure_If_Correction;
+	using Policy::Solve_Linear_Clean;
+	using Policy::Solve_Linear_FactorizeMatrice;
 	typedef typename DataType::type_data_struct type_data;
 	typedef typename type_data::type_Data_Grid type_grid;
 	typedef typename type_grid::type_data type_data_data;
@@ -31,33 +33,34 @@ class Algorithms_Solve_Pressure: public Policy
 	static const int type_dim=type_speed::type_dim;
 	type_grid& m_grid;
 	const type_spacing_vector& m_1_h;
+	int m_n;
+	int* m_offset;
+	int* m_indice;
+	type_speed_value* m_value;
 	public:
 	Algorithms_Solve_Pressure(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv())
 	{
 	}
-	void Do()
+	void Init_Iteration()
 	{
-
 		struct tms t1;
 		struct tms t2;
 		double conv=double(sysconf(_SC_CLK_TCK));
 		long t_deb=times(&t1);
 
 		// Upper bound of memory usage.
-		int n=m_grid.size_upper();
+		m_n=m_grid.size_upper();
 		int nEntry=(2*type_dim+1)*m_grid.size_upper();
-		int* offset=new int[n+1];
-		int* indice=new int[nEntry];
-		type_speed_value* value=new type_speed_value[nEntry];
-		type_speed_value* b=new type_speed_value[n];
-		type_speed_value* res=new type_speed_value[n];
+		m_offset=new int[m_n+1];
+		m_indice=new int[nEntry];
+		m_value=new type_speed_value[nEntry];
 
 		//Set every layer to empty.
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
-			it.data().Layer_GetRef().SetLayerEmpty();
+			it.data().Id_Cell_GetRef().SetLayerEmpty();
 		}
-		offset[0]=0;
+		m_offset[0]=0;
 		int lay=0;
 		int lay_cur;
 		int off=0;
@@ -65,7 +68,7 @@ class Algorithms_Solve_Pressure: public Policy
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			type_neigh  neigh;
-			if(!it.data().Layer_GetRef().GetIsLayerEmpty())
+			if(!it.data().Id_Cell_GetRef().GetIsLayerEmpty())
 			{
 				continue;
 			}
@@ -78,9 +81,9 @@ class Algorithms_Solve_Pressure: public Policy
 				if(next_neigh.CellType_GetRef().GetIsInDomain())
 				{
 					//Cell has no number assign one.
-					if(next_neigh.Layer_GetRef().GetIsLayerEmpty())
+					if(next_neigh.Id_Cell_GetRef().GetIsLayerEmpty())
 					{
-						next_neigh.Layer_GetRef().SetLayer(lay);
+						next_neigh.Id_Cell_GetRef().SetLayer(lay);
 						lay_cur=lay;
 						++lay;
 					}
@@ -88,7 +91,7 @@ class Algorithms_Solve_Pressure: public Policy
 					//We have a number, use it.
 					else
 					{
-						lay_cur=next_neigh.Layer_GetRef().GetLayer();
+						lay_cur=next_neigh.Id_Cell_GetRef().GetLayer();
 					}
 
 					//Ordered map to store indice value relation.
@@ -114,16 +117,16 @@ class Algorithms_Solve_Pressure: public Policy
 								//NeighBour is in domain, assign a number if needed and add the matrice element to calculate the derivatif.
 								else if(neigh.CellType_GetRef().GetIsInDomain())
 								{
-									if(neigh.Layer_GetRef().GetIsLayerEmpty())
+									if(neigh.Id_Cell_GetRef().GetIsLayerEmpty())
 									{
-										neigh.Layer_GetRef().SetLayer(lay);
+										neigh.Id_Cell_GetRef().SetLayer(lay);
 										lay_cur2=lay;
 										++lay;
 										next.push_back(neigh);
 									}
 									else
 									{
-										lay_cur2=neigh.Layer_GetRef().GetLayer();
+										lay_cur2=neigh.Id_Cell_GetRef().GetLayer();
 									}
 									m_map.insert(type_pair(lay_cur2,pow(m_1_h.Get(i),2)));
 									neigh.Pressure_GetRef().Pressure_Get();
@@ -136,33 +139,55 @@ class Algorithms_Solve_Pressure: public Policy
 					//Insert the value of the map. The map is ordered.
 					for(const_iterator it=m_map.begin();it!=m_map.end();++it)
 					{
-						value[off]=it->second;
-						indice[off]=it->first;
+						m_value[off]=it->second;
+						m_indice[off]=it->first;
 						++off;
 					}
 					//Add current offset.
-					offset[lay_cur+1]=off;
+					m_offset[lay_cur+1]=off;
 				}
 			};
 		}
-		n=lay;
+		m_n=lay;
+		Solve_Linear_FactorizeMatrice(m_n,m_offset,m_indice,m_value);
+
+		long t_end=times(&t2);
+		cout<<"real Pressure_Prepare+Factorize "<<(t_end-t_deb)/conv<<endl;
+		cout<<"real Pressure_Prepare+Factorize "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+	}
+	void End_Iteration()
+	{
+		delete[] m_offset;
+		delete[] m_indice;
+		delete[] m_value;
+		m_offset=nullptr;
+		m_indice=nullptr;
+		m_value=nullptr;
+		Solve_Linear_Clean();
+	}
+	void Divergence_Projection()
+	{
+		type_speed_value* b=new type_speed_value[m_n];
+		type_speed_value* res=new type_speed_value[m_n];
 		// Set b to divergence.
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
+			int lay_cur;
 			if(it.data().CellType_GetRef().GetIsInDomain())
 			{
-				lay_cur=it.data().Layer_GetRef().GetLayer();
+				lay_cur=it.data().Id_Cell_GetRef().GetLayer();
 				b[lay_cur]=Get_Divergence(it.data()).Get();
 			}
 		}
 		// Solve the linear system.
-		Solve_Linear(n,offset,indice,value,b,res);
+		Solve_Linear(m_n,m_offset,m_indice,m_value,b,res);
 		// Set the pressure of cell from the result.
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
+			int lay_cur;
 			if(it.data().CellType_GetRef().GetIsInDomain())
 			{
-				lay_cur=it.data().Layer_GetRef().GetLayer();
+				lay_cur=it.data().Id_Cell_GetRef().GetLayer();
 				it.data().Pressure_GetRef().Pressure_Set(type_pressure(res[lay_cur]));
 			}
 			else
@@ -176,7 +201,7 @@ class Algorithms_Solve_Pressure: public Policy
 			{
 				if(Get_Pressure_If_Correction(it.data(),i))
 				{
-					it.data().Speed_GetRef().Speed_Set(i,it.data().Speed_GetRef().Speed_Get(i)-Get_Gradiant(it.data(),i));
+					it.data().Speed_GetRef().Set(i,it.data().Speed_GetRef().Get(i)-Get_Gradiant(it.data(),i));
 				}
 			}
 		}
@@ -192,16 +217,8 @@ class Algorithms_Solve_Pressure: public Policy
 				}
 			}
 		}
-		delete[] offset;
-		delete[] indice;
-		delete[] value;
 		delete[] b;
 		delete[] res;
-
-		long t_end=times(&t2);
-		cout<<"real solve_pres "<<(t_end-t_deb)/conv<<endl;
-		cout<<"user solve_pres "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
-
 	}
 };
 #endif

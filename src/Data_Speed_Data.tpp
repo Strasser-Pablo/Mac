@@ -5,6 +5,12 @@ void Data_Speed_Data<Dim,TypeData>::Set(int i,const TypeData& d)
 }
 
 template <int Dim,typename TypeData>
+void Data_Speed_Data<Dim,TypeData>::SetZero()
+{
+	m_speed.SetAll(0);
+}
+
+template <int Dim,typename TypeData>
 TypeData Data_Speed_Data<Dim,TypeData>::Get(int i) const
 {
 	return m_speed.Get(i);

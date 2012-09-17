@@ -22,8 +22,8 @@ class Policy_Divergence
 		type_pressure ret(0);
 		for(int i=1;i<=type_dim;++i)
 		{
-			ret-=m_neigh.Speed_GetRef().Speed_Get(i)*m_1_h.Get(i);
-			ret+=m_neigh.GetNeighbour(i,1).Speed_GetRef().Speed_Get(i)*m_1_h.Get(i);
+			ret-=m_neigh.Speed_GetRef().Get(i)*m_1_h.Get(i);
+			ret+=m_neigh.GetNeighbour(i,1).Speed_GetRef().Get(i)*m_1_h.Get(i);
 		}
 		return ret;
 	}

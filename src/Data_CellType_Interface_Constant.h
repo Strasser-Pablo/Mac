@@ -35,11 +35,11 @@ class Data_CellType_Interface_Constant : public Data_CellType_Interface_Implemen
 		}
 		if(sign==1)
 		{
-			return neigh2.GetRef_Speed().Speed_Get_Const(dim);
+			return neigh2.GetRef_Speed().Get_Const(dim);
 		}
 		else
 		{
-			return neigh.GetRef_Speed().Speed_Get_Const(dim);
+			return neigh.GetRef_Speed().Get_Const(dim);
 		}
 	}
 	template <class T_INT, typename Is_Staggered_Left_SFINAE<T_INT,Base,int>::type =0>
@@ -52,11 +52,11 @@ class Data_CellType_Interface_Constant : public Data_CellType_Interface_Implemen
 		}
 		if(sign==1)
 		{
-			return neigh2.Speed_GetRef().Speed_Get_Const(dim);
+			return neigh2.Speed_GetRef().Get_Const(dim);
 		}
 		else
 		{
-			return neigh.Speed_GetRef().Speed_Get_Const(dim);
+			return neigh.Speed_GetRef().Get_Const(dim);
 		}
 	}
 };

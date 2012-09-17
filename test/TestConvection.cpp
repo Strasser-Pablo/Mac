@@ -119,20 +119,29 @@
 // Solve Grid
 #include "../src/Algorithms_Gravity.h"
 #include "../src/Algorithms_Viscosity.h"
-#include "../src/Algorithms_Solve_Pressure.h"
+#include "../src/Algorithms_Solve_Pressure_Empty.h"
 #include "../src/Algorithms_Convection.h"
 
 //Move Particle
 #include "../src/Algorithms_Move_Particles.h"
+
+//Integrator
+#include "../src/Algorithms_Euler.h"
+#include "../src/Algorithms_RungeKutta.h"
 
 // Output
 #include "../src/Algorithms_Output_Only_Speed.h"
 
 #include "../src/DataRef.h"
 
+#include <bitset>
+
+using namespace std;
+
 int main()
 {
 	const int dim=2;
+	const int NBSpeed=3;
 	typedef double type_data_value;
 	const int N=4;
 	const int NStock=pow(N,dim);
@@ -157,8 +166,10 @@ int main()
 	typedef Data_Grid_CellType_To_Grid_CellType<type_cell_type> type_cell_cell;
 	type_cell_cell m_cell_cell(m_celltype);
 	// Data Speed.
-	typedef Data_Grid_Speed<type_Data_Base> type_grid_speed;
-	type_grid_speed m_grid_speed;
+	typedef bitset<dim> type_const;
+	type_const m_const;
+	typedef Data_Grid_Speed<type_Data_Base,type_const> type_grid_speed;
+	type_grid_speed m_grid_speed(m_const);
 
 	// Data Pressure
 	typedef Data_Grid_Pressure<type_Data_Base> type_grid_pressure;
@@ -172,7 +183,7 @@ int main()
 
 	typedef Data_Chunk_Bool_Array<NStock> type_bool_array;
 	type_bool_array m_chunk_bool_array;
-	typedef Data_Chunk_Speed<type_grid_speed,NStock> type_chunk_speed;
+	typedef Data_Chunk_Speed<type_grid_speed,NBSpeed,1,NStock> type_chunk_speed;
 	type_chunk_speed m_chunk_speed(m_grid_speed);
 	typedef Data_Chunk_CellType<type_cell_cell,NStock> type_chunk_celltype;
 	type_chunk_celltype m_chunk_celltype(m_cell_cell);
@@ -239,7 +250,7 @@ int main()
 			Physvector<dim,type_data_value> speed;
 			speed.Set(1,0.0);
 			speed.Set(2,9.9999);
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<dim,type_data_value>(speed));
 			m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
 			m_data_ref.m_data.GetGridData()[v].Layer_GetRef().SetLayer(0);
 		}
@@ -255,7 +266,7 @@ int main()
 			Physvector<dim,type_data_value> speed;
 			speed.Set(1,0.0);
 			speed.Set(2,9.9999);
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<dim,type_data_value>(speed));
 			m_data_ref.m_data.GetGridData()[v].Layer_GetRef().SetLayerEmpty();
 		}
 	}
@@ -269,7 +280,7 @@ int main()
 			Physvector<dim,type_data_value> speed;
 			speed.Set(1,0.0);
 			speed.Set(2,9.9999);
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<dim,type_data_value>(speed));
 			m_data_ref.m_data.GetGridData()[v].Layer_GetRef().SetLayerEmpty();
 		}
 		for(int j=jmax+1;j<=jmax+3;++j)
@@ -280,7 +291,7 @@ int main()
 			Physvector<dim,type_data_value> speed;
 			speed.Set(1,0.0);
 			speed.Set(2,9.9999);
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<dim,type_data_value>(speed));
 			m_data_ref.m_data.GetGridData()[v].Layer_GetRef().SetLayerEmpty();
 		}
 	}
@@ -294,7 +305,7 @@ int main()
 			Physvector<dim,type_data_value> speed;
 			speed.Set(1,0.0);
 			speed.Set(2,9.9999);
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<dim,type_data_value>(speed));
 			m_data_ref.m_data.GetGridData()[v].Layer_GetRef().SetLayerEmpty();
 		}
 	}
@@ -307,17 +318,17 @@ int main()
 		Physvector<dim,type_data_value> speed;
 		speed.Set(1,0.0);
 		speed.Set(2,10.0);
-		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<dim,type_data_value>(speed));
 		m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
-		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(2);
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set_Const(2);
 		m_data_ref.m_data.GetGridData()[v].Layer_GetRef().SetLayer(0);
 
 		v.Set(1,i);
 		v.Set(2,1);
 
-		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<dim,type_data_value>(speed));
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<dim,type_data_value>(speed));
 		m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
-		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(2);
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set_Const(2);
 		m_data_ref.m_data.GetGridData()[v].Layer_GetRef().SetLayer(0);
 	}
 
@@ -364,8 +375,16 @@ int main()
 	typedef Algorithms<type_alg_convection> type_alg_solve_grid;
 	type_alg_solve_grid m_alg_solve_grid(m_alg_convection);
 
-	typedef Algorithms<type_alg_init,type_alg_solve_grid> type_alg;
-	type_alg m_alg(m_alg_init,m_alg_solve_grid);
+	typedef Algorithms_Solve_Pressure_Empty type_solve_pres;
+	type_solve_pres m_solve_pres;
+
+	//policy integrator
+	typedef Policies<type_alg_solve_grid,type_solve_pres> type_pol_ODE;
+	type_pol_ODE m_pol_ODE(m_alg_solve_grid,m_solve_pres);
+	//Integrator
+	//typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
+	typedef Algorithms_RungeKutta<type_data_ref,type_pol_ODE> type_alg_ODE;
+	type_alg_ODE m_alg_ODE(m_data_ref,m_pol_ODE);
 
 	//Policy Output
 	typedef Policy_Output_Grid_Speed<type_data_ref> type_pol_output_speed;
@@ -382,7 +401,8 @@ int main()
 	for(int i=1;i<=1000;++i)
 	{
 	//	cout<<"i "<<i<<endl;
-		m_alg.Do();
+		m_alg_init.Do();
+		m_alg_ODE.Do();
 		m_data_ref.m_data.GetTimingData().m_t+=m_data_ref.m_data.GetTimingData().m_dt;
 	//	cout<<"dt "<<m_data_ref.m_data.GetTimingData().m_dt<<endl;
 	//	cout<<"t "<<m_data_ref.m_data.GetTimingData().m_t<<endl;

@@ -1,103 +1,82 @@
-template <typename DataBase,typename Const,typename Speed>
-void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Set_Const(int i)
+template <typename DataBase,typename Const>
+void Data_Grid_Speed<DataBase,Const>::Set_Const(int i)
 {
 	m_const[i-1]=true;
 }
 
-template <typename DataBase,typename Const,typename Speed>
-void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Set_None_Const(int i)
+template <typename DataBase,typename Const>
+void Data_Grid_Speed<DataBase,Const>::Set_None_Const(int i)
 {
 	m_const[i-1]=false;
 }
 
-template <typename DataBase,typename Const,typename Speed>
-bool Data_Grid_Speed<DataBase,Const,Speed>::Speed_Get_Const(int i) const
+template <typename DataBase,typename Const>
+bool Data_Grid_Speed<DataBase,Const>::Get_Const(int i) const
 {
 	return m_const[i-1];
 }
 
-template <typename DataBase,typename Const,typename Speed>
-void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Set(int i,const type_data_value& val)
+template <typename DataBase,typename Const>
+void Data_Grid_Speed<DataBase,Const>::Set(int i,const type_data_value& val,bool force)
 {
-	if(!m_const[i-1])
+	if(force||!m_const[i-1])
 	{
 		m_speed.Set(i,val);
 	}
 }
-template <typename DataBase,typename Const,typename Speed>
-auto Data_Grid_Speed<DataBase,Const,Speed>::Speed_Get(int i) const -> type_data_value
+
+template <typename DataBase,typename Const>
+void Data_Grid_Speed<DataBase,Const>::SetZero(bool force)
+{
+	if(force||m_const.none())
+	{
+		m_speed.SetZero();
+	}
+	else
+	{
+		for(int i=1;i<=type_dim;++i)
+		{
+			Set(i,0);
+		}
+	}
+}
+
+template <typename DataBase,typename Const>
+auto Data_Grid_Speed<DataBase,Const>::Get(int i) const -> type_data_value
 {
 	return m_speed.Get(i);
 }
 
-template <typename DataBase,typename Const,typename Speed>
-auto Data_Grid_Speed<DataBase,Const,Speed>::Speed_Get() const -> type_speed
+template <typename DataBase,typename Const>
+auto Data_Grid_Speed<DataBase,Const>::Get() const -> type_speed
 {
 	return m_speed;
 }
 
-template <typename DataBase,typename Const,typename Speed>
-void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Set(const type_speed &val)
+template <typename DataBase,typename Const>
+void Data_Grid_Speed<DataBase,Const>::Set(const type_speed &val,bool force)
 {
-	if(m_const.none())
+	if(force||m_const.none())
 	{
 		m_speed=val;
 	}
-	for(int i=1;i<=type_dim;++i)
+	else
 	{
-		Speed_Set(i,val.Get(i));
+		for(int i=1;i<=type_dim;++i)
+		{
+			Set(i,val.Get(i));
+		}
 	}
 }
 
-
-template <typename DataBase,typename Const,typename Speed>
-void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_Set(int i,const type_data_value& val)
-{
-	if(!m_const[i-1])
-	{
-		m_temp_speed.Set(i,val);
-	}
-}
-template <typename DataBase,typename Const,typename Speed>
-auto Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_Get(int i) const -> type_data_value
-{
-	return m_temp_speed.Get(i);
-}
-
-template <typename DataBase,typename Const,typename Speed>
-auto Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_Get() const -> type_speed
-{
-	return m_temp_speed;
-}
-
-template <typename DataBase,typename Const,typename Speed>
-void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_Set(const type_speed &val)
-{
-	if(m_const.none())
-	{
-		m_temp_speed=val;
-	}
-	for(int i=1;i<=type_dim;++i)
-	{
-		Speed_Temp_Set(i,val.Get(i));
-	}
-}
-
-
-template <typename DataBase,typename Const,typename Speed>
-void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Temp_To_Speed()
-{
-	m_speed=m_temp_speed;
-}
-
-template <typename DataBase,typename Const,typename Speed>
-void Data_Grid_Speed<DataBase,Const,Speed>::Speed_Speed_To_Temp()
-{
-	m_temp_speed=m_speed;
-}
-
-template <typename DataBase,typename Const,typename Speed>
-bool Data_Grid_Speed<DataBase,Const,Speed>::Speed_Is_One_Const() const
+template <typename DataBase,typename Const>
+bool Data_Grid_Speed<DataBase,Const>::Is_One_Const() const
 {
 	return m_const.any();
+}
+
+template <typename DataBase,typename Const>
+const Const& Data_Grid_Speed<DataBase,Const>::GetConstRef() const
+{
+	return m_const;
 }

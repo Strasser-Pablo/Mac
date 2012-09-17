@@ -9,6 +9,7 @@
 
 //Data_Chunk
 #include "../src/Data_Chunk_Layer.h"
+#include "../src/Data_Chunk_Id_Cell.h"
 #include "../src/Data_Chunk_Pressure.h"
 #include "../src/Data_Chunk_CellType.h"
 #include "../src/Data_Chunk_Bool_Array.h"
@@ -18,6 +19,7 @@
 //Offset
 #include "../src/Offset.h"
 #include "../src/Offset_Base.h"
+#include "../src/Offset_Base_Id_Cell.h"
 #include "../src/Offset_Base_Layer.h"
 #include "../src/Offset_Base_CellType.h"
 #include "../src/Offset_Base_Speed.h"
@@ -117,7 +119,6 @@
 #include "../src/Algorithms_Calculate_Time_Step.h"
 #include "../src/Algorithms_Delete_MacCell.h"
 #include "../src/Algorithms_Update_CellType_Layer.h"
-#include "../src/Algorithms_Fluid_To_Layer.h"
 #include "../src/Algorithms_Inflow_To_Const.h"
 #include "../src/Algorithms_Solid_To_Const.h"
 
@@ -134,11 +135,21 @@
 // Output
 #include "../src/Algorithms_Output.h"
 
+//Integrator
+#include "../src/Algorithms_Euler.h"
+#include "../src/Algorithms_RungeKutta.h"
+
 #include <sys/times.h>
+
+#include <bitset>
+
+using namespace std;
 
 int main()
 {
 	const int DIM=2;
+	const int NBSpeed=3;
+	//const int NBSpeed=1;
 	typedef double type_data_value;
 	const int N=8;
 	const int NStock=pow(N,DIM);
@@ -152,8 +163,15 @@ int main()
 	typedef Data_Grid_Layer_Empty<type_layer> type_empt_lay;
 	type_empt_lay m_empt_lay(layer);
 
-	typedef Data_Grid_Speed<DataBase> type_grid_speed;
-	type_grid_speed m_grid_speed;
+	typedef Data_Grid_Layer<int> type_id;
+	type_id m_id;
+	typedef Data_Grid_Layer_Empty<type_layer> type_empt_id;
+	type_empt_id m_empt_id(m_id);
+
+	typedef bitset<DIM> type_const;
+	type_const m_const;
+	typedef Data_Grid_Speed<DataBase,type_const> type_grid_speed;
+	type_grid_speed m_grid_speed(m_const);
 
 	typedef Data_Grid_Pressure<DataBase> type_grid_pressure;
 	type_grid_pressure m_grid_pressure;
@@ -174,20 +192,23 @@ int main()
 	typedef Data_Chunk_Layer<type_empt_lay,NStock> type_chunk_layer;
 	type_chunk_layer m_chunk_layer(m_empt_lay);
 
+	typedef Data_Chunk_Id_Cell<type_empt_id,NStock> type_chunk_id;
+	type_chunk_id m_chunk_id(m_empt_id);
+
 	typedef Data_Chunk_Bool_Array<NStock> type_bool_array;
 	type_bool_array m_bool_array;
 
 	typedef Data_Chunk_CellType<type_cell_grid_celltype,NStock> type_chunk_celltype;
 	type_chunk_celltype m_chunk_celltype(m_cell_grid_celltype);
 
-	typedef Data_Chunk_Speed<type_grid_speed,NStock> type_chunk_speed;
+	typedef Data_Chunk_Speed<type_grid_speed,NBSpeed,1,NStock> type_chunk_speed;
 	type_chunk_speed m_chunk_speed(m_grid_speed);
 
 	typedef Data_Chunk_Pressure<type_grid_pressure,NStock> type_chunk_pressure;
 	type_chunk_pressure m_chunk_pressure(m_grid_pressure);
 
-	typedef Data_Chunk<type_bool_array,type_chunk_layer,type_chunk_celltype,type_chunk_speed,type_chunk_pressure> type_chunk;
-	type_chunk m_chunk(m_bool_array,m_chunk_layer,m_chunk_celltype,m_chunk_speed,m_chunk_pressure);
+	typedef Data_Chunk<type_bool_array,type_chunk_layer,type_chunk_id,type_chunk_celltype,type_chunk_speed,type_chunk_pressure> type_chunk;
+	type_chunk m_chunk(m_bool_array,m_chunk_layer,m_chunk_id,m_chunk_celltype,m_chunk_speed,m_chunk_pressure);
 
 	typedef Neighbour_List_Empty<DIM,type_chunk> type_neigh;
 	type_neigh m_neigh(m_chunk);
@@ -195,7 +216,8 @@ int main()
 	typedef Offset<int,DIM,N> type_off;
 	typedef Offset_Base<type_off,type_neigh> type_off_base;
 	typedef Offset_Base_Layer<type_empt_lay,type_off_base> type_off_base_layer;
-	typedef Offset_Base_CellType<type_cell_grid_celltype,type_off_base_layer> type_off_base_celltype;
+	typedef Offset_Base_Id_Cell<type_empt_id,type_off_base_layer> type_off_base_id;
+	typedef Offset_Base_CellType<type_cell_grid_celltype,type_off_base_id> type_off_base_celltype;
 	typedef Offset_Base_Speed<type_grid_speed,type_off_base_celltype> type_off_base_speed;
 	typedef Offset_Base_Pressure<type_grid_pressure,type_off_base_speed> type_off_base_pressure;
 	typedef Offset_Base_Neighbour<type_off_base_pressure> type_off_base_neighbour;
@@ -253,23 +275,23 @@ int main()
 		Physvector<DIM,type_data_value> speed;
 		speed.Set(1,0.0);
 		speed.Set(2,1.0);
-		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed));
 		m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetInflow();
-		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(1);
-		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(2);
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set_Const(1);
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set_Const(2);
 
 		v.Set(2,y0+1);
 		speed.Set(1,0.0);
 		speed.Set(2,1.0);
-		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
+		m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed));
 	}
 	Physvector<DIM,type_data_value> speed;
 	v.Set(2,y0);
 	v.Set(1,imax+1);
 	speed.Set(1,0.0);
 	speed.Set(2,0.0);
-	m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set(Data_Speed_Data<DIM,type_data_value>(speed));
-	m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Speed_Set_Const(1);
+	m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed));
+	m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set_Const(1);
 
 	//Policy First Init
 	typedef Policies<> type_pol_init_first;
@@ -325,27 +347,17 @@ int main()
 	type_pol_laplacian_speed m_pol_laplacian_speed(m_data_ref);
 	typedef Policy_Viscosity_Apply_If<type_data_ref> type_pol_viscosity_apply_if;
 	type_pol_viscosity_apply_if m_pol_viscosity_apply_if;
-	typedef Policy_Solve_Linear_Umfpack<double> type_pol_solve_linear;
-	type_pol_solve_linear m_pol_solve_linear;
-	typedef Policy_Divergence<type_data_ref> type_pol_divergence;
-	type_pol_divergence m_pol_divergence(m_data_ref);
-	typedef Policy_Gradiant<type_data_ref> type_pol_gradiant;
-	type_pol_gradiant m_pol_gradiant(m_data_ref);
-	typedef Policy_Von_Neumann_Boundary<type_data_ref> type_pol_von_neumann_boundary;
-	type_pol_von_neumann_boundary m_pol_von_neumann_boundary(m_data_ref);
 	typedef Policy_Speed_Interpolation_Linear_Symmetric<type_data_ref> type_pol_speed_interpolation;
 	type_pol_speed_interpolation m_pol_speed_interpolation(m_data_ref);
 	typedef Policy_Convection_Apply_If<type_data_ref> type_pol_convection_apply_if;
 	type_pol_convection_apply_if m_pol_convection_apply_if;
 	typedef Policy_Upwind_1_Order<type_data_ref,type_pol_speed_interpolation> type_pol_convection;
 	type_pol_convection m_pol_convection(m_data_ref,m_pol_speed_interpolation);
-	typedef Policy_Pressure_If_Correction<type_data_ref> type_pol_pres_cor_if;
-	type_pol_pres_cor_if m_pol_pres_cor_if;
 	typedef Policy_Wind<type_data_ref> type_pol_wind;
 	type_pol_wind m_pol_wind(100,1,1);
 
-	typedef Policies<type_pol_gravity,type_pol_laplacian,type_pol_laplacian_speed,type_pol_viscosity_apply_if,type_pol_solve_linear,type_pol_divergence,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_convection_apply_if,type_pol_convection,type_pol_pres_cor_if,type_pol_wind> type_pol_solve_grid;
-	type_pol_solve_grid m_pol_solve_grid(m_pol_gravity,m_pol_laplacian,m_pol_laplacian_speed,m_pol_viscosity_apply_if,m_pol_solve_linear,m_pol_divergence,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_convection_apply_if,m_pol_convection,m_pol_pres_cor_if,m_pol_wind);
+	typedef Policies<type_pol_gravity,type_pol_laplacian,type_pol_laplacian_speed,type_pol_viscosity_apply_if,type_pol_convection_apply_if,type_pol_convection,type_pol_wind> type_pol_solve_grid;
+	type_pol_solve_grid m_pol_solve_grid(m_pol_gravity,m_pol_laplacian,m_pol_laplacian_speed,m_pol_viscosity_apply_if,m_pol_convection_apply_if,m_pol_convection,m_pol_wind);
 
 	//Algorithms Solve Grid
 	typedef Algorithms_Gravity<type_data_ref,type_pol_solve_grid> type_alg_gravity;
@@ -356,14 +368,37 @@ int main()
 	type_alg_convection m_alg_convection(m_data_ref,m_pol_solve_grid);
 	typedef Algorithms_Apply_Wind<type_data_ref,type_pol_solve_grid> type_alg_wind;
 	type_alg_wind m_alg_wind(m_data_ref,m_pol_solve_grid);
-	typedef Algorithms_Solve_Pressure<type_data_ref,type_pol_solve_grid> type_alg_solve_pressure;
-	type_alg_solve_pressure m_alg_solve_pressure(m_data_ref,m_pol_solve_grid);
 
-	typedef Algorithms<type_alg_gravity,type_alg_viscosity,type_alg_convection,type_alg_wind,type_alg_solve_pressure> type_alg_solve_grid;
-	type_alg_solve_grid m_alg_solve_grid(m_alg_gravity,m_alg_viscosity,m_alg_convection,m_alg_wind,m_alg_solve_pressure);
+	typedef Algorithms<type_alg_gravity,type_alg_viscosity,type_alg_convection> type_alg_solve_grid;
+	type_alg_solve_grid m_alg_solve_grid(m_alg_gravity,m_alg_viscosity,m_alg_convection);
 
-	typedef Algorithms<type_alg_init,type_alg_solve_grid> type_alg;
-	type_alg m_alg(m_alg_init,m_alg_solve_grid);
+	//Policy Pressure
+	typedef Policy_Solve_Linear_Umfpack<double> type_pol_solve_linear;
+	type_pol_solve_linear m_pol_solve_linear;
+	typedef Policy_Divergence<type_data_ref> type_pol_divergence;
+	type_pol_divergence m_pol_divergence(m_data_ref);
+	typedef Policy_Gradiant<type_data_ref> type_pol_gradiant;
+	type_pol_gradiant m_pol_gradiant(m_data_ref);
+	typedef Policy_Von_Neumann_Boundary<type_data_ref> type_pol_von_neumann_boundary;
+	type_pol_von_neumann_boundary m_pol_von_neumann_boundary(m_data_ref);
+	typedef Policy_Pressure_If_Correction<type_data_ref> type_pol_pres_cor_if;
+	type_pol_pres_cor_if m_pol_pres_cor_if;
+
+	typedef Policies<type_pol_solve_linear,type_pol_divergence,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_pres_cor_if> type_pol_pres;
+	type_pol_pres m_pol_pres(m_pol_solve_linear,m_pol_divergence,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_pres_cor_if);
+	
+	//Algorithm Solve Pressure
+	typedef Algorithms_Solve_Pressure<type_data_ref,type_pol_pres> type_alg_solve_pressure;
+	type_alg_solve_pressure m_alg_solve_pressure(m_data_ref,m_pol_pres);
+
+	//Policy ODE
+	typedef Policies<type_alg_solve_grid,type_alg_solve_pressure> type_pol_ODE;
+	type_pol_ODE m_pol_ODE(m_alg_solve_grid,m_alg_solve_pressure);
+
+	//Algorithms ODE
+	//typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
+	typedef Algorithms_RungeKutta<type_data_ref,type_pol_ODE> type_alg_ODE;
+	type_alg_ODE m_alg_ODE(m_data_ref,m_pol_ODE);
 
 	//Policy Move
 	typedef Policy_Advance_Ode_RungeKutta<type_data_ref> type_pol_advance_ode;
@@ -398,8 +433,6 @@ int main()
 	type_pol_fluid_to_layer m_pol_fluid_to_layer;
 
 	//Algorithms Fluid to Layer
-	typedef Algorithms_Fluid_To_Layer<type_data_ref,type_pol_fluid_to_layer> type_alg_fluid_to_layer;
-	type_alg_fluid_to_layer m_alg_fluid_to_layer(m_data_ref,m_pol_fluid_to_layer);
 	m_alg_first_init.Do();
 	for(int i=1;;++i)
 	{
@@ -410,9 +443,8 @@ int main()
 		struct tms to2;
 		double conv=double(sysconf(_SC_CLK_TCK));
 		long t_deb=times(&t1);
-		m_alg.Do();
-		m_alg_fluid_to_layer.Do();
-		m_alg_update_celltype.Do();
+		m_alg_init.Do();
+		m_alg_ODE.Do();
 		m_alg_extrapolate_init.Do();
 		m_alg_move.Do();
 		m_data_ref.m_data.GetTimingData().m_t+=m_data_ref.m_data.GetTimingData().m_dt;

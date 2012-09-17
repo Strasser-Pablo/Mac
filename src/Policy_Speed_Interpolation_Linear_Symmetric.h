@@ -62,12 +62,12 @@ class Policy_Speed_Interpolation_Linear_Symmetric
 		{
 			if(i!=k)
 			{
-				type_speed_data_value ret=(1-pos_scal.Get(i))*(neigh.Speed_GetRef().Speed_Get(k))+pos_scal.Get(i)*(neigh.GetNeighbour(i,1).Speed_GetRef().Speed_Get(k));
+				type_speed_data_value ret=(1-pos_scal.Get(i))*(neigh.Speed_GetRef().Get(k))+pos_scal.Get(i)*(neigh.GetNeighbour(i,1).Speed_GetRef().Get(k));
 				return ret;
 			}
 			else
 			{
-				type_speed_data_value ret=(0.5-pos_scal.Get(i))*(neigh.Speed_GetRef().Speed_Get(k))+(0.5+pos_scal.Get(i))*(neigh.GetNeighbour(i,1).Speed_GetRef().Speed_Get(k));
+				type_speed_data_value ret=(0.5-pos_scal.Get(i))*(neigh.Speed_GetRef().Get(k))+(0.5+pos_scal.Get(i))*(neigh.GetNeighbour(i,1).Speed_GetRef().Get(k));
 				return ret;
 			}
 		}
@@ -121,9 +121,9 @@ class Policy_Speed_Interpolation_Linear_Symmetric
 	{
 		if(i==j)
 		{
-			return neigh.Speed_GetRef().Speed_Get(j);
+			return neigh.Speed_GetRef().Get(j);
 		}
-		return 0.25*(neigh.Speed_GetRef().Speed_Get(j)+neigh.GetNeighbour(j,1).Speed_GetRef().Speed_Get(j)+neigh.GetNeighbour(i,-1).Speed_GetRef().Speed_Get(j)+neigh.GetNeighbour(i,-1).GetNeighbour(j,1).Speed_GetRef().Speed_Get(j));
+		return 0.25*(neigh.Speed_GetRef().Get(j)+neigh.GetNeighbour(j,1).Speed_GetRef().Get(j)+neigh.GetNeighbour(i,-1).Speed_GetRef().Get(j)+neigh.GetNeighbour(i,-1).GetNeighbour(j,1).Speed_GetRef().Get(j));
 	}
 	Policy_Speed_Interpolation_Linear_Functor_Symmetric<Data>& Get_Speed_Functor()
 	{

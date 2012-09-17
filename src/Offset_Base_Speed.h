@@ -29,6 +29,31 @@ class Offset_Base_Speed : public Base
 	{
 		return *(this->m_base->Speed_GetPointer(i)+this->m_off.Get());
 	}
+
+	Data* Acceleration_GetPointer()
+	{
+		return this->m_base->Acceleration_GetPointer()+this->m_off.Get();
+	}
+	Data& Acceleration_GetRef()
+	{
+		return *(this->m_base->Acceleration_GetPointer()+this->m_off.Get());
+	}
+	const Data& Acceleration_GetRef() const
+	{
+		return *(this->m_base->Acceleration_GetPointer()+this->m_off.Get());
+	}
+	Data* Acceleration_GetPointer(int i)
+	{
+		return this->m_base->Acceleration_GetPointer(i)+this->m_off.Get();
+	}
+	Data& Acceleration_GetRef(int i)
+	{
+		return *(this->m_base->Acceleration_GetPointer(i)+this->m_off.Get());
+	}
+	const Data& Acceleration_GetRef(int i) const
+	{
+		return *(this->m_base->Acceleration_GetPointer(i)+this->m_off.Get());
+	}
 	Offset_Base_Speed()
 	{
 	}

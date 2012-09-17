@@ -26,7 +26,7 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			type_key k=it.key();
-			if(it.data().Speed_GetRef().Speed_Is_One_Const())
+			if(it.data().Speed_GetRef().Is_One_Const())
 			{
 				m_set.insert(it.key());
 			}
@@ -40,7 +40,7 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 				k.GetRef(i)+=1;
 				for(int j=1;j<=type_dim;++j)
 				{
-					m_grid[k].Speed_GetRef().Speed_Set(j,0);
+					m_grid[k].Speed_GetRef().Set(j,0);
 				}
 				k.GetRef(i)-=1;
 			}
@@ -52,9 +52,9 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 			for(int i=1;i<=type_dim;++i)
 			{
 				k.GetRef(i)+=1;
-				if(m_grid[k0].Speed_GetRef().Speed_Get_Const(i))
+				if(m_grid[k0].Speed_GetRef().Get_Const(i))
 				{
-					m_grid[k].Speed_GetRef().Speed_Set(i,m_grid[k0].Speed_GetRef().Speed_Get(i));
+					m_grid[k].Speed_GetRef().Set(i,m_grid[k0].Speed_GetRef().Get(i));
 				}
 				k.GetRef(i)-=1;
 			}

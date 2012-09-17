@@ -22,16 +22,16 @@ class Policy_Convection_Center : public Policy
 			type_speed_data_value U1;
 			type_speed_data_value U2;
 			type_speed_data_value U=Get_Speed_At_Bound(m_neigh,i,j);
-			U1=m_neigh.GetNeighbour(j,-1).Speed_GetRef().Speed_Get(i);
-			U2=m_neigh.GetNeighbour(j,1).Speed_GetRef().Speed_Get(i);
+			U1=m_neigh.GetNeighbour(j,-1).Speed_GetRef().Get(i);
+			U2=m_neigh.GetNeighbour(j,1).Speed_GetRef().Get(i);
 			U*=0.5*(U2-U1)*m_1_h.Get(j);
 			return U;
 		}
 		else
 		{
-			type_speed_data_value U0=m_neigh.Speed_GetRef().Speed_Get(i);
-			type_speed_data_value U1=m_neigh.GetNeighbour(i,1).Speed_GetRef().Speed_Get(i);
-			type_speed_data_value U2=m_neigh.GetNeighbour(i,-1).Speed_GetRef().Speed_Get(i);
+			type_speed_data_value U0=m_neigh.Speed_GetRef().Get(i);
+			type_speed_data_value U1=m_neigh.GetNeighbour(i,1).GetRef().Get(i);
+			type_speed_data_value U2=m_neigh.GetNeighbour(i,-1).GetRef().Get(i);
 			type_speed_data_value U=0.25*U1+0.25*U2+0.5*U0;
 			U*=0.5*(U1-U2)*m_1_h.Get(j);
 			return U;

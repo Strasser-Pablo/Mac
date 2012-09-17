@@ -9,14 +9,11 @@ class Algorithms_Viscosity : public Policy
 	typedef typename Data::type_data_struct::type_Data_Grid type_Data_Grid;
 	typedef typename type_Data_Grid::type_data::type_speed::type_data_value type_data_value;
 	typedef typename type_Data_Grid::iterator iterator;
-	typedef typename Data::type_data_struct::type_Data_Timing type_Data_Timing;
-	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
 	static const int type_dim=type_Data_Grid::type_dim;
 	type_Data_Grid& m_grid;
-	const type_Time_Type& m_dt;
 	const type_data_value& m_viscosity;
 	public:
-	Algorithms_Viscosity(Data data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt),m_viscosity(data.m_data.GetGridData().m_viscosity)
+	Algorithms_Viscosity(Data data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_viscosity(data.m_data.GetGridData().m_viscosity)
 	{
 	}
 	void Do()
@@ -25,17 +22,8 @@ class Algorithms_Viscosity : public Policy
 		{
 			if(Get_If_Apply_Viscosity(it.data()))
 			{
-				it.data().Speed_GetRef().Speed_Speed_To_Temp();
-				it.data().Speed_GetRef().Speed_Temp_Set(it.data().Speed_GetRef().Speed_Temp_Get()+Get_Laplacian_Speed(it.data())*m_viscosity*m_dt);
+				it.data().Acceleration_GetRef().Set(it.data().Acceleration_GetRef().Get()+Get_Laplacian_Speed(it.data())*m_viscosity);
 			}
-			else
-			{
-				it.data().Speed_GetRef().Speed_Speed_To_Temp();
-			}
-		}
-		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
-		{
-			it.data().Speed_GetRef().Speed_Temp_To_Speed();
 		}
 	}
 };

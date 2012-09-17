@@ -90,7 +90,6 @@
 #include "../src/Policy_Laplacian.h"
 #include "../src/Policy_Laplacian_Speed.h"
 #include "../src/Policy_Viscosity_Apply_If.h"
-#include "../src/Policy_Solve_Linear_Umfpack.h"
 #include "../src/Policy_Divergence.h"
 #include "../src/Policy_Gradiant.h"
 #include "../src/Policy_Von_Neumann_Boundary.h"
@@ -107,6 +106,7 @@
 #include "../src/Policy_Pressure_If_Correction.h"
 #include "../src/Policy_Wind.h"
 #include "../src/Policy_Depth.h"
+#include "../src/Policy_LinearUpdate.h"
 /// To add Convection
 
 //Algorithms
@@ -127,7 +127,7 @@
 // Solve Grid
 #include "../src/Algorithms_Gravity.h"
 #include "../src/Algorithms_Viscosity.h"
-#include "../src/Algorithms_Solve_Pressure.h"
+#include "../src/Algorithms_Solve_Pressure_Update.h"
 #include "../src/Algorithms_Solve_Pressure_Empty_Pressure.h"
 #include "../src/Algorithms_Convection.h"
 #include "../src/Algorithms_Apply_Wind.h"
@@ -148,6 +148,7 @@
 #include <stdlib.h>
 
 #include <bitset>
+
 
 using namespace std;
 
@@ -396,8 +397,8 @@ int main()
 
 
 	//Policy Solve Pressure;
-	typedef Policy_Solve_Linear_Umfpack<double> type_pol_solve_linear;
-	type_pol_solve_linear m_pol_solve_linear;
+	typedef Policy_LinearUpdate type_pol_update;
+	type_pol_update m_pol_update;
 	typedef Policy_Pressure_If_Correction<type_data_ref> type_pol_pres_cor_if;
 	type_pol_pres_cor_if m_pol_pres_cor_if;
 	typedef Policy_Gradiant<type_data_ref> type_pol_gradiant;
@@ -407,11 +408,11 @@ int main()
 	typedef Policy_Divergence<type_data_ref> type_pol_divergence;
 	type_pol_divergence m_pol_divergence(m_data_ref);
 
-	typedef Policies<type_pol_solve_linear,type_pol_pres_cor_if,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_divergence> type_pol_pressure;
-	type_pol_pressure m_pol_pressure(m_pol_solve_linear,m_pol_pres_cor_if,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_divergence);
+	typedef Policies<type_pol_update,type_pol_pres_cor_if,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_divergence> type_pol_pressure;
+	type_pol_pressure m_pol_pressure(m_pol_update,m_pol_pres_cor_if,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_divergence);
 	
 	//Algorithms Solve Pressure
-	typedef Algorithms_Solve_Pressure<type_data_ref,type_pol_pressure> type_alg_solve_pressure;
+	typedef Algorithms_Solve_Pressure_Update<type_data_ref,type_pol_pressure> type_alg_solve_pressure;
 	//typedef Algorithms_Solve_Pressure_Empty_Pressure<type_data_ref> type_alg_solve_pressure;
 	type_alg_solve_pressure m_alg_solve_pressure(m_data_ref,m_pol_pressure);
 	//type_alg_solve_pressure m_alg_solve_pressure(m_data_ref);

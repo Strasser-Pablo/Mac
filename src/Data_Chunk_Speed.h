@@ -2,57 +2,89 @@
 #define Data_Chunk_Speed_H
 
 
-template <typename DataSpeed,int NBSpeed,int N>
+template <typename DataSpeed,int NBSpeed,int NBAcceleration,int N>
 class Data_Chunk_Speed
 {
 	public:
-	typedef typename DataSpeed::type_speed DataSpeedContainer;
 	typedef typename DataSpeed::type_const Const;
 	private:
 	const static int type_dim=DataSpeed::type_dim;
-	static int ispeed;
-	const DataSpeedContainer& m_cop;
-	DataSpeed* m_data[NBSpeed];
-	DataSpeedContainer* m_temp_speed;
+	const DataSpeed& m_cop;
+	DataSpeed* m_data_speed[NBSpeed];
+	DataSpeed* m_data_acceleration[NBAcceleration];
 	Const* m_const;
 	public:
-	typedef Data_Chunk_Speed<DataSpeed,NBSpeed,N> type_chunk_speed;
-	Data_Chunk_Speed(const DataSpeedContainer& cop):m_cop(cop),m_temp_speed(nullptr),m_const(nullptr)
+	static int ispeed;
+	static int iacceleration;
+	typedef Data_Chunk_Speed<DataSpeed,NBSpeed,NBAcceleration,N> type_chunk_speed;
+	Data_Chunk_Speed(const DataSpeed& cop):m_cop(cop),m_const(nullptr)
 	{
 		for(int i=0;i<NBSpeed;++i)
 		{
-			m_data[i]=nullptr;
+			m_data_speed[i]=nullptr;
+		}
+		for(int i=0;i<NBAcceleration;++i)
+		{
+			m_data_acceleration[i]=nullptr;
 		}
 	}
 	DataSpeed* Speed_GetPointer(int i=type_chunk_speed::ispeed)
 	{
-		return m_data[i];
+		return m_data_speed[i];
 	}
 	DataSpeed& Speed_GetRef(int i=type_chunk_speed::ispeed)
 	{
-		return *m_data[i];
+		return *m_data_speed[i];
 	}
 	const DataSpeed& Speed_GetRef(int i=type_chunk_speed::ispeed) const
 	{
-		return *m_data[i];
+		return *m_data_speed[i];
 	}
 	void Speed_SetPointer(DataSpeed* data,int i=type_chunk_speed::ispeed)
 	{
-		m_data[i]=data;
+		m_data_speed[i]=data;
+	}
+
+	DataSpeed* Acceleration_GetPointer(int i=type_chunk_speed::iacceleration)
+	{
+		return m_data_acceleration[i];
+	}
+	DataSpeed& Acceleration_GetRef(int i=type_chunk_speed::iacceleration)
+	{
+		return *m_data_acceleration[i];
+	}
+	const DataSpeed& Acceleration_GetRef(int i=type_chunk_speed::iacceleration) const
+	{
+		return *m_data_acceleration[i];
+	}
+	void Acceleration_SetPointer(DataSpeed* data,int i=type_chunk_speed::iacceleration)
+	{
+		m_data_acceleration[i]=data;
 	}
 	typedef DataSpeed type_speed;
 
 	void Allocate()
 	{
 		UnAllocate();
-		m_temp_speed=new DataSpeedContainer(m_cop);
-		m_const=new Const[N];
+		m_const=reinterpret_cast<Const*>(::operator new (N*sizeof(Const)));
+		for(int i=0;i<N;++i)
+		{
+			new  (m_const+i) Const(m_cop.GetConstRef());
+		}
 		for(int i=0;i<NBSpeed;++i)
 		{
-			m_data[i]=reinterpret_cast<DataSpeed*>(::operator new (N*sizeof(DataSpeed)));
+			m_data_speed[i]=reinterpret_cast<DataSpeed*>(::operator new (N*sizeof(DataSpeed)));
 			for(int j=0;j<N;++j)
 			{
-				new  (m_data[i]+j) DataSpeed(*m_temp_speed,m_const[j]);
+				new  (m_data_speed[i]+j) DataSpeed(m_cop,m_const[j]);
+			}
+		}
+		for(int i=0;i<NBAcceleration;++i)
+		{
+			m_data_acceleration[i]=reinterpret_cast<DataSpeed*>(::operator new (N*sizeof(DataSpeed)));
+			for(int j=0;j<N;++j)
+			{
+				new  (m_data_acceleration[i]+j) DataSpeed(m_cop,m_const[j]);
 			}
 		}
 	}
@@ -60,20 +92,37 @@ class Data_Chunk_Speed
 	{
 		for(int i=0;i<NBSpeed;++i)
 		{
-			if(m_data[i]!=nullptr)
+			if(m_data_speed[i]!=nullptr)
 			{
 				for(int j=0;j<N;++j)
 				{
-					m_data[i][j].~DataSpeed();
+					m_data_speed[i][j].~DataSpeed();
 				}
-				::operator delete(m_data[i]);
+				::operator delete(m_data_speed[i]);
 			}
 		}
-		delete m_temp_speed;
-		delete[] m_const;
+		for(int i=0;i<NBAcceleration;++i)
+		{
+			if(m_data_acceleration[i]!=nullptr)
+			{
+				for(int j=0;j<N;++j)
+				{
+					m_data_acceleration[i][j].~DataSpeed();
+				}
+				::operator delete(m_data_acceleration[i]);
+			}
+		}
+		for(int i=0;i<N;++i)
+		{
+			m_const[i].~Const();
+		}
+		::operator delete(m_const);
 	}
 };
 
-template <typename DataSpeed,int NBSpeed,int N>
-int Data_Chunk_Speed<DataSpeed,NBSpeed,N>::ispeed=0;
+template <typename DataSpeed,int NBSpeed,int NBAcceleration,int N>
+int Data_Chunk_Speed<DataSpeed,NBSpeed,NBAcceleration,N>::ispeed=0;
+
+template <typename DataSpeed,int NBSpeed,int NBAcceleration,int N>
+int Data_Chunk_Speed<DataSpeed,NBSpeed,NBAcceleration,N>::iacceleration=0;
 #endif

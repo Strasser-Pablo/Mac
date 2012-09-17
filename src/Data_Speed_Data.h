@@ -113,6 +113,7 @@ class Data_Speed_Data : public Data_Speed_Get<Dim,TypeData>
 	 * @return Value to get.
 	 **/
 	TypeData Get(int i) const __attribute__ ((pure));
+	void SetZero();
 	/**
 	 * @brief
 	 * Get the ith component to the given value.

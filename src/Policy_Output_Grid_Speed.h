@@ -145,7 +145,7 @@ class Policy_Output_Grid_Speed
 				{
 					continue;
 				}
-				vtkspeedarray->InsertComponent(it.data().Layer_GetRef().GetLayer(),0,it.data().Speed_GetRef().Speed_Get(ispeed));
+				vtkspeedarray->InsertComponent(it.data().Layer_GetRef().GetLayer(),0,it.data().Speed_GetRef().Get(ispeed));
 			}
 			if(ispeed==1)
 			{

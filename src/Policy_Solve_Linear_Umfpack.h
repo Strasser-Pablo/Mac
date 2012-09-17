@@ -6,9 +6,35 @@
 template <typename Data>
 class Policy_Solve_Linear_Umfpack
 {
+	double controle[UMFPACK_CONTROL];
+	void *m_Symbolic;
+	void *m_Numeric ;
 	public:
 	Policy_Solve_Linear_Umfpack()
 	{
+		umfpack_di_defaults(controle);
+		controle[UMFPACK_STRATEGY]=UMFPACK_STRATEGY_SYMMETRIC;
+	}
+	void Solve_Linear_FactorizeMatrice(int n,int* offset,int* indice,Data* value)
+	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
+		if(n!=0)
+		{
+			cout<<"n system size "<<n<<endl;
+			(void) umfpack_di_symbolic (n, n,offset,indice,value,&m_Symbolic, controle, nullptr) ;
+			(void) umfpack_di_numeric (offset,indice,value,m_Symbolic,&m_Numeric,controle, nullptr) ;
+		}
+		long t_end=times(&t2);
+		cout<<"real Matrice Factorize "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Matrice Factorize "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+	}
+	void Solve_Linear_Clean()
+	{
+		umfpack_di_free_symbolic (&m_Symbolic) ;
+		umfpack_di_free_numeric (&m_Numeric) ;
 	}
 	void Solve_Linear(int n,int* offset,int* indice,Data* value,Data* b,Data* res)
 	{
@@ -18,37 +44,11 @@ class Policy_Solve_Linear_Umfpack
 		long t_deb=times(&t1);
 		if(n!=0)
 		{
-			/*
-			for(int i=0;i<n;++i)
-			{
-				cout<<"line "<<i<<endl;
-				for(int off=offset[i];off<offset[i+1];++off)
-				{
-					cout<<"indice "<<indice[off]<<endl;
-					cout<<"value "<<value[off]<<endl;
-				}
-			}
-			for(int i=0;i<n;++i)
-			{
-				cout<<"b "<<b[i]<<endl;
-			}
-			*/
-
-			double controle[UMFPACK_CONTROL];
-			umfpack_di_defaults(controle);
-			controle[UMFPACK_STRATEGY]=UMFPACK_STRATEGY_SYMMETRIC;
-			void *Symbolic, *Numeric ;
-			(void) umfpack_di_symbolic (n, n,offset,indice,value,&Symbolic, controle, nullptr) ;
-			(void) umfpack_di_numeric (offset,indice,value,Symbolic,&Numeric,controle, nullptr) ;
-			umfpack_di_free_symbolic (&Symbolic) ;
-			(void) umfpack_di_solve (UMFPACK_A,offset,indice,value,res,b, Numeric, controle, nullptr) ;
-			umfpack_di_free_numeric (&Numeric) ;
-			cout<<"n system size "<<n<<endl;
+			(void) umfpack_di_solve (UMFPACK_A,offset,indice,value,res,b,m_Numeric, controle, nullptr) ;
 		}
 		long t_end=times(&t2);
-		cout<<"real solve_lin "<<(t_end-t_deb)/conv<<endl;
-		cout<<"user solve_lin "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
-
+		cout<<"real Matrice Solve "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Matrice Solve "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 
