@@ -134,7 +134,7 @@ struct Policy_LinearUpdate
 	min_lena(1000000),grow_lena(100),min_max_n(10000),grow_max_n(10)
 	{
 		luparm[0]=6;
-		luparm[1]=10;
+		luparm[1]=-1;
 		luparm[2]=5;
 		luparm[5]=0;
 		luparm[7]=1;
