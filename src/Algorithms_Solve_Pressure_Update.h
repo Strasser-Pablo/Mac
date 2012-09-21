@@ -37,7 +37,7 @@ class Algorithms_Solve_Pressure_Update: public Policy
 	static const int type_dim=type_speed::type_dim;
 	type_grid& m_grid;
 	const type_spacing_vector& m_1_h;
-	type_Time_Type m_dt;
+	const type_Time_Type& m_dt;
 	type_speed_value* m_value;
 	bool m_bfactorization;
 	int nb_fact;
