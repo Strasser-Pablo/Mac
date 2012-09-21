@@ -386,7 +386,8 @@ class Algorithms_Solve_Pressure_Update: public Policy
 		}
 		long t_end=times(&t2);
 		cout<<"real Pressure_Update_Factorization "<<(t_end-t_deb)/conv<<endl;
-		cout<<"real Pressure_Update_Factorization "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		cout<<"user Pressure_Update_Factorization "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		cout<<"size "<<m_n<<endl;
 	}
 	public:
 	Algorithms_Solve_Pressure_Update(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_dt(data.m_data.GetTimingData().m_dt),m_bfactorization(false),m_a(nullptr),m_indc(nullptr),m_indr(nullptr),m_ip(nullptr),m_iq(nullptr),m_lenc(nullptr),m_lenr(nullptr),m_locc(nullptr),m_locr(nullptr),m_iploc(nullptr),m_iqloc(nullptr),nb_fact(0)
@@ -505,6 +506,7 @@ class Algorithms_Solve_Pressure_Update: public Policy
 		long t_end=times(&t2);
 		cout<<"real Pressure_Projection "<<(t_end-t_deb)/conv<<endl;
 		cout<<"user Pressure_Projection "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		cout<<"size "<<m_n<<endl;
 	}
 	void Complete_Factorization()
 	{
@@ -653,6 +655,7 @@ class Algorithms_Solve_Pressure_Update: public Policy
 		long t_end=times(&t2);
 		cout<<"real Pressure_Complete_Factorization "<<(t_end-t_deb)/conv<<endl;
 		cout<<"user Pressure_Complete_Factorization "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		cout<<"size "<<m_n<<endl;
 		if(inform==7)
 		{
 			cout<<"complete refactorization because of lena to small for fac "<<nb_fact<<endl;

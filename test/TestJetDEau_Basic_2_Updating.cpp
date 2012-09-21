@@ -490,7 +490,7 @@ int main()
 		m_data_ref.m_data.GetTimingData().m_t+=m_data_ref.m_data.GetTimingData().m_dt;
 		cout<<"dt "<<m_data_ref.m_data.GetTimingData().m_dt<<endl;
 		cout<<"t "<<m_data_ref.m_data.GetTimingData().m_t<<endl;
-	//	if(i%20==1)
+		if(i%20==1)
 		{
 			long to_deb=times(&to1);
 			m_alg_output.Do();
