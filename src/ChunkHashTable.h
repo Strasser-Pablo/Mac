@@ -33,7 +33,7 @@ public:
 	typedef typename Offset::type_offset type_base_offset;
 	typedef Offset type_offset;
 protected:
-	type_base_offset ToOffsetFromKey(const TypeKey& key) const __attribute__ ((const));
+	type_base_offset ToOffsetFromKey(const TypeKey& key) const;
 public:
 	typedef typename type_base_offset::type_type type_value_offset;
 	typedef TypeData type_data;

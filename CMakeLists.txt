@@ -34,6 +34,9 @@ option (USE_COMPILER_EXTRA "Build with -WExtra" OFF)
 option (USE_COMPILER_OPTIMISATION_FLAG "Optimize Code" on)
 
 option (USE_LUSOL "Use LUSOL Fortran code" on)
+
+option (USE_TEST_COMPILER_FLAG "Use Test Compiler Flag" on)
+
 include(CheckCXXCompilerFlag)
 find_package( Boost 1.46.0 COMPONENTS "serialization")
 link_directories ( ${Boost_LIBRARY_DIRS} )
@@ -53,6 +56,8 @@ if(USE_LUSOL)
 	target_link_libraries(lib_lusol ${BLAS_LIBRARIES})
 	set_target_properties(lib_lusol PROPERTIES LINK_FLAGS "${BLAS_LINKER_FLAGS}")
 endif(USE_LUSOL)
+
+
 if(USE_INSTALLATION)
 include (InstallRequiredSystemLibraries)
 include (CPack)
@@ -181,6 +186,7 @@ if(USE_DEB_INFO)
 	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -g" )
 endif()
 
+
 if(COMPILER_EXTRA)
 	set(COMPUTATION_COMPILE_FLAGS "${COMPUTATION_COMPILE_FLAGS} -Wextra -Wunsafe-loop-optimizations -Wdisabled-optimization -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn -Wno-unused-parameter -funsafe-loop-optimizations -Wstrict-overflow=5 -Wtrampolines -Wcast-qual -Wcast-align -Wvector-operation-performance -Wdisabled-optimization ")
 else()
@@ -221,6 +227,12 @@ endif(USE_LUSOL)
 if(USE_GOOGLE_PERF)
 	TARGET_LINK_LIBRARIES(lib_computation -lprofiler)
 endif(USE_GOOGLE_PERF)
+
+
+if(USE_TEST_COMPILER_FLAG)
+	set(COMPILER_FLAG "${COMPILER_NO_OPTIMISATION_FLAG} ${COMPILER_COVERAGE_FLAG}  ${CPP11_FLAG} -Wall -Wextra -Wstrict-aliasing=1 -fno-strict-aliasing")
+endif(USE_TEST_COMPILER_FLAG)
+
 #TARGET_LINK_LIBRARIES(computation lib_computation)
 #install (TARGETS computation DESTINATION bin)
 
@@ -502,5 +514,10 @@ endfunction(AddTestProperty)
 	AddTestProperty(test_cov_Gravity)
 	TARGET_LINK_LIBRARIES(test_cov_Gravity lib_computation)
 	add_test(NAME test_Gravity COMMAND test_cov_Gravity)
+
+	add_executable(test_cov_Update_Pressure ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdate_Pressure.cpp)
+	AddTestProperty(test_cov_Update_Pressure)
+	TARGET_LINK_LIBRARIES(test_cov_Update_Pressure lib_computation)
+	add_test(NAME test_Update_Pressure COMMAND test_cov_Update_Pressure)
 
 endif(USE_TESTING)

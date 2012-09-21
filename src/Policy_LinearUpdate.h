@@ -74,6 +74,10 @@ struct Policy_LinearUpdate
 	*/
 	int& luparm_keepLU;
 	/*
+	 Minimum recommended value for  lena.
+	 */
+	int & luparm_minlen;
+	/*
   	Ltol1    Max Lij allowed during Factor.
 	With TRP and TCP (Rook and Complete Pivoting),
 	values less than 25.0 may be expensive
@@ -126,7 +130,7 @@ struct Policy_LinearUpdate
 	*/
 	double& parmlu_dens2;
 	Policy_LinearUpdate():luparm_nout(luparm[0]),luparm_lprint(luparm[1]),luparm_maxcol(luparm[2]),luparm_pivoting(luparm[5]),luparm_keepLU(luparm[7]),
-	parmlu_Ltol1(parmlu[0]),parmlu_Ltol2(parmlu[1]),parmlu_small(parmlu[2]),parmlu_Utol1(parmlu[3]),parmlu_Utol2(parmlu[4]),parmlu_Uspace(parmlu[5]),parmlu_dens1(parmlu[6]),parmlu_dens2(parmlu[7]),
+	parmlu_Ltol1(parmlu[0]),parmlu_Ltol2(parmlu[1]),parmlu_small(parmlu[2]),parmlu_Utol1(parmlu[3]),parmlu_Utol2(parmlu[4]),parmlu_Uspace(parmlu[5]),parmlu_dens1(parmlu[6]),parmlu_dens2(parmlu[7]),luparm_minlen(luparm[12]),
 	min_lena(1000000),grow_lena(100),min_max_n(10000),grow_max_n(10)
 	{
 		luparm[0]=6;

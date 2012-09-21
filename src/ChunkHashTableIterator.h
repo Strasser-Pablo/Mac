@@ -38,12 +38,12 @@ class ChunkHashTableIterator
 	 * Constructor constructing the iterator from the unordered_map iterator.
 	 * @param iterator unordered_Map iterator to use.
 	 **/
-	ChunkHashTableIterator(typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator,type_offset off,typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator_end) __attribute__ ((const));
+	ChunkHashTableIterator(typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator,type_offset off,typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator iterator_end);
 	/**
 	 * @brief
 	 * Destructor.
 	 **/
-	~ChunkHashTableIterator() __attribute__ ((const));
+	~ChunkHashTableIterator()  __attribute__ ((const));
 	/**
 	 * @brief
 	 * Equality operator. Check if two iterator represent the same target.

@@ -37,8 +37,13 @@ class Algorithms_Solve_Pressure_Update: public Policy
 	static const int type_dim=type_speed::type_dim;
 	type_grid& m_grid;
 	const type_spacing_vector& m_1_h;
+	type_Time_Type m_dt;
 	type_speed_value* m_value;
 	bool m_bfactorization;
+	int nb_fact;
+	int nb_add;
+	int nb_rpc_del;
+	int nb_rpc_add;
 	stack<int> m_free_list;
 	//lusol_Data
 	int m_m;
@@ -82,6 +87,7 @@ class Algorithms_Solve_Pressure_Update: public Policy
 		double conv=double(sysconf(_SC_CLK_TCK));
 		long t_deb=times(&t1);
 
+		++nb_fact;
 		stack<type_neigh> new_point;
 		stack<type_neigh> up_point;
 		stack<type_neigh> up2_point;
@@ -128,20 +134,33 @@ class Algorithms_Solve_Pressure_Update: public Policy
 			double diag;
 			double vnorm;
 			int inform;
-			lu8rpc(mode1,mode2,m_m,m_n,i,nullptr,nullptr,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform,diag,vnorm );
-
 			double* v=new double[m_m];
 			double* w=new double[m_n];
+			++nb_rpc_del;
+			lu8rpc(mode1,mode2,m_m,m_n,i,nullptr,nullptr,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform,diag,vnorm );
 			lu8rpr(mode1,mode2,m_m,m_n,i,v,w,nullptr,m_lena,m_luparm,m_parmlu,m_a, m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform );
-			m_free_list.push(i);
+
+			neigh.Id_Cell_GetRef().SetLayerEmpty();
+			m_free_list.push(i-1);
+			delete[] v;
+			delete[] w;
 		}
 		while(!new_point.empty())
 		{
-			cout<<"up m_m "<<m_m<<endl;
+			if(m_m+1>=m_nmax)
+			{
+				cout<<"complete refactorization because of m_m,m_n too small for add a row and a column "<<nb_fact<<endl;
+				cout<<"nb_rpc_del "<<nb_rpc_del<<" nb_rpc_add "<<nb_rpc_add<<" nb_add  "<<nb_add<<endl;
+				cout<<"lena "<<m_lena<<" n "<<m_n<<endl;
+				Complete_Factorization();
+				return;
+			}
 			double* v=new double[m_m+1];
+			double* vvv=new double[m_m+1];
 			for(int i=0;i<=m_m;++i)
 			{
 				v[i]=0;
+				vvv[i]=0;
 			}
 			type_neigh next_neigh=new_point.top();
 			new_point.pop();
@@ -193,12 +212,12 @@ class Algorithms_Solve_Pressure_Update: public Policy
 								{
 									lay=m_free_list.top();
 									m_free_list.pop();
+									neigh.Id_Cell_GetRef().SetLayer(lay);
 								}
 								else
 								{
 									continue;
 								}
-								neigh.Id_Cell_GetRef().SetLayer(lay);
 								lay_cur2=lay;
 							}
 							else
@@ -206,12 +225,14 @@ class Algorithms_Solve_Pressure_Update: public Policy
 								lay_cur2=neigh.Id_Cell_GetRef().GetLayer();
 							}
 							v[lay_cur2]=pow(m_1_h.Get(i),2);
+							vvv[lay_cur2]=pow(m_1_h.Get(i),2);
 						}
 					}
 				}
 			}
 			//Insert diagonal value
 			v[lay_cur]=temp_diag_value;
+			vvv[lay_cur]=temp_diag_value;
 			if(lay_cur>=m_m)
 			{
 				int inform;
@@ -220,8 +241,29 @@ class Algorithms_Solve_Pressure_Update: public Policy
 				int mode=1;
 				++m_m;
 				lu8adr(m_m,m_n,v,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform,diag );
+				if(inform==7)
+				{
+					cout<<"complete refactorization because of lena too small for adr "<<nb_fact<<endl;
+					cout<<"nb_rpc_del "<<nb_rpc_del<<" nb_rpc_add "<<nb_rpc_add<<" nb_add  "<<nb_add<<endl;
+					cout<<"lena "<<m_lena<<" n "<<m_n<<endl;
+					delete[] v;
+					delete[] vvv;
+					Complete_Factorization();
+					return;
+				}
 				++m_n;
 				lu8adc(mode,m_m,m_n,v,nullptr,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform,diag,vnorm );
+				if(inform==7)
+				{
+					cout<<"complete refactorization because of lena too small for adc "<<nb_fact<<endl;
+					cout<<"nb_rpc_del "<<nb_rpc_del<<" nb_rpc_add "<<nb_rpc_add<<" nb_add  "<<nb_add<<endl;
+					cout<<"lena "<<m_lena<<" n "<<m_n<<endl;
+					delete[] v;
+					delete[] vvv;
+					Complete_Factorization();
+					return;
+				}
+				++nb_add;
 			}
 			else
 			{
@@ -234,11 +276,37 @@ class Algorithms_Solve_Pressure_Update: public Policy
 				double *v2=new double[m_m];
 				int i=lay_cur+1;
 				lu8rpr(mode1,mode2,m_m,m_n,i,v2,w,v,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform);
-				lu8rpc(mode1,mode2,m_m,m_n,i,v,nullptr,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform,diag,vnorm);
+				if(inform==7)
+				{
+					cout<<"complete refactorization because of lena too small for rpr add "<<nb_fact<<endl;
+					cout<<"nb_rpc_del "<<nb_rpc_del<<" nb_rpc_add "<<nb_rpc_add<<" nb_add  "<<nb_add<<endl;
+					cout<<"lena "<<m_lena<<" n "<<m_n<<endl;
+					delete[] w;
+					delete[] v2;
+					delete[] v;
+					delete[] vvv;
+					Complete_Factorization();
+					return;
+				}
+				lu8rpc(mode1,mode2,m_m,m_n,i,vvv,nullptr,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform,diag,vnorm);
+				if(inform==7)
+				{
+					cout<<"complete refactorization because of lena too small for rpc add "<<nb_fact<<endl;
+					cout<<"nb_rpc_del "<<nb_rpc_del<<" nb_rpc_add "<<nb_rpc_add<<" nb_add  "<<nb_add<<endl;
+					cout<<"lena "<<m_lena<<" n "<<m_n<<endl;
+					delete[] w;
+					delete[] v2;
+					delete[] v;
+					delete[] vvv;
+					Complete_Factorization();
+					return;
+				}
+				++nb_rpc_add;
 				delete[] w;
 				delete[] v2;
 			}
 			delete[] v;
+			delete[] vvv;
 		}
 		while(!up2_point.empty())
 		{
@@ -289,7 +357,29 @@ class Algorithms_Solve_Pressure_Update: public Policy
 			double vnorm;
 			int i=lay_cur+1;
 			lu8rpr(mode1,mode2,m_m,m_n,i,w2,w,v,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform);
+			if(inform==7)
+			{
+				cout<<"complete refactorization because of lena too small for rpr del "<<nb_fact<<endl;
+				cout<<"nb_rpc_del "<<nb_rpc_del<<" nb_rpc_add "<<nb_rpc_add<<" nb_add  "<<nb_add<<endl;
+				cout<<"lena "<<m_lena<<" n "<<m_n<<endl;
+				delete[] v;
+				delete[] w;
+				delete[] w2;
+				Complete_Factorization();
+				return;
+			}
 			lu8rpc(mode1,mode2,m_m,m_n,i,v,nullptr,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr,inform,diag,vnorm );
+			if(inform==7)
+			{
+				cout<<"complete refactorization because of lena too small for rpc del "<<nb_fact<<endl;
+				cout<<"nb_rpc_del "<<nb_rpc_del<<" nb_rpc_add "<<nb_rpc_add<<" nb_add  "<<nb_add<<endl;
+				cout<<"lena "<<m_lena<<" n "<<m_n<<endl;
+				delete[] v;
+				delete[] w;
+				delete[] w2;
+				Complete_Factorization();
+				return;
+			}
 			delete[] v;
 			delete[] w;
 			delete[] w2;
@@ -299,10 +389,24 @@ class Algorithms_Solve_Pressure_Update: public Policy
 		cout<<"real Pressure_Update_Factorization "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 	public:
-	Algorithms_Solve_Pressure_Update(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_bfactorization(false),m_a(nullptr),m_indc(nullptr),m_indr(nullptr),m_ip(nullptr),m_iq(nullptr),m_lenc(nullptr),m_lenr(nullptr),m_locc(nullptr),m_locr(nullptr),m_iploc(nullptr),m_iqloc(nullptr)
+	Algorithms_Solve_Pressure_Update(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_dt(data.m_data.GetTimingData().m_dt),m_bfactorization(false),m_a(nullptr),m_indc(nullptr),m_indr(nullptr),m_ip(nullptr),m_iq(nullptr),m_lenc(nullptr),m_lenr(nullptr),m_locc(nullptr),m_locr(nullptr),m_iploc(nullptr),m_iqloc(nullptr),nb_fact(0)
 	{
 		GetLinearUpdateLuparm(m_luparm);
 		GetLinearUpdateParmlu(m_parmlu);
+	}
+	~Algorithms_Solve_Pressure_Update()
+	{
+		delete[] m_a;
+		delete[] m_indc;
+		delete[] m_indr;
+		delete[] m_ip;
+		delete[] m_iq;
+      		delete[] m_lenc;
+		delete[] m_lenr;
+		delete[] m_iploc;
+		delete[] m_iqloc;
+		delete[] m_locc;
+		delete[] m_locr;
 	}
 	void Init_Iteration()
 	{
@@ -317,60 +421,90 @@ class Algorithms_Solve_Pressure_Update: public Policy
 	}
 	void Divergence_Projection()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		type_speed_value* b=new type_speed_value[m_m];
 		type_speed_value* res=new type_speed_value[m_n];
 		// Set b to divergence.
-		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
-		{
-			int lay_cur;
-			if(it.data().CellType_GetRef().GetIsInDomain())
-			{
-				lay_cur=it.data().Id_Cell_GetRef().GetLayer();
-				b[lay_cur]=Get_Divergence(it.data()).Get();
-			}
-		}
 		// Solve the linear system.
 		int mode=5;
 		int inform;
-		lu6sol(mode ,m_m ,m_n,b ,res ,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr, inform );
-		// Set the pressure of cell from the result.
-		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+		bool brefact=true;
+		while(brefact)
 		{
-			int lay_cur;
-			if(it.data().CellType_GetRef().GetIsInDomain())
+			double _1_dt=1/m_dt;
+			for(int i=0;i<m_m;++i)
 			{
-				lay_cur=it.data().Id_Cell_GetRef().GetLayer();
-				it.data().Pressure_GetRef().Pressure_Set(type_pressure(res[lay_cur]));
+				b[i]=0;
 			}
-			else
+			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
-				it.data().Pressure_GetRef().Pressure_Set(type_pressure(0));
-			}
-		}
-		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
-		{
-			for(int i=1;i<=type_dim;++i)
-			{
-				if(Get_Pressure_If_Correction(it.data(),i))
+				int lay_cur;
+				if(it.data().CellType_GetRef().GetIsInDomain())
 				{
-					it.data().Speed_GetRef().Set(i,it.data().Speed_GetRef().Get(i)-Get_Gradiant(it.data(),i));
+					lay_cur=it.data().Id_Cell_GetRef().GetLayer();
+					b[lay_cur]=Get_Divergence(it.data()).Get()*_1_dt;
 				}
 			}
-		}
-		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
-		{
-			if(it.data().CellType_GetRef().GetIsInDomain())
+			brefact=false;
+			lu6sol(mode ,m_m ,m_n,b ,res ,m_lena,m_luparm,m_parmlu,m_a,m_indc,m_indr,m_ip,m_iq,m_lenc,m_lenr,m_locc,m_locr, inform );
+			// Set the pressure of cell from the result.
+			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
-				type_speed_value div=Get_Divergence(it.data()).Get();
-				if(abs(div)>0.0000000001)
+				int lay_cur;
+				it.data().Acceleration_GetRef().Set(it.data().Speed_GetRef().Get(),true);
+				if(it.data().CellType_GetRef().GetIsInDomain())
 				{
-					cout<<"key "<<it.key()<<endl;
-					cout<<"div "<<Get_Divergence(it.data()).Get()<<endl;
+					lay_cur=it.data().Id_Cell_GetRef().GetLayer();
+					it.data().Pressure_GetRef().Pressure_Set(type_pressure(res[lay_cur]));
 				}
+				else
+				{
+					it.data().Pressure_GetRef().Pressure_Set(type_pressure(0));
+				}
+			}
+			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+			{
+				for(int i=1;i<=type_dim;++i)
+				{
+					if(Get_Pressure_If_Correction(it.data(),i))
+					{
+						it.data().Speed_GetRef().Set(i,it.data().Speed_GetRef().Get(i)-Get_Gradiant(it.data(),i)*m_dt);
+					}
+				}
+			}
+			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+			{
+				if(it.data().CellType_GetRef().GetIsInDomain())
+				{
+					type_speed_value div=Get_Divergence(it.data()).Get();
+					if(abs(div)>0.0000000001)
+					{
+						cout<<"key "<<it.key()<<endl;
+						cout<<"div "<<div<<endl;
+						brefact=true;
+						break;
+					}
+				}
+			}
+			if(brefact)
+			{
+				for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+				{
+					it.data().Speed_GetRef().Set(it.data().Acceleration_GetRef().Get(),true);
+				}
+				cout<<"complete refactorization because of residu "<<nb_fact<<endl;
+				cout<<"nb_rpc_del "<<nb_rpc_del<<" nb_rpc_add "<<nb_rpc_add<<" nb_add  "<<nb_add<<endl;
+				Complete_Factorization();
 			}
 		}
 		delete[] b;
 		delete[] res;
+		long t_end=times(&t2);
+		cout<<"real Pressure_Projection "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Pressure_Projection "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 	void Complete_Factorization()
 	{
@@ -378,10 +512,14 @@ class Algorithms_Solve_Pressure_Update: public Policy
 		struct tms t2;
 		double conv=double(sysconf(_SC_CLK_TCK));
 		long t_deb=times(&t1);
+		nb_add=0;
+		nb_rpc_del=0;
+		nb_rpc_add=0;
 		m_free_list=stack<int>();
 		// Upper bound of memory usage.
 		int n=m_grid.size_upper();
 
+		nb_fact=1;
 		m_lena=GetLinearUpdateLenaGrowFactor()*n;
 		if(m_lena<GetLinearUpdateMinimalLena())
 		{
@@ -514,7 +652,17 @@ class Algorithms_Solve_Pressure_Update: public Policy
 		m_bfactorization=true;
 		long t_end=times(&t2);
 		cout<<"real Pressure_Complete_Factorization "<<(t_end-t_deb)/conv<<endl;
-		cout<<"real Pressure_Complete_Factorization "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		cout<<"user Pressure_Complete_Factorization "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		if(inform==7)
+		{
+			cout<<"complete refactorization because of lena to small for fac "<<nb_fact<<endl;
+			cout<<"nb_rpc_del "<<nb_rpc_del<<" nb_rpc_add "<<nb_rpc_add<<" nb_add  "<<nb_add<<endl;
+			cout<<"lena "<<m_lena<<" n "<<m_n<<endl;
+			m_lena=this->luparm_minlen;
+			cout<<"lena needed "<<m_lena<<endl;
+
+			Complete_Factorization();
+		}
 	}
 };
 #endif
