@@ -66,7 +66,7 @@ class Data_Grid_Speed
 	{
 	}
 
-	Data_Grid_Speed(const Data_Grid_Speed<DataBase,Const> & cop,Const& _const) :m_const(_const),m_speed(cop.m_speed)
+	Data_Grid_Speed(const Data_Grid_Speed<DataBase,Const> & cop,Const& _const) :m_speed(cop.m_speed),m_const(_const)
 	{
 	}
 	/**
