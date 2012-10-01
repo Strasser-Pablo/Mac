@@ -37,10 +37,9 @@ option (USE_LUSOL "Use LUSOL Fortran code" on)
 
 option (USE_TEST_COMPILER_FLAG "Use Test Compiler Flag" on)
 
+option (USE_PYTHON "Use Python" on)
+
 include(CheckCXXCompilerFlag)
-find_package( Boost 1.46.0 COMPONENTS "serialization")
-link_directories ( ${Boost_LIBRARY_DIRS} )
-include_directories ( ${Boost_INCLUDE_DIRS} )
 if (USE_TESTING)
  ENABLE_TESTING()
 endif (USE_TESTING)
@@ -56,6 +55,17 @@ if(USE_LUSOL)
 	target_link_libraries(lib_lusol ${BLAS_LIBRARIES})
 	set_target_properties(lib_lusol PROPERTIES LINK_FLAGS "${BLAS_LINKER_FLAGS}")
 endif(USE_LUSOL)
+
+if(USE_PYTHON)
+	find_package(Boost 1.50 COMPONENTS python REQUIRED)
+
+	link_directories ( ${Boost_LIBRARY_DIRS} )
+	set(Python_ADDITIONAL_VERSIONS 2.7)
+	find_package(PythonLibs REQUIRED)
+	include_directories(${Boost_INCLUDE_DIRS})
+	include_directories(${PYTHON_INCLUDE_DIRS})
+	include_directories(/usr/lib/python2.7/site-packages/numpy/core/include)
+endif(USE_PYTHON)
 
 
 if(USE_INSTALLATION)
@@ -228,6 +238,9 @@ if(USE_GOOGLE_PERF)
 	TARGET_LINK_LIBRARIES(lib_computation -lprofiler)
 endif(USE_GOOGLE_PERF)
 
+if(USE_PYTHON)
+	TARGET_LINK_LIBRARIES(lib_computation ${Boost_LIBRARIES} ${Boost_PYTHON_LIBRARY} ${PYTHON_LIBRARIES})
+endif(USE_PYTHON)
 
 if(USE_TEST_COMPILER_FLAG)
 	set(COMPILER_FLAG "${COMPILER_NO_OPTIMISATION_FLAG} ${COMPILER_COVERAGE_FLAG}  ${CPP11_FLAG} -Wall -Wextra -Wstrict-aliasing=1 -fno-strict-aliasing")
@@ -257,6 +270,14 @@ TARGET_LINK_LIBRARIES(JetDEau_Basic_2_Depth lib_computation)
 add_executable(JetDEau_Basic_2_Updating ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Updating.cpp)
 set_target_properties(JetDEau_Basic_2_Updating PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(JetDEau_Basic_2_Updating lib_computation)
+
+add_executable(JetDEau_Basic_2_Pyamg ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Pyamg.cpp)
+set_target_properties(JetDEau_Basic_2_Pyamg PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(JetDEau_Basic_2_Pyamg lib_computation)
+
+add_executable(JetDEau_Basic_2_Pyamg_Simplified ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Pyamg_Simplified.cpp)
+set_target_properties(JetDEau_Basic_2_Pyamg_Simplified PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(JetDEau_Basic_2_Pyamg_Simplified lib_computation)
 
 add_executable(FillingContainer2D_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer2D_Basic.cpp)
 set_target_properties(FillingContainer2D_Basic PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
@@ -296,7 +317,7 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 
 
 function(AddTestProperty target)
-	set(COMPILER_FLAG "${COMPILER_NO_OPTIMISATION_FLAG} ${COMPILER_COVERAGE_FLAG}  ${CPP11_FLAG} -Wall -Wextra -Wstrict-aliasing=1 -fno-strict-aliasing")
+	set(COMPILER_FLAG "${COMPILER_NO_OPTIMISATION_FLAG} ${COMPILER_COVERAGE_FLAG}  ${CPP11_FLAG} -Wall -Wextra -Wstrict-aliasing=1 -fno-strict-aliasing ")
 	set_target_properties(${target} PROPERTIES COMPILE_FLAGS ${COMPILER_FLAG} LINK_FLAGS ${COMPILER_FLAG})
 	Target_link_libraries(${target}  ${Boost_LIBRARIES})
 endfunction(AddTestProperty)
@@ -509,6 +530,17 @@ endfunction(AddTestProperty)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Updating)
 	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Updating lib_computation)
 	add_test(NAME test_JetDEau_Basic_2_Updating COMMAND test_cov_JetDEau_Basic_2_Updating)
+
+
+	add_executable(test_cov_JetDEau_Basic_2_Pyamg ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Pyamg.cpp)
+	AddTestProperty(test_cov_JetDEau_Basic_2_Pyamg)
+	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Pyamg lib_computation)
+	add_test(NAME test_JetDEau_Basic_2_Pyamg COMMAND test_cov_JetDEau_Basic_2_Pyamg)
+
+	add_executable(test_cov_JetDEau_Basic_2_Pyamg_Simplified ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Pyamg_Simplified.cpp)
+	AddTestProperty(test_cov_JetDEau_Basic_2_Pyamg_Simplified)
+	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Pyamg_Simplified lib_computation)
+	add_test(NAME test_JetDEau_Basic_2_Pyamg_Simplified COMMAND test_cov_JetDEau_Basic_2_Pyamg_Simplified)
 
 	add_executable(test_cov_Gravity ${CMAKE_CURRENT_SOURCE_DIR}/test/TestGravity.cpp)
 	AddTestProperty(test_cov_Gravity)
