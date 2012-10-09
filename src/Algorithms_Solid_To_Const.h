@@ -40,16 +40,16 @@ class Algorithms_Solid_To_Const : public Policy
 			m_grid[k].Pressure_GetRef().Pressure_Set(0);
 			for(int i=1;i<=type_dim;++i)
 			{
-				m_grid[k].Speed_GetRef().Speed_Set(i,0);
-				m_grid[k].Speed_GetRef().Speed_Set_Const(i);
+				m_grid[k].Speed_GetRef().Set(i,0);
+				m_grid[k].Speed_GetRef().Set_Const(i);
 				k.GetRef(i)+=1;
 				m_grid[k].CellType_GetRef().SetIsNoDelete();
 				for(int j=1;j<=type_dim;++j)
 				{
-					m_grid[k].Speed_GetRef().Speed_Set(j,0);
+					m_grid[k].Speed_GetRef().Set(j,0);
 				}
 				m_grid[k].Pressure_GetRef().Pressure_Set(0);
-				m_grid[k].Speed_GetRef().Speed_Set_Const(i);
+				m_grid[k].Speed_GetRef().Set_Const(i);
 				k.GetRef(i)-=1;
 			}
 		}

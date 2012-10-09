@@ -254,8 +254,8 @@ int main()
 	typedef Data_Grid_Base_Spacing<type_data_viscosity,Physvector<DIM,type_data_value> > type_data_grid;
 	type_data_grid m_data_grid(m_data_viscosity);
 	Physvector<DIM,type_data_value> h;
-	h.Set(1,0.002);
-	h.Set(2,0.002);
+	h.Set(1,0.0001);
+	h.Set(2,0.0001);
 	m_data_grid.m_h.Set(h);
 	typedef Data_Staggered_Left<type_data_grid> type_data_stag_left;
 	type_data_stag_left m_data_stag_left(m_data_grid);
@@ -286,8 +286,8 @@ int main()
 	//Initial Data
 	vect v;
 	int y0=0;
-	int imax=10;
-	for(int i=-10;i<=imax;++i)
+	int imax=200;
+	for(int i=-200;i<=imax;++i)
 	{
 		v.Set(1,i);
 		v.Set(2,y0);
@@ -381,7 +381,6 @@ int main()
 	typedef Policies<type_pol_gravity,type_pol_laplacian,type_pol_laplacian_speed,type_pol_viscosity_apply_if,type_pol_convection_apply_if,type_pol_convection,type_pol_wind> type_pol_solve_grid;
 	type_pol_solve_grid m_pol_solve_grid(m_pol_gravity,m_pol_laplacian,m_pol_laplacian_speed,m_pol_viscosity_apply_if,m_pol_convection_apply_if,m_pol_convection,m_pol_wind);
 
-
 	//Algorithms Solve Grid
 	typedef Algorithms_Gravity<type_data_ref,type_pol_solve_grid> type_alg_gravity;
 	type_alg_gravity m_alg_gravity(m_data_ref,m_pol_solve_grid);
@@ -458,7 +457,7 @@ int main()
 	type_alg_output m_alg_output(m_data_ref,m_pol_output);
 
 	m_alg_first_init.Do();
-	for(int i=1;i<2;++i)
+	for(int i=1;;++i)
 	{
 		cout<<"i "<<i<<endl;
 		struct tms t1;

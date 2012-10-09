@@ -28,7 +28,14 @@ class Algorithms_RungeKutta : public Policy
 			it.data().Acceleration_GetRef().SetZero(true);
 		}
 
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		Policy::Do();
+		long t_end=times(&t2);
+		cout<<"real Calculate Grid "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Calculate Grid "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 
 		type_chunk_speed::ispeed=2;
 
@@ -42,9 +49,13 @@ class Algorithms_RungeKutta : public Policy
 		{
 			it.data().Acceleration_GetRef().SetZero(true);
 		}
-
+		cout<<"FIRST_PROJECTION "<<endl;
 		Policy::Divergence_Projection();
+		t_deb=times(&t1);
 		Policy::Do();
+		t_end=times(&t2);
+		cout<<"real Calculate Grid "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Calculate Grid "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
@@ -58,7 +69,11 @@ class Algorithms_RungeKutta : public Policy
 		}
 
 		Policy::Divergence_Projection();
+		t_deb=times(&t1);
 		Policy::Do();
+		t_end=times(&t2);
+		cout<<"real Calculate Grid "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Calculate Grid "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
@@ -72,7 +87,11 @@ class Algorithms_RungeKutta : public Policy
 		}
 
 		Policy::Divergence_Projection();
+		t_deb=times(&t1);
 		Policy::Do();
+		t_end=times(&t2);
+		cout<<"real Calculate Grid "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Calculate Grid "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 
 		type_chunk_speed::ispeed=0;
 

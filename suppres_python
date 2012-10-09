@@ -1,0 +1,32 @@
+{
+   PyObject_Free_Mem4
+   Memcheck:Addr4
+   fun:PyObject_Free
+}
+{
+   PyObject_Free_Cond
+   Memcheck:Cond
+   fun:PyObject_Free
+}
+{
+   PyObject_Free_Mem8
+   Memcheck:Value8
+   fun:PyObject_Free
+}
+
+{
+   PyObject_Realloc_Cond
+   Memcheck:Cond
+   fun:PyObject_Realloc
+}
+{
+   PyObject_Realloc_Mem8
+   Memcheck:Value8
+   fun:PyObject_Realloc
+}
+
+{
+   PyObject_Realloc_Mem4
+   Memcheck:Addr4
+   fun:PyObject_Realloc
+}

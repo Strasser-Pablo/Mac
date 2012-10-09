@@ -288,6 +288,10 @@ add_executable(FillingContainer_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFilli
 set_target_properties(FillingContainer_Basic PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(FillingContainer_Basic lib_computation)
 
+add_executable(FillingContainer_Basic_Pyamg ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer_Basic_Pyamg.cpp)
+set_target_properties(FillingContainer_Basic_Pyamg PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(FillingContainer_Basic_Pyamg lib_computation)
+
 add_executable(JetDEau_Basic_2 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2.cpp)
 set_target_properties(JetDEau_Basic_2 PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(JetDEau_Basic_2 lib_computation)
@@ -453,6 +457,11 @@ endfunction(AddTestProperty)
 	AddTestProperty(test_cov_FillingContainer_Basic)
 	TARGET_LINK_LIBRARIES(test_cov_FillingContainer_Basic lib_computation)
 	add_test(NAME test_cov_FillingContainer_Basic COMMAND test_cov_FillingContainer_Basic)
+
+	add_executable(test_cov_FillingContainer_Basic_Pyamg ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer_Basic_Pyamg.cpp)
+	AddTestProperty(test_cov_FillingContainer_Basic_Pyamg)
+	TARGET_LINK_LIBRARIES(test_cov_FillingContainer_Basic_Pyamg lib_computation)
+	add_test(NAME test_cov_FillingContainer_Basic_Pyamg COMMAND test_cov_FillingContainer_Basic_Pyamg)
 
 	add_executable(test_cov_FillingContainer2D_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer2D_Basic.cpp)
 	AddTestProperty(test_cov_FillingContainer2D_Basic)
