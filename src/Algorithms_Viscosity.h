@@ -18,6 +18,10 @@ class Algorithms_Viscosity : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			if(Get_If_Apply_Viscosity(it.data()))
@@ -25,6 +29,9 @@ class Algorithms_Viscosity : public Policy
 				it.data().Acceleration_GetRef().Set(it.data().Acceleration_GetRef().Get()+Get_Laplacian_Speed(it.data())*m_viscosity);
 			}
 		}
+		long t_end=times(&t2);
+		cout<<"real Viscosity "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Viscosity "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 

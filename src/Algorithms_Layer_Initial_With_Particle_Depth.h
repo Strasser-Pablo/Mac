@@ -46,8 +46,8 @@ class Algorithms_Layer_Initial_With_Particle_Depth : public Policy
 			}
 		}
 		long t_end=times(&t2);
-		cout<<"real Layer initial "<<(t_end-t_deb)/conv<<endl;
-		cout<<"user Layer initial "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		cout<<"real Layer initial With Particle Depth "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Layer initial With Particle Depth "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 

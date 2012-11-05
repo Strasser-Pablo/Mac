@@ -21,6 +21,11 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
+
 		typedef unordered_set<type_key,type_hash> type_unordered_set;
 		type_unordered_set m_set(10,m_grid.GetHash());
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
@@ -59,6 +64,9 @@ class Algorithms_Speed_Constant_Mirror : public Policy
 				k.GetRef(i)-=1;
 			}
 		}
+		long t_end=times(&t2);
+		cout<<"real Algorithms Speed Constant Mirror "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Algorithms Speed Constant Mirror "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 #endif

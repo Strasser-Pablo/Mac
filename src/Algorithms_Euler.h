@@ -19,6 +19,10 @@ class Algorithms_Euler : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		type_chunk_speed::ispeed=0;
 		type_chunk_speed::iacceleration=0;
 		Policy::Init_Iteration();
@@ -34,6 +38,9 @@ class Algorithms_Euler : public Policy
 		type_chunk_speed::ispeed=0;
 		Policy::Divergence_Projection();
 		Policy::End_Iteration();
+		long t_end=times(&t2);
+		cout<<"real Euler "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Euler "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 #endif

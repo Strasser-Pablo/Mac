@@ -30,9 +30,10 @@ class Policy_Convection_Center : public Policy
 		else
 		{
 			type_speed_data_value U0=m_neigh.Speed_GetRef().Get(i);
-			type_speed_data_value U1=m_neigh.GetNeighbour(i,1).GetRef().Get(i);
-			type_speed_data_value U2=m_neigh.GetNeighbour(i,-1).GetRef().Get(i);
-			type_speed_data_value U=0.25*U1+0.25*U2+0.5*U0;
+//			type_speed_data_value U1=m_neigh.GetNeighbour(i,1).GetRef().Get(i);
+//			type_speed_data_value U2=m_neigh.GetNeighbour(i,-1).GetRef().Get(i);
+//			type_speed_data_value U=0.25*U1+0.25*U2+0.5*U0;
+			U=U0;
 			U*=0.5*(U1-U2)*m_1_h.Get(j);
 			return U;
 		}

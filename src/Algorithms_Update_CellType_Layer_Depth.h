@@ -23,6 +23,10 @@ class Algorithms_Update_CellType_Layer_Depth : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		typedef pair<type_data_neigh,type_data_key> type_pair;
 		stack<type_pair> s;
 		stack<type_pair> sback;
@@ -128,6 +132,9 @@ class Algorithms_Update_CellType_Layer_Depth : public Policy
 				break;
 			}
 		}
+		long t_end=times(&t2);
+		cout<<"real Update CellType Layer Depth "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Update CellType Layer Depth "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 

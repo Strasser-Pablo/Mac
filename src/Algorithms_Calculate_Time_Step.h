@@ -24,6 +24,10 @@ class Algorithms_Calculate_Time_Step : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		type_speed_data_value max=0;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
@@ -42,6 +46,9 @@ class Algorithms_Calculate_Time_Step : public Policy
 		}
 		m_dt=1/sqrt(max)*m_factor;
 		m_dt=CheckDT(m_dt);
+		long t_end=times(&t2);
+		cout<<"real Calculate Time Step "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Calculate Time Step "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 

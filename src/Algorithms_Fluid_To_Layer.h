@@ -16,6 +16,9 @@ class Algorithms_Fluid_To_Layer : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		long t_deb=times(&t1);
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			if(it.data().CellType_GetRef().GetIsFluid())
@@ -27,6 +30,9 @@ class Algorithms_Fluid_To_Layer : public Policy
 				it.data().Layer_GetRef().SetLayerEmpty();
 			}
 		}
+		long t_end=times(&t2);
+		cout<<"real Fluid To Layer "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Fluid To Layer "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 

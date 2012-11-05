@@ -19,6 +19,11 @@ class Algorithms_RungeKutta : public Policy
 	}
 	void Do()
 	{
+		struct tms tA1;
+		struct tms tA2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long tA_deb=times(&tA1);
+
 		type_chunk_speed::ispeed=0;
 		type_chunk_speed::iacceleration=0;
 		Policy::Init_Iteration();
@@ -30,7 +35,6 @@ class Algorithms_RungeKutta : public Policy
 
 		struct tms t1;
 		struct tms t2;
-		double conv=double(sysconf(_SC_CLK_TCK));
 		long t_deb=times(&t1);
 		Policy::Do();
 		long t_end=times(&t2);
@@ -102,6 +106,9 @@ class Algorithms_RungeKutta : public Policy
 
 		Policy::Divergence_Projection();
 		Policy::End_Iteration();
+		long tA_end=times(&tA2);
+		cout<<"real RungeKutta "<<(tA_end-tA_deb)/conv<<endl;
+		cout<<"user RungeKutta "<<(tA2.tms_utime-tA1.tms_utime)/conv<<endl;
 	}
 };
 #endif

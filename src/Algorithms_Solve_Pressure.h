@@ -217,6 +217,7 @@ class Algorithms_Solve_Pressure: public Policy
 				}
 			}
 		}
+		exit(0);
 		delete[] b;
 		delete[] res;
 	}

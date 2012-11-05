@@ -15,6 +15,10 @@ class Algorithms_Inflow_To_Const : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			if(it.data().CellType_GetRef().GetIsInflow())
@@ -25,6 +29,9 @@ class Algorithms_Inflow_To_Const : public Policy
 				}
 			}
 		}
+		long t_end=times(&t2);
+		cout<<"real Inflow To Const "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Inflow To Const "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 

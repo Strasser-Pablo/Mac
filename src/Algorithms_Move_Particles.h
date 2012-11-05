@@ -31,8 +31,8 @@ class Algorithms_Move_Particles : public Policy
 			this->AdvanceSolveODE((*it).GetParticlePosRef(),this->Get_Speed_Functor(),m_dt);
 		}
 		long t_end=times(&t2);
-		cout<<"real move "<<(t_end-t_deb)/conv<<endl;
-		cout<<"user move "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		cout<<"real Move Particles "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Move Particles "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 #endif

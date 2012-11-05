@@ -18,11 +18,17 @@ class Algorithms_Layer_Initial_With_Particle : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		long t_deb=times(&t1);
 		for(iterator it=m_list.begin();it!=m_list.end();++it)
 		{
 			m_grid[GetKeyFromParticle(*it)].Layer_GetRef().SetLayer(0);
 			m_grid[GetKeyFromParticle(*it)].CellType_GetRef().SetFluid();
 		}
+		long t_end=times(&t2);
+		cout<<"real Layer Initial With Particle "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Layer Initial With Particle "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 

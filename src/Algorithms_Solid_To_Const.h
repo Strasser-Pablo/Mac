@@ -23,6 +23,10 @@ class Algorithms_Solid_To_Const : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		stack<type_key> s;
 
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
@@ -53,6 +57,9 @@ class Algorithms_Solid_To_Const : public Policy
 				k.GetRef(i)-=1;
 			}
 		}
+		long t_end=times(&t2);
+		cout<<"real Solid To Const "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Solid To Const "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 

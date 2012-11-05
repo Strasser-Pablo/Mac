@@ -259,23 +259,47 @@ class Algorithms_Solve_Pressure_Pyamg: public Policy
 			}
 		};
 
+		struct tms tA1;
+		struct tms tA2;
+		long tA_deb=times(&tA1);
 		PyRun_SimpleString("s=array.f_create_matrice_vector()");
-		PyRun_SimpleString("A=csr_matrix((s.data,(s.row,s.col)))");
+		long tA_end=times(&t2);
+		cout<<"real Create matrice vector "<<(tA_end-tA_deb)/conv<<endl;
+		cout<<"user Create matrice vector "<<(tA2.tms_utime-tA1.tms_utime)/conv<<endl;
 
+		struct tms tB1;
+		struct tms tB2;
+		long tB_deb=times(&tB1);
+
+		PyRun_SimpleString("save('n_data',s.data)");
+		PyRun_SimpleString("save('n_row',s.row)");
+		PyRun_SimpleString("save('n_col',s.col)");
+		PyRun_SimpleString("A=csr_matrix((s.data,(s.row,s.col)))");
+		exit(0);
+		long tB_end=times(&tB2);
+		cout<<"real Create Matrice from vector "<<(tB_end-tB_deb)/conv<<endl;
+		cout<<"user Create matrice vector "<<(tB2.tms_utime-tB1.tms_utime)/conv<<endl;
+
+		struct tms tC1;
+		struct tms tC2;
+		long tC_deb=times(&tC1);
 		PyRun_SimpleString("ml = smoothed_aggregation_solver(A,strength=('symmetric', {'theta': 0.0}),\n"
 				"smooth=\"jacobi\",Bimprove=[None],aggregate=\"standard\",\n"
 				"presmoother=('block_gauss_seidel', {'sweep': 'symmetric', 'iterations': 1}),\n"
 				"postsmoother=('block_gauss_seidel', {'sweep': 'symmetric', 'iterations': 1}),\n"
 				"max_coarse=100,\n"
 				"coarse_solver=\"pinv\")");
+		long tC_end=times(&tC2);
+		cout<<"real Create Solver "<<(tC_end-tC_deb)/conv<<endl;
+		cout<<"user Create Solver "<<(tC2.tms_utime-tC1.tms_utime)/conv<<endl;
 
 		cout<<"aft "<<endl;
 		long t_end=times(&t2);
-	/*	cout<<"real Pressure_Prepare+Factorize "<<(t_end-t_deb)/conv<<endl;
+		cout<<"real Pressure_Prepare+Factorize "<<(t_end-t_deb)/conv<<endl;
 		cout<<"real Pressure_Prepare+Factorize "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 		cout<<"nnz "<<global_array_nnz_size()<<endl;
 		cout<<"n "<<global_array_length_size()<<endl;
-		
+		/*
 		PyRun_SimpleString("from pyamg.gallery import *");
 		PyRun_SimpleString("A2 = poisson((500,500), format='csr')");
 		cout<<"bef "<<endl;
@@ -284,8 +308,8 @@ class Algorithms_Solve_Pressure_Pyamg: public Policy
 				"presmoother=('block_gauss_seidel', {'sweep': 'symmetric', 'iterations': 1}),\n"
 				"postsmoother=('block_gauss_seidel', {'sweep': 'symmetric', 'iterations': 1}),\n"
 				"coarse_solver=\"pinv\")");
-		cout<<"bef solve "<<endl;*/
-		
+		cout<<"bef solve "<<endl;
+		*/
 	}
 	void End_Iteration()
 	{
@@ -428,19 +452,7 @@ class Algorithms_Solve_Pressure_Pyamg: public Policy
 		cout<<"real Pressure_Solve "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 		cout<<"nnz "<<global_array_nnz_size()<<endl;
 		cout<<"n "<<global_array_length_size()<<endl;
-		static fstream m_out("stat_pres_tim.txt",fstream::out);
-		if(bpres)
-		{
-			m_out<<"no pres"<<endl;
-		}
-		else
-		{
-			m_out<<"pres"<<endl;
-		}
-		m_out<<((t2.tms_utime-t1.tms_utime)/conv)<<" "<<global_array_nnz_size()<<" "<<global_array_length_size()<<endl;
-
-
-
+		exit(0);
 	}
 };
 }

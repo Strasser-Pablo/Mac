@@ -21,6 +21,10 @@ class Algorithms_Delete_MacCell : public Policy
 	template<typename T=type_data_neigh>
 	typename Data_Chunk_CellType_void_SFINAE<type_data_neigh,T>::type Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			if(it.data().Layer_GetRef().GetIsLayerEmpty()&&!it.data().CellType_GetRef().GetIsNoDelete())
@@ -32,11 +36,17 @@ class Algorithms_Delete_MacCell : public Policy
 				}
 			}
 		}
-	
+		long t_end=times(&t2);
+		cout<<"real Delete MacCell "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Delete MacCell "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 	template<typename T=type_data_neigh>
 	typename Data_Chunk_CellType_void_Not_SFINAE<type_data_neigh,T>::type Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long t_deb=times(&t1);
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			if(it.data().Layer_GetRef().GetIsLayerEmpty())
@@ -48,7 +58,9 @@ class Algorithms_Delete_MacCell : public Policy
 				}
 			}
 		}
-	
+		long t_end=times(&t2);
+		cout<<"real Delete MacCell "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Delete MacCell "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 #endif

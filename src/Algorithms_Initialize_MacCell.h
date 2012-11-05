@@ -14,10 +14,16 @@ class Algorithms_Initialize_MacCell : public Policy
 	}
 	void Do()
 	{
+		struct tms t1;
+		struct tms t2;
+		long t_deb=times(&t1);
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			it.data().Layer_GetRef().SetLayerEmpty();
 		}
+		long t_end=times(&t2);
+		cout<<"real Initialize MacCell "<<(t_end-t_deb)/conv<<endl;
+		cout<<"user Initialize MacCell "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 #endif

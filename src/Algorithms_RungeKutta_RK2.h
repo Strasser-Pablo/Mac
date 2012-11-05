@@ -19,6 +19,10 @@ class Algorithms_RungeKutta_RK2 : public Policy
 	}
 	void Do()
 	{
+		struct tms tA1;
+		struct tms tA2;
+		double conv=double(sysconf(_SC_CLK_TCK));
+		long tA_deb=times(&tA1);
 		type_chunk_speed::ispeed=0;
 		type_chunk_speed::iacceleration=0;
 		Policy::Init_Iteration();
@@ -54,6 +58,9 @@ class Algorithms_RungeKutta_RK2 : public Policy
 
 		Policy::Divergence_Projection();
 		Policy::End_Iteration();
+		long tA_end=times(&tA2);
+		cout<<"real RungeKutta RK2"<<(tA_end-tA_deb)/conv<<endl;
+		cout<<"user RungeKutta RK2"<<(tA2.tms_utime-tA1.tms_utime)/conv<<endl;
 	}
 };
 #endif
