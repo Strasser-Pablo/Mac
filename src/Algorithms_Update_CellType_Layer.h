@@ -21,9 +21,6 @@ class Algorithms_Update_CellType_Layer : public Policy
 	}
 	void Do()
 	{
-		struct tms t1;
-		struct tms t2;
-		long t_deb=times(&t1);
 		typedef pair<type_data_neigh,type_data_key> type_pair;
 		stack<type_pair> s;
 		stack<type_pair> s2;
@@ -89,9 +86,6 @@ class Algorithms_Update_CellType_Layer : public Policy
 				}
 			}
 		}
-		long t_end=times(&t2);
-		cout<<"real Update CellType Layer "<<(t_end-t_deb)/conv<<endl;
-		cout<<"user Update CellType Layer "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 	}
 };
 
