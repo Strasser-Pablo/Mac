@@ -16,9 +16,9 @@ class Data_CellType_Interface_Implement_Constant : public Base
 	}
 	bool GetIsConstantInterface(const type_key &k1,int dim,int sign)
 	{
-		return static_cast<const Implementation&>(*this).GetIsConstantInterface_Impl(k1,dim,sign);
+		return static_cast<Implementation&>(*this).GetIsConstantInterface_Impl(k1,dim,sign);
 	}
-	bool GetIsConstantInterface(const type_neigh &neigh,int dim,int sign)
+	bool GetIsConstantInterface(const type_neigh &neigh,int dim,int sign) const
 	{
 		return static_cast<const Implementation&>(*this).GetIsConstantInterface_Impl(neigh,dim,sign);
 	}

@@ -283,6 +283,19 @@ add_executable(FillingContainer2D_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFil
 set_target_properties(FillingContainer2D_Basic PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(FillingContainer2D_Basic lib_computation)
 
+add_executable(Pool_Lin_Speed_2d ${CMAKE_CURRENT_SOURCE_DIR}/test/Pool_Lin_Speed_2d.cpp)
+set_target_properties(Pool_Lin_Speed_2d PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Pool_Lin_Speed_2d lib_computation)
+
+
+add_executable(solheat_2d ${CMAKE_CURRENT_SOURCE_DIR}/test/SolHeat_2d.cpp)
+set_target_properties(solheat_2d PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(solheat_2d lib_computation)
+
+
+add_executable(Pool_Constant_Speed_2d ${CMAKE_CURRENT_SOURCE_DIR}/test/Pool_Constant_Speed_2d.cpp)
+set_target_properties(Pool_Constant_Speed_2d PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Pool_Constant_Speed_2d lib_computation)
 
 add_executable(FillingContainer_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer_Basic.cpp)
 set_target_properties(FillingContainer_Basic PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
