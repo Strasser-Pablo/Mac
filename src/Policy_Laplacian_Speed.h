@@ -24,10 +24,14 @@ class Policy_Laplacian_Speed
 		type_data_speed ret;
 		for(int i=1;i<=type_dim;++i)
 		{
-			type_speed_value temp=-2*m_neigh.Speed_GetRef().Get(i)*pow(m_1_h.Get(i),2);
-			temp+=m_neigh.GetNeighbour(i,1).Speed_GetRef().Get(i)*pow(m_1_h.Get(i),2);
-			temp+=m_neigh.GetNeighbour(i,-1).Speed_GetRef().Get(i)*pow(m_1_h.Get(i),2);
-			ret.Set(i,temp);
+			type_speed_value temp=0;
+			for(int j=1;j<=type_dim;++j)
+			{
+				temp-=2*m_neigh.Speed_GetRef().Get(i)*pow(m_1_h.Get(j),2);
+				temp+=m_neigh.GetNeighbour(j,1).Speed_GetRef().Get(i)*pow(m_1_h.Get(j),2);
+				temp+=m_neigh.GetNeighbour(j,-1).Speed_GetRef().Get(i)*pow(m_1_h.Get(j),2);
+				ret.Set(i,temp);
+			}
 		}
 		return ret;
 	}

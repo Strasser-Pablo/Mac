@@ -92,7 +92,7 @@
 #include "../src/Policy_Is_Inbound_Filling_Layer_CellType.h"
 #include "../src/Policy_Advance_ODE_RungeKutta.h"
 #include "../src/Policy_Speed_Interpolation_Linear_Symmetric.h"
-#include "../src/Policy_Output_Grid_Speed.h"
+#include "../src/Policy_Output_Grid_Speed_ID.h"
 #include "../src/Policy_Output_Grid_Pressure.h"
 #include "../src/Policy_Output_Particle.h"
 #include "../src/Policy_Output_Animation.h"
@@ -119,6 +119,7 @@
 #include "../src/Algorithms_Gravity.h"
 #include "../src/Algorithms_Viscosity.h"
 #include "../src/Algorithms_Solve_Pressure_Fixed.h"
+#include "../src/Algorithms_Solve_Pressure_Empty.h"
 #include "../src/Algorithms_Convection.h"
 
 //Integrator
@@ -141,7 +142,9 @@ int main()
 {
 	const int DIM=2;
 	const int NBSpeed=3;
-	double spacing=0.01;
+	double length=.10;
+	int NBX=50;
+	double spacing=length/NBX;
 	double value=1.0;
 //	const int NBSpeed=1;
 //	const int NBSpeed=2;
@@ -227,7 +230,8 @@ int main()
 
 	typedef Data_Viscosity<type_chunk_table> type_data_viscosity;
 	type_data_viscosity m_data_viscosity(m_chunk_table);
-	m_data_viscosity.m_viscosity=0;
+	// watter viscosity at 10 c
+	m_data_viscosity.m_viscosity=1.307e-6;
 	typedef Data_Grid_Base_Spacing<type_data_viscosity,Physvector<DIM,type_data_value> > type_data_grid;
 	type_data_grid m_data_grid(m_data_viscosity);
 	Physvector<DIM,type_data_value> h;
@@ -246,8 +250,8 @@ int main()
 	typedef Data_Timing_Time<type_data_value> type_time;
 	type_time m_time;
 	m_time.m_t=0;
-	m_time.m_factor=0.10;
-	m_time.m_dt=1.0*spacing;
+	m_time.m_factor=0.1;
+	m_time.m_dt=1.0;
 	typedef Data_Timing<type_time,type_grid_data> type_timing;
 	type_timing m_timing(m_time,m_grid_data);
 
@@ -257,8 +261,8 @@ int main()
 
 	//Initial Data
 	vect v;
-	int imax=40;
-	int jmax=40;
+	int imax=NBX-1;
+	int jmax=NBX-1;
 	for(int i=0;i<=imax;++i)
 	{
 		for(int j=0;j<=jmax;++j)
@@ -276,7 +280,7 @@ int main()
 			{
 				speed.Set(2,-value);
 			}
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed));
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
 			m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
 		}
 	}
@@ -297,16 +301,22 @@ int main()
 			{
 				speed.Set(2,-value);
 			}
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed));
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
 			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set_Const(1);
-			if(i==imax+1)
+			if(i!=-1)
 			{
-				v.Set(1,imax);
+				m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+				v.Set(1,i-1);
+				m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set_Const(2);
 			}
-			m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetInflow();
+			else
+			{
+				m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetFluid();
+				m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set_Const(2);
+			}
 		}
 	}
-	for(int i=-1;i<=imax;++i)
+	for(int i=-1;i<=imax+1;++i)
 	{
 		for(int j=-1;j<=jmax+1;j+=jmax+2)
 		{
@@ -323,15 +333,11 @@ int main()
 			{
 				speed.Set(2,-value);
 			}
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed));
-			m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetInflow();
-			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set_Const(2);
+			m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+			m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 		}
 	}
 
-	v.Set(1,imax);
-	v.Set(2,-1);
-	m_data_ref.m_data.GetGridData().Add_0_Pres(v);
 
 	//Policy First Init
 	typedef Policy_Layer_Max<type_data_ref> type_pol_layer_max;
@@ -368,8 +374,8 @@ int main()
 	type_pol_solve_grid m_pol_solve_grid(m_pol_gravity,m_pol_laplacian,m_pol_laplacian_speed,m_pol_viscosity_apply_if,m_pol_convection_apply_if,m_pol_convection);
 
 	//Algorithms Solve Grid
-	typedef Algorithms_Speed_Repeat_Constant<type_data_ref,type_pol_solve_grid> type_alg_repeat_const;
-	type_alg_repeat_const m_alg_repeat_const(m_data_ref,m_pol_solve_grid);
+	typedef Algorithms_Extrapolate<type_data_ref,type_pol_solve_grid> type_alg_extrapolate;
+	type_alg_extrapolate m_alg_extrapolate(m_data_ref,m_pol_solve_grid);
 	typedef Algorithms_Gravity<type_data_ref,type_pol_solve_grid> type_alg_gravity;
 	type_alg_gravity m_alg_gravity(m_data_ref,m_pol_solve_grid);
 	typedef Algorithms_Viscosity<type_data_ref,type_pol_solve_grid> type_alg_viscosity;
@@ -377,8 +383,8 @@ int main()
 	typedef Algorithms_Convection<type_data_ref,type_pol_solve_grid> type_alg_convection;
 	type_alg_convection m_alg_convection(m_data_ref,m_pol_solve_grid);
 
-	typedef Algorithms<type_alg_repeat_const,type_alg_gravity,/*type_alg_viscosity,*/type_alg_convection> type_alg_solve_grid;
-	type_alg_solve_grid m_alg_solve_grid(m_alg_repeat_const,m_alg_gravity,/*m_alg_viscosity,*/m_alg_convection);
+	typedef Algorithms<type_alg_extrapolate,/*type_alg_gravity,*/type_alg_viscosity,type_alg_convection> type_alg_solve_grid;
+	type_alg_solve_grid m_alg_solve_grid(m_alg_extrapolate,/*m_alg_gravity,*/m_alg_viscosity,m_alg_convection);
 
 
 	//Policy Solve Pressure;
@@ -412,7 +418,7 @@ int main()
 	type_alg_ODE m_alg_ODE(m_data_ref,m_pol_ODE);
 
 	//Policy Output
-	typedef Policy_Output_Grid_Speed<type_data_ref> type_pol_output_speed;
+	typedef Policy_Output_Grid_Speed_ID<type_data_ref> type_pol_output_speed;
 	type_pol_output_speed m_pol_output_speed(m_data_ref,"out_speed_");
 	typedef Policy_Output_Grid_Pressure<type_data_ref> type_pol_output_pressure;
 	type_pol_output_pressure m_pol_output_pressure(m_data_ref,"out_press_");
@@ -426,6 +432,8 @@ int main()
 	type_alg_output m_alg_output(m_data_ref,m_pol_output);
 
 	m_alg_first_init.Do();
+	m_alg_output.Do();
+	m_alg_extrapolate.Do();
 	for(int i=1;;++i)
 	{
 		cout<<"i "<<i<<endl;
@@ -433,7 +441,10 @@ int main()
 		m_data_ref.m_data.GetTimingData().m_t+=m_data_ref.m_data.GetTimingData().m_dt;
 		cout<<"dt "<<m_data_ref.m_data.GetTimingData().m_dt<<endl;
 		cout<<"t "<<m_data_ref.m_data.GetTimingData().m_t<<endl;
-		m_alg_output.Do();
+		if(i%10==1)
+		{
+			m_alg_output.Do();
+		}
 	}
 	SingletonManager::Kill();
 }
