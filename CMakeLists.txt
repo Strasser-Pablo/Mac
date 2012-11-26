@@ -292,6 +292,9 @@ add_executable(solheat_2d ${CMAKE_CURRENT_SOURCE_DIR}/test/SolHeat_2d.cpp)
 set_target_properties(solheat_2d PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(solheat_2d lib_computation)
 
+add_executable(Irrotational_Flow ${CMAKE_CURRENT_SOURCE_DIR}/test/Irrotational_Flow.cpp)
+set_target_properties(Irrotational_Flow PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Irrotational_Flow lib_computation)
 
 add_executable(Pool_Constant_Speed_2d ${CMAKE_CURRENT_SOURCE_DIR}/test/Pool_Constant_Speed_2d.cpp)
 set_target_properties(Pool_Constant_Speed_2d PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
@@ -337,6 +340,7 @@ function(AddTestProperty target)
 	set(COMPILER_FLAG "${COMPILER_NO_OPTIMISATION_FLAG} ${COMPILER_COVERAGE_FLAG}  ${CPP11_FLAG} -Wall -Wextra -Wstrict-aliasing=1 -fno-strict-aliasing ")
 	set_target_properties(${target} PROPERTIES COMPILE_FLAGS ${COMPILER_FLAG} LINK_FLAGS ${COMPILER_FLAG})
 	Target_link_libraries(${target}  ${Boost_LIBRARIES})
+	Target_link_libraries(${target} lib_computation)
 endfunction(AddTestProperty)
 	CXXTEST_ADD_TEST(test_cov_physvector test/TestPhysvector.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPhysvector.h)
 	AddTestProperty(test_cov_physvector)
@@ -439,25 +443,21 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Policy_Solve_Linear_Umfpack test/TestPolicy_Solve_Linear_Umfpack.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Solve_Linear_Umfpack.h)
 	AddTestProperty(test_cov_Policy_Solve_Linear_Umfpack)
-	TARGET_LINK_LIBRARIES(test_cov_Policy_Solve_Linear_Umfpack lib_computation)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Solve_Pressure test/TestAlgorithms_Solve_Pressure.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Solve_Pressure.h)
 	AddTestProperty(test_cov_Algorithms_Solve_Pressure)
-	TARGET_LINK_LIBRARIES(test_cov_Algorithms_Solve_Pressure lib_computation)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Move_Particles test/TestAlgorithms_Move_Particles.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Move_Particles.h)
 	AddTestProperty(test_cov_Algorithms_Move_Particles)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Output test/TestAlgorithms_Output.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Output.h)
 	AddTestProperty(test_cov_Algorithms_Output)
-	TARGET_LINK_LIBRARIES(test_cov_Algorithms_Output lib_computation)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Extrapolate test/TestAlgorithms_Extrapolate.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Extrapolate.h)
 	AddTestProperty(test_cov_Algorithms_Extrapolate)
 
 	add_executable(test_cov_JetDEau_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic)
-	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic lib_computation)
 	add_test(NAME test_JetDEau_Basic COMMAND test_cov_JetDEau_Basic)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Convection test/TestAlgorithms_Convection.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Convection.h)
@@ -466,34 +466,31 @@ endfunction(AddTestProperty)
 	CXXTEST_ADD_TEST(test_cov_Data_CellType_Fluid_Air_Solid_Inflow test/TestData_CellType_Fluid_Air_Solid_Inflow.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_CellType_Fluid_Air_Solid_Inflow.h)
 	AddTestProperty(test_cov_Data_CellType_Fluid_Air_Solid_Inflow)
 
+	CXXTEST_ADD_TEST(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_0_Pres test/TestData_CellType_Fluid_Air_Solid_Inflow_0_Pres.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_CellType_Fluid_Air_Solid_Inflow_0_Pres.h)
+	AddTestProperty(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_0_Pres)
+
 	add_executable(test_cov_FillingContainer_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer_Basic.cpp)
 	AddTestProperty(test_cov_FillingContainer_Basic)
-	TARGET_LINK_LIBRARIES(test_cov_FillingContainer_Basic lib_computation)
 	add_test(NAME test_cov_FillingContainer_Basic COMMAND test_cov_FillingContainer_Basic)
 
 	add_executable(test_cov_FillingContainer_Basic_Pyamg ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer_Basic_Pyamg.cpp)
 	AddTestProperty(test_cov_FillingContainer_Basic_Pyamg)
-	TARGET_LINK_LIBRARIES(test_cov_FillingContainer_Basic_Pyamg lib_computation)
 	add_test(NAME test_cov_FillingContainer_Basic_Pyamg COMMAND test_cov_FillingContainer_Basic_Pyamg)
 
 	add_executable(test_cov_FillingContainer2D_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestFillingContainer2D_Basic.cpp)
 	AddTestProperty(test_cov_FillingContainer2D_Basic)
-	TARGET_LINK_LIBRARIES(test_cov_FillingContainer2D_Basic lib_computation)
 	add_test(NAME test_cov_FillingContainer2D_Basic COMMAND test_cov_FillingContainer2D_Basic)
 
 	add_executable(test_cov_Convection ${CMAKE_CURRENT_SOURCE_DIR}/test/TestConvection.cpp)
 	AddTestProperty(test_cov_Convection)
-	TARGET_LINK_LIBRARIES(test_cov_Convection lib_computation)
 	add_test(NAME test_cov_Convection COMMAND test_cov_Convection)
 
 	add_executable(test_cov_ConvectionDiag ${CMAKE_CURRENT_SOURCE_DIR}/test/TestConvectionDiag.cpp)
 	AddTestProperty(test_cov_ConvectionDiag)
-	TARGET_LINK_LIBRARIES(test_cov_ConvectionDiag lib_computation)
 	add_test(NAME test_cov_ConvectionDiag COMMAND test_cov_ConvectionDiag)
 
 	add_executable(test_cov_ConvectionDiagCenter ${CMAKE_CURRENT_SOURCE_DIR}/test/TestConvectionDiagCenter.cpp)
 	AddTestProperty(test_cov_ConvectionDiagCenter)
-	TARGET_LINK_LIBRARIES(test_cov_ConvectionDiagCenter lib_computation)
 	add_test(NAME test_cov_ConvectionDiagCenter COMMAND test_cov_ConvectionDiagCenter)
 
 	CXXTEST_ADD_TEST(test_cov_Policy_Speed_Interpolation_Linear_Symmetric test/TestPolicy_Speed_Interpolation_Linear_Symmetric.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPolicy_Speed_Interpolation_Linear_Symmetric.h)
@@ -501,7 +498,6 @@ endfunction(AddTestProperty)
 
 	add_executable(test_cov_JetDEau_Basic_2 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2)
-	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2 lib_computation)
 	add_test(NAME test_JetDEau_Basic_2 COMMAND test_cov_JetDEau_Basic_2)
 
 	add_executable(test_cov_JetDEau_Basic_3 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_3.cpp)
@@ -517,7 +513,6 @@ endfunction(AddTestProperty)
 
 	add_executable(test_cov_TestPerformance_Without_Particle ${CMAKE_CURRENT_SOURCE_DIR}/test/TestPerformance_Without_Particle.cpp)
 	AddTestProperty(test_cov_TestPerformance_Without_Particle)
-	TARGET_LINK_LIBRARIES(test_cov_TestPerformance_Without_Particle lib_computation)
 	add_test(NAME test_TestPerformance_Without_Particle COMMAND test_cov_TestPerformance_Without_Particle)
 
 	CXXTEST_ADD_TEST(test_cov_Offset test/Test_Offset.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Offset.h)
@@ -531,7 +526,6 @@ endfunction(AddTestProperty)
 
 	add_executable(test_cov_TestChunk_Hash_Table_Performance ${CMAKE_CURRENT_SOURCE_DIR}/test/TestChunk_Hash_Table_Performance.cpp)
 	AddTestProperty(test_cov_TestChunk_Hash_Table_Performance)
-	TARGET_LINK_LIBRARIES(test_cov_TestChunk_Hash_Table_Performance lib_computation)
 	add_test(NAME test_cov_TestChunk_Hash_Table_Performance COMMAND test_cov_TestChunk_Hash_Table_Performance)
 
 	CXXTEST_ADD_TEST(test_cov_MacCell2 test/Test_MacCell2.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_MacCell2.h)
@@ -543,35 +537,32 @@ endfunction(AddTestProperty)
 	CXXTEST_ADD_TEST(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_Interior test/TestData_CellType_Fluid_Air_Solid_Inflow_Interior.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_CellType_Fluid_Air_Solid_Inflow_Interior.h)
 	AddTestProperty(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_Interior)
 
+	CXXTEST_ADD_TEST(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_Interior_0_Pres test/TestData_CellType_Fluid_Air_Solid_Inflow_Interior_0_Pres.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_CellType_Fluid_Air_Solid_Inflow_Interior_0_Pres.h)
+	AddTestProperty(test_cov_Data_CellType_Fluid_Air_Solid_Inflow_Interior_0_Pres)
+
 	add_executable(test_cov_JetDEau_Basic_2_Depth ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Depth.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Depth)
-	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Depth lib_computation)
 	add_test(NAME test_JetDEau_Basic_2_Depth COMMAND test_cov_JetDEau_Basic_2_Depth)
 
 	add_executable(test_cov_JetDEau_Basic_2_Updating ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Updating.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Updating)
-	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Updating lib_computation)
 	add_test(NAME test_JetDEau_Basic_2_Updating COMMAND test_cov_JetDEau_Basic_2_Updating)
 
 
 	add_executable(test_cov_JetDEau_Basic_2_Pyamg ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Pyamg.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Pyamg)
-	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Pyamg lib_computation)
 	add_test(NAME test_JetDEau_Basic_2_Pyamg COMMAND test_cov_JetDEau_Basic_2_Pyamg)
 
 	add_executable(test_cov_JetDEau_Basic_2_Pyamg_Simplified ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Pyamg_Simplified.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Pyamg_Simplified)
-	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_2_Pyamg_Simplified lib_computation)
 	add_test(NAME test_JetDEau_Basic_2_Pyamg_Simplified COMMAND test_cov_JetDEau_Basic_2_Pyamg_Simplified)
 
 	add_executable(test_cov_Gravity ${CMAKE_CURRENT_SOURCE_DIR}/test/TestGravity.cpp)
 	AddTestProperty(test_cov_Gravity)
-	TARGET_LINK_LIBRARIES(test_cov_Gravity lib_computation)
 	add_test(NAME test_Gravity COMMAND test_cov_Gravity)
 
 	add_executable(test_cov_Update_Pressure ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdate_Pressure.cpp)
 	AddTestProperty(test_cov_Update_Pressure)
-	TARGET_LINK_LIBRARIES(test_cov_Update_Pressure lib_computation)
 	add_test(NAME test_Update_Pressure COMMAND test_cov_Update_Pressure)
 
 endif(USE_TESTING)

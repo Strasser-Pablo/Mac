@@ -155,6 +155,8 @@ auto Data_CellType_Fluid_Air_Solid_Inflow_Interior<DataBase>::GetRho(Material_Ty
 			return GetRhoFluid();
 		case Material_Type::Solid:
 			return 0;
+		case Material_Type::Interior:
+			return GetRhoFluid();
 		default:
 			throw std::logic_error("In Data_GetCellType_Fluid_Air.tpp Function GetRho : Enum Value not in Enum.");
 	}
