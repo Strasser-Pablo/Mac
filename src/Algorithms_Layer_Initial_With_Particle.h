@@ -1,5 +1,6 @@
 #ifndef Algorithms_Layer_Initial_With_Particle_H
 #define Algorithms_Layer_Initial_With_Particle_H
+#include <sys/times.h>
 
 template <typename DataType,typename Policy>
 class Algorithms_Layer_Initial_With_Particle : public Policy
@@ -18,6 +19,7 @@ class Algorithms_Layer_Initial_With_Particle : public Policy
 	}
 	void Do()
 	{
+        double conv=double(sysconf(_SC_CLK_TCK));
 		struct tms t1;
 		struct tms t2;
 		long t_deb=times(&t1);
