@@ -23,7 +23,7 @@ int main()
 {
 		const int NL=2;
 		const int N=pow(NL,3);
-		typedef Data_Chunk_Speed<double,N> type_speed;
+        typedef Data_Chunk_Speed<double,1,1,N> type_speed;
 		type_speed m_speed(0);
 		typedef Data_Chunk_Bool_Array<N> type_bool_array;
 		type_bool_array m_bool_array;
