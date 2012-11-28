@@ -58,7 +58,7 @@ class Data_CellType_Domain_Fluid_Without_0_Pres : public Data_CellType_Domain_Im
 	 **/
 	bool GetIsInDomain_Impl(const Material_Type mat) const
 	{
-		return Base::GetIsFluid(mat);
+		return Base::GetIsFluid(mat)&&!Base::GetIs0_Pres(mat);
 	}
 	/**
 	 * @brief
@@ -125,7 +125,7 @@ class Data_CellType_Domain_Fluid_Without_0_Pres__InCell : public Data_CellType_D
 	 **/
 	bool GetIsInDomain_Impl() const
 	{
-		return RealBase::GetIsFluid();
+		return RealBase::GetIsFluid()&&!RealBase::GetIs0_Pres();
 	}
 	/**
 	 * @brief

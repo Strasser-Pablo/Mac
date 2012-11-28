@@ -47,7 +47,7 @@ class Data_CellType_Interface_Constant_With_0_Pres : public Data_CellType_Interf
 		{
 			return false;
 		}
-		if(m_set.count(neigh)==1||m_set.count(neigh2))
+		if(m_set.count(neigh)==1||m_set.count(neigh2)==1)
 		{
 			return false;
 		}
@@ -68,7 +68,7 @@ class Data_CellType_Interface_Constant_With_0_Pres : public Data_CellType_Interf
 		{
 			return false;
 		}
-		if(m_set.count(neigh)==1||m_set.count(neigh2))
+		if(m_set.count(neigh)==1||m_set.count(neigh2)==1)
 		{
 			return false;
 		}

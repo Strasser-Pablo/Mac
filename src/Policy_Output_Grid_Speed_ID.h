@@ -16,6 +16,7 @@
 #include <sstream>
 #include <vtkXMLUnstructuredGridWriter.h>
 #include <unordered_map>
+#include <functional>
 
 using std::unordered_map;
 

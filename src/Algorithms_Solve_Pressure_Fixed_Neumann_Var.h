@@ -1,5 +1,5 @@
-#ifndef Algorithms_Solve_Pressure_H
-#define Algorithms_Solve_Pressure_H
+#ifndef Algorithms_Solve_Pressure_Fixed_Neumann_Var_H
+#define Algorithms_Solve_Pressure_Fixed_H
 
 #include <cmath>
 #include <map>
@@ -9,7 +9,7 @@
 using namespace std;
 
 template <typename DataType,typename Policy>
-class Algorithms_Solve_Pressure: public Policy
+class Algorithms_Solve_Pressure_Fixed: public Policy
 {
 	using Policy::Solve_Linear;
 	using Policy::Get_Divergence;
@@ -33,16 +33,29 @@ class Algorithms_Solve_Pressure: public Policy
 	static const int type_dim=type_speed::type_dim;
 	type_grid& m_grid;
 	const type_spacing_vector& m_1_h;
+	bool b=false;
 	int m_n;
 	int* m_offset;
 	int* m_indice;
 	type_speed_value* m_value;
 	public:
-	Algorithms_Solve_Pressure(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv())
+	Algorithms_Solve_Pressure_Fixed(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv())
 	{
+	}
+	~Algorithms_Solve_Pressure_Fixed()
+	{
+		delete[] m_offset;
+		delete[] m_indice;
+		delete[] m_value;
+		m_offset=nullptr;
+		m_indice=nullptr;
+		m_value=nullptr;
+		Solve_Linear_Clean();
 	}
 	void Init_Iteration()
 	{
+		if(!b)
+		{
 		struct tms t1;
 		struct tms t2;
 		double conv=double(sysconf(_SC_CLK_TCK));
@@ -154,16 +167,11 @@ class Algorithms_Solve_Pressure: public Policy
 		long t_end=times(&t2);
 		cout<<"real Pressure_Prepare+Factorize "<<(t_end-t_deb)/conv<<endl;
 		cout<<"real Pressure_Prepare+Factorize "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+		b=true;
+		}
 	}
 	void End_Iteration()
 	{
-		delete[] m_offset;
-		delete[] m_indice;
-		delete[] m_value;
-		m_offset=nullptr;
-		m_indice=nullptr;
-		m_value=nullptr;
-		Solve_Linear_Clean();
 	}
 	void Divergence_Projection()
 	{
