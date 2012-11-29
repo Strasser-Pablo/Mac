@@ -34,12 +34,13 @@ class Algorithms_Solve_Pressure_Neumann_Var: public Policy
 	static const int type_dim=type_speed::type_dim;
 	type_grid& m_grid;
 	const type_spacing_vector& m_1_h;
+    const type_spacing_vector& m_h;
 	int m_n;
 	int* m_offset;
 	int* m_indice;
 	type_speed_value* m_value;
 	public:
-	Algorithms_Solve_Pressure_Neumann_Var(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv())
+    Algorithms_Solve_Pressure_Neumann_Var(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_h(data.m_data.GetGridData().m_h.GetRef())
 	{
 	}
 	void Init_Iteration()
@@ -114,7 +115,6 @@ class Algorithms_Solve_Pressure_Neumann_Var: public Policy
 								if(Get_Is_Von_Neumann_Boundary(next_neigh,i,s))
 								{
 									temp_diag_value+=pow(m_1_h.Get(i),2);
-									temp_diag_value+=s*m_1_h.Get(i)*GetNeumannGradiantPressure(next_neigh,i,s);
 								}
 								//NeighBour is in domain, assign a number if needed and add the matrice element to calculate the derivatif.
 								else if(neigh.CellType_GetRef().GetIsInDomain())
@@ -175,10 +175,20 @@ class Algorithms_Solve_Pressure_Neumann_Var: public Policy
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			int lay_cur;
-			if(it.data().CellType_GetRef().GetIsInDomain())
-			{
-				lay_cur=it.data().Id_Cell_GetRef().GetLayer();
-				b[lay_cur]=Get_Divergence(it.data()).Get();
+            if(it.data().CellType_GetRef().GetIsInDomain())
+            {
+                lay_cur=it.data().Id_Cell_GetRef().GetLayer();
+                b[lay_cur]=Get_Divergence(it.data()).Get();
+                for(int i=1;i<=type_dim;++i)
+                {
+                    for(int s=-1;s<=1;s+=2)
+                    {
+                        if(Get_Is_Von_Neumann_Boundary(it.data(),i,s))
+                        {
+                            b[lay_cur]-=s*m_1_h.Get(i)*GetNeumannGradiantPressure(it.data(),i,s);
+                        }
+                    }
+                }
 			}
 		}
 		// Solve the linear system.
@@ -198,17 +208,13 @@ class Algorithms_Solve_Pressure_Neumann_Var: public Policy
 			{
 				lay_cur=it.data().Id_Cell_GetRef().GetLayer();
 				it.data().Pressure_GetRef().Pressure_Set(type_pressure(res[lay_cur]));
-				cout<<"lay_cur "<<lay_cur<<endl;
-				cout<<"P "<<res[lay_cur]<<endl;
 				for(int i=1;i<=type_dim;++i)
 				{
 					for(int s=-1;s<=1;s+=2)
 					{
 						if(Get_Is_Von_Neumann_Boundary(it.data(),i,s))
 						{
-							cout<<"von neumann0 "<<s*GetNeumannGradiantPressure(it.data(),i,s)<<endl;
-							cout<<"von neumann1 "<<res[lay_cur]-s*GetNeumannGradiantPressure(it.data(),i,s)<<endl;
-							it.data().GetNeighbour(i,s).Pressure_GetRef().Pressure_Set(type_pressure(res[lay_cur]-s*GetNeumannGradiantPressure(it.data(),i,s)));
+                            it.data().GetNeighbour(i,s).Pressure_GetRef().Pressure_Set(type_pressure(res[lay_cur]+s*m_h.Get(i)*GetNeumannGradiantPressure(it.data(),i,s)));
 						}
 					}
 				}
@@ -220,8 +226,6 @@ class Algorithms_Solve_Pressure_Neumann_Var: public Policy
 			{
 				if(Get_Pressure_If_Correction(it.data(),i))
 				{
-					cout<<"key "<<it.key()<<" "<<i<<endl;
-					cout<<"grad "<<Get_Gradiant(it.data(),i)<<endl;
 					it.data().Speed_GetRef().Set(i,it.data().Speed_GetRef().Get(i)-Get_Gradiant(it.data(),i),true);
 				}
 			}

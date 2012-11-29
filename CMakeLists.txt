@@ -571,4 +571,6 @@ endfunction(AddTestProperty)
 	AddTestProperty(test_cov_Update_Pressure)
 	add_test(NAME test_Update_Pressure COMMAND test_cov_Update_Pressure)
 
+	CXXTEST_ADD_TEST(test_cov_Algorithms_Solve_Pressure_Neumann_Var test/Test_Algorithms_Solve_Pressure_Neumann_Var.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Algorithms_Solve_Pressure_Neumann_Var.h)
+	AddTestProperty(test_cov_Algorithms_Solve_Pressure_Neumann_Var)
 endif(USE_TESTING)
