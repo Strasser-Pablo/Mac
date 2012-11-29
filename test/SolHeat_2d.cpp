@@ -432,10 +432,10 @@ int main()
 	type_alg_output m_alg_output(m_data_ref,m_pol_output);
 
 	m_alg_first_init.Do();
-	m_alg_output.Do();
 	m_alg_extrapolate.Do();
+    m_alg_output.Do();
 	int k=0;
-	for(int i=1;;++i)
+    for(int i=1;i<2;++i)
 	{
 		cout<<"i "<<i<<endl;
 		m_alg_ODE.Do();
@@ -450,4 +450,6 @@ int main()
 		}
 	}
 	SingletonManager::Kill();
+    cout<<"finished"<<endl;
+    return 0;
 }

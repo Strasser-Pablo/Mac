@@ -14,9 +14,12 @@ class Algorithms_RungeKutta : public Policy
 	type_Time_Type& m_dt;
 	type_Data_Grid& m_grid;
 	public:
-	Algorithms_RungeKutta(Data data, const Policy& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt)
+    Algorithms_RungeKutta(Data data,Policy& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt)
 	{
 	}
+    Algorithms_RungeKutta(Data data, Policy&& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt)
+    {
+    }
 	void Do()
 	{
 		struct tms tA1;

@@ -36,6 +36,9 @@ Testing/
 /MAC.*
 doc/latex/
 doc/html/
+/qtdoc/latex/
+/qtdoc/html/
+/qtdoc/doc.qch
 *.*~
 temp/
 sim/

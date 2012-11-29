@@ -109,7 +109,12 @@ endif(USE_TESTING)
 if(USE_DOXYGEN)
 add_custom_target(doc COMMAND "${DOXYGEN_EXECUTABLE}" "Doxyfile"
 COMMENT "Writing documentation ..."
-WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/doc/")
+WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/doc/"
+DEPENDS docqt)
+
+add_custom_target(docqt COMMAND "${DOXYGEN_EXECUTABLE}" "Doxyfile"
+COMMENT "Writing documentation ..."
+WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/qtdoc/")
 endif(USE_DOXYGEN)
 
 CHECK_CXX_COMPILER_FLAG(-march=native COMPILER_NATIVE)

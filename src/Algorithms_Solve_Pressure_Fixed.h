@@ -35,22 +35,35 @@ class Algorithms_Solve_Pressure_Fixed: public Policy
 	const type_spacing_vector& m_1_h;
 	bool b=false;
 	int m_n;
-	int* m_offset;
-	int* m_indice;
-	type_speed_value* m_value;
+    int* m_offset=nullptr;
+    int* m_indice=nullptr;
+    type_speed_value* m_value=nullptr;
 	public:
-	Algorithms_Solve_Pressure_Fixed(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv())
+    Algorithms_Solve_Pressure_Fixed(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_offset(nullptr),m_indice(nullptr),m_value(nullptr)
 	{
 	}
+    Algorithms_Solve_Pressure_Fixed(Algorithms_Solve_Pressure_Fixed <DataType,Policy>& cop):Policy(cop),m_grid(cop.m_grid),m_1_h(cop.m_1_h),m_offset(nullptr),m_indice(nullptr),m_value(nullptr),b(false)
+    {
+    }
+
+    Algorithms_Solve_Pressure_Fixed(Algorithms_Solve_Pressure_Fixed <DataType,Policy>&& cop):Policy(cop),m_grid(cop.m_grid),m_1_h(cop.m_1_h),m_offset(nullptr),m_indice(nullptr),m_value(nullptr),b(false)
+    {
+    }
+
 	~Algorithms_Solve_Pressure_Fixed()
 	{
-		delete[] m_offset;
-		delete[] m_indice;
-		delete[] m_value;
+        delete[] m_offset;
+        delete[] m_indice;
+        delete[] m_value;
+
 		m_offset=nullptr;
 		m_indice=nullptr;
 		m_value=nullptr;
+
 		Solve_Linear_Clean();
+
+        b=false;
+
 	}
 	void Init_Iteration()
 	{
@@ -64,7 +77,7 @@ class Algorithms_Solve_Pressure_Fixed: public Policy
 		// Upper bound of memory usage.
 		m_n=m_grid.size_upper();
 		int nEntry=(2*type_dim+1)*m_grid.size_upper();
-		m_offset=new int[m_n+1];
+        m_offset=new int[m_n+1];
 		m_indice=new int[nEntry];
 		m_value=new type_speed_value[nEntry];
 
