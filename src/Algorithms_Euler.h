@@ -12,9 +12,10 @@ class Algorithms_Euler : public Policy
 	typedef typename type_data::type_Data_Timing type_Data_Timing;
 	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
 	type_Time_Type& m_dt;
+    type_Time_Type& m_t;
 	type_Data_Grid& m_grid;
 	public:
-	Algorithms_Euler(Data data, const Policy& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt)
+    Algorithms_Euler(Data data, const Policy& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt),m_t(data.m_data.GetTimingData().m_t)
 	{
 	}
 	void Do()
@@ -41,6 +42,7 @@ class Algorithms_Euler : public Policy
 		long t_end=times(&t2);
 		cout<<"real Euler "<<(t_end-t_deb)/conv<<endl;
 		cout<<"user Euler "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
+        m_t+=m_dt;
 	}
 };
 #endif

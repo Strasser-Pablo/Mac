@@ -12,12 +12,13 @@ class Algorithms_RungeKutta : public Policy
 	typedef typename type_data::type_Data_Timing type_Data_Timing;
 	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
 	type_Time_Type& m_dt;
+    type_Time_Type& m_t;
 	type_Data_Grid& m_grid;
 	public:
-    Algorithms_RungeKutta(Data data,Policy& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt)
+    Algorithms_RungeKutta(Data data,Policy& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt),m_t(data.m_data.GetTimingData().m_t)
 	{
 	}
-    Algorithms_RungeKutta(Data data, Policy&& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt)
+    Algorithms_RungeKutta(Data data, Policy&& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt),m_t(data.m_data.GetTimingData().m_t)
     {
     }
 	void Do()
@@ -45,7 +46,7 @@ class Algorithms_RungeKutta : public Policy
 		cout<<"user Calculate Grid "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
 
 		type_chunk_speed::ispeed=2;
-
+        m_t+=0.5*m_dt;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			it.data().Speed_GetRef(2).Set(it.data().Speed_GetRef(0).Get()+it.data().Acceleration_GetRef().Get()*m_dt*0.5,true);
@@ -81,7 +82,7 @@ class Algorithms_RungeKutta : public Policy
 		t_end=times(&t2);
 		cout<<"real Calculate Grid "<<(t_end-t_deb)/conv<<endl;
 		cout<<"user Calculate Grid "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
-
+        m_t+=0.5*m_dt;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 		{
 			it.data().Speed_GetRef(2).Set(it.data().Speed_GetRef(0).Get()+it.data().Acceleration_GetRef().Get()*m_dt,true);

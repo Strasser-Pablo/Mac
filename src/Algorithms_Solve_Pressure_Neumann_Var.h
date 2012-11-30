@@ -1,5 +1,5 @@
-#ifndef Algorithms_Solve_Pressure_H
-#define Algorithms_Solve_Pressure_H
+#ifndef Algorithms_Solve_Pressure_Neumann_Var_H
+#define Algorithms_Solve_Pressure_Neumann_Var_H
 
 #include <cmath>
 #include <map>
