@@ -1,6 +1,8 @@
 #ifndef Algorithms_Calculate_Time_Step_H
 #define Algorithms_Calculate_Time_Step_H
 
+#include <cfenv>
+
 template <typename DataType,typename Policy>
 class Algorithms_Calculate_Time_Step : public Policy
 {
@@ -44,7 +46,11 @@ class Algorithms_Calculate_Time_Step : public Policy
 				}
 			}
 		}
-		m_dt=1/sqrt(max)*m_factor;
+        //Protect call for division by 0 that are possible
+        std::fenv_t fp_env;
+        std::feholdexcept(&fp_env);
+        m_dt=1/sqrt(max)*m_factor;
+        std::fesetenv(&fp_env);
 		m_dt=CheckDT(m_dt);
 		long t_end=times(&t2);
 		cout<<"real Calculate Time Step "<<(t_end-t_deb)/conv<<endl;

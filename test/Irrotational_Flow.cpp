@@ -1,3 +1,5 @@
+ #pragma STDC FENV_ACCESS ON
+
 //Vector
 #include "../src/Physvector.h"
 #include "../src/HashPhysvector.h"
@@ -146,8 +148,9 @@
 
 #include <stdexcept>
 
-using namespace std;
+#include <cfenv>
 
+using namespace std;
 
 template <typename Data>
 class PolicyVonNeumann_Boundary
@@ -172,6 +175,7 @@ class PolicyVonNeumann_Boundary
 	type_speed_value GetNeumannGradiantPressure(const type_neigh & neigh,int i,int s)
 	{
 		type_speed_value ret=(neigh.GetKey().Get(i)+s*0.5)*m_h.Get(i);
+        ret=0;
 		if(i==1)
 		{
 			return -4*pow(m_t,2)*ret-2*ret;
@@ -184,18 +188,65 @@ class PolicyVonNeumann_Boundary
 	}
 };
 
-int main()
+template <typename Data,typename Policy>
+class Algorithm_Extrapolate_Boundary : public Policy
 {
+    typedef typename Data::type_data_struct::type_Data_Grid type_Data_Grid;
+    typedef typename type_Data_Grid::type_key type_key;
+    typedef typename type_Data_Grid::type_data::type_speed type_speed;
+    typedef typename type_speed::type_data_value type_speed_value;
+    typedef typename type_Data_Grid::type_spacing_vector type_spacing_vector;
+    typedef typename type_Data_Grid::type_offset type_neigh;
+    typedef typename Data::type_data_struct::type_Data_Timing type_Data_Timing;
+    typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
+    typedef typename type_Data_Grid::iterator iterator;
+    static const int type_dim=type_Data_Grid::type_key::type_dim;
+    type_Data_Grid& m_grid;
+    const type_spacing_vector &m_1_h;
+    const type_spacing_vector &m_h;
+    type_Time_Type& m_t;
+    public:
+    Algorithm_Extrapolate_Boundary(Data data, const Policy& pol): Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_h(data.m_data.GetGridData().m_h.GetRef()),m_t(data.m_data.GetTimingData().m_t)
+    {
+    }
+
+    void Do()
+    {
+        for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+        {
+            if(it.data().Layer_GetRef().GetLayer()!=0)
+            {
+                for(int i=1;i<=type_dim;++i)
+                {
+                    type_neigh neigh=it.data().GetNeighbour(i,1);
+                    if(neigh.IsValid())
+                    {
+                        type_speed_value value=(it.key().Get(i)+1.5)*m_h.Get(i);
+                        cout<<"key "<<it.key()<<" set "<<value<<endl;
+                        neigh.Speed_GetRef().Set(i,-2*m_t*value);
+                    }
+                }
+            }
+        }
+    }
+};
+
+int main()
+{     
+    feenableexcept(FE_INVALID | FE_DIVBYZERO);
 	const int DIM=2;
 	const int NBSpeed=3;
 	double length=1.0;
-    int NBX=2;
-	double spacing=length/(NBX);
+    int NBX=50;
+    cout<<"bef"<<endl;
+    double spacing=length/double(NBX);
+    cout<<"spacing "<<spacing<<endl;
+    //spacing=0.0000001;
 	double value=1.0;
 //	const int NBSpeed=1;
 //	const int NBSpeed=2;
 	typedef double type_data_value;
-	const int N=2;
+    const int N=2;
 	const int NStock=pow(N,DIM);
 	typedef Data_Base_Dim_Type<double,DIM> DataBase0;
 	DataBase0 base0;
@@ -393,7 +444,7 @@ int main()
 
 	//Policy First Init
 	typedef Policy_Layer_Max<type_data_ref> type_pol_layer_max;
-    type_pol_layer_max m_pol_layer_max(5);
+    type_pol_layer_max m_pol_layer_max(20);
 	typedef Policies<type_pol_layer_max> type_pol_init_first;
 	type_pol_init_first m_pol_init_first(m_pol_layer_max);
 
@@ -440,8 +491,8 @@ int main()
 	type_pol_solve_grid m_pol_solve_grid(m_pol_gravity,m_pol_laplacian,m_pol_laplacian_speed,m_pol_viscosity_apply_if,m_pol_convection_apply_if,m_pol_convection);
 
 	//Algorithms Solve Grid
-	typedef Algorithms_Extrapolate<type_data_ref,type_pol_solve_grid> type_alg_extrapolate;
-	type_alg_extrapolate m_alg_extrapolate(m_data_ref,m_pol_solve_grid);
+    typedef Algorithm_Extrapolate_Boundary<type_data_ref,type_pol_solve_grid> type_alg_extrapolate;
+    type_alg_extrapolate m_alg_extrapolate(m_data_ref,m_pol_solve_grid);
 	typedef Algorithms_Gravity<type_data_ref,type_pol_solve_grid> type_alg_gravity;
 	type_alg_gravity m_alg_gravity(m_data_ref,m_pol_solve_grid);
 	typedef Algorithms_Viscosity<type_data_ref,type_pol_solve_grid> type_alg_viscosity;
