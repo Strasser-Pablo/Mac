@@ -43,6 +43,17 @@ class Algorithms_Solve_Pressure_Fixed_Neumann_Var: public Policy
     Algorithms_Solve_Pressure_Fixed_Neumann_Var(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_h(data.m_data.GetGridData().m_h.GetRef())
     {
     }
+    ~Algorithms_Solve_Pressure_Fixed_Neumann_Var()
+    {
+        delete[] m_offset;
+        delete[] m_indice;
+        delete[] m_value;
+        m_offset=nullptr;
+        m_indice=nullptr;
+        m_value=nullptr;
+        Solve_Linear_Clean();
+    }
+
     void Init_Iteration()
     {
         if(!b)
@@ -163,13 +174,6 @@ class Algorithms_Solve_Pressure_Fixed_Neumann_Var: public Policy
     }
     void End_Iteration()
     {
-        delete[] m_offset;
-        delete[] m_indice;
-        delete[] m_value;
-        m_offset=nullptr;
-        m_indice=nullptr;
-        m_value=nullptr;
-        Solve_Linear_Clean();
     }
     void Divergence_Projection()
     {
