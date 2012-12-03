@@ -11,6 +11,14 @@ class Policy_Solve_Linear_Umfpack
 	void *m_Numeric ;
     bool b=false;
 	public:
+    void CheckError(int status,const char * message)
+    {
+        if(status!=UMFPACK_OK)
+        {
+            cout<<"umfpack error or warning :"<<status<<" in "<<message<<endl;
+        }
+    }
+
 	Policy_Solve_Linear_Umfpack()
 	{
 		umfpack_di_defaults(controle);
@@ -25,8 +33,10 @@ class Policy_Solve_Linear_Umfpack
 		if(n!=0)
 		{
 			cout<<"n system size "<<n<<endl;
-			(void) umfpack_di_symbolic (n, n,offset,indice,value,&m_Symbolic, controle, nullptr) ;
-			(void) umfpack_di_numeric (offset,indice,value,m_Symbolic,&m_Numeric,controle, nullptr) ;
+            int status=umfpack_di_symbolic (n, n,offset,indice,value,&m_Symbolic, controle, nullptr) ;
+            CheckError(status," symbolic");
+            status=umfpack_di_numeric (offset,indice,value,m_Symbolic,&m_Numeric,controle, nullptr) ;
+            CheckError(status," numeric");
             b=true;
 		}
 		long t_end=times(&t2);
@@ -47,10 +57,11 @@ class Policy_Solve_Linear_Umfpack
 		struct tms t1;
 		struct tms t2;
 		double conv=double(sysconf(_SC_CLK_TCK));
-		long t_deb=times(&t1);
+        long t_deb=times(&t1);
 		if(n!=0)
 		{
-			(void) umfpack_di_solve (UMFPACK_A,offset,indice,value,res,b,m_Numeric, controle, nullptr) ;
+            int status=umfpack_di_solve (UMFPACK_A,offset,indice,value,res,b,m_Numeric, controle, nullptr);
+            CheckError(status," solve");
 		}
 		long t_end=times(&t2);
 		cout<<"real Matrice Solve "<<(t_end-t_deb)/conv<<endl;
