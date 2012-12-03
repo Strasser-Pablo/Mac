@@ -232,8 +232,8 @@ class Algorithm_Extrapolate_Boundary : public Policy
 };
 
 int main()
-{     
-    feenableexcept(FE_INVALID | FE_DIVBYZERO);
+{
+    feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
 	const int DIM=2;
 	const int NBSpeed=3;
 	double length=1.0;
