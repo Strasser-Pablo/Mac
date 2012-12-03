@@ -238,7 +238,6 @@ int main()
 	const int NBSpeed=3;
 	double length=1.0;
     int NBX=50;
-    cout<<"bef"<<endl;
     double spacing=length/double(NBX);
     cout<<"spacing "<<spacing<<endl;
     //spacing=0.0000001;
