@@ -1,3 +1,5 @@
+#include "SFINAE_Is_Policy_With_Do_After.h"
+
 #ifndef Algorithms_RungeKutta_H
 #define Algorithms_RungeKutta_H
 //Need 3 speed and 1 acceleration
@@ -11,6 +13,7 @@ class Algorithms_RungeKutta : public Policy
 	typedef typename type_Data_Grid::iterator iterator;
 	typedef typename type_data::type_Data_Timing type_Data_Timing;
 	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
+    typedef Policy type_policy;
 	type_Time_Type& m_dt;
     type_Time_Type& m_t;
 	type_Data_Grid& m_grid;
@@ -24,10 +27,9 @@ class Algorithms_RungeKutta : public Policy
 	void Do()
 	{
 		struct tms tA1;
-		struct tms tA2;
+        struct tms tA2;
 		double conv=double(sysconf(_SC_CLK_TCK));
 		long tA_deb=times(&tA1);
-
 		type_chunk_speed::ispeed=0;
 		type_chunk_speed::iacceleration=0;
 		Policy::Init_Iteration();
@@ -44,7 +46,6 @@ class Algorithms_RungeKutta : public Policy
 		long t_end=times(&t2);
 		cout<<"real Calculate Grid "<<(t_end-t_deb)/conv<<endl;
 		cout<<"user Calculate Grid "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
-
 		type_chunk_speed::ispeed=2;
         m_t+=0.5*m_dt;
 		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
@@ -59,6 +60,7 @@ class Algorithms_RungeKutta : public Policy
 		}
 		cout<<"FIRST_PROJECTION "<<endl;
 		Policy::Divergence_Projection();
+        DoAfter(this);
 		t_deb=times(&t1);
 		Policy::Do();
 		t_end=times(&t2);
@@ -75,8 +77,8 @@ class Algorithms_RungeKutta : public Policy
 		{
 			it.data().Acceleration_GetRef().SetZero(true);
 		}
-
 		Policy::Divergence_Projection();
+        DoAfter(this);
 		t_deb=times(&t1);
 		Policy::Do();
 		t_end=times(&t2);
@@ -95,6 +97,7 @@ class Algorithms_RungeKutta : public Policy
 		}
 
 		Policy::Divergence_Projection();
+        DoAfter(this);
 		t_deb=times(&t1);
 		Policy::Do();
 		t_end=times(&t2);
@@ -110,9 +113,19 @@ class Algorithms_RungeKutta : public Policy
 
 		Policy::Divergence_Projection();
 		Policy::End_Iteration();
+        DoAfter(this);
 		long tA_end=times(&tA2);
 		cout<<"real RungeKutta "<<(tA_end-tA_deb)/conv<<endl;
 		cout<<"user RungeKutta "<<(tA2.tms_utime-tA1.tms_utime)/conv<<endl;
 	}
+    template<typename T,typename SFINAE_Is_Policy_With_Do_After<typename T::type_policy>::FALSE=0>
+    void DoAfter(T* mthis)
+    {
+    }
+    template<typename T,typename SFINAE_Is_Policy_With_Do_After<typename T::type_policy>::TRUE=0>
+    void DoAfter(T* mthis)
+    {
+        Policy::DoAfter();
+    }
 };
 #endif

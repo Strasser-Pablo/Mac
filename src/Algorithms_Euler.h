@@ -1,3 +1,5 @@
+#include "SFINAE_Is_Policy_With_Do_After.h"
+
 #ifndef Algorithms_Euler_H
 #define Algorithms_Euler_H
 
@@ -11,6 +13,7 @@ class Algorithms_Euler : public Policy
 	typedef typename type_Data_Grid::iterator iterator;
 	typedef typename type_data::type_Data_Timing type_Data_Timing;
 	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
+    typedef Policy type_policy;
 	type_Time_Type& m_dt;
     type_Time_Type& m_t;
 	type_Data_Grid& m_grid;
@@ -39,10 +42,20 @@ class Algorithms_Euler : public Policy
 		type_chunk_speed::ispeed=0;
 		Policy::Divergence_Projection();
 		Policy::End_Iteration();
+        m_t+=m_dt;
+        DoAfter(this);
 		long t_end=times(&t2);
 		cout<<"real Euler "<<(t_end-t_deb)/conv<<endl;
 		cout<<"user Euler "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
-        m_t+=m_dt;
 	}
+    template<typename T,typename SFINAE_Is_Policy_With_Do_After<typename T::type_policy>::FALSE=0>
+    void DoAfter(T* mthis)
+    {
+    }
+    template<typename T,typename SFINAE_Is_Policy_With_Do_After<typename T::type_policy>::TRUE=0>
+    void DoAfter(T* mthis)
+    {
+        Policy::DoAfter();
+    }
 };
 #endif

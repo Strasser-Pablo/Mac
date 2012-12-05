@@ -82,7 +82,8 @@
 
 //Algorithms
 #include "../src/Algorithms.h"
-
+#include "../src/Algorithms_After.h"
+#include "../src/Algorithms_After_From_Algorithms.h"
 
 //Policy
 #include "../src/Policy_Layer_Max.h"
@@ -127,8 +128,7 @@
 #include "../src/Algorithms_Speed_Repeat_Constant.h"
 #include "../src/Algorithms_Gravity.h"
 #include "../src/Algorithms_Viscosity.h"
-#include "../src/Algorithms_Solve_Pressure_Fixed_Neumann_Var.h"
-#include "../src/Algorithms_Solve_Pressure_Fixed.h"
+#include "../src/Algorithms_Solve_Pressure_Fixed_Neumann.h"
 #include "../src/Algorithms_Solve_Pressure_Empty.h"
 #include "../src/Algorithms_Convection.h"
 
@@ -152,8 +152,8 @@
 
 using namespace std;
 
-template <typename Data>
-class PolicyVonNeumann_Boundary
+template <typename Data,typename Policy>
+class AlgorithmAcceleration : public Policy
 {
 	typedef typename Data::type_data_struct::type_Data_Grid type_Data_Grid;
 	typedef typename type_Data_Grid::type_key type_key;
@@ -161,30 +161,61 @@ class PolicyVonNeumann_Boundary
 	typedef typename type_speed::type_data_value type_speed_value;
 	typedef typename type_Data_Grid::type_spacing_vector type_spacing_vector;
 	typedef typename type_Data_Grid::type_offset type_neigh;
+    typedef typename type_Data_Grid::iterator iterator;
 	typedef typename Data::type_data_struct::type_Data_Timing type_Data_Timing;
 	typedef typename type_Data_Timing::type_Time_Type type_Time_Type;
+    static const int type_dim=type_Data_Grid::type_key::type_dim;
 	type_Data_Grid& m_grid;
-	int m_N;
 	const type_spacing_vector &m_1_h;
 	const type_spacing_vector &m_h;
 	type_Time_Type& m_t;
 	public:
-	PolicyVonNeumann_Boundary(Data data,int N) :m_grid(data.m_data.GetGridData()),m_N(N),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_h(data.m_data.GetGridData().m_h.GetRef()),m_t(data.m_data.GetTimingData().m_t)
+    AlgorithmAcceleration(Data data,Policy & pol) :Policy(pol),m_grid(data.m_data.GetGridData()),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv()),m_h(data.m_data.GetGridData().m_h.GetRef()),m_t(data.m_data.GetTimingData().m_t)
 	{
 	}
-	type_speed_value GetNeumannGradiantPressure(const type_neigh & neigh,int i,int s)
+    bool NeedToApply(const type_neigh neigh,int i)
+    {
+        if(neigh.CellType_GetRef().GetIsFluid())
+        {
+            return true;
+        }
+        if(neigh.Layer_GetRef().GetIsLayerEmpty())
+        {
+            return false;
+        }
+        type_neigh neigh2=neigh.GetNeighbour(i,-1);
+        if(!neigh2.IsValid())
+        {
+            return false;
+        }
+        if(neigh2.CellType_GetRef().GetIsFluid())
+        {
+            return true;
+        }
+        return false;
+    }
+    void Do()
 	{
-		type_speed_value ret=(neigh.GetKey().Get(i)+s*0.5)*m_h.Get(i);
-        ret=0;
-		if(i==1)
-		{
-			return -4*pow(m_t,2)*ret-2*ret;
-		}
-		else if(i==2)
-		{
-			return -4*pow(m_t,2)*ret+2*ret;
-		}
-		throw std::logic_error("Boundary condition access direction bigger than dimension");
+        for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+        {
+            static_assert(type_dim==2,"type_dim pas egal à 2.");
+            for(int i=1;i<=type_dim;++i)
+            {
+                type_speed_value ret=(it.data().GetKey().Get(i)-0.5)*m_h.Get(i);
+                if(i==1)
+                {
+                     ret=-4*pow(m_t,2)*ret-2*ret;
+                }
+                else if(i==2)
+                {
+                    ret=-4*pow(m_t,2)*ret+2*ret;
+                }
+                if(NeedToApply(it.data(),i))
+                {
+                    it.data().Acceleration_GetRef().Set(i,it.data().Acceleration_GetRef().Get(i)+ret);
+                }
+            }
+        }
 	}
 };
 
@@ -219,10 +250,9 @@ class Algorithm_Extrapolate_Boundary : public Policy
                 for(int i=1;i<=type_dim;++i)
                 {
                     type_neigh neigh=it.data().GetNeighbour(i,1);
-                    if(neigh.IsValid())
+                    if(neigh.IsValid()&&neigh.Layer_GetRef().GetLayer()!=0)
                     {
                         type_speed_value value=(it.key().Get(i)+1.5)*m_h.Get(i);
-                        cout<<"key "<<it.key()<<" set "<<value<<endl;
                         neigh.Speed_GetRef().Set(i,-2*m_t*value);
                     }
                 }
@@ -239,14 +269,12 @@ int main()
 	double length=1.0;
     int NBX=50;
     double spacing=length/double(NBX);
-    cout<<"spacing "<<spacing<<endl;
-    //spacing=0.0000001;
 	double value=1.0;
 //	const int NBSpeed=1;
 //	const int NBSpeed=2;
 	typedef double type_data_value;
     const int N=2;
-	const int NStock=pow(N,DIM);
+    const int NStock=pow(N,DIM);
 	typedef Data_Base_Dim_Type<double,DIM> DataBase0;
 	DataBase0 base0;
 	typedef Data_Staggered_Left<DataBase0> DataBase;
@@ -498,9 +526,11 @@ int main()
 	type_alg_viscosity m_alg_viscosity(m_data_ref,m_pol_solve_grid);
 	typedef Algorithms_Convection<type_data_ref,type_pol_solve_grid> type_alg_convection;
 	type_alg_convection m_alg_convection(m_data_ref,m_pol_solve_grid);
+    typedef AlgorithmAcceleration<type_data_ref,type_pol_solve_grid> type_alg_accel;
+    type_alg_accel m_alg_accel(m_data_ref,m_pol_solve_grid);
 
-    typedef Algorithms<type_alg_extrapolate,/*type_alg_gravity,*//*type_alg_viscosity,*/type_alg_convection> type_alg_solve_grid;
-    type_alg_solve_grid m_alg_solve_grid(m_alg_extrapolate,/*m_alg_gravity,*//*m_alg_viscosity,*/m_alg_convection);
+    typedef Algorithms</*type_alg_gravity,*//*type_alg_viscosity,*/type_alg_convection,type_alg_accel> type_alg_solve_grid;
+    type_alg_solve_grid m_alg_solve_grid(/*m_alg_gravity,*//*m_alg_viscosity,*/m_alg_convection,m_alg_accel);
 
 
 	//Policy Solve Pressure;
@@ -514,25 +544,27 @@ int main()
 	type_pol_von_neumann_boundary m_pol_von_neumann_boundary(m_data_ref);
 	typedef Policy_Divergence<type_data_ref> type_pol_divergence;
 	type_pol_divergence m_pol_divergence(m_data_ref);
-	typedef PolicyVonNeumann_Boundary<type_data_ref> type_pol_von_neumann2;
-	type_pol_von_neumann2 m_pol_von_neumann_boundary2(m_data_ref,NBX-1);
 
-	typedef Policies<type_pol_solve_linear,type_pol_pres_cor_if,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_divergence,type_pol_von_neumann2> type_pol_pressure;
-	type_pol_pressure m_pol_pressure(m_pol_solve_linear,m_pol_pres_cor_if,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_divergence,m_pol_von_neumann_boundary2);
+    typedef Policies<type_pol_solve_linear,type_pol_pres_cor_if,type_pol_gradiant,type_pol_von_neumann_boundary,type_pol_divergence> type_pol_pressure;
+    type_pol_pressure m_pol_pressure(m_pol_solve_linear,m_pol_pres_cor_if,m_pol_gradiant,m_pol_von_neumann_boundary,m_pol_divergence);
 
 	//Algorithms Solve Pressure
-    typedef Algorithms_Solve_Pressure_Fixed_Neumann_Var<type_data_ref,type_pol_pressure> type_alg_solve_pressure;
+    typedef Algorithms_Solve_Pressure_Fixed_Neumann<type_data_ref,type_pol_pressure> type_alg_solve_pressure;
 //	typedef Algorithms_Solve_Pressure_Empty type_alg_solve_pressure;
 	type_alg_solve_pressure m_alg_solve_pressure(m_data_ref,m_pol_pressure);
 //	type_alg_solve_pressure m_alg_solve_pressure;
 
+    //Algorithm After
+    typedef Algorithms_After_From_Algorithms<type_data_ref,type_alg_extrapolate> type_sol_after_extrapolate;
+    type_sol_after_extrapolate m_alg_after_extrapolate(m_data_ref,m_alg_extrapolate);
+
 	//Policy ODE integrator
-	typedef Policies<type_alg_solve_grid,type_alg_solve_pressure> type_pol_ODE;
-	type_pol_ODE m_pol_ODE(m_alg_solve_grid,m_alg_solve_pressure);
+    typedef Policies<type_alg_solve_grid,type_alg_solve_pressure,type_sol_after_extrapolate> type_pol_ODE;
+    type_pol_ODE m_pol_ODE(m_alg_solve_grid,m_alg_solve_pressure,m_alg_after_extrapolate);
 
 	//Algorithms ODE integrator
-    typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
-//	typedef Algorithms_RungeKutta<type_data_ref,type_pol_ODE> type_alg_ODE;
+//    typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
+    typedef Algorithms_RungeKutta<type_data_ref,type_pol_ODE> type_alg_ODE;
 //	typedef Algorithms_RungeKutta_RK2<type_data_ref,type_pol_ODE> type_alg_ODE;
 //	typedef Algorithms_RungeKutta_RK2_TVD<type_data_ref,type_pol_ODE> type_alg_ODE;
 	type_alg_ODE m_alg_ODE(m_data_ref,m_pol_ODE);
@@ -552,7 +584,7 @@ int main()
 	type_alg_output m_alg_output(m_data_ref,m_pol_output);
 
 	m_alg_first_init.Do();
-	m_alg_extrapolate.Do();
+    m_alg_extrapolate.Do();
     m_alg_output.Do();
 	int k=0;
     for(int i=1;;++i)
