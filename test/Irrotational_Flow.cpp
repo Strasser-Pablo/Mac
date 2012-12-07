@@ -204,11 +204,11 @@ class AlgorithmAcceleration : public Policy
                 type_speed_value ret=(it.data().GetKey().Get(i)-0.5)*m_h.Get(i);
                 if(i==1)
                 {
-                     ret=-4*pow(m_t,2)*ret-2*ret;
+                     ret=4*pow(m_t,2)*ret+2*ret;
                 }
                 else if(i==2)
                 {
-                    ret=-4*pow(m_t,2)*ret+2*ret;
+                    ret=4*pow(m_t,2)*ret-2*ret;
                 }
                 if(NeedToApply(it.data(),i))
                 {
@@ -252,8 +252,15 @@ class Algorithm_Extrapolate_Boundary : public Policy
                     type_neigh neigh=it.data().GetNeighbour(i,1);
                     if(neigh.IsValid()&&neigh.Layer_GetRef().GetLayer()!=0)
                     {
-                        type_speed_value value=(it.key().Get(i)+1.5)*m_h.Get(i);
-                        neigh.Speed_GetRef().Set(i,-2*m_t*value);
+                        type_speed_value value=(neigh.GetKey().Get(i)-0.5)*m_h.Get(i);
+                        if(i==1)
+                        {
+                            neigh.Speed_GetRef().Set(i,2*m_t*value);
+                        }
+                        else
+                        {
+                           neigh.Speed_GetRef().Set(i,-2*m_t*value);
+                        }
                     }
                 }
             }
@@ -267,7 +274,7 @@ int main()
 	const int DIM=2;
 	const int NBSpeed=3;
 	double length=1.0;
-    int NBX=50;
+    int NBX=10;
     double spacing=length/double(NBX);
 	double value=1.0;
 //	const int NBSpeed=1;
@@ -385,7 +392,7 @@ int main()
 	typedef Data_Timing_Time<type_data_value> type_time;
 	type_time m_time;
 	m_time.m_t=0;
-	m_time.m_factor=0.1;
+    m_time.m_factor=1;
 	typedef Data_Timing<type_time,type_grid_data> type_timing;
 	type_timing m_timing(m_time,m_grid_data);
 
@@ -471,7 +478,7 @@ int main()
 
 	//Policy First Init
 	typedef Policy_Layer_Max<type_data_ref> type_pol_layer_max;
-    type_pol_layer_max m_pol_layer_max(20);
+    type_pol_layer_max m_pol_layer_max(5);
 	typedef Policies<type_pol_layer_max> type_pol_init_first;
 	type_pol_init_first m_pol_init_first(m_pol_layer_max);
 
@@ -487,7 +494,7 @@ int main()
 
 	//Policy Init
 	typedef Policy_CheckDT<type_data_ref> type_pol_check_dt;
-    type_pol_check_dt m_pol_check_dt(0.0000001,0.000001);
+    type_pol_check_dt m_pol_check_dt(0,0.1);
 
 	typedef Policies<type_pol_check_dt> type_pol_init;
 	type_pol_init m_pol_init(m_pol_check_dt);
