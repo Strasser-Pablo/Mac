@@ -264,6 +264,25 @@ class Algorithm_Extrapolate_Boundary : public Policy
                     }
                 }
             }
+            if(it.data().Layer_GetRef().GetLayer()>3)
+            {
+                for(int i=1;i<=type_dim;++i)
+                {
+                    type_neigh neigh=it.data();
+                    if(neigh.IsValid()&&neigh.Layer_GetRef().GetLayer()!=0)
+                    {
+                        type_speed_value value=(neigh.GetKey().Get(i)-0.5)*m_h.Get(i);
+                        if(i==1)
+                        {
+                            neigh.Speed_GetRef().Set(i,2*m_t*value);
+                        }
+                        else
+                        {
+                           neigh.Speed_GetRef().Set(i,-2*m_t*value);
+                        }
+                    }
+                }
+            }
         }
     }
 };
@@ -274,7 +293,7 @@ int main()
 	const int DIM=2;
 	const int NBSpeed=3;
 	double length=1.0;
-    int NBX=10;
+    int NBX=50;
     double spacing=length/double(NBX);
 	double value=1.0;
 //	const int NBSpeed=1;
@@ -392,7 +411,7 @@ int main()
 	typedef Data_Timing_Time<type_data_value> type_time;
 	type_time m_time;
 	m_time.m_t=0;
-    m_time.m_factor=1;
+    m_time.m_factor=10;
 	typedef Data_Timing<type_time,type_grid_data> type_timing;
 	type_timing m_timing(m_time,m_grid_data);
 
@@ -478,7 +497,7 @@ int main()
 
 	//Policy First Init
 	typedef Policy_Layer_Max<type_data_ref> type_pol_layer_max;
-    type_pol_layer_max m_pol_layer_max(5);
+    type_pol_layer_max m_pol_layer_max(7);
 	typedef Policies<type_pol_layer_max> type_pol_init_first;
 	type_pol_init_first m_pol_init_first(m_pol_layer_max);
 
@@ -570,8 +589,8 @@ int main()
     type_pol_ODE m_pol_ODE(m_alg_solve_grid,m_alg_solve_pressure,m_alg_after_extrapolate);
 
 	//Algorithms ODE integrator
-//    typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
-    typedef Algorithms_RungeKutta<type_data_ref,type_pol_ODE> type_alg_ODE;
+    typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
+//    typedef Algorithms_RungeKutta<type_data_ref,type_pol_ODE> type_alg_ODE;
 //	typedef Algorithms_RungeKutta_RK2<type_data_ref,type_pol_ODE> type_alg_ODE;
 //	typedef Algorithms_RungeKutta_RK2_TVD<type_data_ref,type_pol_ODE> type_alg_ODE;
 	type_alg_ODE m_alg_ODE(m_data_ref,m_pol_ODE);

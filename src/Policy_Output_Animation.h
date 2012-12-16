@@ -38,7 +38,7 @@ class Policy_Output_Animation
 		int i=1;
 		for(list<string>::iterator it=m_list.begin();it!=m_list.end();++it)
 		{
-			m_out<<" <DataSet timestep=\""<<t<<"\" group=\"\" part=\""<<i<<"\" file=\""<<*it<<"\" />"<<endl;
+            m_out<<std::setprecision(30)<<" <DataSet timestep=\""<<t<<"\" group=\"\" part=\""<<i<<"\" file=\""<<*it<<"\" />"<<endl;
 			++i;
 		}
 		m_spos=m_out.tellp();
