@@ -573,4 +573,8 @@ endfunction(AddTestProperty)
 
 	CXXTEST_ADD_TEST(test_cov_Algorithms_Solve_Pressure_Neumann_Var test/Test_Algorithms_Solve_Pressure_Neumann_Var.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Algorithms_Solve_Pressure_Neumann_Var.h)
 	AddTestProperty(test_cov_Algorithms_Solve_Pressure_Neumann_Var)
+
+        CXXTEST_ADD_TEST(test_cov_extrapolate_boundary test/Test_Extrapolate_Boundary.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/test_Extrapolate_Boundary.h)
+        AddTestProperty(test_cov_extrapolate_boundary)
+
 endif(USE_TESTING)
