@@ -139,8 +139,8 @@ typename ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::iterato
 	if(m_map.at(key_chunk).GetChunk_Bool_Array().none())
 	{
 		m_map.at(key_chunk).UnAllocate();
+        m_hook.erase(pos.GetMapIterator());
 		typename unordered_map<TypeKey,TypeData,TypeHash,TypeComp>::iterator it=m_map.erase(pos.GetMapIterator());
-		m_hook.erase(pos.GetMapIterator());
 		return ChunkHashTableIterator<TypeKey,TypeData,TypeHash,TypeComp,Offset>(it,type_base_offset(0),m_map.end());
 	}
 	return ++pos;
@@ -151,12 +151,11 @@ void ChunkHashTable<Hook,TypeKey,TypeData,Offset,TypeHash,TypeComp>::erase(const
 {
 	type_base_offset cur_off=ToOffsetFromKey(key);
 	TypeKey key_chunk=ToChunkKey(key);
-	m_map[key_chunk].GetChunk_Bool_Array()[cur_off.Get()]=false;
-	Offset off(cur_off,m_map[key.chunk]);
-	if(m_map[key.chunk].GetChunk_Bool_Array().none())
+    m_map.at(key_chunk).GetChunk_Bool_Array()[cur_off.Get()]=false;
+    if(m_map.at(key_chunk).GetChunk_Bool_Array().none())
 	{
 		m_hook.erase(key_chunk);
-		m_map[key_chunk].UnAllocate();
+        m_map.at(key_chunk).UnAllocate();
 		m_map.erase(key_chunk);
 	}
 }

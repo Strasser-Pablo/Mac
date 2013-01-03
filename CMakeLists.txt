@@ -390,6 +390,9 @@ endfunction(AddTestProperty)
 	CXXTEST_ADD_TEST(test_cov_Data_Hook_Neighbour_List test/TestData_Hook_Neighbour_List.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Hook_Neighbour_List.h)
 	AddTestProperty(test_cov_Data_Hook_Neighbour_List)
 
+        #CXXTEST_ADD_TEST(test_cov_Data_Hook_Neighbour_List_Key test/TestData_Hook_Neighbour_List_Key.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Hook_Neighbour_List_Key.h)
+        #AddTestProperty(test_cov_Data_Hook_Neighbour_List_Key)
+
 #	CXXTEST_ADD_TEST(test_cov_Data_Interface_Fluid_Air test/TestData_Interface_Fluid_Air.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Interface_Fluid_Air.h)
 #	AddTestProperty(test_cov_Data_Interface_Fluid_Air)
 
@@ -527,8 +530,8 @@ endfunction(AddTestProperty)
 	CXXTEST_ADD_TEST(test_cov_Offset_Base test/Test_Offset_Base.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Offset_Base.h)
 	AddTestProperty(test_cov_Offset_Base)
 
-#	CXXTEST_ADD_TEST(test_cov_ChunkHashTable test/TestChunkHashTable.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestChunkHashTable.h)
-#	AddTestProperty(test_cov_ChunkHashTable)
+        CXXTEST_ADD_TEST(test_cov_ChunkHashTable test/TestChunkHashTable.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestChunkHashTable.h)
+        AddTestProperty(test_cov_ChunkHashTable)
 
 	#add_executable(test_cov_TestChunk_Hash_Table_Performance ${CMAKE_CURRENT_SOURCE_DIR}/test/TestChunk_Hash_Table_Performance.cpp)
 	#AddTestProperty(test_cov_TestChunk_Hash_Table_Performance)
@@ -576,5 +579,9 @@ endfunction(AddTestProperty)
 
         CXXTEST_ADD_TEST(test_cov_extrapolate_boundary test/Test_Extrapolate_Boundary.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/test_Extrapolate_Boundary.h)
         AddTestProperty(test_cov_extrapolate_boundary)
+
+        add_executable(test_cov_Single_Particle ${CMAKE_CURRENT_SOURCE_DIR}/test/Single_Particle.cpp)
+        AddTestProperty(test_cov_Single_Particle)
+        add_test(NAME test_single_particle COMMAND test_cov_Single_Particle)
 
 endif(USE_TESTING)

@@ -323,7 +323,7 @@ public:
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
         typedef Policy_Is_In_Domain_Speed<type_data_ref> type_pol;
-        type_pol pol(m_data_ref);
+        type_pol pol;
         typedef Algorithm_Extrapolate_Boundary_Condition<type_data_ref,type_pol> type_alg;
         type_alg alg(m_data_ref,pol);
         alg.Do();
@@ -584,7 +584,7 @@ public:
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
         typedef Policy_Is_In_Domain_Speed<type_data_ref> type_pol;
-        type_pol pol(m_data_ref);
+        type_pol pol;
         typedef Algorithm_Extrapolate_Boundary_Condition<type_data_ref,type_pol> type_alg;
         type_alg alg(m_data_ref,pol);
         alg.Do();
@@ -1000,7 +1000,7 @@ public:
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
         typedef Policy_Is_In_Domain_Speed<type_data_ref> type_pol;
-        type_pol pol(m_data_ref);
+        type_pol pol;
         typedef Algorithm_Extrapolate_Boundary_Condition<type_data_ref,type_pol> type_alg;
         type_alg alg(m_data_ref,pol);
         alg.Do();
@@ -1614,7 +1614,7 @@ public:
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
         typedef Policy_Is_In_Domain_Speed<type_data_ref> type_pol;
-        type_pol pol(m_data_ref);
+        type_pol pol;
         typedef Algorithm_Extrapolate_Boundary_Condition<type_data_ref,type_pol> type_alg;
         type_alg alg(m_data_ref,pol);
         alg.Do();
@@ -2166,7 +2166,7 @@ public:
 
 
         typedef Policy_Is_In_Domain_Speed<type_data_ref> type_pol;
-        type_pol pol(m_data_ref);
+        type_pol pol;
         typedef Algorithm_Extrapolate_Boundary_Condition<type_data_ref,type_pol> type_alg;
         type_alg alg(m_data_ref,pol);
         alg.Do();
@@ -2565,7 +2565,7 @@ public:
 
 
         typedef Policy_Is_In_Domain_Speed<type_data_ref> type_pol;
-        type_pol pol(m_data_ref);
+        type_pol pol;
         typedef Algorithm_Extrapolate_Boundary_Condition<type_data_ref,type_pol> type_alg;
         type_alg alg(m_data_ref,pol);
         alg.Do();
@@ -3005,7 +3005,7 @@ public:
 
 
         typedef Policy_Is_In_Domain_Speed<type_data_ref> type_pol;
-        type_pol pol(m_data_ref);
+        type_pol pol;
         typedef Algorithm_Extrapolate_Boundary_Condition<type_data_ref,type_pol> type_alg;
         type_alg alg(m_data_ref,pol);
         alg.Do();

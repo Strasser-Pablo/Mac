@@ -8,9 +8,8 @@ class Policy_Is_In_Domain_Speed
     typedef typename type_Data_Grid::type_offset type_neigh;
     typedef typename type_Data_Grid::type_data::type_speed type_speed;
     typedef typename type_speed::type_data_value type_speed_value;
-    const type_Data_Grid& m_grid;
     public:
-    Policy_Is_In_Domain_Speed(const Data& data):m_grid(data.m_data.GetGridData())
+    Policy_Is_In_Domain_Speed()
     {
     }
     bool Get_Is_Speed_In_Domain(const type_neigh neigh,int dir)

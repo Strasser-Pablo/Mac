@@ -330,7 +330,9 @@ private:
         for(int i=1;i<=type_dim;++i)
         {
             type_speed_data_value v1=neigh.Speed_GetRef().Get(i);
-            type_speed_data_value v2=neigh.GetNeighbour(i,1).Speed_GetRef().Get(i);
+            const type_neigh neigh_temp=neigh.GetNeighbour(i,1);
+            assert(neigh_temp.IsValid());
+            type_speed_data_value v2=neigh_temp.Speed_GetRef().Get(i);
             if(std::isnan(v1))
             {
                 tab[0][n]=i;
