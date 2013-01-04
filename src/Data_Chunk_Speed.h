@@ -16,6 +16,7 @@ class Data_Chunk_Speed
 	public:
 	static int ispeed;
 	static int iacceleration;
+    static bool baccel_instead_speed;
 	typedef Data_Chunk_Speed<DataSpeed,NBSpeed,NBAcceleration,N> type_chunk_speed;
 	Data_Chunk_Speed(const DataSpeed& cop):m_cop(cop),m_const(nullptr)
 	{
@@ -28,20 +29,52 @@ class Data_Chunk_Speed
 			m_data_acceleration[i]=nullptr;
 		}
 	}
-	DataSpeed* Speed_GetPointer(int i=type_chunk_speed::ispeed)
+    DataSpeed* Speed_GetPointer(int i=-1)
 	{
+        if(i==-1)
+        {
+            if(baccel_instead_speed)
+            {
+                return m_data_acceleration[iacceleration];
+            }
+            i=ispeed;
+        }
 		return m_data_speed[i];
 	}
-	DataSpeed& Speed_GetRef(int i=type_chunk_speed::ispeed)
+    DataSpeed& Speed_GetRef(int i=-1)
 	{
+        if(i==-1)
+        {
+            if(baccel_instead_speed)
+            {
+                return *m_data_acceleration[iacceleration];
+            }
+            i=ispeed;
+        }
 		return *m_data_speed[i];
 	}
-	const DataSpeed& Speed_GetRef(int i=type_chunk_speed::ispeed) const
+    const DataSpeed& Speed_GetRef(int i=-1) const
 	{
+        if(i==-1)
+        {
+            if(baccel_instead_speed)
+            {
+                return *m_data_acceleration[iacceleration];
+            }
+            i=ispeed;
+        }
 		return *m_data_speed[i];
 	}
-	void Speed_SetPointer(DataSpeed* data,int i=type_chunk_speed::ispeed)
+    void Speed_SetPointer(DataSpeed* data,int i=-1)
 	{
+        if(i==-1)
+        {
+            if(baccel_instead_speed)
+            {
+                m_data_acceleration[iacceleration]=data;
+            }
+            i=ispeed;
+        }
 		m_data_speed[i]=data;
 	}
 
@@ -118,6 +151,14 @@ class Data_Chunk_Speed
 		}
 		::operator delete(m_const);
 	}
+    static void SetAccel_Instead_Speed(bool b)
+    {
+        baccel_instead_speed=b;
+    }
+    static bool GetAccel_Instead_Speed()
+    {
+        return baccel_instead_speed;
+    }
 };
 
 template <typename DataSpeed,int NBSpeed,int NBAcceleration,int N>
@@ -125,4 +166,7 @@ int Data_Chunk_Speed<DataSpeed,NBSpeed,NBAcceleration,N>::ispeed=0;
 
 template <typename DataSpeed,int NBSpeed,int NBAcceleration,int N>
 int Data_Chunk_Speed<DataSpeed,NBSpeed,NBAcceleration,N>::iacceleration=0;
+
+template <typename DataSpeed,int NBSpeed,int NBAcceleration,int N>
+bool Data_Chunk_Speed<DataSpeed,NBSpeed,NBAcceleration,N>::baccel_instead_speed=false;
 #endif

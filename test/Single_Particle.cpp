@@ -1,5 +1,5 @@
 #pragma STDC FENV_ACCESS ON
-
+#undef SPLIT
 //Vector
 #include "../src/Physvector.h"
 #include "../src/HashPhysvector.h"
@@ -113,6 +113,7 @@
 #include "../src/Policy_Is_In_Domain_Speed.h"
 #include "../src/Policy_Wind.h"
 #include "../src/Policy_Output_Topology.h"
+#include "../src/Policy_Move_Particle.h"
 /// To add Convection
 
 //Algorithms
@@ -131,6 +132,7 @@
 #include "../src/Algorithms_Solid_To_Const.h"
 #include "../src/Algorithms_Layer_Initial_With_Particle.h"
 #include "../src/Algorithms_Delete_MacCell.h"
+#include "../src/Algorithms_Accel_To_Speed.h"
 
 // Solve Grid
 #include "../src/Algorithms_Speed_Repeat_Constant.h"
@@ -141,12 +143,16 @@
 #include "../src/Algorithms_Solve_Pressure.h"
 #include "../src/Algorithms_Convection.h"
 #include "../src/Algorithms_Move_Particles.h"
+#include "../src/Algorithms_Solve_Pressure_Force.h"
+#include "../src/Algorithms_Do_After_Pressure.h"
 
 //Integrator
 #include "../src/Algorithms_Euler.h"
 #include "../src/Algorithms_RungeKutta.h"
+#include "../src/Algorithms_RungeKutta_Force.h"
 #include "../src/Algorithms_RungeKutta_RK2.h"
 #include "../src/Algorithms_RungeKutta_RK2_TVD.h"
+#include "../src/Algorithms_RungeKutta_all.h"
 
 // Output
 #include "../src/Algorithms_Output_Speed_Pressure.h"
@@ -280,7 +286,7 @@ int main()
     type_grid_data m_grid_data(m_type_interface_constant,base);
 
     // Data Particle
-    typedef Data_Particle<DataBase> type_particle;
+    typedef Data_Particle<DataBase,NBSpeed> type_particle;
     typedef Data_Particles_List<type_particle,DataBase> type_particles;
     type_particles particles(base);
     typedef Data_Topology<type_particles,type_grid_data> type_topology;
@@ -359,6 +365,8 @@ int main()
     typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_extrap_bound,type_alg_extrap,type_alg_calculate_time_step> type_alg_init;
     type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_layer_initial,m_alg_update_celltype,m_alg_delete_maccell,m_alg_extrap_bound,m_alg_extrap,m_alg_calculate_time_step);
 
+    typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_update_celltype,type_alg_delete_maccell,type_alg_extrap_bound,type_alg_extrap> type_alg_init2;
+    type_alg_init2 m_alg_init2(m_alg_initialize_mac,m_alg_layer_initial,m_alg_update_celltype,m_alg_delete_maccell,m_alg_extrap_bound,m_alg_extrap);
 
     // Policy Solve Grid
     typedef Policy_Gravity<type_data_ref> type_pol_gravity;
@@ -387,9 +395,14 @@ int main()
     typedef Algorithms_Convection<type_data_ref,type_pol_solve_grid> type_alg_convection;
     type_alg_convection m_alg_convection(m_data_ref,m_pol_solve_grid);
 
-    typedef Algorithms<type_alg_init,type_alg_gravity,type_alg_convection> type_alg_solve_grid;
-    type_alg_solve_grid m_alg_solve_grid(m_alg_init,m_alg_gravity,m_alg_convection);
 
+#ifdef SPLIT
+    typedef Algorithms<type_alg_gravity,type_alg_convection> type_alg_solve_grid;
+    type_alg_solve_grid m_alg_solve_grid(m_alg_gravity,m_alg_convection);
+#else
+    typedef Algorithms<type_alg_init2,type_alg_gravity,type_alg_convection> type_alg_solve_grid;
+    type_alg_solve_grid m_alg_solve_grid(m_alg_init2,m_alg_gravity,m_alg_convection);
+#endif
     //Policy Pressure
     typedef Policy_Solve_Linear_Umfpack<double> type_pol_solve_linear;
     type_pol_solve_linear m_pol_solve_linear;
@@ -409,16 +422,53 @@ int main()
     typedef Algorithms_Solve_Pressure<type_data_ref,type_pol_pres> type_alg_solve_pressure;
     type_alg_solve_pressure m_alg_solve_pressure(m_data_ref,m_pol_pres);
 
+    typedef Algorithms_Solve_Pressure_Force<type_data_ref,type_alg_solve_pressure> type_alg_solve_force_pressure;
+    type_alg_solve_force_pressure m_alg_solve_force_pressure(m_data_ref,m_alg_solve_pressure);
+#ifndef SPLIT
+    typedef Algorithms<type_alg_extrap_bound,type_alg_extrap> type_alg_extrapolate;
+    type_alg_extrapolate m_alg_extrapolate(m_alg_extrap_bound,m_alg_extrap);
+
+    typedef Algorithms_Accel_To_Speed<type_data_ref,type_alg_extrapolate> type_alg_extrapolate_force;
+    type_alg_extrapolate_force m_alg_extrapolate_force(m_data_ref,m_alg_extrapolate);
+
+    typedef Algorithms<type_alg_solve_grid,type_alg_solve_force_pressure,type_alg_extrapolate_force> type_alg_solve_grid_force;
+    type_alg_solve_grid_force m_alg_solve_grid_force(m_alg_solve_grid,m_alg_solve_force_pressure,m_alg_extrapolate_force);
+#else
+     typedef Algorithms<type_alg_solve_grid,type_alg_solve_force_pressure> type_alg_solve_grid_force;
+     type_alg_solve_grid_force m_alg_solve_grid_force(m_alg_solve_grid,m_alg_solve_force_pressure);
+#endif
+
+     typedef Algorithms_Do_After_Pressure<type_data_ref,type_alg_solve_pressure> type_alg_do_after_pres;
+     type_alg_do_after_pres m_alg_do_after_pres(m_data_ref,m_alg_solve_pressure);
+#ifndef SPLIT
     //Policy ODE
-    typedef Policies<type_alg_solve_grid,type_alg_solve_pressure> type_pol_ODE;
-    type_pol_ODE m_pol_ODE(m_alg_solve_grid,m_alg_solve_pressure);
+     typedef Policy_Speed_Interpolation_Linear_Symmetric<type_data_ref> type_pol_interpolation;
+     type_pol_interpolation m_pol_interpolation(m_data_ref);
+     typedef Policies<type_pol_interpolation> type_pol_move;
+     type_pol_move m_pol_move(m_pol_interpolation);
+
+     typedef Policy_Move_Particle<type_data_ref,type_pol_move> type_pol_move2;
+     type_pol_move2 m_pol_move2(m_data_ref,m_pol_move);
+
+    typedef Policies<type_alg_solve_grid_force,type_pol_move2,type_alg_do_after_pres> type_pol_ODE;
+    type_pol_ODE m_pol_ODE(m_alg_solve_grid_force,m_pol_move2,m_alg_do_after_pres);
+#else
+     typedef Policies<type_alg_solve_grid_force,type_alg_do_after_pres> type_pol_ODE;
+     type_pol_ODE m_pol_ODE(m_alg_solve_grid_force,m_alg_do_after_pres);
+#endif
 
     //Algorithms ODE
     //typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
-    typedef Algorithms_RungeKutta<type_data_ref,type_pol_ODE> type_alg_ODE;
+#ifdef SPLIT
+    typedef Algorithms_RungeKutta_Force<type_data_ref,type_pol_ODE> type_alg_ODE;
     type_alg_ODE m_alg_ODE(m_data_ref,m_pol_ODE);
+#else
+     typedef Algorithms_RungeKutta_all<type_data_ref,type_pol_ODE> type_alg_ODE;
+     type_alg_ODE m_alg_ODE(m_data_ref,m_pol_ODE);
+#endif
 
     //Policy Move
+#ifdef SPLIT
     typedef Policy_Advance_Ode_RungeKutta<type_data_ref> type_pol_advance_ode;
     type_pol_advance_ode m_pol_advance_ode;
     typedef Policy_Speed_Interpolation_Linear_Symmetric<type_data_ref> type_pol_interpolation;
@@ -429,6 +479,7 @@ int main()
     //Algorithms Move
     typedef Algorithms_Move_Particles<type_data_ref,type_pol_move> type_alg_move;
     type_alg_move m_alg_move(m_data_ref,m_pol_move);
+#endif
 
     //Policy Output
     typedef Policy_Output_Grid_Speed_ID<type_data_ref> type_pol_output_speed;
@@ -453,12 +504,14 @@ int main()
     m_alg_solve_pressure.End_Iteration();
     m_alg_output.Do();
 
-    for(int i=1;i<20;++i)
+    for(int i=1;;++i)
     {
         cout<<"i "<<i<<endl;
         m_alg_init.Do();
         m_alg_ODE.Do();
+#ifdef SPLIT
         m_alg_move.Do();
+#endif
         cout<<"dt "<<m_data_ref.m_data.GetTimingData().m_dt<<endl;
         cout<<"t "<<m_data_ref.m_data.GetTimingData().m_t<<endl;
         //if(m_data_ref.m_data.GetTimingData().m_t>=k*0.1-m_data_ref.m_data.GetTimingData().m_dt/2)
