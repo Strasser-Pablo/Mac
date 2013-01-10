@@ -265,6 +265,10 @@ endif(USE_TEST_COMPILER_FLAG)
 #set_target_properties(Container_Filling PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 #TARGET_LINK_LIBRARIES(Container_Filling lib_computation)
 
+add_executable(Lateral_Jet ${CMAKE_CURRENT_SOURCE_DIR}/test/Lateral_jet.cpp)
+set_target_properties(Lateral_Jet PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Lateral_Jet lib_computation)
+
 add_executable(test_lusol ${CMAKE_CURRENT_SOURCE_DIR}/test/test_lusol.cpp)
 set_target_properties(test_lusol PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(test_lusol lib_computation)
@@ -583,5 +587,9 @@ endfunction(AddTestProperty)
         add_executable(test_cov_Single_Particle ${CMAKE_CURRENT_SOURCE_DIR}/test/Single_Particle.cpp)
         AddTestProperty(test_cov_Single_Particle)
         add_test(NAME test_single_particle COMMAND test_cov_Single_Particle)
+
+        add_executable(test_cov_Lateral_Jet ${CMAKE_CURRENT_SOURCE_DIR}/test/Lateral_jet.cpp)
+        AddTestProperty(test_cov_Lateral_Jet)
+        add_test(NAME test_lateral_jet COMMAND test_cov_Lateral_Jet)
 
 endif(USE_TESTING)
