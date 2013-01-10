@@ -3233,7 +3233,7 @@ public:
         v.Set(1,1);
         v.Set(2,0);
         TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(1),2,eps);
-        TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(2),0,eps);
+        TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(2),6,eps);
         TS_ASSERT(!std::isnan(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(1)));
         TS_ASSERT(!std::isnan(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(2)));
         v.Set(1,1);
@@ -3271,7 +3271,7 @@ public:
         TS_ASSERT(std::isnan(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(1)));
         v.Set(1,2);
         v.Set(2,-1);
-        TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(1),12,eps);
+        TS_ASSERT_DELTA(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(1),6,eps);
         TS_ASSERT(std::isnan(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(2)));
         TS_ASSERT(!std::isnan(m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Get(1)));
 
