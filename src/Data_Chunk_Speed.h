@@ -29,11 +29,11 @@ class Data_Chunk_Speed
 			m_data_acceleration[i]=nullptr;
 		}
 	}
-    DataSpeed* Speed_GetPointer(int i=-1)
+    DataSpeed* Speed_GetPointer(int i=-1,bool b=true)
 	{
         if(i==-1)
         {
-            if(baccel_instead_speed)
+            if(baccel_instead_speed&&b)
             {
                 return m_data_acceleration[iacceleration];
             }
@@ -41,11 +41,11 @@ class Data_Chunk_Speed
         }
 		return m_data_speed[i];
 	}
-    DataSpeed& Speed_GetRef(int i=-1)
+    DataSpeed& Speed_GetRef(int i=-1,bool b=true)
 	{
         if(i==-1)
         {
-            if(baccel_instead_speed)
+            if(baccel_instead_speed&&b)
             {
                 return *m_data_acceleration[iacceleration];
             }
@@ -53,11 +53,11 @@ class Data_Chunk_Speed
         }
 		return *m_data_speed[i];
 	}
-    const DataSpeed& Speed_GetRef(int i=-1) const
+    const DataSpeed& Speed_GetRef(int i=-1,bool b=true) const
 	{
         if(i==-1)
         {
-            if(baccel_instead_speed)
+            if(baccel_instead_speed&&b)
             {
                 return *m_data_acceleration[iacceleration];
             }
@@ -65,11 +65,11 @@ class Data_Chunk_Speed
         }
 		return *m_data_speed[i];
 	}
-    void Speed_SetPointer(DataSpeed* data,int i=-1)
+    void Speed_SetPointer(DataSpeed* data,int i=-1,bool b=true)
 	{
         if(i==-1)
         {
-            if(baccel_instead_speed)
+            if(baccel_instead_speed&&b)
             {
                 m_data_acceleration[iacceleration]=data;
             }

@@ -17,17 +17,17 @@ class Offset_Base_Speed : public Base
 	{
 		return *(this->m_base->Speed_GetPointer()+this->m_off.Get());
 	}
-	Data* Speed_GetPointer(int i)
+    Data* Speed_GetPointer(int i,bool b=true)
 	{
-		return this->m_base->Speed_GetPointer(i)+this->m_off.Get();
+        return this->m_base->Speed_GetPointer(i,b)+this->m_off.Get();
 	}
-	Data& Speed_GetRef(int i)
+    Data& Speed_GetRef(int i,bool b=true)
 	{
-		return *(this->m_base->Speed_GetPointer(i)+this->m_off.Get());
+        return *(this->m_base->Speed_GetPointer(i,b)+this->m_off.Get());
 	}
-	const Data& Speed_GetRef(int i) const
+    const Data& Speed_GetRef(int i,bool b=true) const
 	{
-		return *(this->m_base->Speed_GetPointer(i)+this->m_off.Get());
+        return *(this->m_base->Speed_GetPointer(i,b)+this->m_off.Get());
 	}
 
 	Data* Acceleration_GetPointer()
