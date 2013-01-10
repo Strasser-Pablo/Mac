@@ -67,10 +67,8 @@ class Algorithms_Extrapolate_Nan : public Policy
                                 //Ok we have found a next cell layer. Add to the list.
                                 m_set2.insert(neigh2);
                             }
-                            if(!std::isnan(neigh2.Speed_GetRef().Get(i)))
+                            if(std::isnan(neigh2.Speed_GetRef().Get(i)))
                             {
-                                continue;
-                            }
                             int n=0;
                             type_speed_data_value val=0;
                             for(int j=1;j<=type_dim;++j)
@@ -117,6 +115,8 @@ class Algorithms_Extrapolate_Nan : public Policy
                                 }
                             }
                             neigh2.Speed_GetRef().Set(i,val/n);
+                            //neigh2.Speed_GetRef().Set(i,0);
+                        }
                         }
                     }
                     //we look -1 direction on speed.
@@ -132,10 +132,8 @@ class Algorithms_Extrapolate_Nan : public Policy
                                 //Ok we have found a next cell layer. Add to the list.
                                 m_set2.insert(neigh2);
                             }
-                            if(!std::isnan(neigh.Speed_GetRef().Get(i)))
+                            if(std::isnan(neigh.Speed_GetRef().Get(i)))
                             {
-                                continue;
-                            }
                             int n=0;
                             type_speed_data_value val=0;
                             for(int j=1;j<=type_dim;++j)
@@ -182,14 +180,14 @@ class Algorithms_Extrapolate_Nan : public Policy
                                 }
                             }
                             neigh.Speed_GetRef().Set(i,val/n);
+                            //neigh.Speed_GetRef().Set(i,0);
+                        }
                         }
                     }
                     else
                     {
-                        if(!std::isnan(neigh.Speed_GetRef().Get(i)))
+                        if(std::isnan(neigh.Speed_GetRef().Get(i)))
                         {
-                            continue;
-                        }
                         int n=0;
                         type_speed_data_value val=0;
                         for(int j=1;j<=type_dim;++j)
@@ -230,7 +228,9 @@ class Algorithms_Extrapolate_Nan : public Policy
                             }
                         }
                         neigh.Speed_GetRef().Set(i,val/n);
+                        //neigh.Speed_GetRef().Set(i,0);
                     }
+                }
                 }
             }
             //Swap new set with the old empty one.
@@ -243,8 +243,6 @@ class Algorithms_Extrapolate_Nan : public Policy
             }
         }
         long t_end=times(&t2);
-        cout<<"real extrapolate "<<(t_end-t_deb)/conv<<endl;
-        cout<<"user extrapolate "<<(t2.tms_utime-t1.tms_utime)/conv<<endl;
     }
 };
 
