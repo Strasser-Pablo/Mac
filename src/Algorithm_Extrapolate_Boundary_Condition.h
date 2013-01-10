@@ -203,8 +203,8 @@ private:
         {
             dir2=2;
         }
-        type_speed_data_value v2=neigh.Speed_GetRef().Get(dir);
-        type_speed_data_value v3=neigh.GetNeighbour(dir2,1).Speed_GetRef().Get(dir);
+        type_speed_data_value v2=neigh.Speed_GetRef().Get(dir2);
+        type_speed_data_value v3=neigh.GetNeighbour(dir2,1).Speed_GetRef().Get(dir2);
         type_speed_data_value res=v-sign*m_1_h.Get(dir2)*m_h.Get(dir)*(v3-v2);
         n.Speed_GetRef().Set(dir,res);
     }
