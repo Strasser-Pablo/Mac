@@ -15,6 +15,7 @@
 #include <string>
 #include <sstream>
 #include <vtkXMLUnstructuredGridWriter.h>
+#include <vtkXMLUnstructuredGridReader.h>
 
 template <typename Data>
 class Policy_Output_Particle
@@ -28,12 +29,12 @@ class Policy_Output_Particle
 	static const int type_dim=type_data_vector::type_dim;
 	typedef typename type_particle_list::const_iterator iterator;
 	public:
-	const type_particle_list& m_part;
+    type_particle_list& m_part;
 	const char * m_pref;
-	Policy_Output_Particle(const Data & data,const char* pref): m_part(data.m_data.GetTopologyData().GetRefToParticleList()),m_pref(pref)
+    Policy_Output_Particle(Data & data,const char* pref): m_part(data.m_data.GetTopologyData().GetRefToParticleList()),m_pref(pref)
 	{
 	}
-	void OutputTopology(int i,list<string>& m_list)
+    void OutputTopology(int i,list<string>& m_list) const
 	{
 		vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 		vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
@@ -70,6 +71,32 @@ class Policy_Output_Particle
 		writer->Write();
 		m_list.push_back(str.c_str());
 	}
+
+    void InputTopology(int i)
+    {
+        stringstream stream;
+        stream<<i;
+        string str=string(m_pref)+stream.str()+string(".vtu");
+        vtkSmartPointer<vtkXMLUnstructuredGridReader> reader=vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
+        reader->SetFileName(str.c_str());
+        reader->Update();
+        vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
+        vtkunstruct=reader->GetOutput();
+        vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
+        vtkpoints=vtkunstruct->GetPoints();
+        int nbCell=vtkpoints->GetNumberOfPoints();
+        for(int i=0;i<nbCell;++i)
+        {
+            type_data_value temp[3];
+            vtkpoints->GetPoint(i,temp);
+            type_data_vector v;
+            for(int j=1;j<=type_dim;++j)
+            {
+                v.Set(j,temp[j-1]);
+            }
+            m_part.push_back(type_particle(v));
+        }
+    }
 
 };
 #endif
