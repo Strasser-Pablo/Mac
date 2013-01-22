@@ -49,6 +49,23 @@ struct Plane_3d_stack
 };
 
 template <typename Data,typename Policy>
+struct Plane_3d_stack
+{
+    typedef typename Data::type_data_struct type_data;
+    typedef typename type_data::type_Data_Grid type_Data_Grid;
+    typedef typename type_Data_Grid::type_data::type_speed type_speed;
+    typedef typename type_speed::type_data_value type_speed_data_value;
+    typedef typename type_Data_Grid::iterator iterator;
+    typedef typename type_Data_Grid::type_offset type_neigh;
+    typedef typename type_Data_Grid::type_spacing_vector type_spacing_vector;
+    typedef typename Policy::type_linear_solver type_linear_solver;
+    int s1;
+    int s2;
+    int s3;
+    type_neigh neigh;
+};
+
+template <typename Data,typename Policy>
 class Algorithm_Extrapolate_Boundary_Condition : public Policy
 {
     using Policy::Get_Is_Speed_In_Domain;
@@ -329,6 +346,18 @@ m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solv
         }
     }
     void Initialize()
+    {
+        for(typename std::unordered_map<int,type_lin_solver_data>::iterator it=m_solver.begin();it!=m_solver.end();++it)
+        {
+            it->second.m_solver.Solve_Linear_Clean();
+            delete[] it->second.m_value;
+            delete[] it->second.m_indice;
+            delete[] it->second.m_offset;
+        }
+        m_solver.clear();
+    }
+
+    }
     {
         for(typename std::unordered_map<int,type_lin_solver_data>::iterator it=m_solver.begin();it!=m_solver.end();++it)
         {
@@ -738,6 +767,131 @@ m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solv
         if(n==1)
         {
             Apply_Div_3d(neigh,dir[0],sign[0]);
+                 bool b=true;
+            for(int i=-1;i<=1;i+=2)
+            {
+                type_neigh neigh2=neigh.GetNeighbour(dir2,i);
+                int  dirtemp[2*type_dim];
+                int  signtemp[2*type_dim];
+                int ntemp;
+                IsBoundary(neigh2,dirtemp,signtemp,ntemp);
+                if(ntemp==1)
+                {
+                    Apply_Div_3d(neigh2,dirtemp[0],signtemp[0]);
+                }
+                if(ntemp==1&&dirtemp[0]==dir[0])
+                {
+                    if(i<0)
+                    {
+                        Apply_3d_Plane(neigh2,neigh,dir[0],sign[0],dir2);
+                    }
+                    else if(i>0)
+                    {
+                        Apply_3d_Plane(neigh,neigh2,dir[0],sign[0],dir2);
+                    }
+                }
+            }
+            if(b)
+            {
+                type_neigh neigh3=neigh;
+                if(sign[0]==1)
+                {
+                    neigh3=neigh.GetNeighbour(dir[0],1);
+                }
+                if(!Get_Is_Speed_In_Domain(neigh,dir[0]))
+                {
+                    neigh3.Speed_GetRef().Set(dir[0],nan(""));
+                }
+            }
+            }
+        }
+        else if(n==2)
+        {
+            if(dir[0]!=dir[1])
+            {
+                int sa=sign[0];
+                int sb=sign[1];
+                int dira=dir[0];
+                int dirb=dir[1];
+                Apply_3d_Plane_45(neigh,sa,dira,sb,dirb);
+            }
+        }
+        else if(n==3)
+        {
+            int s1=0;
+            int s2=0;
+            int s3=0;
+
+            for(int i=0;i<n;++i)
+            {
+                if(dir[i]==1)
+                {
+                    s1=sign[i];
+                    break;
+                }
+            }
+            for(int i=0;i<n;++i)
+            {
+                if(dir[i]==2)
+                {
+                    s2=sign[i];
+                    break;
+                }
+            }
+            for(int i=0;i<n;++i)
+            {
+                if(dir[i]==3)
+                {
+                    s3=sign[i];
+                    break;
+                }
+            }
+            if(s1!=0 && s2!=0 && s3!=0)
+            {
+                type_plane3d plane3d;
+                plane3d.s1=s1;
+                plane3d.s2=s2;
+                plane3d.s3=s3;
+                plane3d.neigh=neigh;
+                m_stack.push(plane3d);
+            }
+                    neigh2=neigh.GetNeighbour(dir[i],1);
+                }
+                if(!Get_Is_Speed_In_Domain(neigh2,dir[i]))
+                {
+                    neigh2.Speed_GetRef().Set(dir[i],nan(""));
+                }
+            }
+        }
+    }
+    void Apply_3d_Plane(type_neigh neigh,type_neigh neigh2,int dir,int sign,int dir2)
+    {
+        type_speed_data_value v1=neigh.Speed_GetRef().Get(dir);
+        type_speed_data_value v2=neigh2.Speed_GetRef().Get(dir);
+        type_speed_data_value v3=neigh2.Speed_GetRef().Get(dir2);
+        type_speed_data_value v=-sign*m_1_h.Get(dir2)*m_h.Get(dir)*(v2-v1)+v3;
+        type_neigh neigh3=neigh2.GetNeighbour(dir,sign);
+        neigh3.Speed_GetRef().Set(dir2,v);
+    }
+    void Apply_Div_3d(type_neigh neigh,int dir,int sign)
+    {
+        type_neigh n=neigh.GetNeighbour(dir,1);
+        type_speed_data_value v=neigh.Speed_GetRef().Get(dir);
+        if(sign==-1)
+        {
+            v=n.Speed_GetRef().Get(dir);
+            n=neigh;
+        }
+        type_speed_data_value res=0;
+        for(int dir2=dir;dir2<=type_dim;++dir2)
+        {
+            type_speed_data_value v2=neigh.Speed_GetRef().Get(dir2);
+            type_speed_data_value v3=neigh.GetNeighbour(dir2,1).Speed_GetRef().Get(dir2);
+            res=m_1_h.Get(dir2)*(v3-v2);
+        }
+        res=v-sign*res*m_h.Get(dir);
+        n.Speed_GetRef().Set(dir,res);
+    }
 
             for(int dir2=1;dir2<=type_dim;++dir2)
             {
