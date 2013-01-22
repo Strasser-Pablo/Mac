@@ -1,5 +1,5 @@
 #pragma STDC FENV_ACCESS ON
-#undef SPLIT
+#define SPLIT
 //Vector
 #include "../src/Physvector.h"
 #include "../src/HashPhysvector.h"
@@ -296,7 +296,7 @@ int main()
     typedef Data_Timing_Time<type_data_value> type_time;
     type_time m_time;
     m_time.m_t=0;
-    m_time.m_factor=0.1;
+    m_time.m_factor=2;
     typedef Data_Timing<type_time,type_topology> type_timing;
     type_timing m_timing(m_time,m_topology);
 
@@ -332,7 +332,7 @@ int main()
 
     //Policy Init
     typedef Policy_Layer_Max<type_data_ref> type_pol_layer;
-    type_pol_layer m_pol_layer(3);
+    type_pol_layer m_pol_layer(10);
     typedef Policy_Particle_To_Key<type_data_ref> type_pol_part_to_key;
     type_pol_part_to_key m_pol_part_to_key(m_data_ref);
     typedef Policy_CheckDT<type_data_ref> type_pol_check_dt;

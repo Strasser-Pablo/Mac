@@ -269,6 +269,14 @@ add_executable(Lateral_Jet ${CMAKE_CURRENT_SOURCE_DIR}/test/Lateral_jet.cpp)
 set_target_properties(Lateral_Jet PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(Lateral_Jet lib_computation)
 
+add_executable(Lateral_Jet_3 ${CMAKE_CURRENT_SOURCE_DIR}/test/Lateral_jet_3.cpp)
+set_target_properties(Lateral_Jet_3 PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Lateral_Jet_3 lib_computation)
+
+add_executable(Jet ${CMAKE_CURRENT_SOURCE_DIR}/test/Jet.cpp)
+set_target_properties(Jet PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Jet lib_computation)
+
 add_executable(test_lusol ${CMAKE_CURRENT_SOURCE_DIR}/test/test_lusol.cpp)
 set_target_properties(test_lusol PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(test_lusol lib_computation)

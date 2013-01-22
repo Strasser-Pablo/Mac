@@ -293,7 +293,7 @@ int main()
 	const int DIM=2;
 	const int NBSpeed=3;
 	double length=1.0;
-    int NBX=50;
+    int NBX=10;
     double spacing=length/double(NBX);
 	double value=1.0;
 //	const int NBSpeed=1;
@@ -411,7 +411,7 @@ int main()
 	typedef Data_Timing_Time<type_data_value> type_time;
 	type_time m_time;
 	m_time.m_t=0;
-    m_time.m_factor=10;
+    m_time.m_factor=1;
 	typedef Data_Timing<type_time,type_grid_data> type_timing;
 	type_timing m_timing(m_time,m_grid_data);
 
@@ -589,8 +589,8 @@ int main()
     type_pol_ODE m_pol_ODE(m_alg_solve_grid,m_alg_solve_pressure,m_alg_after_extrapolate);
 
 	//Algorithms ODE integrator
-    typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
-//    typedef Algorithms_RungeKutta<type_data_ref,type_pol_ODE> type_alg_ODE;
+//    typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
+   typedef Algorithms_RungeKutta<type_data_ref,type_pol_ODE> type_alg_ODE;
 //	typedef Algorithms_RungeKutta_RK2<type_data_ref,type_pol_ODE> type_alg_ODE;
 //	typedef Algorithms_RungeKutta_RK2_TVD<type_data_ref,type_pol_ODE> type_alg_ODE;
 	type_alg_ODE m_alg_ODE(m_data_ref,m_pol_ODE);

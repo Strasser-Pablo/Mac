@@ -2,7 +2,12 @@
 #define Algorithms_Calculate_Time_Step_H
 
 #include <cfenv>
-
+/**
+ * @brief Algorithms witch modify time step using the cfl condition
+ *
+ * @tparam DataType
+ * @tparam Policy Class witch need to define a method CheckDT, witch will Check a given time step and modify it if needed.
+ */
 template <typename DataType,typename Policy>
 class Algorithms_Calculate_Time_Step : public Policy
 {
@@ -24,6 +29,9 @@ class Algorithms_Calculate_Time_Step : public Policy
 	Algorithms_Calculate_Time_Step(DataType data,const Policy& pol) : Policy(pol),m_grid(data.m_data.GetGridData()),m_dt(data.m_data.GetTimingData().m_dt),m_factor(data.m_data.GetTimingData().m_factor),m_1_h(data.m_data.GetGridData().m_h.GetRef_Inv())
 	{
 	}
+    /**
+     * @brief Do Launch the algorithm.
+     */
 	void Do()
 	{
 		struct tms t1;

@@ -184,5 +184,8 @@ class Policy_Output_Grid_Speed_ID
 			writer->Write();
 		}
 	}
+        void InputGridSpeed(int i)
+        {
+        }
 };
 #endif
