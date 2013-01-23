@@ -738,7 +738,16 @@ protected:
             b[2]+=-this->m_1_h.Get(3)*cell.GetNeighbour(3,1).Speed_GetRef().Get(3);
         }
         int id=SignToInt(s1,s2,s3);
-        m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solver[id].m_indice,m_solver[id].m_value,b,res);
+        if((!std::isnan(b[0]))&&(!std::isnan(b[1]))&&(!std::isnan(b[2])))
+        {
+            m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solver[id].m_indice,m_solver[id].m_value,b,res);
+        }
+        else
+        {
+            res[0]=nan("");
+            res[1]=nan("");
+            res[2]=nan("");
+        }
         if(s1==1)
         {
             cell.GetNeighbour(1,1).Speed_GetRef().Set(1,res[0]);
