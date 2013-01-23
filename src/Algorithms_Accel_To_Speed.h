@@ -1,5 +1,12 @@
 #ifndef ALGORITHMS_ACCEL_TO_SPEED_H
 #define ALGORITHMS_ACCEL_TO_SPEED_H
+/**
+ * @brief Algorithms to change an algorithm witch make that algorithm that use as input the speed.
+ * will use the acceleration instead.
+ *
+ *@tparam Data
+ *@tparam Policy A policy class with a method Do.
+ */
 template <typename Data,typename Policy>
 class Algorithms_Accel_To_Speed
 {
@@ -13,6 +20,9 @@ public:
     {
 
     }
+    /**
+    * @brief Do Launch the algorithms, with the passing mecanism were acceleration is used as input instead of speed.
+    */
    void Do()
    {
        bool b=type_chunk_speed::GetAccel_Instead_Speed();
