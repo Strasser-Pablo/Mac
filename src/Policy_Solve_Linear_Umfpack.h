@@ -11,6 +11,7 @@ class Policy_Solve_Linear_Umfpack
 	void *m_Numeric ;
     bool b=false;
 	public:
+    typedef Policy_Solve_Linear_Umfpack<Data> type_linear_solver;
     void CheckError(int status,const char * message)
     {
         if(status!=UMFPACK_OK)
