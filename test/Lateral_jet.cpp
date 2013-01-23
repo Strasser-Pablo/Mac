@@ -486,11 +486,11 @@ int main()
     typedef Algorithms_Extrapolate_Nan<type_data_ref,type_pol_init> type_alg_extrap;
     type_alg_extrap m_alg_extrap(m_data_ref,m_pol_init);
 
-    typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_part_create,type_alg_update_celltype,type_alg_delete_maccell,type_alg_calculate_time_step/*,type_alg_perturb*/,type_alg_extrap_bound,type_alg_extrap> type_alg_init;
-    type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_layer_initial,m_alg_part_create,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step/*,m_alg_perturb*/,m_alg_extrap_bound,m_alg_extrap);
+    typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_part_create,type_alg_update_celltype,type_alg_delete_maccell,type_alg_calculate_time_step,type_alg_perturb,type_alg_extrap_bound,type_alg_extrap> type_alg_init;
+    type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_layer_initial,m_alg_part_create,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step,m_alg_perturb,m_alg_extrap_bound,m_alg_extrap);
 
-    typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_part_create_interior,type_alg_update_celltype,type_alg_delete_maccell/*,type_alg_perturb*/,type_alg_extrap_bound,type_alg_extrap> type_alg_init2;
-    type_alg_init2 m_alg_init2(m_alg_initialize_mac,m_alg_layer_initial,m_alg_part_create_interior,m_alg_update_celltype,m_alg_delete_maccell/*,m_alg_perturb*/,m_alg_extrap_bound,m_alg_extrap);
+    typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_part_create_interior,type_alg_update_celltype,type_alg_delete_maccell,type_alg_perturb,type_alg_extrap_bound,type_alg_extrap> type_alg_init2;
+    type_alg_init2 m_alg_init2(m_alg_initialize_mac,m_alg_layer_initial,m_alg_part_create_interior,m_alg_update_celltype,m_alg_delete_maccell,m_alg_perturb,m_alg_extrap_bound,m_alg_extrap);
 
     // Policy Solve Grid
     typedef Policy_Gravity<type_data_ref> type_pol_gravity;
@@ -568,6 +568,9 @@ int main()
 #endif
     type_alg_solve_pressure m_alg_solve_pressure(m_data_ref,m_pol_pres);
 
+    typedef Algorithms_Solve_Pressure<type_data_ref,type_pol_pres> type_alg_solve_pressure2;
+    type_alg_solve_pressure2 m_alg_solve_pressure2(m_data_ref,m_pol_pres);
+
     typedef Algorithms_Solve_Pressure_Force<type_data_ref,type_alg_solve_pressure> type_alg_solve_force_pressure;
     type_alg_solve_force_pressure m_alg_solve_force_pressure(m_data_ref,m_alg_solve_pressure);
 #ifndef SPLIT
@@ -584,8 +587,8 @@ int main()
     type_alg_solve_grid_force m_alg_solve_grid_force(m_alg_solve_grid,m_alg_solve_force_pressure);
 #endif
 
-    typedef Algorithms_Do_Pressure<type_data_ref,type_alg_solve_pressure> type_alg_do_pres;
-    type_alg_do_pres m_alg_do_pres(m_data_ref,m_alg_solve_pressure);
+    typedef Algorithms_Do_Pressure<type_data_ref,type_alg_solve_pressure2> type_alg_do_pres;
+    type_alg_do_pres m_alg_do_pres(m_data_ref,m_alg_solve_pressure2);
 #ifndef SPLIT
     //Policy ODE
     typedef Policy_Speed_Interpolation_Linear_Symmetric<type_data_ref> type_pol_interpolation;
@@ -599,8 +602,8 @@ int main()
     typedef Policies<type_alg_solve_grid_force,type_pol_move2> type_pol_ODE;
     type_pol_ODE m_pol_ODE(m_alg_solve_grid_force,m_pol_move2);
 #else
-    typedef Policies<type_alg_solve_grid_force,type_alg_do_pres> type_pol_ODE;
-    type_pol_ODE m_pol_ODE(m_alg_solve_grid_force);
+    typedef Algorithms<type_alg_solve_grid_force,type_alg_do_pres> type_pol_ODE;
+    type_pol_ODE m_pol_ODE(m_alg_solve_grid_force,m_alg_do_pres);
 #endif
 
     //Algorithms ODE
@@ -654,7 +657,7 @@ int main()
     m_alg_solve_pressure.End_Iteration();
     m_alg_output.Do();
 
-    for(int i=1;i<50;++i)
+    for(int i=1;;++i)
     {
         cout<<"i "<<i<<endl;
         m_alg_init.Do();
