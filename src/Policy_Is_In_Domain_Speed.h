@@ -15,9 +15,10 @@ class Policy_Is_In_Domain_Speed
     bool Get_Is_Speed_In_Domain(const type_neigh neigh,int dir)
     {
         const type_neigh neigh2=neigh.GetNeighbour(dir,-1);
+        // @todo test of tickness
         if(!neigh2.IsValid())
         {
-            return true;
+            return neigh.CellType_GetRef().GetIsFluid();
         }
         if(neigh.CellType_GetRef().GetIsFluid()&&neigh2.CellType_GetRef().GetIsFluid())
         {
