@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <unordered_map>
+#include <stack>
 using std::nan;
 
 /**
@@ -27,7 +28,24 @@ struct Linear_Solver_Data
     int* m_indice;
     int m_n;
     type_speed_data_value* m_value;
-    type_linear_solver_solver m_solver;
+    type_linear_solver m_solver;
+};
+
+template <typename Data,typename Policy>
+struct Plane_3d_stack
+{
+    typedef typename Data::type_data_struct type_data;
+    typedef typename type_data::type_Data_Grid type_Data_Grid;
+    typedef typename type_Data_Grid::type_data::type_speed type_speed;
+    typedef typename type_speed::type_data_value type_speed_data_value;
+    typedef typename type_Data_Grid::iterator iterator;
+    typedef typename type_Data_Grid::type_offset type_neigh;
+    typedef typename type_Data_Grid::type_spacing_vector type_spacing_vector;
+    typedef typename Policy::type_linear_solver type_linear_solver;
+    int s1;
+    int s2;
+    int s3;
+    type_neigh neigh;
 };
 
 template <typename Data,typename Policy>
@@ -43,11 +61,13 @@ class Algorithm_Extrapolate_Boundary_Condition : public Policy
     typedef typename type_Data_Grid::type_spacing_vector type_spacing_vector;
     typedef typename Policy::type_linear_solver type_linear_solver;
     typedef Linear_Solver_Data<Data,Policy> type_lin_solver_data;
+    typedef Plane_3d_stack<Data,Policy> type_plane3d;
     static const int type_dim=type_Data_Grid::type_key::type_dim;
     const type_spacing_vector &m_1_h;
     const type_spacing_vector &m_h;
     type_Data_Grid& m_grid;
     std::unordered_map<int,type_lin_solver_data> m_solver;
+    std::stack<Plane_3d_stack<Data,Policy> > m_stack;
 public:
     /**
      * @brief Algorithm_Extrapolate_Boundary_Condition Constructor.
@@ -59,7 +79,7 @@ public:
     }
     ~Algorithm_Extrapolate_Boundary_Condition()
     {
-        InitializeMatrix();
+        Initialize();
     }
 
     void Do()
@@ -92,36 +112,24 @@ private:
         m_solver[id].m_n=3;
         for(int i=0;i<4;++i)
         {
-            m_offset[i]=3*i;
+            m_solver[id].m_offset[i]=3*i;
         }
 
         for(int i=0;i<9;++i)
         {
-            m_indice[i]=i%3;
+            m_solver[id].m_indice[i]=i%3;
         }
 
-        m_value[0]=-s1*2*m_1_h.Get(1)-s1*0.5*m_1_h.Get(3);
-        m_value[3]=s2*2*m_1_h.Get(2)+s2*0.5*m_1_h.Get(3);
-        m_value[6]=-s3*0.5*m_1_h.Get(1)+s2*s3*0.5*m_1_h.Get(2);
-        m_value[1]=-s1*0.5*m_1_h.Get(3)+s1*0.5*m_1_h.Get(2);
-        m_value[4]=s2*2*m_1_h.Get(2)+s2*0.5*m_1_h.Get(2);
-        m_value[7]=-s3*2*m_1_h.Get(3)-s3*0.5*m_1_h.Get(1);
-        m_value[2]=s1*m_1_h.Get(1);
-        m_value[5]=s2*m_1_h.Get(2);
-        m_value[8]=s3*m_1_h.Get(3);
-        for(int i=0;i<9;++i)
-        {
-            cout<<"value i "<<i<<" "<<m_value[i]<<endl;
-        }
-        for(int i=0;i<4;++i)
-        {
-            cout<<"offset i "<<i<<" "<<m_offset[i]<<endl;
-        }
-        for(int i=0;i<9;++i)
-        {
-            cout<<"indice i "<<i<<" "<<m_indice[i]<<endl;
-        }
-        m_solver[SignToInt(s1,s2,s3)].m_solver.Solve_Linear_FactorizeMatrice(3,m_offset,m_indice,m_value);
+        m_solver[id].m_value[0]=-s1*2*m_1_h.Get(1)-s1*0.5*m_1_h.Get(3);
+        m_solver[id].m_value[3]=s2*2*m_1_h.Get(2)+s2*0.5*m_1_h.Get(3);
+        m_solver[id].m_value[6]=-s3*0.5*m_1_h.Get(1)+s2*s3*0.5*m_1_h.Get(2);
+        m_solver[id].m_value[1]=-s1*0.5*m_1_h.Get(3)+s1*0.5*m_1_h.Get(2);
+        m_solver[id].m_value[4]=s2*2*m_1_h.Get(2)+s2*0.5*m_1_h.Get(2);
+        m_solver[id].m_value[7]=-s3*2*m_1_h.Get(3)-s3*0.5*m_1_h.Get(1);
+        m_solver[id].m_value[2]=s1*m_1_h.Get(1);
+        m_solver[id].m_value[5]=s2*m_1_h.Get(2);
+        m_solver[id].m_value[8]=s3*m_1_h.Get(3);
+        m_solver[SignToInt(s1,s2,s3)].m_solver.Solve_Linear_FactorizeMatrice(3,m_solver[id].m_offset,m_solver[id].m_indice,m_solver[id].m_value);
     }
     void SolveMatrix(int s1,int s2,int s3,type_neigh cell)
     {
@@ -161,7 +169,6 @@ private:
         }
         //term 4-5
         b[0]+=s3*0.5*m_1_h.Get(1)*(-cell.GetNeighbour(1,-s1).Speed_GetRef().Get(3)-cell.GetNeighbour(1,-s1).GetNeighbour(3,1).Speed_GetRef().Get(3));
-
         //term 6
         if(s1==1)
         {
@@ -321,16 +328,16 @@ m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solv
             cell.Speed_GetRef().Set(3,res[2]);
         }
     }
-    void InitializeMatrix()
+    void Initialize()
     {
         for(typename std::unordered_map<int,type_lin_solver_data>::iterator it=m_solver.begin();it!=m_solver.end();++it)
         {
-            it->m_solver.Solve_Linear_Clean();
-            delete[] it->m_value;
-            delete[] it->m_indice;
-            delete[] it->m_offset;
+            it->second.m_solver.Solve_Linear_Clean();
+            delete[] it->second.m_value;
+            delete[] it->second.m_indice;
+            delete[] it->second.m_offset;
         }
-        m_solver.clear()
+        m_solver.clear();
     }
 
     /**
@@ -701,6 +708,7 @@ m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solv
         {
             apply_set_nan(it.data());
         }
+        Initialize();
         for(iterator it=m_grid.begin();it!=m_grid.end();++it)
         {
             int dir[2*type_dim];
@@ -710,6 +718,12 @@ m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solv
             {
                 Choose_Boundary_Case_3d(it.data(),dir,sign,n);
             }
+        }
+        while(!m_stack.empty())
+        {
+            type_plane3d plane3d=m_stack.top();
+            m_stack.pop();
+            Apply_3d_Plane_3d(plane3d.neigh,plane3d.s1,plane3d.s2,plane3d.s3);
         }
         for(iterator it=m_grid.begin();it!=m_grid.end();++it)
         {
@@ -782,11 +796,11 @@ m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solv
         }
         else if(n==3)
         {
-            int s1;
-            int s2;
-            int s3;
+            int s1=0;
+            int s2=0;
+            int s3=0;
 
-            for(int i=0;i<=n;++i)
+            for(int i=0;i<n;++i)
             {
                 if(dir[i]==1)
                 {
@@ -794,7 +808,7 @@ m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solv
                     break;
                 }
             }
-            for(int i=0;i<=n;++i)
+            for(int i=0;i<n;++i)
             {
                 if(dir[i]==2)
                 {
@@ -802,7 +816,7 @@ m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solv
                     break;
                 }
             }
-            for(int i=0;i<=n;++i)
+            for(int i=0;i<n;++i)
             {
                 if(dir[i]==3)
                 {
@@ -810,7 +824,15 @@ m_solver[id].m_solver.Solve_Linear(m_solver[id].m_n,m_solver[id].m_offset,m_solv
                     break;
                 }
             }
-            Apply_3d_Plane_3d(neigh,s1,s2,s3);
+            if(s1!=0 && s2!=0 && s3!=0)
+            {
+                type_plane3d plane3d;
+                plane3d.s1=s1;
+                plane3d.s2=s2;
+                plane3d.s3=s3;
+                plane3d.neigh=neigh;
+                m_stack.push(plane3d);
+            }
         }
         else
         {
