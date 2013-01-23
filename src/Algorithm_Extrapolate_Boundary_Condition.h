@@ -324,7 +324,6 @@ private:
      */
     void apply_nan_extrap(type_neigh neigh)
     {
-        auto key=neigh.GetKey();
         int n=0;
         int tab[2][2*type_dim];
         for(int i=1;i<=type_dim;++i)
