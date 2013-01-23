@@ -26,16 +26,17 @@ class Algorithms_Delete_MacCell : public Policy
 		struct tms t2;
 		double conv=double(sysconf(_SC_CLK_TCK));
 		long t_deb=times(&t1);
-		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+        iterator it=m_grid.begin();
+        while(it!=m_grid.end())
 		{
 			if(it.data().Layer_GetRef().GetIsLayerEmpty()&&!it.data().CellType_GetRef().GetIsNoDelete())
 			{
 				it=m_grid.erase(it);
-				if(it==m_grid.end())
-				{
-					break;
-				}
 			}
+            else
+            {
+                ++it;
+            }
 		}
 		long t_end=times(&t2);
 		cout<<"real Delete MacCell "<<(t_end-t_deb)/conv<<endl;
@@ -48,16 +49,17 @@ class Algorithms_Delete_MacCell : public Policy
 		struct tms t2;
 		double conv=double(sysconf(_SC_CLK_TCK));
 		long t_deb=times(&t1);
-		for(iterator it=m_grid.begin();it!=m_grid.end();++it)
+        iterator it=m_grid.begin();
+        while(it!=m_grid.end())
 		{
 			if(it.data().Layer_GetRef().GetIsLayerEmpty())
 			{
 				it=m_grid.erase(it);
-				if(it==m_grid.end())
-				{
-					break;
-				}
 			}
+            else
+            {
+                ++it;
+            }
 		}
 		long t_end=times(&t2);
 		cout<<"real Delete MacCell "<<(t_end-t_deb)/conv<<endl;
