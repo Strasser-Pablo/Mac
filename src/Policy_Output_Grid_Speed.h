@@ -173,5 +173,8 @@ class Policy_Output_Grid_Speed
 			writer->Write();
 		}
 	}
+        void InputGridSpeed(int i)
+        {
+        }
 };
 #endif

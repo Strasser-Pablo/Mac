@@ -199,11 +199,11 @@ class Policy_Output_Grid_Pressure
 			vtkunstruct->InsertNextCell(ntype,nbcont,con);
 		}
   		vtkSmartPointer<vtkDoubleArray> vtkPressurearray=vtkSmartPointer<vtkDoubleArray>::New();
-  		vtkSmartPointer<vtkIntArray> vtkType_Cell=vtkSmartPointer<vtkIntArray>::New();
+        vtkSmartPointer<vtkIntArray> vtkType_Cell=vtkSmartPointer<vtkIntArray>::New();
 		for(typename type_map::iterator it=m_map2.begin();it!=m_map2.end();++it)
 		{
 			vtkPressurearray->InsertValue(it->second,m_grid[it->first].Pressure_GetRef().Pressure_Get().Get());
-			vtkType_Cell->InsertValue(it->second,m_grid[it->first].CellType_GetRef().GetIsFluid());
+            vtkType_Cell->InsertValue(it->second,m_grid[it->first].CellType_GetRef().GetIsFluid());
 		}
 		vtkPressurearray->SetName("Pressure");
 		vtkType_Cell->SetName("Fluid");
@@ -222,5 +222,8 @@ class Policy_Output_Grid_Pressure
   		writer->Write();
 		m_list.push_back(str);
 	}
+        void InputGridPressure(int i)
+        {
+        }
 };
 #endif
