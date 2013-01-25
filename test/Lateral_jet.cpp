@@ -109,7 +109,7 @@
 #include "../src/Policy_Advance_ODE_RungeKutta.h"
 #include "../src/Policy_Speed_Interpolation_Linear_Symmetric.h"
 #include "../src/Policy_Output_Grid_Speed_ID.h"
-#include "../src/Policy_Output_Grid_Pressure.h"
+#include "../src/Policy_Output_Grid_Pressure_ID.h"
 #include "../src/Policy_Output_Particle.h"
 #include "../src/Policy_Output_Animation.h"
 #include "../src/Policy_Output_Particle.h"
@@ -407,6 +407,8 @@ int main()
     Physvector<DIM,type_data_value> speed;
     type_data_value val_speed=1.0;
 
+    bool breload=false;
+    int ireload=0;
     int ymax=50;
     for(int y=0;y<ymax;++y)
     {
@@ -636,7 +638,7 @@ int main()
     //Policy Output
     typedef Policy_Output_Grid_Speed_ID<type_data_ref> type_pol_output_speed;
     type_pol_output_speed m_pol_output_speed(m_data_ref,"out_speed_");
-    typedef Policy_Output_Grid_Pressure<type_data_ref> type_pol_output_pressure;
+    typedef Policy_Output_Grid_Pressure_ID<type_data_ref> type_pol_output_pressure;
     type_pol_output_pressure m_pol_output_pressure(m_data_ref,"out_press_");
     typedef Policy_Output_Animation<type_data_ref> type_pol_output_animation;
     type_pol_output_animation m_pol_output_animation(m_data_ref,"Out_Animation.pvd");
@@ -647,7 +649,7 @@ int main()
 
     //Algorithms Output
     typedef Algorithms_Output<type_data_ref,type_pol_output> type_alg_output;
-    type_alg_output m_alg_output(m_data_ref,m_pol_output);
+    type_alg_output m_alg_output(m_data_ref,m_pol_output,ireload,breload);
 
 
     m_alg_init.Do();
