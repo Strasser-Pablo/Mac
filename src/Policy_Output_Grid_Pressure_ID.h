@@ -34,6 +34,7 @@ class Policy_Output_Grid_Pressure_ID
 	typedef typename type_Data_Grid::type_spacing_vector::type_data type_spacing_value;
 	typedef typename type_Data_Grid::type_offset type_neigh;
 	typedef typename type_Data_Grid::type_data::type_speed type_speed;
+    typedef typename type_Data_Grid::type_data::type_speed::type_data_value type_speed_value;
 	typedef typename type_Data_Grid::type_data::type_cell_type type_cell_type;
 	typedef typename type_Data_Grid::iterator iterator;
 	static const int type_dim=type_Data_Grid::type_spacing_vector::type_dim;
@@ -114,6 +115,32 @@ class Policy_Output_Grid_Pressure_ID
         vtkunstruct->GetCellData()->AddArray(vtkSpeed);
         vtkSpeedConst->SetName("SpeedConst");
         vtkunstruct->GetCellData()->AddArray(vtkSpeedConst);
+    }
+    void AddSpeedAverage(type_Data_Grid& grid __attribute__ ((unused)),type_map &m_map,vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct)
+    {
+        vtkSmartPointer<vtkDoubleArray> vtkSpeed=vtkSmartPointer<vtkDoubleArray>::New();
+        vtkSmartPointer<vtkIntArray> vtkSpeedConst=vtkSmartPointer<vtkIntArray>::New();
+        vtkSpeed->SetNumberOfComponents(3);
+        vtkSpeedConst->SetNumberOfComponents(3);
+        for(typename type_map::iterator it=m_map.begin();it!=m_map.end();++it)
+        {
+            for(int i=1;i<=type_dim;++i)
+            {
+                type_speed_value val=m_grid[it->first].Speed_GetRef().Get(i);
+                type_neigh neigh=m_grid[it->first].GetNeighbour(i,1);
+                if(neigh.IsValid())
+                {
+                    val=(val+neigh.Speed_GetRef().Get(i))/2;
+                }
+                vtkSpeed->InsertComponent(it->second,i-1,val);
+            }
+            for(int i=type_dim+1;i<=3;++i)
+            {
+                 vtkSpeed->InsertComponent(it->second,i-1,0);
+            }
+        }
+        vtkSpeed->SetName("SpeedAverage");
+        vtkunstruct->GetCellData()->AddArray(vtkSpeed);
     }
 
     void LoadSpeed(type_Data_Grid& grid __attribute__ ((unused)),type_map &m_map,vtkSmartPointer<vtkCellData> vtkcell)
@@ -292,6 +319,7 @@ class Policy_Output_Grid_Pressure_ID
 		AddInterior(m_grid,m_map2,vtkunstruct);
         AddKey(m_grid,m_map2,vtkunstruct);
         AddSpeed(m_grid,m_map2,vtkunstruct);
+        AddSpeedAverage(m_grid,m_map2,vtkunstruct);
 		vtkunstruct->GetCellData()->AddArray(vtkPressurearray);
 		vtkunstruct->GetCellData()->AddArray(vtkType_Cell);
         vtkunstruct->GetCellData()->AddArray(vtkEnumType_Cell);
