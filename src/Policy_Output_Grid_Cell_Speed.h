@@ -40,6 +40,7 @@ class Policy_Output_Grid_Cell_Speed_ID
     {
             vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
             vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
+            vtkPoints->SetDataTypeToDouble();
             typedef std::function<size_t(type_neigh)> type_hash;
             type_hash f=[](type_neigh neigh)
             {

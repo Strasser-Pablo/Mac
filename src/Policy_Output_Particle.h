@@ -38,6 +38,7 @@ class Policy_Output_Particle
 	{
 		vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 		vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
+        vtkpoints->SetDataTypeToDouble();
 		int nbCell=0;
 		for(iterator it=m_part.begin();it!=m_part.end();++it)
 		{

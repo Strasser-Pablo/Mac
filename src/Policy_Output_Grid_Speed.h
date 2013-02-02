@@ -38,6 +38,7 @@ class Policy_Output_Grid_Speed
 		{
 	 		vtkSmartPointer<vtkUnstructuredGrid> vtkunstruct=vtkSmartPointer<vtkUnstructuredGrid>::New();
 			vtkSmartPointer<vtkPoints> vtkpoints=vtkSmartPointer<vtkPoints>::New();
+            vtkPoints->SetDataTypeToDouble();
 			int num=0;
 			for(iterator it=m_grid.begin();it!=m_grid.end();++it)
 			{
