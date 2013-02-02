@@ -314,6 +314,10 @@ add_executable(Irrotational_Flow ${CMAKE_CURRENT_SOURCE_DIR}/test/Irrotational_F
 set_target_properties(Irrotational_Flow PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(Irrotational_Flow lib_computation)
 
+add_executable(Vortex ${CMAKE_CURRENT_SOURCE_DIR}/test/Vortex.cpp)
+set_target_properties(Vortex PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
+TARGET_LINK_LIBRARIES(Vortex lib_computation)
+
 add_executable(Pool_Constant_Speed_2d ${CMAKE_CURRENT_SOURCE_DIR}/test/Pool_Constant_Speed_2d.cpp)
 set_target_properties(Pool_Constant_Speed_2d PROPERTIES COMPILE_FLAGS ${COMPUTATION_COMPILE_FLAGS} LINK_FLAGS ${COMPUTATION_LINK_FLAGS})
 TARGET_LINK_LIBRARIES(Pool_Constant_Speed_2d lib_computation)
