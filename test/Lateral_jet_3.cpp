@@ -408,7 +408,7 @@ int main()
     Physvector<DIM,type_data_value> speed;
     type_data_value val_speed=1.0;
 
-    int ymax=10;
+    int ymax=5;
     bool breload=false;
     int ireload=0;
     for(int y=0;y<ymax;++y)
@@ -416,7 +416,7 @@ int main()
         for(int z=0;z<ymax;++z)
         {
         vect v;
-        speed.Set(1,1.0);
+        speed.Set(1,val_speed);
         speed.Set(2,0.0);
         speed.Set(3,0.0);
         v.Set(1,0);
@@ -690,7 +690,7 @@ int main()
     m_alg_solve_pressure.End_Iteration();
     m_alg_output.Do();
 
-    for(int i=1;i<4;++i)
+    for(int i=1;;++i)
     {
         cout<<"i "<<i<<endl;
         m_alg_init.Do();
