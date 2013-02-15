@@ -438,8 +438,15 @@ protected:
         {
             dir2=2;
         }
-        type_speed_data_value v1=neigh.Speed_GetRef().Get(dir);
-        type_speed_data_value v2=neigh2.Speed_GetRef().Get(dir);
+        type_neigh n=neigh;
+        type_neigh n2=neigh2;
+        if(sign==1)
+        {
+            n=neigh.GetNeighbour(dir,1);
+            n2=neigh2.GetNeighbour(dir,1);
+        }
+        type_speed_data_value v1=n.Speed_GetRef().Get(dir);
+        type_speed_data_value v2=n2.Speed_GetRef().Get(dir);
         type_speed_data_value v3=neigh2.Speed_GetRef().Get(dir2);
         type_speed_data_value v=-sign*this->m_1_h.Get(dir2)*this->m_h.Get(dir)*(v2-v1)+v3;
         type_neigh neigh3=neigh2.GetNeighbour(dir,sign);
@@ -904,8 +911,15 @@ protected:
     }
     void Apply_3d_Plane(type_neigh neigh,type_neigh neigh2,int dir,int sign,int dir2)
     {
-        type_speed_data_value v1=neigh.Speed_GetRef().Get(dir);
-        type_speed_data_value v2=neigh2.Speed_GetRef().Get(dir);
+        type_neigh n=neigh;
+        type_neigh n2=neigh2;
+        if(sign==1)
+        {
+            n=neigh.GetNeighbour(dir,1);
+            n2=neigh2.GetNeighbour(dir,1);
+        }
+        type_speed_data_value v1=n.Speed_GetRef().Get(dir);
+        type_speed_data_value v2=n2.Speed_GetRef().Get(dir);
         type_speed_data_value v3=neigh2.Speed_GetRef().Get(dir2);
         type_speed_data_value v=-sign*this->m_1_h.Get(dir2)*this->m_h.Get(dir)*(v2-v1)+v3;
         type_neigh neigh3=neigh2.GetNeighbour(dir,sign);
@@ -921,8 +935,12 @@ protected:
             n=neigh;
         }
         type_speed_data_value res=0;
-        for(int dir2=dir;dir2<=type_dim;++dir2)
+        for(int dir2=1;dir2<=type_dim;++dir2)
         {
+            if(dir2==dir)
+            {
+                continue;
+            }
             type_speed_data_value v2=neigh.Speed_GetRef().Get(dir2);
             type_speed_data_value v3=neigh.GetNeighbour(dir2,1).Speed_GetRef().Get(dir2);
             res=this->m_1_h.Get(dir2)*(v3-v2);
