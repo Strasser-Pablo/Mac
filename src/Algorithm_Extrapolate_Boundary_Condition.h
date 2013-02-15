@@ -224,7 +224,7 @@ public:
             {
                 for(int s=-1;s<=1;++s)
                 {
-                    type_speed_data_value add=neigh2.Speed_GetRef().Get(dir);
+                    type_speed_data_value add=neigh2.GetNeighbour(dir2,s).Speed_GetRef().Get(dir);
                     if(!std::isnan(add))
                     {
                         vtemp+=add;
