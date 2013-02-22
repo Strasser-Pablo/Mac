@@ -15,6 +15,10 @@ class Pow_Int : public Singleton<Pow_Int<N,Dim,Type> >
 	{
 		return m_pow[i];
 	}
+    static constexpr Type GetStatic(int i)
+    {
+        return i==0 ? 1 : N*GetStatic(i-1);
+    }
 };
 #include "Singleton_Impl.h"
 #include "Pow_Int_Impl.h"

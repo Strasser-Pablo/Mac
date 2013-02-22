@@ -3,11 +3,13 @@
 #include "Physvector.h"
 #include "Pow_Int.h"
 #include "Modulo.h"
+#include "Offset_GetNeighbour.h"
 using namespace std;
 template <typename type,int DIM,int N>
 struct Offset
 {
 	static Pow_Int<N,DIM,type>& m_pow;
+    static Offset_GetNeighbour<N,DIM,type>& m_getneigh;
 	type off;
 	template <typename Key>
 	Offset(const Key& key)
@@ -25,23 +27,7 @@ struct Offset
 	}
 	bool GetNeighbour(int i,int dir,Offset<type,DIM,N>& res) const
 	{
-		res.off=off+dir*m_pow.Get(i-1);
-		if(res.off<0)
-		{
-			res.off+=m_pow.Get(i);
-			return true;
-		}
-		else if(dir==1&&((res.off/m_pow.Get(i-1)%N)==0))
-		{
-			res.off-=m_pow.Get(i);
-			return true;
-		}
-		else if(dir==-1&&((res.off/m_pow.Get(i-1)%N)==N-1))
-		{
-			res.off+=m_pow.Get(i);
-			return true;
-		}
-		return false;
+        return m_getneigh.Get(i,dir,off,res.off);
 	}
 	Offset<type,DIM,N>& operator++()
 	{
@@ -102,4 +88,7 @@ struct Offset
 
 template <typename type,int DIM,int N>
 Pow_Int<N,DIM,type>& Offset<type,DIM,N>::m_pow=Singleton<Pow_Int<N,DIM,type> >::GetInstance();
+
+template <typename type,int DIM,int N>
+Offset_GetNeighbour<N,DIM,type>& Offset<type,DIM,N>::m_getneigh=Singleton<Offset_GetNeighbour<N,DIM,type> >::GetInstance();
 #endif
