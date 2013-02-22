@@ -2,7 +2,7 @@ Mac
 ===
 
 Compile
-_______
+--------
 
 Create a build directory:
 
@@ -26,7 +26,7 @@ Note that experiment launch an infinit loop.
 
 
 Structure
-_________
+--------
 
 All the framework is in directory src.
 All the test and experiment are in directory test.
@@ -34,7 +34,7 @@ The experiment are infinit loop so need to be stopped.
 Output file can be opened with paraview.
 
 Dependency
-__________
+--------
 
 The code has the following dependency:
 
