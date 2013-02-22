@@ -77,12 +77,12 @@ class TestOffset : public CxxTest::TestSuite  //LCOV_EXCL_LINE
 		type_off_1 res;
 		TS_ASSERT(!off1.GetNeighbour(1,1,res));
 		TS_ASSERT_EQUALS(res.off,50);
-		TS_ASSERT(!off1.GetNeighbour(1,-1,res));
+        TS_ASSERT(!off1.GetNeighbour(1,-1,res));
 		TS_ASSERT_EQUALS(res.off,48);
-		TS_ASSERT(!off1.GetNeighbour(2,1,res));
+        TS_ASSERT(!off1.GetNeighbour(2,1,res));
 		TS_ASSERT_EQUALS(res.off,53);
-		TS_ASSERT(!off1.GetNeighbour(2,-1,res));
-		TS_ASSERT_EQUALS(res.off,45);
+        TS_ASSERT(off1.GetNeighbour(2,-1,res));
+        TS_ASSERT_EQUALS(res.off,61);
 		TS_ASSERT(off1.GetNeighbour(3,1,res));
 		TS_ASSERT_EQUALS(res.off,1);
 		TS_ASSERT(!off1.GetNeighbour(3,-1,res));
