@@ -256,6 +256,38 @@ public:
 };
 */
 
+template <typename Data,typename Policy>
+class Algorithm_DelParticle : public Policy
+{
+    typedef typename Data::type_data_struct type_data;
+    typedef typename type_data::type_Data_Topology type_topology;
+    typedef typename type_topology::type_particle_list type_particle_list;
+    typedef typename type_particle_list::iterator iterator;
+    type_particle_list& m_list;
+    double m_y;
+
+public:
+        Algorithm_DelParticle(Data data, const Policy& pol,double ymin): Policy(pol),m_list(data.m_data.GetTopologyData().GetRefToParticleList()),m_y(ymin)
+    {
+    }
+    void Do()
+    {
+        iterator it=m_list.begin();
+        while(it!=m_list.end())
+        {
+            if((*it).GetParticlePos().Get(2)<m_y)
+            {
+                it=m_list.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+
+        }
+    }
+};
+
 int main()
 {
     feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
@@ -264,7 +296,7 @@ int main()
     //	const int NBSpeed=1;
     //	const int NBSpeed=2;
     typedef double type_data_value;
-    const int N=2;
+    const int N=8;
     const int NStock=pow(N,DIM);
     typedef Data_Base_Dim_Type<double,DIM> DataBase0;
     DataBase0 base0;
@@ -410,14 +442,14 @@ int main()
     Physvector<DIM,type_data_value> speed;
     type_data_value val_speed=1.0;
 
-    int ymax=25;
+    int ymax=15;
     bool breload=false;
     int ireload=0;
     for(int y=-ymax;y<=ymax;++y)
     {
         for(int z=-ymax;z<=ymax;++z)
         {
-            if(y*y+z*z>600)
+            if(y*y+z*z>200)
             {
                 continue;
             }
@@ -469,7 +501,7 @@ int main()
 
     //Policy Init
     typedef Policy_Layer_Max<type_data_ref> type_pol_layer;
-    type_pol_layer m_pol_layer(10);
+    type_pol_layer m_pol_layer(4);
     typedef Policy_Particle_To_Key<type_data_ref> type_pol_part_to_key;
     type_pol_part_to_key m_pol_part_to_key(m_data_ref);
     typedef Policy_CheckDT<type_data_ref> type_pol_check_dt;
@@ -481,7 +513,7 @@ int main()
     typedef Policy_Is_In_Domain_Speed<type_data_ref> type_pol_is_in_domain_speed;
     type_pol_is_in_domain_speed m_pol_is_in_domain_speed;
     typedef Policy_Depth<type_data_ref> type_pol_depth;
-    type_pol_depth m_pol_depth(10,3,4);
+    type_pol_depth m_pol_depth(7,3,5);
     typedef Policy_Solve_Linear_Umfpack<double> type_pol_solve_linear2;
     type_pol_solve_linear2 m_pol_solve_linear2;
     typedef Policies<type_pol_layer,type_pol_part_to_key,type_pol_check_dt,type_pol_add_particle,type_pol_is_inbound_filling_layer,type_pol_is_in_domain_speed,type_pol_depth,type_pol_solve_linear2> type_pol_init;
@@ -490,6 +522,8 @@ int main()
     //Algorithm Init
     typedef Algorithms_Initialize_Layer_And_Depth<type_data_ref,type_pol_init> type_alg_initialize_mac;
     type_alg_initialize_mac m_alg_initialize_mac(m_data_ref,m_pol_init);
+    typedef Algorithm_DelParticle<type_data_ref,type_pol_init> type_alg_del_particle;
+    type_alg_del_particle m_alg_del_particle(m_data_ref,m_pol_init,0);
     typedef Algorithms_Layer_Initial_With_Particle_Depth<type_data_ref,type_pol_init> type_alg_layer_initial;
     type_alg_layer_initial m_alg_layer_initial(m_data_ref,m_pol_init);
     typedef Algorithms_Create_Fluid_Particle_Depth<type_data_ref,type_pol_init> type_alg_part_create;
@@ -504,16 +538,16 @@ int main()
     type_alg_calculate_time_step m_alg_calculate_time_step(m_data_ref,m_pol_init);
     //typedef Algorithm_Init_Perturbation<type_data_ref,type_pol_init> type_alg_perturb;
     //type_alg_perturb m_alg_perturb(m_data_ref,m_pol_init,val_speed,1.0,0.01,ymax);
-    //typedef Algorithm_Extrapolate_Boundary_Condition<type_data_ref,type_pol_init> type_alg_extrap_bound;
-    //type_alg_extrap_bound m_alg_extrap_bound(m_data_ref,m_pol_init);
+    typedef Algorithm_Extrapolate_Boundary_Condition<type_data_ref,type_pol_init> type_alg_extrap_bound;
+    type_alg_extrap_bound m_alg_extrap_bound(m_data_ref,m_pol_init);
     typedef Algorithms_Extrapolate<type_data_ref,type_pol_init> type_alg_extrap;
     type_alg_extrap m_alg_extrap(m_data_ref,m_pol_init);
 
-    typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_part_create,type_alg_update_celltype,type_alg_delete_maccell,type_alg_calculate_time_step/*,type_alg_perturb*/,type_alg_extrap> type_alg_init;
-    type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_layer_initial,m_alg_part_create,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step/*,m_alg_perturb*/,m_alg_extrap);
+    typedef Algorithms<type_alg_initialize_mac,type_alg_del_particle,type_alg_layer_initial,type_alg_part_create,type_alg_update_celltype,type_alg_delete_maccell,type_alg_calculate_time_step/*,type_alg_perturb*/,type_alg_extrap_bound,type_alg_extrap> type_alg_init;
+    type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_del_particle,m_alg_layer_initial,m_alg_part_create,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step/*,m_alg_perturb*/,m_alg_extrap_bound,m_alg_extrap);
 
-    typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_part_create_interior,type_alg_update_celltype,type_alg_delete_maccell/*,type_alg_perturb*/,type_alg_extrap> type_alg_init2;
-    type_alg_init2 m_alg_init2(m_alg_initialize_mac,m_alg_layer_initial,m_alg_part_create_interior,m_alg_update_celltype,m_alg_delete_maccell/*,m_alg_perturb*/,m_alg_extrap);
+    typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_part_create_interior,type_alg_update_celltype,type_alg_delete_maccell/*,type_alg_perturb*/,type_alg_extrap_bound,type_alg_extrap> type_alg_init2;
+    type_alg_init2 m_alg_init2(m_alg_initialize_mac,m_alg_layer_initial,m_alg_part_create_interior,m_alg_update_celltype,m_alg_delete_maccell/*,m_alg_perturb*/,m_alg_extrap_bound,m_alg_extrap);
 
     // Policy Solve Grid
     typedef Policy_Gravity<type_data_ref> type_pol_gravity;
@@ -599,14 +633,14 @@ int main()
     typedef Algorithms_Solve_Pressure_Force<type_data_ref,type_alg_solve_pressure> type_alg_solve_force_pressure;
     type_alg_solve_force_pressure m_alg_solve_force_pressure(m_data_ref,m_alg_solve_pressure);
 #ifndef SPLIT
-    //typedef Algorithms<type_alg_extrap_bound,type_alg_extrap> type_alg_extrapolate;
-    //type_alg_extrapolate m_alg_extrapolate(m_alg_extrap_bound,m_alg_extrap);
+    typedef Algorithms<type_alg_extrap_bound,type_alg_extrap> type_alg_extrapolate;
+    type_alg_extrapolate m_alg_extrapolate(m_alg_extrap_bound,m_alg_extrap);
 
-    //typedef Algorithms_Accel_To_Speed<type_data_ref,type_alg_extrapolate> type_alg_extrapolate_force;
-    //type_alg_extrapolate_force m_alg_extrapolate_force(m_data_ref,m_alg_extrapolate);
+    typedef Algorithms_Accel_To_Speed<type_data_ref,type_alg_extrapolate> type_alg_extrapolate_force;
+    type_alg_extrapolate_force m_alg_extrapolate_force(m_data_ref,m_alg_extrapolate);
 
-    typedef Algorithms<type_alg_solve_grid,type_alg_solve_force_pressure> type_alg_solve_grid_force;
-    type_alg_solve_grid_force m_alg_solve_grid_force(m_alg_solve_grid,m_alg_solve_force_pressure);
+    typedef Algorithms<type_alg_solve_grid,type_alg_solve_force_pressure,type_alg_extrapolate_force> type_alg_solve_grid_force;
+    type_alg_solve_grid_force m_alg_solve_grid_force(m_alg_solve_grid,m_alg_solve_force_pressure,m_alg_extrapolate_force);
 #else
     typedef Algorithms<type_alg_solve_grid,type_alg_solve_force_pressure> type_alg_solve_grid_force;
     type_alg_solve_grid_force m_alg_solve_grid_force(m_alg_solve_grid,m_alg_solve_force_pressure);
@@ -696,7 +730,7 @@ int main()
         {
             cout<<"out "<<endl;
 #ifndef SPLIT
-           // m_alg_extrap_bound.Do();
+            m_alg_extrap_bound.Do();
             m_alg_extrap.Do();
 #endif
             m_alg_output.Do();
