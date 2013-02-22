@@ -28,10 +28,10 @@ Note that experiment launch an infinit loop.
 Structure
 --------
 
-All the framework is in directory src.
+All the framework are in directory src.
 All the test and experiment are in directory test.
 The experiment are infinit loop so need to be stopped.
-Output file can be opened with paraview.
+Output file can be opened with paraview, Out_Animation.pvd allow to open all timestep in paraview.
 
 Dependency
 --------
@@ -44,4 +44,5 @@ The code has the following dependency:
 - Pyamg, as multigrid solver.
 
 The library linking can be changed in cmake configuration.
+Umfpack depend on blast library.
 
