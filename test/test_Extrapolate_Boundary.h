@@ -553,8 +553,28 @@ public:
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
+        v.Set(1,-1);
+        v.Set(2,1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,-1);
+        v.Set(2,-1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
         v.Set(1,0);
         v.Set(2,-1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,0);
+        v.Set(2,2);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,0);
+        v.Set(2,-2);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
@@ -568,7 +588,27 @@ public:
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
+        v.Set(1,-2);
+        v.Set(2,0);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
         v.Set(1,2);
+        v.Set(2,0);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,2);
+        v.Set(2,1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,2);
+        v.Set(2,-1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,3);
         v.Set(2,0);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
@@ -580,6 +620,16 @@ public:
 
         v.Set(1,1);
         v.Set(2,-1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,1);
+        v.Set(2,2);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,1);
+        v.Set(2,-2);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
@@ -974,7 +1024,37 @@ public:
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
+        v.Set(1,-1);
+        v.Set(2,2);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,1);
+        v.Set(2,2);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
         v.Set(1,2);
+        v.Set(2,0);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,4);
+        v.Set(2,0);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,2);
+        v.Set(2,-1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,2);
+        v.Set(2,1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,3);
         v.Set(2,0);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
@@ -996,6 +1076,11 @@ public:
 
         v.Set(1,0);
         v.Set(2,2);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,0);
+        v.Set(2,3);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
@@ -2154,12 +2239,32 @@ public:
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
+        v.Set(1,1);
+        v.Set(2,2);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
         v.Set(1,-1);
         v.Set(2,0);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
         v.Set(1,3);
+        v.Set(2,0);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,3);
+        v.Set(2,-1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,3);
+        v.Set(2,1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,4);
         v.Set(2,0);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
@@ -2514,6 +2619,16 @@ public:
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
         v.Set(1,0);
+        v.Set(2,2);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,2);
+        v.Set(2,2);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,0);
         v.Set(2,-1);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
@@ -2530,6 +2645,11 @@ public:
 
         v.Set(1,1);
         v.Set(2,2);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,1);
+        v.Set(2,3);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
@@ -2559,6 +2679,21 @@ public:
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
 
         v.Set(1,3);
+        v.Set(2,0);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,3);
+        v.Set(2,1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,3);
+        v.Set(2,-1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,4);
         v.Set(2,0);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
@@ -3002,6 +3137,22 @@ public:
         v.Set(2,0);
         m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
         m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,5);
+        v.Set(2,0);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,4);
+        v.Set(2,-1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
+        v.Set(1,4);
+        v.Set(2,1);
+        m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
+        m_data_ref.m_data.GetGridData()[v].CellType_GetRef().SetAir();
+
 
 
         typedef Policy_Is_In_Domain_Speed<type_data_ref> type_pol;
