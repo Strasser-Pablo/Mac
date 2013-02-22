@@ -286,46 +286,6 @@ class Algorithm_Extrapolate_Boundary : public Policy
                         neigh.Speed_GetRef().Set(i,val*(1-exp(fact))/r);
                        //neigh.Speed_GetRef().Set(i,0);
                    }
-
-               }
-               if(it.data().Layer_GetRef().GetLayer()>3)
-               {
-                   for(int i=1;i<=type_dim;++i)
-                   {
-                       type_neigh neigh=it.data();
-                       if(neigh.IsValid()&&neigh.Layer_GetRef().GetLayer()!=0)
-                       {
-                           type_speed_value x=neigh.GetKey().Get(1)*m_h.Get(1);
-                           type_speed_value y=neigh.GetKey().Get(2)*m_h.Get(2);
-                           type_speed_value val;
-                           if(i==1)
-                           {
-                               x-=0.5*m_h.Get(1);
-
-                           }
-                           else
-                           {
-                               y-=0.5*m_h.Get(2);
-
-                           }
-                           type_speed_value r=sqrt(x*x+y*y);
-                           if(i==1)
-                           {
-                               val=-y/r;
-                           }
-                           else
-                           {
-                                val=x/r;
-                           }
-                           std::fenv_t fp_env;
-                           std::feholdexcept(&fp_env);
-                           type_speed_value fact=-r*r/(4*m_t*m_viscosity);
-                           std::fesetenv(&fp_env);
-                           neigh.Speed_GetRef().Set(i,val*(1-exp(fact))/r);
-                           //neigh.Speed_GetRef().Set(i,0);
-                       }
-
-                   }
                }
            }
        }
@@ -337,9 +297,9 @@ int main()
    feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
    const int DIM=2;
    const int NBSpeed=3;
-   double length=20.0;
+   double length=1;
    double lengthinner=3.0;
-   int NBX=16;
+   int NBX=25;
    double spacing=length/double(NBX);
 //	const int NBSpeed=1;
 //	const int NBSpeed=2;
@@ -451,12 +411,14 @@ int main()
    typedef Data_Grid_Data<type_interface_constant,DataBase> type_grid_data;
    type_grid_data m_grid_data(m_type_interface_constant,base);
 
+   cout<<std::setprecision(30);
+   cout<<"spacing "<<spacing<<endl;
 
    // Data Timming
    typedef Data_Timing_Time<type_data_value> type_time;
    type_time m_time;
-   m_time.m_t=0;
-   m_time.m_factor=0.1;
+   m_time.m_t=0.01;
+   m_time.m_factor=0.001;
    typedef Data_Timing<type_time,type_grid_data> type_timing;
    type_timing m_timing(m_time,m_grid_data);
 
@@ -499,7 +461,11 @@ int main()
                 {
                      val=x/r;
                 }
-                speed.Set(dim,val/r);
+                std::fenv_t fp_env;
+                std::feholdexcept(&fp_env);
+                type_data_value fact=-r*r/(4*m_time.m_t*m_data_viscosity.m_viscosity);
+                std::fesetenv(&fp_env);
+                 speed.Set(dim,val*(1-exp(fact))/r);
                 //speed.Set(dim,1);
            }
            m_data_ref.m_data.GetGridData()[v].Speed_GetRef().Set(Data_Speed_Data<DIM,type_data_value>(speed),true);
@@ -563,7 +529,7 @@ int main()
 
    //Policy Init
    typedef Policy_CheckDT<type_data_ref> type_pol_check_dt;
-   type_pol_check_dt m_pol_check_dt(0,100);
+   type_pol_check_dt m_pol_check_dt(0,100000);
 
    typedef Policies<type_pol_check_dt> type_pol_init;
    type_pol_init m_pol_init(m_pol_check_dt);
@@ -666,8 +632,8 @@ int main()
 
       //Algorithms ODE integrator
    //    typedef Algorithms_Euler<type_data_ref,type_pol_ODE> type_alg_ODE;
-     typedef Algorithms_RungeKutta_Force<type_data_ref,type_pol_ODE> type_alg_ODE;
-      //typedef Algorithms_Euler_Force<type_data_ref,type_pol_ODE> type_alg_ODE;
+    // typedef Algorithms_RungeKutta_Force<type_data_ref,type_pol_ODE> type_alg_ODE;
+      typedef Algorithms_Euler_Force<type_data_ref,type_pol_ODE> type_alg_ODE;
    //	typedef Algorithms_RungeKutta_RK2<type_data_ref,type_pol_ODE> type_alg_ODE;
    //	typedef Algorithms_RungeKutta_RK2_TVD<type_data_ref,type_pol_ODE> type_alg_ODE;
       type_alg_ODE m_alg_ODE(m_data_ref,m_pol_ODE);
@@ -701,8 +667,8 @@ int main()
        cout<<"dt "<<m_data_ref.m_data.GetTimingData().m_dt<<endl;
        cout<<"t "<<m_data_ref.m_data.GetTimingData().m_t<<endl;
        //if(m_data_ref.m_data.GetTimingData().m_t>=k*0.1-m_data_ref.m_data.GetTimingData().m_dt/2)
+       if(i%20==0)
        {
-           ++k;
            cout<<"out "<<endl;
            m_alg_output.Do();
        }

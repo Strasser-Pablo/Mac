@@ -528,7 +528,7 @@ int main()
     type_alg_extrap m_alg_extrap(m_data_ref,m_pol_init);
 
     typedef Algorithms<type_alg_initialize_mac,type_alg_del_particle,type_alg_layer_initial,type_alg_part_create,type_alg_update_celltype,type_alg_delete_maccell,type_alg_calculate_time_step,type_alg_perturb,type_alg_extrap_bound,type_alg_extrap> type_alg_init;
-    type_alg_init m_alg_init(m_alg_initialize_mac,m_alg_del_particle,m_alg_layer_initial,m_alg_part_create,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step,m_alg_perturb,m_alg_extrap_bound,m_alg_extrap);
+    type_alg_init m_alg_init(m_alg_initialize_mac,c,m_alg_layer_initial,m_alg_part_create,m_alg_update_celltype,m_alg_delete_maccell,m_alg_calculate_time_step,m_alg_perturb,m_alg_extrap_bound,m_alg_extrap);
 
     typedef Algorithms<type_alg_initialize_mac,type_alg_layer_initial,type_alg_part_create_interior,type_alg_update_celltype,type_alg_delete_maccell,type_alg_perturb,type_alg_extrap_bound,type_alg_extrap> type_alg_init2;
     type_alg_init2 m_alg_init2(m_alg_initialize_mac,m_alg_layer_initial,m_alg_part_create_interior,m_alg_update_celltype,m_alg_delete_maccell,m_alg_perturb,m_alg_extrap_bound,m_alg_extrap);
