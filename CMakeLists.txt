@@ -487,7 +487,7 @@ endfunction(AddTestProperty)
 
 	add_executable(test_cov_JetDEau_Basic ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic)
-	add_test(NAME test_JetDEau_Basic COMMAND test_cov_JetDEau_Basic)
+        #add_test(NAME test_JetDEau_Basic COMMAND test_cov_JetDEau_Basic)
 
 #	CXXTEST_ADD_TEST(test_cov_Algorithms_Convection test/TestAlgorithms_Convection.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestAlgorithms_Convection.h)
 #	AddTestProperty(test_cov_Algorithms_Convection)
@@ -512,7 +512,7 @@ endfunction(AddTestProperty)
 
 	add_executable(test_cov_Convection ${CMAKE_CURRENT_SOURCE_DIR}/test/TestConvection.cpp)
 	AddTestProperty(test_cov_Convection)
-	add_test(NAME test_cov_Convection COMMAND test_cov_Convection)
+        #add_test(NAME test_cov_Convection COMMAND test_cov_Convection)
 
 #	add_executable(test_cov_ConvectionDiag ${CMAKE_CURRENT_SOURCE_DIR}/test/TestConvectionDiag.cpp)
 #	AddTestProperty(test_cov_ConvectionDiag)
@@ -527,12 +527,12 @@ endfunction(AddTestProperty)
 
 	add_executable(test_cov_JetDEau_Basic_2 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2)
-	add_test(NAME test_JetDEau_Basic_2 COMMAND test_cov_JetDEau_Basic_2)
+        #add_test(NAME test_JetDEau_Basic_2 COMMAND test_cov_JetDEau_Basic_2)
 
 #	add_executable(test_cov_JetDEau_Basic_3 ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_3.cpp)
 #	AddTestProperty(test_cov_JetDEau_Basic_3)
 #	TARGET_LINK_LIBRARIES(test_cov_JetDEau_Basic_3 lib_computation)
-	add_test(NAME test_JetDEau_Basic_3 COMMAND test_cov_JetDEau_Basic_3)
+#	add_test(NAME test_JetDEau_Basic_3 COMMAND test_cov_JetDEau_Basic_3)
 
 	CXXTEST_ADD_TEST(test_cov_Data_Neighbour_List_Empty test/TestData_Neighbour_List_Empty.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/TestData_Neighbour_List_Empty.h)
 	AddTestProperty(test_cov_Data_Neighbour_List_Empty)
@@ -571,24 +571,24 @@ endfunction(AddTestProperty)
 
 	add_executable(test_cov_JetDEau_Basic_2_Depth ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Depth.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Depth)
-	add_test(NAME test_JetDEau_Basic_2_Depth COMMAND test_cov_JetDEau_Basic_2_Depth)
+        #add_test(NAME test_JetDEau_Basic_2_Depth COMMAND test_cov_JetDEau_Basic_2_Depth)
 
 	add_executable(test_cov_JetDEau_Basic_2_Updating ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Updating.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Updating)
-	add_test(NAME test_JetDEau_Basic_2_Updating COMMAND test_cov_JetDEau_Basic_2_Updating)
+        #add_test(NAME test_JetDEau_Basic_2_Updating COMMAND test_cov_JetDEau_Basic_2_Updating)
 
 
 	add_executable(test_cov_JetDEau_Basic_2_Pyamg ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Pyamg.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Pyamg)
-	add_test(NAME test_JetDEau_Basic_2_Pyamg COMMAND test_cov_JetDEau_Basic_2_Pyamg)
+        #add_test(NAME test_JetDEau_Basic_2_Pyamg COMMAND test_cov_JetDEau_Basic_2_Pyamg)
 
 	add_executable(test_cov_JetDEau_Basic_2_Pyamg_Simplified ${CMAKE_CURRENT_SOURCE_DIR}/test/TestJetDEau_Basic_2_Pyamg_Simplified.cpp)
 	AddTestProperty(test_cov_JetDEau_Basic_2_Pyamg_Simplified)
-	add_test(NAME test_JetDEau_Basic_2_Pyamg_Simplified COMMAND test_cov_JetDEau_Basic_2_Pyamg_Simplified)
+        #add_test(NAME test_JetDEau_Basic_2_Pyamg_Simplified COMMAND test_cov_JetDEau_Basic_2_Pyamg_Simplified)
 
 	add_executable(test_cov_Gravity ${CMAKE_CURRENT_SOURCE_DIR}/test/TestGravity.cpp)
 	AddTestProperty(test_cov_Gravity)
-	add_test(NAME test_Gravity COMMAND test_cov_Gravity)
+        #add_test(NAME test_Gravity COMMAND test_cov_Gravity)
 
 	add_executable(test_cov_Update_Pressure ${CMAKE_CURRENT_SOURCE_DIR}/test/TestUpdate_Pressure.cpp)
 	AddTestProperty(test_cov_Update_Pressure)
@@ -602,10 +602,10 @@ endfunction(AddTestProperty)
 
         add_executable(test_cov_Single_Particle ${CMAKE_CURRENT_SOURCE_DIR}/test/Single_Particle.cpp)
         AddTestProperty(test_cov_Single_Particle)
-        add_test(NAME test_single_particle COMMAND test_cov_Single_Particle)
+        #add_test(NAME test_single_particle COMMAND test_cov_Single_Particle)
 
         add_executable(test_cov_Lateral_Jet ${CMAKE_CURRENT_SOURCE_DIR}/test/Lateral_jet.cpp)
         AddTestProperty(test_cov_Lateral_Jet)
-        add_test(NAME test_lateral_jet COMMAND test_cov_Lateral_Jet)
+        #add_test(NAME test_lateral_jet COMMAND test_cov_Lateral_Jet)
 
 endif(USE_TESTING)
